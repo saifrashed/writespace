@@ -1,0 +1,30 @@
+{
+  "name": "PSE-E-frontend",
+  "version": "1.0.0",
+  "description": "PROJECT SOFTWARE ENGINEERING client",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "build:tailwind": "tailwind build ./styles/index.css -o ./styles/tailwind.css"
+  },
+  "dependencies": {
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@fortawesome/fontawesome-free": "^6.4.0",
+    "@tailwindcss/forms": "^0.5.3",
+    "tailwindcss": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^18.15.8",
+    "@types/react": "^18.0.29",
+    "@types/react-dom": "^18.0.11",
+    "@typescript-eslint/eslint-plugin": "^5.56.0",
+    "@typescript-eslint/parser": "^5.32.0",
+    "eslint": "8.36.0",
+    "typescript": "5.0.2"
+  }
+}
