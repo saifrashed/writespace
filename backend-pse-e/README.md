@@ -1,5 +1,5 @@
 <!-- ABOUT THE PROJECT -->
-# Ticketflip Server
+# Project Server
 
 
 
