@@ -2,6 +2,7 @@
 .next/
 out/
 node_modules/
+styles/tailwind.css
 
 # Build artifacts
 /.next/

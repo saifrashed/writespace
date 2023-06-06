@@ -20,7 +20,7 @@ To get a local copy up and running follow these simple example steps.
 _Below are the steps of how you can start installing and setting up the app._
 1. Clone the repo
    ```sh
-   git clone https://github.com/saifrashed/ticketflip.git
+   git clone https://github.com/[URL]
    ```
 2. Install npm packages
    ```sh
