@@ -4,6 +4,7 @@ In this project we are using the 'services' directory for all the requests.
 Normally, you would have routes, controllers and services, but for this project 
 we are keeping it as simple as possible because we only have 4 weeks and a lot of
 students do not have any or minimal experience with BE developing.
+# Project Server
 
 The test.model.js and test.service.js file are tutorial files so that the code can be copied
 and modified for specific user stories so that everyone can easily code in the backend.
@@ -49,6 +50,9 @@ Postman is recommended to use for testing requests.
 An example collection of Postman requests can be found in the root folder of the backend-pse-e directory. 
 Import this file in Postman to get example requests.
 
+## .env file
+create the '.env' file in the root folder of the 'backend-pse-e' and add the information on Discord
+from the backend channel to it.
 
 ### Deployment
 
