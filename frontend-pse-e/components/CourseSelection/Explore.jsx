@@ -19,27 +19,27 @@ const staggerContainer = (staggerChildren, delayChildren) => ({
 const exploreCourses = [
   {
     id: 'course-1',
-    imgUrl: 'https://img.parool.nl/c65801c8e90ae3484621391defddf267d62f4d7b/uva-stelt-onderzoek-in-na-klacht-docent-over-woke-gedachtegoed-op-universiteit',
+    gradient: 'bg-gradient-to-br from-purple-500 via-pink-500 to-red-500',
     title: 'Automaten & Formele Talen',
   },
   {
     id: 'course-2',
-    imgUrl: 'https://img.parool.nl/c65801c8e90ae3484621391defddf267d62f4d7b/uva-stelt-onderzoek-in-na-klacht-docent-over-woke-gedachtegoed-op-universiteit',
+    gradient: 'bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500',
     title: 'Project Software Engineering',
   },
   {
     id: 'course-3',
-    imgUrl: 'https://img.parool.nl/c65801c8e90ae3484621391defddf267d62f4d7b/uva-stelt-onderzoek-in-na-klacht-docent-over-woke-gedachtegoed-op-universiteit',
+    gradient: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500',
     title: 'Logic & Modeling',
   },
   {
     id: 'course-4',
-    imgUrl: 'https://img.parool.nl/c65801c8e90ae3484621391defddf267d62f4d7b/uva-stelt-onderzoek-in-na-klacht-docent-over-woke-gedachtegoed-op-universiteit',
+    gradient: 'bg-gradient-to-br from-green-400 via-blue-500 to-indigo-500',
     title: 'Compiler Construction',
   },
   {
     id: 'course-5',
-    imgUrl: 'https://img.parool.nl/c65801c8e90ae3484621391defddf267d62f4d7b/uva-stelt-onderzoek-in-na-klacht-docent-over-woke-gedachtegoed-op-universiteit',
+    gradient: 'bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-500',
     title: 'Programming Languages',
   },
 ];
