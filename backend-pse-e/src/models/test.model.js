@@ -2,6 +2,7 @@
 const mongoose = require("mongoose");
 const testModel = new mongoose.Schema({
     username: String,
+    // This is an Object in an Object, so an Object as an attribute
     test: {
         testId: Number
     }
