@@ -6,6 +6,9 @@ import { generalRouter } from "./routes/general.route";
 
 require("dotenv").config();
 
+// Database connection
+require("./config/databaseConfig").connect();
+
 const app = express();
 const port = process.env.PORT || 5000;
 
