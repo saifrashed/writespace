@@ -25,10 +25,17 @@ app.use(express.json())
 app.use(express.json({ limit: "50mb" }));
 
 
-// Test get request
+// ************************* Add new services here *************************
+// Import services here
+const testService = require('./services/test.service.js');
+// Define new routes here with the start route
+app.use('/test', testService);
+
+
+// ************************* General requests *************************
 app.get("/", (req, res) => {
     res.status(200).json('Welcome to PSE-E Api')
-})
+});
 
 // Every other route. This should be the last route else it won't work
 app.use("*", (req, res) => {

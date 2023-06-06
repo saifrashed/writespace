@@ -5,6 +5,7 @@ const testModel = new mongoose.Schema({
     test: {
         testId: Number
     }
-})
+});
 
+// Export the database model for MongoDB
 module.exports = mongoose.model("test", testModel);
