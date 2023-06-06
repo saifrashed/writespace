@@ -5,6 +5,8 @@ Normally, you would have routes, controllers and services, but for this project
 we are keeping it as simple as possible because we only have 4 weeks and a lot of
 students do not have any or minimal experience with BE developing.
 
+The test.model.js and test.service.js file are tutorial files so that the code can be copied
+and modified for specific user stories so that everyone can easily code in the backend.
 
 
 ## About The Project
