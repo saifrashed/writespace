@@ -1,1 +1,0 @@
-// For any database model
