@@ -17,18 +17,28 @@ router.get("/get", (req, res) => {
 });
 
 // Post request (creates something in the db)
-router.post('/save', (req, res) => {
-    var test = new TestModel();
-    test.username = req.body.username;
-    test.testId = req.body.testId;
-
-    test.save(function (err, data) {
-        if (err) {
-            res.send(err);
-        } else {
-            res.send(data);
-        }
-    });
+router.post('/save', async (req, res) => {
+    try {
+        const username = req.body.username;
+        const testId = req.body.testId;
+    
+        // Create a new instance of the TestModel
+        const newTest = new TestModel({
+            username,
+            test: {
+              testId
+            }
+        });
+    
+        // Save the newTest instance to the database
+        const savedTest = await newTest.save();
+        
+        // Send the savedTest object back in json form
+        res.status(200).json(savedTest);
+    } catch (error) {
+        console.error('Error saving data to MongoDB:', error);
+        res.status(500).json({ error: 'Failed to save data to the database' });
+    }
 });
 
 // Export requests with the router variable
