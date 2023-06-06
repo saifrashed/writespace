@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "729a0c71-c9ef-46a4-a22a-e70c4c6f0ff5",
+		"name": "PSE-E-UvA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14877361",
+		"_collection_link": "https://new-world-86-pad-team-7.postman.co/workspace/Team-Workspace~d3f42447-f8b4-4df1-893c-c1469601f20c/collection/14877361-729a0c71-c9ef-46a4-a22a-e70c4c6f0ff5?action=share&creator=14877361&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Test requests",
+			"item": [
+				{
+					"name": "Getall",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/test/getAll",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"test",
+								"getAll"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test post request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"testingDBDemo\",\r\n    \"testId\" : 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/test/save",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"test",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test put request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"test\",\r\n    \"testId\" : 10242342\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:5000/test/update/10",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"test",
+								"update",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get one by testId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/test/findByTestId/10242342",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"test",
+								"findByTestId",
+								"10242342"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete one test model by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:5000/test/delete/10242342",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"test",
+								"delete",
+								"10242342"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
