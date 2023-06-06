@@ -2,8 +2,8 @@
 .env
 /.idea
 
-# Backend node_modules
-/backend-pse-e/node_modules
+# all node_modules one directory further
+/*/node_modules
 
 dev.db
 dev.db-journal
