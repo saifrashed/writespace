@@ -20,7 +20,7 @@ To get a local copy up and running follow these simple example steps.
 ### Installation
 
 _Below are the steps of how you can start installing and setting up the app._
-1. Clone the repo
+1. Clone the repository
    ```sh
    git clone [URL]
    ```
