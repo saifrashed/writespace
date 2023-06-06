@@ -1,2 +1,2 @@
 # PSE-E
-Repo voor PSE project
+Repository voor PSE project
