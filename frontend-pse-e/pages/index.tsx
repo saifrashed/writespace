@@ -1,5 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
+import Explore from "../components/CourseSelection/Explore"
 
 const Home = () => {
   return (
@@ -11,7 +12,7 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className="font-bold text-3xl">Start project</h1>
+      <Explore />
     </>
   );
 };
