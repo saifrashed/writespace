@@ -50,6 +50,9 @@ Postman is recommended to use for testing requests.
 An example collection of Postman requests can be found in the root folder of the backend-pse-e directory. 
 Import this file in Postman to get example requests.
 
+## .env file
+create the '.env' file in the root folder of the 'backend-pse-e' and add the information on Discord
+from the backend channel to it.
 
 ### Deployment
 
