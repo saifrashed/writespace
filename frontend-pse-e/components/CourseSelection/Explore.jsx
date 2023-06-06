@@ -48,7 +48,7 @@ const Explore = () => {
   const [active, setActive] = useState('course-2');
 
   return (
-    <section className={'sm:p-16 xs:p-8 px-6 py-12'} id="explore">
+    <section className={'sm:p-16 xs:p-8 px-6 py-[3rem]'} id="explore">
       <motion.div
         variants={staggerContainer}
         initial="hidden"

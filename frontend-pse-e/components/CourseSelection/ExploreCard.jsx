@@ -1,12 +1,31 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/router';
 
-export const ExploreCard = ({ id, gradient, title, active, handleClick }) => (
-  <motion.div
+const handleCardClick = (router, handleClick, active, id, gradient, title) => {
+  if (active === id) {
+    router.push(
+      {
+        // pathname: `/course-overview`, 
+        pathname: `/course-overview/${id}`,
+        // query: { courseId: id },
+        shallow: true,
+        state: { gradient, title }
+      },
+    );
+  } else {
+    handleClick(id);
+  }
+};
+
+export const ExploreCard = ({ id, gradient, title, active, handleClick }) => {
+  const router = useRouter();
+
+  return <motion.div
     className={`relative overflow-hidden ${active === id ? 'xl:flex-[3.5] lg:flex-[5] flex-[10]' : 'xl-flex[0.5] lg:flex-[1] flex-[2]'
       } flex items-center justify-center min-w-[170px] h-[32rem] transition-[flex] duration-[0.7s] ease-out-flex cursor-pointer`}
-    onClick={() => handleClick(id)}
+    onClick={() => handleCardClick(router, handleClick, active, id, gradient, title)}
   >
     <div
       className={`absolute w-full h-full rounded-[1rem] ${gradient} backdrop-blur-[3rem]`}
@@ -35,4 +54,4 @@ export const ExploreCard = ({ id, gradient, title, active, handleClick }) => (
       </div>
     )}
   </motion.div >
-);
+};
