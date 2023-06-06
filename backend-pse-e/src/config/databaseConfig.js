@@ -1,3 +1,4 @@
+// This is the database configuration file to connect to MongoDB
 const mongoose = require("mongoose");
 
 const { MONGO_URI } = process.env;

@@ -27,20 +27,23 @@ router.get("/getAll", async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
-// // This gets one test with an ObjectId from MongoDB
-// router.get("/findByTestId/:testId", async (req, res) => {
-//     try {
-//         // Find the object using an attribute of the object
-//         const test = await TestModel.find({ 'test.testId': req.params.testId });
-//         // If the object is not fount give an error
-//         if (test.length === 0) {
-//             return res.status(404).json({ error: 'Object not found' });
-//         }
-//     } catch (error) {
-//         console.error('Error from MongoDB:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+// This gets one test with an ObjectId from MongoDB
+router.get("/findByTestId/:testId", async (req, res) => {
+    try {
+        // Find the object using an attribute of the object
+        const test = await TestModel.find({ 'test.testId': req.params.testId });
+        // If the object is not fount give an error
+        if (test.length === 0) {
+            return res.status(404).json({ error: 'Object not found' });
+        }
+        
+        // Handle success case here
+        res.status(200).json(test);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // Post request (creates something in the db)
 router.post('/save', async (req, res) => {
@@ -68,7 +71,7 @@ router.post('/save', async (req, res) => {
     }
 });
 
-// PUT request (updates an existing test in the db)
+// PUT request (updates something in the db)
 router.put('/update/:testId', async (req, res) => {
     try {
       const testId = req.params.testId;
@@ -97,6 +100,35 @@ router.put('/update/:testId', async (req, res) => {
     }
 });
 
-// ************************* This needs to stay the same, you are exporting the requests with the router variable *************************
+// DELETE request (deletes something from the db)
+router.delete('/delete/:testId', async (req, res) => {
+    try {
+      const testId = req.params.testId;
+  
+      // Find the document by testId and remove it
+      const result = await TestModel.deleteOne({ 'test.testId': testId });
+  
+      // Check if the document was found and deleted successfully
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ error: 'Object not found' });
+      }
+ 
+      // Delete successful
+      res.status(200).json({ message: 'Test deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting data from MongoDB:', error);
+      res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});  
+
+// ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable
 module.exports = router;
+
+/*
+*****************************************************************************************************************************
+Example Postman collection to test the test model can be found in the root folder of the backend-pse-e directory.
+Import this in Postman using the import button, this is a file, so import it as a file, and then you can use 
+that collection to test and make new requests based on these requests in Postman to test your requests.
+*****************************************************************************************************************************
+*/
