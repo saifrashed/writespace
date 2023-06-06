@@ -3,9 +3,6 @@
 const express = require('express');
 const router = express.Router();
 
-// Database connection
-//require("./config/databaseConfig").connect();
-
 // Import models for this service (../ goes up one directory)
 const TestModel = require("../models/test.model.js");
 
