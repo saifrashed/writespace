@@ -8,7 +8,9 @@ function useAssigments() {
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
+
         // API CALL HERE
+
         setAssignmentsData(assignments)
       } catch (error) {
         console.log(error)
@@ -17,7 +19,7 @@ function useAssigments() {
     fetchAssignments();
   }, []);
 
-  // // For any other extra function you want to export
+  // // For any other extra function you want to use
   // const extraFunction = async () => {
   //   try {
   //     return { response: "OK" };

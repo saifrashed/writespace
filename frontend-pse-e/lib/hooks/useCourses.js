@@ -4,7 +4,6 @@ import { courses } from "./dummy"
 function useCourses() {
   const [coursesData, setCoursesData] = useState([]);
 
-
   // Start off making an API call
   useEffect(() => {
     const fetchCourses = async () => {
@@ -19,7 +18,6 @@ function useCourses() {
     };
     fetchCourses();
   }, []);
-
 
   // // For any other extra function you want to export
   // const extraFunction = async () => {

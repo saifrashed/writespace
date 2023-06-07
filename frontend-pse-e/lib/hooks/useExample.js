@@ -1,3 +1,9 @@
+/**
+ * This is an example hook that can be used to create new API
+ * interfaces for any kind of datatype (courses, assignments, user
+ * and more...)
+ */
+
 import { useEffect, useState } from "react";
 
 function useExample() {
@@ -6,8 +12,6 @@ function useExample() {
   useEffect(() => {
     const fetchExample = async () => {
       try {
-
-
 
       } catch (error) {
         console.log(error)
