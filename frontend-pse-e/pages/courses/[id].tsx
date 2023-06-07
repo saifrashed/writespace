@@ -1,6 +1,6 @@
 import Head from "next/head";
 import Image from "next/image";
-import Explore from "../../components/CourseSelection/Explore"
+import Explore from "../../components/CourseSelection.tsx/Explore"
 
 const Courses = () => {
   return (

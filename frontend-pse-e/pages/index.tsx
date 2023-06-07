@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Image from "next/image";
-import Explore from "../components/CourseSelection/Explore"
 import NavBar from "../components/NavBar"
 import Link from 'next/link';
 
@@ -53,7 +52,7 @@ const Home = () => {
 
               <div className="absolute bottom-0 left-0">
                 <div className="p-4 sm:p-6 lg:p-8">
-                  <p className="max-w-xs mt-1.5 text-xl text-white">Join others and learn to write better (and more fun)</p>
+                  <p className="max-w-xs mt-1.5 text-xl text-white">Join others and learn to write better.</p>
                 </div>
               </div>
             </div>
