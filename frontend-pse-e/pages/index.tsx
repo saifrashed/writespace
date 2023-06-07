@@ -1,7 +1,20 @@
 import Head from "next/head";
 import Image from "next/image";
+import useCourses from "../lib/hooks/useCourses"
+import useAssignments from "../lib/hooks/useAssignments"
+
+import { useEffect } from "react";
 
 const Home = () => {
+  const { courses } = useCourses()
+  const { assignments } = useAssignments()
+
+  useEffect(() => {
+    console.log(courses)
+    console.log(assignments)
+
+  }, [courses, assignments])
+
   return (
     <>
       <Head>
