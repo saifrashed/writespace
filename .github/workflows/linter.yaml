@@ -16,3 +16,10 @@ jobs:
     
     - name: Run Eslint
       run: cd ./backend-pse-e && npm run lint
+    
+    - name: Install packages frontend
+      run: cd ./frontend-pse-e && npm install
+
+    - name: Run Eslint
+      run: cd ./frontend-pse-e && npm run lint2
+      
