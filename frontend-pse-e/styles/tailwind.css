@@ -712,8 +712,16 @@ select {
   right: 0px;
 }
 
+.top-0 {
+  top: 0px;
+}
+
 .z-0 {
   z-index: 0;
+}
+
+.z-50 {
+  z-index: 50;
 }
 
 .mx-auto {
@@ -846,10 +854,6 @@ select {
   max-width: 20rem;
 }
 
-.flex-\[10\] {
-  flex: 10;
-}
-
 .flex-\[2\] {
   flex: 2;
 }
@@ -896,6 +900,10 @@ select {
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.overflow-x-auto {
+  overflow-x: auto;
 }
 
 .rounded-2xl {
@@ -1073,17 +1081,16 @@ select {
   padding-bottom: 1rem;
 }
 
-.py-\[3rem\] {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
-}
-
 .pb-16 {
   padding-bottom: 4rem;
 }
 
 .pt-24 {
   padding-top: 6rem;
+}
+
+.pt-6 {
+  padding-top: 1.5rem;
 }
 
 .text-center {
@@ -1254,10 +1261,6 @@ select {
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
   }
 
-  .sm\:p-16 {
-    padding: 4rem;
-  }
-
   .sm\:p-6 {
     padding: 1.5rem;
   }
@@ -1284,6 +1287,10 @@ select {
 @media (min-width: 768px) {
   .md\:block {
     display: block;
+  }
+
+  .md\:min-h-screen {
+    min-height: 100vh;
   }
 
   .md\:flex-row {
@@ -1366,10 +1373,6 @@ select {
     flex: 1;
   }
 
-  .lg\:flex-\[5\] {
-    flex: 5;
-  }
-
   .lg\:origin-\[0\2c 0\] {
     transform-origin: 0,0;
   }
@@ -1422,10 +1425,6 @@ select {
 }
 
 @media (min-width: 1280px) {
-  .xl\:flex-\[3\.5\] {
-    flex: 3.5;
-  }
-
   .xl\:text-8xl {
     font-size: 6rem;
     line-height: 1;

@@ -21,7 +21,7 @@ const Home = () => {
           <div className="flex flex-col lg:flex-row lg:items-stretch lg:min-h-[800px]">
             <div className="relative flex items-center justify-center w-full lg:order-2 lg:w-7/12">
               <div className="absolute bottom-0 right-0 hidden lg:block">
-                <img className="object-contain w-auto h-48" src="https://cdn.rareblocks.xyz/collection/celebration/images/hero/3/curved-lines.png" alt="" />
+                <img className="object-contain w-auto h-48" src="./curved-lines.png" alt="" />
               </div>
 
               <div className="relative px-4 pt-24 pb-16 text-center sm:px-6 md:px-24 2xl:px-32 lg:py-24 lg:text-left">
@@ -34,7 +34,7 @@ const Home = () => {
                 <div className=" sm:bg-white sm:border-2 sm:border-transparent sm:rounded-full ">
                   <div className="flex flex-col items-center md:flex-row">
                     <Link href={"/courses"}>
-                      <button type="submit" className="inline-flex items-center justify-center w-full rounded-2xl px-4 py-4 mt-8 font-semibold text-white transition-all duration-200 bg-orange-500 border border-transparent sm:w-auto hover:bg-orange-600 focus:bg-orange-600">
+                      <button type="submit" className="inline-flex items-center justify-center w-full rounded-2xl px-4 py-4 mt-8 font-bold text-white transition-all duration-200 bg-orange-500 border border-transparent sm:w-auto hover:bg-orange-600 focus:bg-orange-600">
                         Go to your courses
                       </button>
                     </Link>
@@ -44,7 +44,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div className="relative w-full overflow-hidden lg:order-1 h-96 lg:h-auto lg:w-5/12">
+            <div className="relative w-full overflow-hidden lg:order-1 h-96 md:min-h-screen lg:h-auto lg:w-5/12">
               <div className="absolute inset-0">
                 <img className="object-cover w-full h-full scale-150" src="/home.png" alt="" />
               </div>
