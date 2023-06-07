@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 const submissionModel = new mongoose.Schema({
-    submissionId: Number,
     userId: String,
     assignmentId: String,
     submissionDate: Date,

@@ -48,29 +48,9 @@ router.get("/findByAssignmentId/:assignmentId", async (req, res) => {
 
 // Find submissions by userId
 router.get("/findByUserId/:userId", async (req, res) => {
-  try {
-      // Find the object using an attribute of the object
-      const result = await submissionModel.find({ 'userId': req.params.userId });
-      // If the object is not fount give an error
-      if (result.length === 0) {
-          return res.status(404).json({ error: 'Object not found' });
-      }
-
-      // Handle success case here
-      res.status(200).json(result);
-  } catch (error) {
-      console.error('Error from MongoDB:', error);
-      res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-
-// Find submissions by id.
-// This gets one test with an ObjectId from MongoDB
-router.get("/findBySubmissionId/:submissionId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
-        const result = await submissionModel.find({ 'submissionId': req.params.submissionId });
+        const result = await submissionModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
             return res.status(404).json({ error: 'Object not found' });
@@ -84,12 +64,31 @@ router.get("/findBySubmissionId/:submissionId", async (req, res) => {
     }
 });
 
+
+// Find submissions by id.
+// This gets one test with an ObjectId from MongoDB
+// router.get("/findBySubmissionId/:submissionId", async (req, res) => {
+//     try {
+//         // Find the object using an attribute of the object
+//         const result = await submissionModel.find({ 'submissionId': req.params.submissionId });
+//         // If the object is not fount give an error
+//         if (result.length === 0) {
+//             return res.status(404).json({ error: 'Object not found' });
+//         }
+
+//         // Handle success case here
+//         res.status(200).json(result);
+//     } catch (error) {
+//         console.error('Error from MongoDB:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// });
+
 // Post request (creates something in the db)
 router.post('/save', async (req, res) => {
     try {
         console.log(req.body);
         // Variables for the model
-        const submissionId = req.body.submissionId;
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;
         const submissionDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }); // Off by two hours
@@ -101,7 +100,6 @@ router.post('/save', async (req, res) => {
 
         // Create a new instance of the submission model
         const newSubmission = new submissionModel({
-            submissionId: submissionId,
             userId: userId,
             assignmentId: assignmentId,
             submissionDate: submissionDate,
@@ -124,18 +122,24 @@ router.post('/save', async (req, res) => {
 });
 
 // Updates the submission Grade
-router.put('/update/grade/:submissionId', async (req, res) => {
+router.put('/update/grade/', async (req, res) => {
     try {
-        const submissionId = req.body.submissionId;
+        const userId = req.body.userId;
+        const assignmentId = req.body.assignmentId
         const newGrade = req.body.submissionGrade;
         const status = "graded";
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
-            { 'submissionId': submissionId },
-            { $set: {
-                'submissionGrade': newGrade,
-                'submissionStatus': status
-            } },
+            {
+                'assignmentId': assignmentId,
+                'userId': userId
+            },
+            {
+                $set: {
+                    'submissionGrade': newGrade,
+                    'submissionStatus': status
+                }
+            },
             { new: true }
         );
 
@@ -151,40 +155,48 @@ router.put('/update/grade/:submissionId', async (req, res) => {
 });
 
 // Updates the submitted file, along with the new date of submission.
-router.put('/update/file/:submissionId', async (req, res) => {
-  try {
-      const submissionId = req.body.submissionId;
-      const newFileType = req.body.filetype;
-      const newFileName = req.body.filename;
-      const newFileData = req.body.fileData;
-      const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
+router.put('/update/file/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const assignmentId = req.body.assignmentId
+        const newFileType = req.body.filetype;
+        const newFileName = req.body.filename;
+        const newFileData = req.body.fileData;
+        const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
 
-      const updatedSubmission = await submissionModel.findOneAndUpdate(
-          { 'submissionId': submissionId },
-          { $set: { 'filetype': newFileType,
+        const updatedSubmission = await submissionModel.findOneAndUpdate(
+            {
+                'assignmentId': assignmentId,
+                'userId': userId
+            },
+            {
+                $set: {
+                    'filetype': newFileType,
                     'filename': newFileName,
                     'fileData': newFileData,
-                    'submissionDate': newDate} },
-          { new: true }
-      );
+                    'submissionDate': newDate
+                }
+            },
+            { new: true }
+        );
 
-      if (updatedSubmission === null) {
-          return res.status(404).json({ error: 'Submission not found' });
-      }
+        if (updatedSubmission === null) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
 
-      res.status(200).json({ message: 'Submission updated successfully' });
-  } catch (error) {
-      console.error('Error updating data in MongoDB:', error);
-      res.status(500).json({ error: 'Failed to update data in the database' });
-  }
+        res.status(200).json({ message: 'Submission updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
 });
 
 // PUT request (updates something in the db)
-router.put('/update/:submissionId', async (req, res) => {
+router.put('/update/', async (req, res) => {
     try {
-        const submissionId = req.params.submissionId;
+        const userId = req.body.userId;
+        const assignmentId = req.body.assignmentId
         const updatedSubmission = {
-            submissionId: req.body.submissionId,
             userId: req.body.userId,
             assignmentId: req.body.assignmentId,
             submissionDate: req.body.submissionDate,
@@ -197,7 +209,10 @@ router.put('/update/:submissionId', async (req, res) => {
 
         // Find the existing test by testId and update it
         const result = await submissionModel.updateOne(
-            { 'submissionId': submissionId },
+            {
+                'assignmentId': assignmentId,
+                'userId': userId
+            },
             { $set: updatedSubmission }
         );
 
@@ -213,13 +228,13 @@ router.put('/update/:submissionId', async (req, res) => {
     }
 });
 
-// DELETE request (deletes something from the db)
-router.delete('/delete/:submissionId', async (req, res) => {
+
+router.delete('/deleteAll/:assignmentId', async (req, res) => {
     try {
-        const submissionId = req.params.submissionId;
+        const assignmentId = req.params.assignmentId;
 
         // Find the document by submissionId and remove it
-        const result = await TestModel.deleteOne({ 'submissionId': submissionId });
+        const result = await submissionModel.deleteMany({'assignmentId': assignmentId});
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
@@ -227,7 +242,30 @@ router.delete('/delete/:submissionId', async (req, res) => {
         }
 
         // Delete successful
-        res.status(200).json({ message: 'Test deleted successfully' });
+        res.status(200).json({ message: 'Submission deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting data from MongoDB:', error);
+        res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// DELETE request (deletes something from the db)
+router.delete('/deleteOne/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const assignmentId = req.body.assignmentId;
+
+        // Find the document by submissionId and remove it
+        const result = await submissionModel.deleteOne({ 'userId': userId,
+                                            'assignmentId': assignmentId});
+
+        // Check if the document was found and deleted successfully
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Object not found' });
+        }
+
+        // Delete successful
+        res.status(200).json({ message: 'Submission deleted successfully' });
     } catch (error) {
         console.error('Error deleting data from MongoDB:', error);
         res.status(500).json({ error: 'Failed to delete data from the database' });
