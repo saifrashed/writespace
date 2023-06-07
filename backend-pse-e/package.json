@@ -8,7 +8,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node src/index.js",
     "server": "nodemon src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "fixcode": "eslint --fix ."
   },
   "author": "PROJECT SOFTWARE ENGINEERING - GROEP E",
   "license": "ISC",
