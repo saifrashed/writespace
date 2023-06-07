@@ -1,9 +1,20 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
+import useAssignments from "../../../lib/hooks/useAssignments"
+import { Assignment } from "../../../lib/hooks/dummy"
+import Link from "next/link";
 
-const Courses = () => {
+const Course = () => {
   const router = useRouter();
   const { courseId: courseId } = router.query;
+  const { assignments } = useAssignments(courseId);
+
+  function formatDate(dateString: String) {
+    const date = new Date(dateString);
+    const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+    const formattedDate = date.toLocaleString('en-US', options);
+    return formattedDate;
+  }
 
   return (
     <>
@@ -13,8 +24,90 @@ const Courses = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      <div className="flex flex-col md:flex-row">
+        <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-8 md:w-1/5 md:h-[100vh] flex items-center content-center justify-center">
+          <div className="flex flex-col items-center">
+            <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">
+              Automaten en Formele Talen
+            </h5>
+            <span className="text-sm text-gray-500 dark:text-gray-400">
+              5062AUFT6Y
+            </span>
+            {/* <div className="flex mt-4 space-x-3 md:mt-6">
+              <a
+                href="#"
+                className="inline-flex items-center px-2 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                Back
+              </a>
+              <a
+                href="#"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
+              >
+                Message
+              </a>
+            </div> */}
+          </div>
+        </div>
+
+        <div className="relative overflow-x-auto sm:rounded-lg sm:p-2 md:p-4 lg:p-8 md:w-4/5">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-1 py-1 sm:px-3 sm:py-2.5 md:px-6 md:py-3">
+                  Name
+                </th>
+                <th scope="col" className="px-1 py-1 sm:px-3 sm:py-2.5 md:px-6 md:py-3">
+                  Due At
+                </th>
+                <th scope="col" className="px-1 py-1 sm:px-3 sm:py-2.5 md:px-6 md:py-3">
+                  Submission Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {assignments.map((assignment: Assignment, index) => (
+                assignment.published && (
+                  <tr
+                    key={assignment.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <Link
+                      href={`/courses/${courseId}/assignment/${assignment.id}`}
+                    >
+                      <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">{assignment.name}</td>
+                    </Link>
+                    <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
+                      {formatDate(assignment.due_at)}
+                    </td>
+                    <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
+                      <div
+                        className={`flex items-center ${assignment.has_submitted_submissions
+                          ? "text-emerald-400"
+                          : "text-red-500"
+                          } font-bold`}
+                      >
+                        <div
+                          className={`h-2.5 w-2.5 rounded-full ${assignment.has_submitted_submissions
+                            ? "bg-emerald-400"
+                            : "bg-red-500"
+                            } mr-2`}
+                        ></div>
+                        {assignment.has_submitted_submissions
+                          ? "Submitted"
+                          : "Not Submitted"}
+                      </div>
+                    </td>
+                  </tr>
+                )
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </>
   );
 };
 
-export default Courses;
+export default Course;
