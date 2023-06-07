@@ -33,7 +33,7 @@ const Home = () => {
                 <div className=" sm:bg-white sm:border-2 sm:border-transparent sm:rounded-full ">
                   <div className="flex flex-col items-center md:flex-row">
                     <Link href={"/courses"}>
-                      <button type="submit" className="inline-flex items-center justify-center w-full rounded-2xl px-4 py-4 mt-8 font-bold text-white transition-all duration-200 bg-orange-500 border border-transparent sm:w-auto hover:bg-orange-600 focus:bg-orange-600">
+                      <button type="submit" className="inline-flex items-center justify-center w-full rounded-2xl px-4 py-4 mt-8 font-bold text-white transition-all duration-200 bg-yellow-500 border border-transparent sm:w-auto bg-yellow-600">
                         Go to your courses
                       </button>
                     </Link>

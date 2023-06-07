@@ -19,17 +19,12 @@ function useCourses() {
     fetchCourses();
   }, []);
 
-  // // For any other extra function you want to export
-  // const extraFunction = async () => {
-  //   try {
-  //     return { response: "OK" };
-  //   } catch (error) {
-  //     console.log(error)
-  //     throw error.response.data;
-  //   }
-  // };
+  // For any other extra function you want to export
+  const updateCourse = async () => {
+    console.log("UPDATED COURSE")
+  };
 
-  return { courses: coursesData };
+  return { courses: coursesData, updateCourse };
 }
 
 export default useCourses;
