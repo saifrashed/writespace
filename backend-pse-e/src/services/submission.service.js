@@ -166,13 +166,13 @@ router.put('/update/grade/', async (req, res) => {
 });
 
 // Updates the submitted file, along with the new date of submission.
-router.put('/update/file/', async (req, res) => {
+router.put('/update/file/', upload.single('file'), async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId
-        const newFileType = req.body.filetype;
-        const newFileName = req.body.filename;
-        const newFileData = req.body.fileData;
+        const newFileType = req.file.mimetype
+        const newFileName = req.file.originalname;
+        const newFileData = req.file.buffer;
         const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
@@ -203,19 +203,17 @@ router.put('/update/file/', async (req, res) => {
 });
 
 // PUT request (updates something in the db)
-router.put('/update/', async (req, res) => {
+router.put('/update/', upload.single('file'), async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId
         const updatedSubmission = {
             userId: req.body.userId,
             assignmentId: req.body.assignmentId,
-            submissionDate: req.body.submissionDate,
-            submissionGrade: req.body.submissionGrade,
-            submissionStatus: req.body.submissionStatus,
-            filetype: req.body.filetype,
-            filename: req.body.filename,
-            fileData: req.body.fileData
+            submissionDate: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
+            filetype: req.file.mimetype,
+            filename: req.file.originalname,
+            fileData: req.file.buffer
         };
 
         // Find the existing test by testId and update it
