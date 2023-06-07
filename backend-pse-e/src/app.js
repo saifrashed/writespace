@@ -12,6 +12,7 @@ require("./config/databaseConfig").connect();
 
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require('body-parser');
 
 // Import ObjectId from MongoDB
 const { ObjectId } = require('mongodb');
@@ -23,6 +24,7 @@ app.use(cors(corsOptions))
 // Express
 app.use(express.json())
 app.use(express.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // ************************* Add new services here *************************

@@ -5,6 +5,11 @@
 const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
+const multer = require('multer');
+
+// Configure multer storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 // ************************* This can be coppied for every new service *************************
 
 // ************************* Copy and change this with the model you added *************************
@@ -66,37 +71,43 @@ router.get("/findByUserId/:userId", async (req, res) => {
 
 
 // Find submissions by id.
-// This gets one test with an ObjectId from MongoDB
-// router.get("/findBySubmissionId/:submissionId", async (req, res) => {
-//     try {
-//         // Find the object using an attribute of the object
-//         const result = await submissionModel.find({ 'submissionId': req.params.submissionId });
-//         // If the object is not fount give an error
-//         if (result.length === 0) {
-//             return res.status(404).json({ error: 'Object not found' });
-//         }
+router.get("/findSpecificSubmission/", async (req, res) => {
+    try {
+        // Find the object using an attribute of the object
+        const userId = req.query.userId;
+        const assignmentId = req.query.assignmentId;
 
-//         // Handle success case here
-//         res.status(200).json(result);
-//     } catch (error) {
-//         console.error('Error from MongoDB:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
+        const result = await submissionModel.find({
+            'assignmentId': assignmentId,
+            'userId': userId
+        });
+        // If the object is not fount give an error
+        if (result.length === 0) {
+            return res.status(404).json({ error: 'Object not found' });
+        }
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
 
 // Post request (creates something in the db)
-router.post('/save', async (req, res) => {
+router.post('/save', upload.single('file'), async (req, res) => {
     try {
-        console.log(req.body);
+        console.log(req.body)
+        console.log(req.file)
         // Variables for the model
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;
         const submissionDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }); // Off by two hours
         const submissionGrade = null;
         const submissionStatus = "ungraded";
-        const filetype = req.body.filetype;
-        const filename = req.body.filename;
-        const fileData = req.body.fileData;
+        const filetype = req.file.mimetype;
+        const filename = req.file.originalname;
+        const fileData = req.file.buffer;
 
         // Create a new instance of the submission model
         const newSubmission = new submissionModel({
@@ -234,7 +245,7 @@ router.delete('/deleteAll/:assignmentId', async (req, res) => {
         const assignmentId = req.params.assignmentId;
 
         // Find the document by submissionId and remove it
-        const result = await submissionModel.deleteMany({'assignmentId': assignmentId});
+        const result = await submissionModel.deleteMany({ 'assignmentId': assignmentId });
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
@@ -256,8 +267,10 @@ router.delete('/deleteOne/', async (req, res) => {
         const assignmentId = req.body.assignmentId;
 
         // Find the document by submissionId and remove it
-        const result = await submissionModel.deleteOne({ 'userId': userId,
-                                            'assignmentId': assignmentId});
+        const result = await submissionModel.deleteOne({
+            'userId': userId,
+            'assignmentId': assignmentId
+        });
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
