@@ -7,11 +7,11 @@ import "../styles/tailwind.css";
 import "../styles/index.css";
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const router = useRouter();
-
-  return <AnimatePresence mode="wait">
-    <Component {...pageProps} key={router.route}/>
-  </AnimatePresence>
+  return (
+    <AnimatePresence mode="wait">
+      <Component {...pageProps} />
+    </AnimatePresence>
+  )
 };
 
 export default App;
