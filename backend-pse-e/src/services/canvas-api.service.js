@@ -19,6 +19,7 @@ the user with the access token.
 Postman request URL: localhost:5000/canvas-api/courses
 */
 router.get('/courses', (req, res) => {
+    // Canvas API url
     axios.get(`${apiUrl}/courses`, {
       headers: {
         // Authorization using the access token
@@ -34,6 +35,7 @@ router.get('/courses', (req, res) => {
 
 // Get general user information
 router.get('/user-information', (req, res) => {
+    // Canvas API url
     axios.get(`${apiUrl}/users/self`, {
       headers: {
         // Authorization using the access token
@@ -46,5 +48,18 @@ router.get('/user-information', (req, res) => {
         res.status(500).json({ error: 'An error occurred.' });
     });
 });
+
+// Login request
+// router.get('/login', (req, res) => {
+//     const queryParams = new URLSearchParams({
+//       client_id: YOUR_CLIENT_ID,
+//       response_type: 'code',
+//       redirect_uri: YOUR_REDIRECT_URI
+//     });
+  
+//     const loginUrl = `${apiUrl}/login/oauth2/auth?${queryParams}`;
+  
+//     res.redirect(loginUrl);
+// });
 
 module.exports = router;
