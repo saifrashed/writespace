@@ -18,34 +18,63 @@ const staggerContainer = (staggerChildren, delayChildren) => ({
 
 const exploreCourses = [
   {
-    id: '1',
+    id: 1,
     gradient: 'bg-gradient-to-br from-purple-500 via-pink-500 to-red-500',
     title: 'Automaten & Formele Talen',
   },
   {
-    id: '2',
+    id: 2,
     gradient: 'bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500',
     title: 'Project Software Engineering',
   },
   {
-    id: '3',
+    id: 3,
     gradient: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500',
     title: 'Logic & Modeling',
   },
   {
-    id: '4',
+    id: 4,
     gradient: 'bg-gradient-to-br from-green-400 via-blue-500 to-indigo-500',
     title: 'Compiler Construction',
   },
   {
-    id: '5',
+    id: 5,
     gradient: 'bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-500',
     title: 'Programming Languages',
   },
+  {
+    id: 6,
+    gradient: 'bg-gradient-to-br from-green-400 via-blue-500 to-indigo-500',
+    title: 'dasda',
+  },
+  // {
+  //   id: '7',
+  //   gradient: 'bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-500',
+  //   title: 'adas',
+  // },
+  // {
+  //   id: '8',
+  //   gradient: 'bg-gradient-to-br from-green-400 via-blue-500 to-indigo-500',
+  //   title: 'Compa',
+  // },
+  // {
+  //   id: '9',
+  //   gradient: 'bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-500',
+  //   title: 's Languages',
+  // },
+  // {
+  //   id: '10',
+  //   gradient: 'bg-gradient-to-br from-green-400 via-blue-500 to-indigo-500',
+  //   title: 'sd Construction',
+  // },
 ];
 
 const Explore = () => {
-  const [active, setActive] = useState('3');
+  const [active, setActive] = useState(1);
+  const totalCards = exploreCourses.length;
+  const cardWidthPercentage = totalCards > 0 ? 100 / totalCards : 100;
+  console.log(active);
+
 
   return (
     <section className={'sm:p-16 xs:p-8 px-6 py-[3rem]'} id="explore">
@@ -54,7 +83,7 @@ const Explore = () => {
         initial="hidden"
         whileInView="show"
         viewport={{ once: false, amount: 0.25 }}
-        className={'2xl:max-w-[1280px] w-full mx-auto flex flex-col'}
+      // className={'2xl:max-w-[1280px] w-full mx-auto flex flex-col'}
       >
         <TitleText
           title={<>Choose the course you want <br className="md:block hidden" /> to explore</>}
@@ -62,13 +91,17 @@ const Explore = () => {
         />
         <div className="mt-[50px] flex lg:flex-row flex-col min-h-[70vh] gap-5">
           {exploreCourses.map((world, index) => (
-            <ExploreCard
+            <div
               key={world.id}
-              {...world}
-              index={index}
-              active={active}
-              handleClick={setActive}
-            />
+              style={{ width: `${active === world.id ? (cardWidthPercentage * 2).toFixed(2) : cardWidthPercentage.toFixed(2)}%` }}
+            >
+              <ExploreCard
+                {...world}
+                index={index}
+                active={active}
+                handleClick={setActive}
+              />
+            </div>
           ))}
         </div>
       </motion.div>

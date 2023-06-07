@@ -2,6 +2,8 @@
 
 import { motion } from 'framer-motion';
 import { NextRouter, useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useRef } from 'react';
 
 const handleCardClick = (router: NextRouter, handleClick: Function, active: Number, id: Number, gradient: String, title: String) => {
   active === id ? router.push(`courses/${id}`) : handleClick(id)
@@ -9,10 +11,21 @@ const handleCardClick = (router: NextRouter, handleClick: Function, active: Numb
 
 export const ExploreCard = ({ id, gradient, title, active, handleClick }) => {
   const router = useRouter();
+  const cardRef = useRef(null);
+  let cardWidth = 0;
+
+  useEffect(() => {
+    if (cardRef.current) {
+      cardWidth = cardRef.current.offsetWidth;
+    }
+  }, [cardRef]);
+  const cardClassName = `relative overflow-hidden ${
+    active === id ? `lg:flex-${cardWidth * 2}` : `lg:flex-${cardWidth}`
+  } items-center justify-center min-w-[170px] h-[32rem] transition-[flex] duration-[0.7s] ease-out-flex cursor-pointer`;
 
   return <motion.div
-    className={`relative overflow-hidden ${active === id ? 'xl:flex-[3.5] lg:flex-[5] flex-[10]' : 'xl-flex[0.5] lg:flex-[1] flex-[2]'
-      } flex items-center justify-center min-w-[170px] h-[32rem] transition-[flex] duration-[0.7s] ease-out-flex cursor-pointer`}
+  ref={cardRef}
+  className={cardClassName}
     onClick={() => handleCardClick(router, handleClick, active, id, gradient, title)}
   >
     <div
