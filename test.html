@@ -78,8 +78,8 @@
 
         getButton.addEventListener("click", async () => {
             try {
-                const userId = "henk";
-                const assignmentId = "assignment3";
+                const userId = "bob123";
+                const assignmentId = "test123";
                 const url = `http://localhost:5000/submission/findSpecificSubmission?userId=${userId}&assignmentId=${assignmentId}`;
                 const response = await fetch(url);
                 const submissions = await response.json();
@@ -90,7 +90,7 @@
                     // console.log(submission.fileData.data);
                     const base64String = hexArrayToBase64(submission.fileData.data);
                     // console.log(base64String)
-                    img.src = "fileData:image/png;base64," + base64String;
+                    img.src = "data:image/png;base64," + base64String;
                     img.style.maxWidth = "100%";
                     responseDiv.appendChild(img);
                 });
