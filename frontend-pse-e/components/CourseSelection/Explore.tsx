@@ -18,34 +18,34 @@ const staggerContainer = (staggerChildren, delayChildren) => ({
 
 const exploreCourses = [
   {
-    id: 'course-1',
+    id: '1',
     gradient: 'bg-gradient-to-br from-purple-500 via-pink-500 to-red-500',
     title: 'Automaten & Formele Talen',
   },
   {
-    id: 'course-2',
+    id: '2',
     gradient: 'bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500',
     title: 'Project Software Engineering',
   },
   {
-    id: 'course-3',
+    id: '3',
     gradient: 'bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500',
     title: 'Logic & Modeling',
   },
   {
-    id: 'course-4',
+    id: '4',
     gradient: 'bg-gradient-to-br from-green-400 via-blue-500 to-indigo-500',
     title: 'Compiler Construction',
   },
   {
-    id: 'course-5',
+    id: '5',
     gradient: 'bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-500',
     title: 'Programming Languages',
   },
 ];
 
 const Explore = () => {
-  const [active, setActive] = useState('course-2');
+  const [active, setActive] = useState('3');
 
   return (
     <section className={'sm:p-16 xs:p-8 px-6 py-[3rem]'} id="explore">

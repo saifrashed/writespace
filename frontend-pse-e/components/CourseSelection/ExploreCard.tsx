@@ -1,22 +1,10 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/router';
+import { NextRouter, useRouter } from 'next/router';
 
-const handleCardClick = (router, handleClick, active, id, gradient, title) => {
-  if (active === id) {
-    router.push(
-      {
-        // pathname: `/course-overview`, 
-        pathname: `/course-overview/${id}`,
-        // query: { courseId: id },
-        shallow: true,
-        state: { gradient, title }
-      },
-    );
-  } else {
-    handleClick(id);
-  }
+const handleCardClick = (router: NextRouter, handleClick: Function, active: Number, id: Number, gradient: String, title: String) => {
+  active === id ? router.push(`courses/${id}`) : handleClick(id)
 };
 
 export const ExploreCard = ({ id, gradient, title, active, handleClick }) => {
