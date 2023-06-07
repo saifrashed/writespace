@@ -28,8 +28,10 @@ app.use(express.json({ limit: "50mb" }));
 // ************************* Add new services here *************************
 // Import services here
 const testService = require('./services/test.service.js');
+const canvasService = require('./services/canvas-api.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
+app.use('/canvas-api', canvasService);
 
 
 // ************************* General requests *************************
