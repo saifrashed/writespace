@@ -1,3 +1,4 @@
+// This service communicates with the Canvas API
 const express = require('express');
 const router = express.Router();
 
@@ -8,7 +9,7 @@ const axios = require('axios');
 const apiUrl = 'https://canvas.uva.nl/api/v1';
 // Change this access token every time for different users!
 // See Canvas_API document in discord on how to get an access token
-const accessToken = 'YOUR_ACCESS_TOKEN_HERE';
+const accessToken = '10392~qSVcCb3DoNHbTt2luk1QS88w2tvzUsmfFjEXqVOm65zgz6GLXpvr7SIG2dJJYNNo';
 // TODO: use OAuth from Canvas documentation to extract access token?? Use Developer key settings??
 
 /* 
@@ -49,7 +50,7 @@ router.get('/user-information', (req, res) => {
     });
 });
 
-// Login request
+// Login request (not done yet, need developer key setup)
 // router.get('/login', (req, res) => {
 //     const queryParams = new URLSearchParams({
 //       client_id: YOUR_CLIENT_ID,
