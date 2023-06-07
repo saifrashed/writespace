@@ -61,14 +61,17 @@
         });
 
         function hexArrayToBase64(hexArray) {
+            // Convert integers to hexadecimal strings
+            const hexStrings = hexArray.map(value => value.toString(16).padStart(2, '0'));
+
             // Convert hex array to string
-            const hexString = hexArray.join("");
+            const hexString = hexStrings.join('');
 
-            // Convert hex string to ArrayBuffer
-            const arrayBuffer = new Uint8Array(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))).buffer;
+            // Convert hex string to bytes
+            const bytes = new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
 
-            // Convert ArrayBuffer to base64
-            const base64String = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
+            // Encode bytes to base64 string
+            const base64String = btoa(String.fromCharCode.apply(null, bytes));
 
             return base64String;
         }
@@ -84,10 +87,10 @@
 
                 submissions.forEach((submission) => {
                     const img = document.createElement("img");
-                    console.log(submission.fileData.data);
+                    // console.log(submission.fileData.data);
                     const base64String = hexArrayToBase64(submission.fileData.data);
-                    console.log(base64String)
-                    img.src = "data:image/png;base64," + base64String;
+                    // console.log(base64String)
+                    img.src = "fileData:image/png;base64," + base64String;
                     img.style.maxWidth = "100%";
                     responseDiv.appendChild(img);
                 });
