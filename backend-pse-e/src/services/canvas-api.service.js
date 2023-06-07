@@ -10,8 +10,7 @@ const apiUrl = 'https://canvas.uva.nl/api/v1';
 
 // Change this access token every time for different users!
 // See Canvas_API document in discord on how to get an access token
-const accessToken = '';
-// TODO: use OAuth from Canvas documentation to extract access token?? Use Developer key settings??
+const accessToken = 'YOUR_ACCESS_TOKEN_HERE';
 
 /* 
 Get request to get all courses with the api.
@@ -64,18 +63,5 @@ router.get('/user-information', (req, res) => {
     res.status(500).json({ error: 'An error occurred.' });
   });
 });
-
-// Login request (not done yet, need developer key setup)
-// router.get('/login', (req, res) => {
-//     const queryParams = new URLSearchParams({
-//       client_id: YOUR_CLIENT_ID,
-//       response_type: 'code',
-//       redirect_uri: YOUR_REDIRECT_URI
-//     });
-
-//     const loginUrl = `${apiUrl}/login/oauth2/auth?${queryParams}`;
-
-//     res.redirect(loginUrl);
-// });
 
 module.exports = router;
