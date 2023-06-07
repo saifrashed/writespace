@@ -9,6 +9,7 @@ const apiUrl = 'https://canvas.uva.nl/api/v1';
 // Change this access token every time for different users!
 // See Canvas_API document in discord on how to get an access token
 const accessToken = 'YOUR_ACCESS_TOKEN_HERE';
+// TODO: use OAuth from Canvas documentation to extract access token?? Use Developer key settings??
 
 /* 
 Get request to get all courses with the api.
