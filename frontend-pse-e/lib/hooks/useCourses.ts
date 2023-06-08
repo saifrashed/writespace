@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { courses } from "./dummy"
+import { Course, courses } from "./dummy"
 
 function useCourses() {
-  const [coursesData, setCoursesData] = useState([]);
+  const [coursesData, setCoursesData] = useState<Course[]>([]);
 
   // Start off making an API call
   useEffect(() => {

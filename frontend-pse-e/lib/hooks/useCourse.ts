@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { courses } from "./dummy"
+import { Course, courses } from "./dummy"
 import axios from 'axios';
 
-function useCourse(courseId) {
-    const [courseData, setCourseData] = useState([]);
+function useCourse(courseId: Number) {
+    const [courseData, setCourseData] = useState<Course>();
 
     // Start off making an API call
     useEffect(() => {
@@ -11,7 +11,8 @@ function useCourse(courseId) {
             try {
                 // const response = await axios.post('https://writespace.onrender.com/assignments', { courseId: courseId });
                 // const response = await axios.get('https://writespace.onrender.com/test/getAll');
-                const course = courses.filter((course) => course.id == courseId)[0];
+                const course = courses.find((course) => course.id === courseId);
+
                 setCourseData(course)
             } catch (error) {
                 console.log(error)
