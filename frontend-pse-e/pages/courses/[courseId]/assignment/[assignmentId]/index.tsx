@@ -18,8 +18,8 @@ const Assignments = () => {
   const [selectedLink, setSelectedLink] = useState<number>(1);
 
   const assignmentContent: ContentItem[] = [
-    { id: 1, label: "Description", content: "Content description" },
-    { id: 2, label: "Rubric", content: "Content rubric" },
+    { id: 1, label: "Description", content: "Content description" }
+    // { id: 2, label: "Rubric", content: "Content rubric" },
   ];
 
   const handleLinkClick = (linkId: number) => {
