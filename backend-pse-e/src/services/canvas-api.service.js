@@ -8,53 +8,14 @@ const axios = require('axios');
 // Canvas api url
 const apiUrl = 'https://canvas.uva.nl/api/v1';
 
-// Change this access token every time for different users!
-// See Canvas_API document in discord on how to get an access token
-const accessToken = 'YOUR_ACCESS_TOKEN_HERE';
-
-/* 
-Get request to get all courses with the api.
-router.x is used to specify the used route.
-axios is used to communicate with the canvas api and authenticate
-the user with the access token.
-Postman request URL: localhost:5000/canvas-api/courses
-*/
-router.get('/courses', (req, res) => {
-  // Canvas API url
-  axios.get(`${apiUrl}/courses`, {
-    headers: {
-      // Authorization using the access token
-      Authorization: `Bearer ${accessToken}`
-    }
-  }).then(response => {
-    res.json(response.data);
-  }).catch(error => {
-    console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
-  });
-});
-
-router.post('/assignments', (req, res) => {
-  const courseId = req.body.courseId;
-  axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`
-    }
-  }).then(response => {
-    res.json(response.data);
-  }).catch(error => {
-    console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
-  });
-});
-
-// Get general user information
-router.get('/user-information', (req, res) => {
+// Get general user information (is a post because a get cannot have a body)
+router.post('/get-user', (req, res) => {
+  const token = req.body.token;
   // Canvas API url
   axios.get(`${apiUrl}/users/self`, {
     headers: {
       // Authorization using the access token
-      Authorization: `Bearer ${accessToken}`
+      Authorization: `Bearer ${token}`
     }
   }).then(response => {
     res.json(response.data);
@@ -65,11 +26,11 @@ router.get('/user-information', (req, res) => {
 });
 
 // Route to get assignments for a course with a user access token
-router.post('/coursesWithToken', (req, res) => {
-  const accessTokenFE = req.body.accessTokenFE;
+router.post('/courses', (req, res) => {
+  const token = req.body.token;
   axios.get(`${apiUrl}/courses`, {
     headers: {
-      Authorization: `Bearer ${accessTokenFE}`
+      Authorization: `Bearer ${token}`
     }
   }).then(response => {
     res.json(response.data);
@@ -80,11 +41,11 @@ router.post('/coursesWithToken', (req, res) => {
 });
 
 // Get all assignments of a course with a user access token
-router.post('/assignmentsWithToken', (req, res) => {
-  const { courseId, accessTokenFE } = req.body;
+router.post('/assignments', (req, res) => {
+  const { courseId, token } = req.body;
   axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
     headers: {
-      Authorization: `Bearer ${accessTokenFE}`
+      Authorization: `Bearer ${token}`
     }
   }).then(response => {
     res.json(response.data);
@@ -96,10 +57,10 @@ router.post('/assignmentsWithToken', (req, res) => {
 
 // Get one course with a user access token
 router.post('/courses/:courseId', (req, res) => {
-  const accessTokenFE = req.body.accessTokenFE;
+  const token = req.body.token;
   axios.get(`${apiUrl}/courses/${req.params.courseId}`, {
     headers: {
-      Authorization: `Bearer ${accessTokenFE}`
+      Authorization: `Bearer ${token}`
     }
   }).then(response => {
     res.json(response.data);
@@ -111,10 +72,10 @@ router.post('/courses/:courseId', (req, res) => {
 
 // Get one assignment from a course with a user access token
 router.post('/courses/:courseId/:assignmentId', (req, res) => {
-  const accessTokenFE = req.body.accessTokenFE;
+  const token = req.body.token;
   axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
     headers: {
-      Authorization: `Bearer ${accessTokenFE}`
+      Authorization: `Bearer ${token}`
     }
   }).then(response => {
     res.json(response.data);
