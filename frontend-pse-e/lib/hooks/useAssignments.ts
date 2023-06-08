@@ -11,9 +11,7 @@ function useAssigments(courseId: Number) {
       try {
         // const response = await axios.post('https://writespace.onrender.com/assignments', { courseId: courseId });
         // const response = await axios.get('https://writespace.onrender.com/test/getAll');
-        const filteredAssignments: Assignment[] = assignments.filter((assignment) => assignment.course_id === courseId);
-        console.log(filteredAssignments);
-        
+        const filteredAssignments: Assignment[] = assignments.filter((assignment) => assignment.course_id === courseId);        
         setAssignmentsData(filteredAssignments)
       } catch (error) {
         console.log(error)
