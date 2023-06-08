@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Assignment, assignments } from "./dummy"
 import axios from 'axios';
+import config from "../config";
+import { Assignment } from "../types";
 
 function useAssigments(courseId: Number) {
   const [assignmentsData, setAssignmentsData] = useState<Assignment[]>([]);
@@ -11,8 +12,7 @@ function useAssigments(courseId: Number) {
       try {
         // const response = await axios.post('https://writespace.onrender.com/assignments', { courseId: courseId });
         // const response = await axios.get('https://writespace.onrender.com/test/getAll');
-        const filteredAssignments: Assignment[] = assignments.filter((assignment) => assignment.course_id === courseId);        
-        setAssignmentsData(filteredAssignments)
+        setAssignmentsData([])
       } catch (error) {
         console.log(error)
       }
@@ -20,17 +20,9 @@ function useAssigments(courseId: Number) {
     fetchAssignments();
   }, [courseId]);
 
-  // // For any other extra function you want to use
-  // const extraFunction = async () => {
-  //   try {
-  //     return { response: "OK" };
-  //   } catch (error) {
-  //     console.log(error)
-  //     throw error.response.data;
-  //   }
-  // };
 
   return { assignments: assignmentsData };
 }
+
 
 export default useAssigments;

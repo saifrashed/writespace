@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { setCookie, removeCookie, getCookie } from "./cookie"
+import { setCookie, removeCookie, getCookie } from "../cookie"
 import { useEffect, useState } from "react";
 
 /**

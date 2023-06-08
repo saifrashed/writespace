@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Course, courses } from "./dummy"
 import axios from 'axios';
+import config from "../config";
+import { Course } from "../types";
 
 function useCourse(courseId: Number) {
-    const [courseData, setCourseData] = useState<Course>();
+    const [courseData, setCourseData] = useState<Course | any>();
 
     // Start off making an API call
     useEffect(() => {
@@ -11,8 +12,7 @@ function useCourse(courseId: Number) {
             try {
                 // const response = await axios.post('https://writespace.onrender.com/assignments', { courseId: courseId });
                 // const response = await axios.get('https://writespace.onrender.com/test/getAll');
-                const course = courses.find((course) => course.id === courseId);
-                setCourseData(course)
+                setCourseData({})
             } catch (error) {
                 console.log(error)
             }
