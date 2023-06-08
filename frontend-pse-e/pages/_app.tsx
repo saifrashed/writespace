@@ -10,18 +10,6 @@ import "../styles/index.css";
 import { useEffect } from "react";
 
 const App = ({ Component, pageProps }: AppProps) => {
-  const { token } = useAuthentication();
-  const router = useRouter()
-
-  /**
-   * Navigate to courses if user is logged in.
-   */
-  useEffect(() => {
-    if (token) {
-      router.push("/courses")
-    }
-  }, [token])
-
   return (
     <>
       <Toaster position="bottom-right" />
