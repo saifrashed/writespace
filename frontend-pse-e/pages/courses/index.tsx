@@ -5,10 +5,15 @@ import { Course } from "../../lib/hooks/dummy"
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import NavBar from "@/components/NavBar";
+import { useEffect } from "react";
 
 const Courses = () => {
   const { token } = useAuthentication();
-  const { courses } = useCourses(token);
+  const { courses, getCourses } = useCourses();
+
+  useEffect(() => {
+    getCourses(token)
+  }, [])
 
   return (
     <>
@@ -28,8 +33,6 @@ const Courses = () => {
             <p className="max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600">A course selection that we pulled from your Canvas account.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5">
-
-
             {courses.map((course: Course, index) => (
               <Link href={"/courses/" + course.id} key={index}>
                 <div className="flex flex-col justify-center items-center bg-yellow-500 bg-opacity-50 backdrop-blur hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 hover:scale-110 p-2 transition-all">
