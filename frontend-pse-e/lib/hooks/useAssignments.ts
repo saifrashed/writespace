@@ -4,31 +4,22 @@ import config from "../config";
 import { Assignment } from "../types";
 import { useNotification } from "./useNotification";
 
-function useAssigments(courseId: Number, token: string) {
+function useAssigments() {
   const { onSuccess, onError } = useNotification()
   const [assignmentsData, setAssignmentsData] = useState<Assignment[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
-  // Start off making an API call
-  useEffect(() => {
-    if (token && courseId) {
-      const fetchAssignments = async () => {
-        try {
-          const response = await axios.post(`${config.baseUrl}/canvas-api/assignments`, { token, courseId });
-          setAssignmentsData(response.data)
-          setIsLoading(false)
-        } catch (error) {
-          console.log(error)
-          onError("Something went wrong")
-        }
-      };
-      fetchAssignments();
+  const getAssignments = async (courseId: Number, token: string) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/canvas-api/assignments`, { token, courseId });
+      setAssignmentsData(response.data)
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
     }
-  }, [courseId]);
-
-
-  return { assignments: assignmentsData, isLoading: isLoading };
+  }
+  return { assignments: assignmentsData, isLoading, getAssignments };
 }
-
 
 export default useAssigments;

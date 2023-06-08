@@ -6,22 +6,29 @@ import { Assignment } from "../../../lib/hooks/dummy"
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { motion } from "framer-motion";
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Context } from '@/Context';
 
 const CourseOverview = () => {
   const router = useRouter();
-  
-  const { courseId: courseIdString } = router.query;
-  const courseId = parseInt(courseIdString as string, 10);
 
+  const { courseId } = router.query;
   const { token } = useAuthentication();
-  const { assignments, isLoading } = useAssignments(courseId, token);
+
+  const { assignments, isLoading, getAssignments } = useAssignments();
 
   const { course: contextCourse } = useContext(Context); // When pressing a course
-  const { course: fetchedCourse } = useCourse(courseId, token); // When navigating to a course via url 
-  const course = contextCourse || fetchedCourse; 
-  
+  const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url 
+  const course = contextCourse || fetchedCourse;
+
+  useEffect(() => {
+    if (courseId && token) {
+      getAssignments(parseInt(courseId.toString()), token)
+      getCourse(parseInt(courseId.toString()), token)
+    }
+  }, [router.query]);
+
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {
@@ -51,7 +58,7 @@ const CourseOverview = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              layoutId={courseId}
+              layoutId={course?.id}
               className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">
               {course?.name}
             </motion.h5>
