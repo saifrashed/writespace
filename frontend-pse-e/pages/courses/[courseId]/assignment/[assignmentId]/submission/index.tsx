@@ -105,7 +105,7 @@ const ViewSubmission: React.FC = () => {
             />
             <button
               onClick={goToPage}
-              className="bg-pink-500 hover:bg-blue-300 text-white font-bold py-1 px-2 rounded"
+              className="bg-yellow-500 hover:bg-blue-300 text-white font-bold py-1 px-2 rounded"
             >
               Go
             </button>

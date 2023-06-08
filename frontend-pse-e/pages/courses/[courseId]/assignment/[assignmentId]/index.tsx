@@ -2,16 +2,29 @@ import Head from "next/head";
 import Image from "next/image";
 import NavBar from "../../../../../components/NavBar";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import Link from 'next/link';
 
-interface AssignmentsProps {
+interface ContentItem {
   id: number;
+  label: string;
+  content: string
 }
 
-const Assignments: React.FC<AssignmentsProps> = () => {
+const Assignments = () => {
   const router = useRouter();
   const { courseId: courseId, assignmentId: assignmentId } = router.query;
+
+  const [selectedLink, setSelectedLink] = useState<number>(1);
+
+  const assignmentContent: ContentItem[] = [
+    { id: 1, label: "Description", content: "Content description"},
+    { id: 2, label: "Rubric", content: "Content rubric"},
+  ];
+
+  const handleLinkClick = (linkId: number) => {
+    setSelectedLink(linkId);
+  };
 
   return (
     <>
@@ -25,7 +38,7 @@ const Assignments: React.FC<AssignmentsProps> = () => {
       <NavBar />
 
       <div className="bg-gray-50 min-h-screen py-10 mt-12">
-        <div className="max-w-5xl mx-auto px-6"> {/* Increase the max width here */}
+        <div className="max-w-5xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold">Assignments</h1>
             <div className="space-x-4">
@@ -35,22 +48,33 @@ const Assignments: React.FC<AssignmentsProps> = () => {
 
           <div className="flex">
             <div className="flex-1 p-4 bg-white rounded-lg shadow-lg mr-4">
-              <p className="text-sm text-gray-500">Left Box</p>
+              {assignmentContent.map((obj) => (
+                <div key={obj.id}>
+                  <button
+                    onClick={() => handleLinkClick(obj.id)}
+                    className={`text-sm text-gray-500 underline cursor-pointer ${
+                      selectedLink === obj.id ? "font-bold" : ""
+                    }`}
+                  >
+                    {obj.label}
+                  </button>
+                </div>
+              ))}
             </div>
 
-            <div className="flex-2 p-4 bg-white rounded-lg shadow-lg mx-2"> {/* Increase the width here */}
+            <div className="flex-2 p-4 bg-white rounded-lg shadow-lg mx-2">
               <div className="flex space-x-4">
                 <div className="w-1/4">
                   <p className="text-sm text-gray-500">Dummy Text</p>
                 </div>
                 <div className="w-3/4">
-                  <p className="text-lg text-gray-800">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                    Mauris consectetur dignissim metus, et rhoncus leo. Nulla
-                    iaculis euismod quam, vitae euismod mi lacinia in.
-                    Pellentesque rhoncus, massa a eleifend pellentesque, metus
-                    ex congue est, a scelerisque nunc turpis nec sapien.
-                  </p>
+                  {assignmentContent.map((obj) => (
+                    selectedLink === obj.id && (
+                      <p key={obj.id} className="text-lg text-gray-800">
+                        {obj.content}
+                      </p>
+                    )
+                  ))}
                 </div>
               </div>
             </div>
@@ -58,11 +82,13 @@ const Assignments: React.FC<AssignmentsProps> = () => {
             <div className="flex-1 p-4 bg-white rounded-lg shadow-lg ml-4">
               <div className="text-sm text-gray-500">Right Box</div>
               <div className="flex flex-col mt-4">
-                <button className="block py-2 px-4 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition-colors">
-                  Button 5
+                <button className="block py-2 px-4 bg-yellow-500 text-white rounded-md hover:bg-pink-600 transition-colors">
+                  Upload file
                 </button>
-                <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission`}>
-                  <button className="block py-2 px-4 bg-pink-500 text-white rounded-md hover:bg-pink-600 transition-colors mt-2">
+                <Link
+                  href={`/courses/${courseId}/assignment/${assignmentId}/submission`}
+                >
+                  <button className="block py-2 px-4 bg-yellow-500 text-white rounded-md hover:bg-pink-600 transition-colors mt-2">
                     View submission
                   </button>
                 </Link>
