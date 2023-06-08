@@ -5,27 +5,23 @@ import axios from 'axios'
 import { useNotification } from "./useNotification";
 import { Context } from "@/Context";
 
-function useCourses(token: string) {
+function useCourses() {
   const { onSuccess, onError } = useNotification()
   const [coursesData, setCoursesData] = useState<Course[]>([]);
   const { setCourses } = useContext(Context);
 
-  // Start off making an API call
-  useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const response = await axios.post(`${config.baseUrl}/canvas-api/courses`, { token: token });
-        setCoursesData(response.data)
-        setCourses(response.data)
-      } catch (error) {
-        console.log(error)
-        onError("Something went wrong")
-      }
-    };
-    fetchCourses();
-  }, []);
+  const getCourses = async (token: string) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/canvas-api/courses`, { token: token });
+      setCoursesData(response.data)
+      setCourses(response.data)
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
+    }
+  }
 
-  return { courses: coursesData };
+  return { courses: coursesData, getCourses };
 }
 
 export default useCourses;

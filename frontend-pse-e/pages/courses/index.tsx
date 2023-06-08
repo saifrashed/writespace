@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -13,8 +13,12 @@ const Courses = () => {
   const { setCourse } = useContext(Context);
 
   const { courses: contextCourses } = useContext(Context);
-  const { courses: fetchedCourses } = useCourses(token);
-
+  const { courses: fetchedCourses, getCourses } = useCourses();
+  
+  useEffect(() => {
+    getCourses(token)
+  }, [])
+  
   const courses = contextCourses || fetchedCourses;
 
   const isLoading = courses.length === 0
