@@ -5,10 +5,15 @@ import { Course } from "../../lib/hooks/dummy"
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import NavBar from "@/components/NavBar";
+import { useEffect } from "react";
 
 const Courses = () => {
   const { token } = useAuthentication();
-  const { courses } = useCourses(token);
+  const { courses, getCourses } = useCourses();
+
+  useEffect(() => {
+    getCourses(token)
+  }, [])
 
   return (
     <>

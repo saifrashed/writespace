@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import useAssignments from "../../../lib/hooks/useAssignments"
 import useCourse from "@/lib/hooks/useCourse";
 import { Assignment } from "../../../lib/hooks/dummy"
+import { useEffect } from "react";
 import { Course } from "../../../lib/hooks/dummy"
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
@@ -10,11 +11,18 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 const CourseOverview = () => {
   const { token } = useAuthentication();
   const router = useRouter();
-  const { courseId: courseIdString } = router.query;
-  const courseId = parseInt(courseIdString as string, 10);
+  const { courseId } = router.query;
 
-  const { assignments, isLoading } = useAssignments(courseId, token);
-  const { course } = useCourse(courseId, token);
+  const { assignments, isLoading, getAssignments } = useAssignments();
+  const { course, getCourse } = useCourse();
+
+  useEffect(() => {
+    if (courseId && token) {
+      getAssignments(parseInt(courseId.toString()), token)
+      getCourse(parseInt(courseId.toString()), token)
+    }
+  }, [router.query]);
+
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

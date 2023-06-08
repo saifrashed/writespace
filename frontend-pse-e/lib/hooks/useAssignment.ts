@@ -1,32 +1,24 @@
-/**
- * This is an example hook that can be used to create new API
- * interfaces for any kind of datatype (courses, assignments, user
- * and more...)
- */
-
 import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../config";
 import { useNotification } from "./useNotification";
+import { Assignment } from "../types";
 
-function useAssignment(courseId: number, assignmentId: number, token: string) {
-  const [assignment, setAssignment] = useState({});
+function useAssignment() {
+  const [assignment, setAssignment] = useState<Assignment>();
   const { onSuccess, onError } = useNotification()
 
-  useEffect(() => {
-    const fetchAssignment = async () => {
-      try {
-        const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}`, { token })
-        setAssignment(response.data)
-      } catch (error) {
-        console.log(error)
-        onError("Something went wrong")
-      }
-    };
-    fetchAssignment();
-  }, []);
+  const getAssignment = async (courseId: number, assignmentId: number, token: string) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}`, { token })
+      setAssignment(response.data)
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
+    }
+  }
 
-  return { assignment: assignment };
+  return { assignment, getAssignment };
 }
 
 export default useAssignment;
