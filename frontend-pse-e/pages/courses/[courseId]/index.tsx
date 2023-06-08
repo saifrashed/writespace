@@ -1,13 +1,16 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import useAssignments from "../../../lib/hooks/useAssignments"
+import useCourse from "@/lib/hooks/useCourse";
 import { Assignment } from "../../../lib/hooks/dummy"
+// import { CourseType } from "../../../lib/hooks/dummy"
 import Link from "next/link";
 
 const Course = () => {
   const router = useRouter();
   const { courseId: courseId } = router.query;
   const { assignments } = useAssignments(courseId);
+  const { course } = useCourse(courseId);
 
   function formatDate(dateString: String) {
     const date = new Date(dateString);
@@ -29,10 +32,10 @@ const Course = () => {
         <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-8 md:w-1/5 md:h-[100vh] flex items-center content-center justify-center">
           <div className="flex flex-col items-center">
             <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">
-              Automaten en Formele Talen
+              {course?.name}
             </h5>
             <span className="text-sm text-gray-500 dark:text-gray-400">
-              5062AUFT6Y
+              {course?.course_code}
             </span>
             {/* <div className="flex mt-4 space-x-3 md:mt-6">
               <a
@@ -73,11 +76,12 @@ const Course = () => {
                     key={assignment.id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    <Link
-                      href={`/courses/${courseId}/assignment/${assignment.id}`}
-                    >
-                      <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">{assignment.name}</td>
-                    </Link>
+
+                    <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
+                      <Link
+                        href={`/courses/${courseId}/assignment/${assignment.id}`}
+                      >{assignment.name}</Link></td>
+
                     <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
                       {formatDate(assignment.due_at)}
                     </td>
