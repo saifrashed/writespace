@@ -14,21 +14,21 @@ const NavBar = () => {
                                 <a href="#" title="" className="text-base font-medium text-black"> Docs </a>
                             </div> */}
 
-                            <div className="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
+                            <div className="absolute -translate-x-1/2 inset-y-5 left-1/2">
                                 <div className="flex-shrink-0">
                                     <a href="#" title="" className="flex">
-                                        <img className="w-auto h-8 lg:h-10" src="./brand/logo.png" alt="" />
+                                        <img className="w-auto h-8 lg:h-10" src="/brand/logo.png" alt="" />
                                     </a>
                                 </div>
                             </div>
 
-                            <button type="button" className="inline-flex p-2 ml-5 text-black transition-all duration-200 rounded-md lg:hidden focus:bg-gray-100 hover:bg-gray-100" onClick={() => {
+                            {/* <button type="button" className="inline-flex p-2 ml-5 text-black transition-all duration-200 rounded-md lg:hidden focus:bg-gray-100 hover:bg-gray-100" onClick={() => {
                                 setIsOpen(!isOpen)
                             }}>
                                 <svg className="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
                                 </svg>
-                            </button>
+                            </button> */}
 
                             {/* <div className="hidden lg:flex lg:items-center lg:space-x-10">
                                 <a href="#" title="" className="text-base font-medium text-black"> Courses </a>

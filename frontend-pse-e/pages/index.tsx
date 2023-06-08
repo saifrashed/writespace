@@ -51,7 +51,7 @@ const Home = () => {
                     {/* </Link> */}
                   </div>
                 </div>
-                <p className="mt-5 text-base text-black">Login with your university</p>
+                <p className="mt-5 text-base text-black">Login with your institution</p>
               </div>
             </div>
 
