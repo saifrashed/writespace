@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { courses } from "./dummy"
+import config from "../config";
+import { Course } from "../types";
 
 function useCourses() {
-  const [coursesData, setCoursesData] = useState([]);
+  const [coursesData, setCoursesData] = useState<Course[]>([]);
 
   // Start off making an API call
   useEffect(() => {
@@ -11,7 +12,7 @@ function useCourses() {
 
         // API CALL HERE
 
-        setCoursesData(courses)
+        setCoursesData([])
       } catch (error) {
         console.log(error)
       }
@@ -19,12 +20,7 @@ function useCourses() {
     fetchCourses();
   }, []);
 
-  // For any other extra function you want to export
-  const updateCourse = async () => {
-    console.log("UPDATED COURSE")
-  };
-
-  return { courses: coursesData, updateCourse };
+  return { courses: coursesData };
 }
 
 export default useCourses;

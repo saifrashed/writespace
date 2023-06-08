@@ -4,9 +4,15 @@ import useCourses from "../../lib/hooks/useCourses"
 import { useEffect } from "react";
 import { Course } from "../../lib/hooks/dummy"
 import Link from "next/link";
+import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Courses = () => {
-  const { courses, updateCourse } = useCourses();
+  const { courses } = useCourses();
+  const { token } = useAuthentication();
+
+  useEffect(() => {
+    console.log(token)
+  }, [token])
 
   return (
     <>
@@ -27,15 +33,15 @@ const Courses = () => {
 
 
             {courses.map((course: Course, index) => (
-              <Link href={"/courses/" + course.id}>
+              <Link href={"/courses/" + course.id} key={index}>
                 <div className="flex flex-col justify-center items-center bg-yellow-500 bg-opacity-50 backdrop-blur hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 hover:scale-110 p-2 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-12 h-12 text-white">
                     <title />
                     <g id="Complete">
-                      <g id="browsers"> 
+                      <g id="browsers">
                         <g>
-                          <rect fill="none" height="14" rx="2" ry="2" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="14" x="3" y="7" />
-                          <path d="M8,3H19a2,2,0,0,1,2,2V16" fill="none" stroke="#000000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
+                          <rect fill="none" height="14" rx="2" ry="2" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" width="14" x="3" y="7" />
+                          <path d="M8,3H19a2,2,0,0,1,2,2V16" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
                         </g>
                       </g>
                     </g>
