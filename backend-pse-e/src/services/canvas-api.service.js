@@ -64,4 +64,64 @@ router.get('/user-information', (req, res) => {
   });
 });
 
+// Route to get assignments for a course with a user access token
+router.post('/coursesWithToken', (req, res) => {
+  const accessTokenFE = req.body.accessTokenFE;
+  axios.get(`${apiUrl}/courses`, {
+    headers: {
+      Authorization: `Bearer ${accessTokenFE}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
+// Get all assignments of a course with a user access token
+router.post('/assignmentsWithToken', (req, res) => {
+  const { courseId, accessTokenFE } = req.body;
+  axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
+    headers: {
+      Authorization: `Bearer ${accessTokenFE}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
+// Get one course with a user access token
+router.post('/courses/:courseId', (req, res) => {
+  const accessTokenFE = req.body.accessTokenFE;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}`, {
+    headers: {
+      Authorization: `Bearer ${accessTokenFE}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
+// Get one assignment from a course with a user access token
+router.post('/courses/:courseId/:assignmentId', (req, res) => {
+  const accessTokenFE = req.body.accessTokenFE;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
+    headers: {
+      Authorization: `Bearer ${accessTokenFE}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 module.exports = router;
