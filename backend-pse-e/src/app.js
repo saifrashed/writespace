@@ -34,6 +34,10 @@ const submissionService = require('./services/submission.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
 app.use('/submission', submissionService);
+const canvasService = require('./services/canvas-api.service.js');
+// Define new routes here with the start route
+app.use('/test', testService);
+app.use('/canvas-api', canvasService);
 
 
 // ************************* General requests *************************
