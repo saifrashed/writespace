@@ -32,7 +32,7 @@
     "components/CourseSelection.tsx/ExploreCard.jsx",
     "components/CourseSelection.tsx/ExploreCard.js",
     "components/CourseSelection.tsx/Explore.jsx"
-  ],
+, "lib/hooks/useExample.js"  ],
   "exclude": [
     "node_modules"
   ]
