@@ -17,7 +17,7 @@ const NavBar = () => {
                             <div className="lg:absolute lg:-translate-x-1/2 lg:inset-y-5 lg:left-1/2">
                                 <div className="flex-shrink-0">
                                     <a href="#" title="" className="flex">
-                                        <img className="w-auto h-8 lg:h-10" src="./brand/logo.png" alt="" />
+                                        <img className="w-auto h-8 lg:h-10" src="/brand/logo.png" alt="" />
                                     </a>
                                 </div>
                             </div>
