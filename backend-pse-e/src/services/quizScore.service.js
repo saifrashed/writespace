@@ -14,8 +14,6 @@ const upload = multer({ storage: storage });
 
 // ************************* Copy and change this with the model you added *************************
 // Import models for this service (../ goes up one directory)
-const quizScore = require("../models/quizScore.model.js");
-const { error } = require('console');
 const quizScoreModel = require('../models/quizScore.model.js');
 // ************************* Copy and change this with the model you added *************************
 
@@ -26,7 +24,7 @@ const quizScoreModel = require('../models/quizScore.model.js');
 router.get("/getAll", async (req, res) => {
     try {
         // Find all tests
-        const quizScores = await quizScore.find();
+        const quizScores = await quizScoreModel.find();
         // Return them in json form
         res.status(200).json(quizScores);
     } catch (error) {
@@ -55,7 +53,7 @@ router.get("/findByUserId/:userId", async (req, res) => {
 router.get("/findByQuizId/:quizId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
-        const result = await quizScoreModel.find({ 'userId': req.params.quizId });
+        const result = await quizScoreModel.find({ 'quizId': req.params.quizId });
         // If the object is not fount give an error
         if (result.length === 0) {
             return res.status(404).json({ error: 'Object not found' });
@@ -69,12 +67,12 @@ router.get("/findByQuizId/:quizId", async (req, res) => {
     }
 });
 
-router.post('/newScore', async (req, res) => {
+router.post('/save/', async (req, res) => {
    try {
         const quizId = req.body.quizId;
         const userId = req.body.userId;
-        const score = req.body.score;
-         
+        const score = req.body.latestScore;
+
         const alreadySubmitted = await quizScoreModel.find({ 'quizId': quizId, 'userId': userId });
         if (alreadySubmitted.length !== 0) {
             return res.status(409).json({ error: 'update the existing quizScore using /update/' })
@@ -89,30 +87,31 @@ router.post('/newScore', async (req, res) => {
         await newScore.save();
         res.status(200).json({ message: 'Score saved' });
    } catch (error) {
-    
+
    }
 });
 
 router.put('/update/grade/', async (req, res) => {
     try {
         const userId = req.body.userId;
-        const quizId = req.body.assignmentId;
-        const newScore = req.body.score;
+        const quizId = req.body.quizId;
+        const newScore = req.body.latestScore;
 
+        const submissionToUpdate = await quizScoreModel.findOne({ 'userId': userId, 'quizId': quizId });
 
-
-        const updatedSubmission = await quizModel.find(
-            {
-                'assignmentId': assignmentId,
-                'userId': userId
-            },
-        );
-
-        if (newScore >= updatedSubmission)
-
-        if (updatedSubmission === null) {
+        if (submissionToUpdate === null) {
             return res.status(404).json({ error: 'Submission not found' });
         }
+
+        documentId = submissionToUpdate._id;
+
+        if (newScore > submissionToUpdate.highScore) {
+            updatedSubmission = await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore, 'highScore': newScore });
+        }
+        else {
+            updatedSubmission = await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore });
+        }
+
 
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {
@@ -120,3 +119,74 @@ router.put('/update/grade/', async (req, res) => {
         res.status(500).json({ error: 'Failed to update data in the database' });
     }
 });
+
+// Delete quiz score by quizId
+router.delete('/deleteAllByQuiz/:quizId', async (req, res) => {
+    try {
+        const quizId = req.params.quizId;
+
+        // Find the document by submissionId and remove it
+        const result = await quizScoreModel.deleteMany({ 'quizId': quizId });
+
+        // Check if the document was found and deleted successfully
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Object not found' });
+        }
+
+        // Delete successful
+        res.status(200).json({ message: 'Submission deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting data from MongoDB:', error);
+        res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// Delete quiz score by userId
+router.delete('/deleteAllByUser/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // Find the document by submissionId and remove it
+        const result = await quizScoreModel.deleteMany({ 'userId': userId });
+
+        // Check if the document was found and deleted successfully
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Object not found' });
+        }
+
+        // Delete successful
+        res.status(200).json({ message: 'Submission deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting data from MongoDB:', error);
+        res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// Delete quiz score for specific user and quiz
+router.delete('/deleteOne/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const quizId = req.body.quizId;
+
+        // Find the document by submissionId and remove it
+        const result = await quizScoreModel.deleteOne({
+            'userId': userId,
+            'quizId': quizId
+        });
+
+        // Check if the document was found and deleted successfully
+        if (result.deletedCount === 0) {
+            return res.status(404).json({ error: 'Object not found' });
+        }
+
+        // Delete successful
+        res.status(200).json({ message: 'Submission deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting data from MongoDB:', error);
+        res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
+// Export requests with the router variable
+module.exports = router;
