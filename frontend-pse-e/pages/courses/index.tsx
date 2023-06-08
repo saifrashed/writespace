@@ -8,7 +8,7 @@ import NavBar from "@/components/NavBar";
 
 const Courses = () => {
   const { token } = useAuthentication();
-  const { courses } = useCourses(token);
+  const { courses, isLoading } = useCourses(token);
 
   return (
     <>
@@ -21,15 +21,13 @@ const Courses = () => {
 
       <NavBar />
 
-      <section className=" bg-gray-100 min-h-screen py-28">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <section className="bg-gray-100 min-h-screen py-28">
+        <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Select a Course</h2>
             <p className="max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600">A course selection that we pulled from your Canvas account.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5">
-
-
             {courses.map((course: Course, index) => (
               <Link href={"/courses/" + course.id} key={index}>
                 <div className="flex flex-col justify-center items-center bg-yellow-500 bg-opacity-50 backdrop-blur hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 hover:scale-110 p-2 transition-all">
@@ -49,6 +47,16 @@ const Courses = () => {
               </Link>
             ))}
           </div>
+          {isLoading && (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 animate-pulse">
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+            </div>
+          )}
         </div>
       </section >
     </>

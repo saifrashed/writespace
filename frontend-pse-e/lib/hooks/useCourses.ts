@@ -7,6 +7,7 @@ import { useNotification } from "./useNotification";
 function useCourses(token: string) {
   const { onSuccess, onError } = useNotification()
   const [coursesData, setCoursesData] = useState<Course[]>([]);
+  const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   // Start off making an API call
   useEffect(() => {
@@ -14,6 +15,7 @@ function useCourses(token: string) {
       try {
         const response = await axios.post(`${config.baseUrl}/canvas-api/courses`, { token: token });
         setCoursesData(response.data)
+        setIsLoading(false)
       } catch (error) {
         console.log(error)
         onError("Something went wrong")
@@ -22,7 +24,7 @@ function useCourses(token: string) {
     fetchCourses();
   }, []);
 
-  return { courses: coursesData };
+  return { courses: coursesData, isLoading: isLoading };
 }
 
 export default useCourses;
