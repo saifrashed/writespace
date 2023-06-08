@@ -27,7 +27,7 @@ const Home = () => {
         <meta name="theme-color" content="#ffffff" />
       </Head>
 
-      <NavBar />
+      <NavBar showLogout={false} />
 
       <div className="relative">
         <section className="bg-white overflow-hidden">

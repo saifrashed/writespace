@@ -4,6 +4,7 @@ import useCourses from "../../lib/hooks/useCourses"
 import { Course } from "../../lib/hooks/dummy"
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
+import NavBar from "@/components/NavBar";
 
 const Courses = () => {
   const { token } = useAuthentication();
@@ -18,7 +19,9 @@ const Courses = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <section className="py-10 bg-gray-100 min-h-screen sm:py-16 lg:py-24">
+      <NavBar />
+
+      <section className=" bg-gray-100 min-h-screen py-28">
         <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Select a Course</h2>
