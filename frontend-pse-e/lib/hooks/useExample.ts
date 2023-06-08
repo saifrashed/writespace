@@ -21,15 +21,16 @@ function useExample() {
   }, []);
 
 
-  const extraFunction = async () => {
-    try {
-      return { response: "OK" };
-    } catch (error) {
-      console.log(error)
-      throw error.response.data;
-    }
-  };
-  return { data: example, extraFunction };
+  // const extraFunction = async () => {
+  //   try {
+  //     return { response: "OK" };
+  //   } catch (error) {
+  //     console.log(error)
+  //     throw error.response.data;
+  //   }
+  // };
+  // return { data: example, extraFunction };
+  return { data: example };
 }
 
 export default useExample;
