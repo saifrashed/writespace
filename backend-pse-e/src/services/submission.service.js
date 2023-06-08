@@ -106,7 +106,7 @@ router.post('/save', upload.single('file'), async (req, res) => {
         const alreadySubmitted = await submissionModel.find({ 'assignmentId': assignmentId, 'userId': userId });
 
         if (alreadySubmitted.length !== 0) {
-            return res.status(409).json({ error: 'You cant submit twice, update the existing assignment instead.' })
+            return res.status(409).json({ error: 'You cant submit twice, update the existing assignment using /update/file.' })
         }
 
         const submissionDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }); // Off by two hours
