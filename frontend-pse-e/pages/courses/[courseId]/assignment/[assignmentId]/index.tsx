@@ -6,6 +6,8 @@ import React, { useEffect, useState } from "react";
 import Link from 'next/link';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
+import Button from "../../../../../components/stdButton";
+import UploadPopup from "../../../../../components/uploadPopup";
 
 
 const Assignments = () => {
@@ -14,6 +16,14 @@ const Assignments = () => {
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
   const { assignment, getAssignment } = useAssignment()
+
+  // For the upload popup.
+  const [showPopup, setShowPopup] = useState(false);
+
+  const togglePopup = () => {
+      setShowPopup(!showPopup);
+  };
+
 
   useEffect(() => {
     if (courseId && assignmentId && token) {
@@ -64,10 +74,7 @@ const Assignments = () => {
             <div className="col-span-1 p-4 ">
               <div className="w-full p-4 bg-white rounded-lg shadow-lg">
                 {/* <div className="text-sm text-gray-500">Right Box</div> */}
-                <div className="flex flex-col mt-4">
-                  {/* <button className="block w-full py-2 px-4 bg-yellow-500 text-white rounded-md">
-                    Upload file
-                  </button> */}
+                <div className="flex flex-col">{/*<div className="flex flex-col mt-4">*/}
                   <Link
                     href={`/courses/${courseId}/assignment/${assignmentId}/submission`}
                   >
@@ -75,6 +82,8 @@ const Assignments = () => {
                       View submission
                     </button>
                   </Link>
+                  <Button onClick={togglePopup}>Upload file</Button>
+                  <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
                 </div>
               </div>
             </div>
