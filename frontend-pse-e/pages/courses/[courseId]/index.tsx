@@ -5,14 +5,16 @@ import useCourse from "@/lib/hooks/useCourse";
 import { Assignment } from "../../../lib/hooks/dummy"
 import { Course } from "../../../lib/hooks/dummy"
 import Link from "next/link";
+import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const CourseOverview = () => {
+  const { token } = useAuthentication();
   const router = useRouter();
   const { courseId: courseIdString } = router.query;
   const courseId = parseInt(courseIdString as string, 10);
 
-  const { assignments } = useAssignments(courseId);
-  const { course } = useCourse(courseId);
+  const { assignments } = useAssignments(courseId, token);
+  const { course } = useCourse(courseId, token);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
