@@ -10,13 +10,7 @@ import { useEffect, useState } from "react";
  */
 function useAuthentication() {
   const router = useRouter();
-  const [token, setToken] = useState<any>()
-
-  useEffect(() => {
-    if (getCookie("pse-token")) {
-      setToken(getCookie("pse-token"))
-    }
-  }, [])
+  const [token, setToken] = useState<any>(getCookie("pse-token"))
 
   const login = async (token: string) => {
     try {
