@@ -1,14 +1,27 @@
+import { useContext } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import useCourses from "../../lib/hooks/useCourses"
-import { Course } from "../../lib/hooks/dummy"
 import Link from "next/link";
-import useAuthentication from "@/lib/hooks/useAuthentication";
+import { motion } from "framer-motion";
 import NavBar from "@/components/NavBar";
+import useCourses from "@/lib/hooks/useCourses"
+import { Course } from "@/lib/hooks/dummy"
+import useAuthentication from "@/lib/hooks/useAuthentication";
+import { Context } from '@/Context';
 
 const Courses = () => {
   const { token } = useAuthentication();
-  const { courses, isLoading } = useCourses(token);
+  const { setCourse } = useContext(Context);
+
+  const { courses: contextCourses } = useContext(Context);
+  const { courses: fetchedCourses } = useCourses(token);
+
+  const courses = contextCourses || fetchedCourses;
+
+  const isLoading = courses.length === 0
+
+  const handleClick = (course: Course) => {
+    setCourse(course);
+  };
 
   return (
     <>
@@ -29,7 +42,7 @@ const Courses = () => {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5">
             {courses.map((course: Course, index) => (
-              <Link href={"/courses/" + course.id} key={index}>
+              <Link href={"/courses/" + course.id} key={course.id} onClick={() => handleClick(course)}>
                 <div className="flex flex-col justify-center items-center bg-yellow-500 bg-opacity-50 backdrop-blur hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 hover:scale-110 p-2 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-12 h-12 text-white">
                     <title />
@@ -42,7 +55,14 @@ const Courses = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className="text-black mt-2 font-medium text-center select-none">{course.name}</span>
+                  <motion.span
+                    key={course.id}
+                    layoutId={course.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-black mt-2 font-medium text-center select-none">{course.name}
+                  </motion.span>
                 </div>
               </Link>
             ))}
