@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useAuthentication from "@/lib/hooks/useAuthentication";
+import Link from "next/link";
 
 const NavBar = ({ showLogout = true }) => {
     const { logout } = useAuthentication();
@@ -14,9 +15,9 @@ const NavBar = ({ showLogout = true }) => {
                         <nav className="relative h-16 lg:h-20">
                             <div className="absolute -translate-x-1/2 inset-y-5 left-1/2">
                                 <div className="flex-shrink-0">
-                                    <a href="#" title="" className="flex">
+                                    <Link href="/">
                                         <img className="w-auto h-8 lg:h-10" src="/brand/logo.png" alt="" />
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
 
