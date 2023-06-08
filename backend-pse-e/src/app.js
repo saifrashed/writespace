@@ -31,9 +31,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Import services here
 const testService = require('./services/test.service.js');
 const submissionService = require('./services/submission.service.js');
+const userService = require('./services/user.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
 app.use('/submission', submissionService);
+app.use('/user', userService);
 const canvasService = require('./services/canvas-api.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
