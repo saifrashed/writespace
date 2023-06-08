@@ -4,12 +4,15 @@ import NavBar from "../components/NavBar"
 import Link from 'next/link';
 import { useState } from "react";
 import useAuthentication from "../lib/hooks/useAuthentication"
+import { useNotification } from "../lib/hooks/useNotification"
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [accessToken, setAccessToken] = useState('');
-
+  const { onError } = useNotification();
   const { login } = useAuthentication();
+
+
 
   return (
     <>
@@ -90,7 +93,11 @@ const Home = () => {
 
             <div className="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
               <button data-modal-hide="defaultModal" type="button" className="text-white bg-yellow-500 font-medium rounded-lg text-sm px-5 py-2.5 text-center" onClick={() => {
-                login(accessToken)
+                if (!accessToken) {
+                  onError("Invalid Access token")
+                } else {
+                  login(accessToken)
+                }
               }}>Login</button>
               <button data-modal-hide="defaultModal" type="button" className="text-gray-500 bg-white rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 focus:z-10" onClick={() => {
                 setIsOpen(false)

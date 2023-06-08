@@ -9,17 +9,23 @@ import Link from "next/link";
 const CourseOverview = () => {
   const router = useRouter();
   const { courseId: courseIdString } = router.query;
-  const courseId = parseInt(courseIdString, 10);
+  const courseId = parseInt(courseIdString as string, 10);
 
   const { assignments } = useAssignments(courseId);
   const { course } = useCourse(courseId);
 
-  function formatDate(dateString: String) {
+  const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const options = { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: 'numeric' };
-    const formattedDate = date.toLocaleString('en-US', options);
-    return formattedDate;
-  }
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric' as const, // Specify the type explicitly
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+
+    return date.toLocaleString('en-US', options);
+  };
 
   return (
     <>
