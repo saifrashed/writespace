@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { courses } from "./dummy"
-import axios from 'axios';
+// import axios from 'axios';
 
 function useCourse(courseId) {
     const [courseData, setCourseData] = useState([]);

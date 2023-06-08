@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { assignments } from "./dummy"
-import axios from 'axios';
+// import axios from 'axios';
 
 function useAssigments(courseId) {
   const [assignmentsData, setAssignmentsData] = useState([]);
