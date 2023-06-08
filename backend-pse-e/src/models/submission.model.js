@@ -5,6 +5,7 @@ const submissionModel = new mongoose.Schema({
     assignmentId: String,
     submissionDate: Date,
     submissionGrade: Number,
+    submissionWhatifGrade: Number,
     submissionStatus: String,
     filetype: String,
     filename: String,

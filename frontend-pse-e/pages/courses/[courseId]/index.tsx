@@ -5,14 +5,16 @@ import useCourse from "@/lib/hooks/useCourse";
 import { Assignment } from "../../../lib/hooks/dummy"
 import { Course } from "../../../lib/hooks/dummy"
 import Link from "next/link";
+import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const CourseOverview = () => {
+  const { token } = useAuthentication();
   const router = useRouter();
   const { courseId: courseIdString } = router.query;
   const courseId = parseInt(courseIdString as string, 10);
 
-  const { assignments } = useAssignments(courseId);
-  const { course } = useCourse(courseId);
+  const { assignments, isLoading } = useAssignments(courseId, token);
+  const { course } = useCourse(courseId, token);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -66,7 +68,7 @@ const CourseOverview = () => {
               {assignments.map((assignment: Assignment, index) => (
                 assignment.published && (
                   <tr
-                    key={assignment.id}
+                    key={index}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
                     <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
@@ -100,6 +102,46 @@ const CourseOverview = () => {
               ))}
             </tbody>
           </table>
+          {isLoading && (
+            <div role="status" className="w-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                </div>
+                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+              </div>
+              <div className="flex items-center justify-between pt-4">
+                <div>
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                </div>
+                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+              </div>
+              <div className="flex items-center justify-between pt-4">
+                <div>
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                </div>
+                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+              </div>
+              <div className="flex items-center justify-between pt-4">
+                <div>
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                </div>
+                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+              </div>
+              <div className="flex items-center justify-between pt-4">
+                <div>
+                  <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                  <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                </div>
+                <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+              </div>
+              <span className="sr-only">Loading...</span>
+            </div>
+          )}
         </div>
       </div>
     </>

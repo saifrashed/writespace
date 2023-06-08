@@ -2,15 +2,27 @@ import Head from "next/head";
 import Image from "next/image";
 import NavBar from "../components/NavBar"
 import Link from 'next/link';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAuthentication from "../lib/hooks/useAuthentication"
 import { useNotification } from "../lib/hooks/useNotification"
+import { useRouter } from 'next/router';
 
 const Home = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [accessToken, setAccessToken] = useState('');
   const { onError } = useNotification();
   const { login } = useAuthentication();
+  const { token } = useAuthentication();
+  const router = useRouter()
+
+  /**
+   * Navigate to courses if user is logged in.
+   */
+  useEffect(() => {
+    if (token) {
+      router.push("/courses")
+    }
+  }, [token])
 
   return (
     <>
@@ -27,7 +39,7 @@ const Home = () => {
         <meta name="theme-color" content="#ffffff" />
       </Head>
 
-      <NavBar />
+      <NavBar showLogout={false} />
 
       <div className="relative">
         <section className="bg-white overflow-hidden">
