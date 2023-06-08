@@ -1,5 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
+import QuizMenu from '../components/quizMenu'
+import 'tailwindcss/tailwind.css';
+
+
 
 const Home = () => {
   return (
@@ -11,7 +15,9 @@ const Home = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <h1 className="font-bold text-3xl">Start project</h1>
+
+      <h1 className="text-3xl">Start project</h1>
+      <QuizMenu />
     </>
   );
 };
