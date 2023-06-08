@@ -2,8 +2,10 @@ import Head from "next/head";
 import Image from "next/image";
 import NavBar from "../../../../../components/NavBar";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from 'next/link';
+import useAssignment from "@/lib/hooks/useAssignment";
+import useAuthentication from "@/lib/hooks/useAuthentication";
 
 interface ContentItem {
   id: number;
@@ -13,18 +15,21 @@ interface ContentItem {
 
 const Assignments = () => {
   const router = useRouter();
-  const { courseId: courseId, assignmentId: assignmentId } = router.query;
+  // Accessing query parameters from the router object
+  const { courseId, assignmentId } = router.query;
+  const { token } = useAuthentication();
+  const { assignment } = useAssignment(parseInt(courseId as string, 10), parseInt(assignmentId as string, 10), token)
 
   const [selectedLink, setSelectedLink] = useState<number>(1);
-
-  const assignmentContent: ContentItem[] = [
-    { id: 1, label: "Description", content: "Content description" }
-    // { id: 2, label: "Rubric", content: "Content rubric" },
-  ];
 
   const handleLinkClick = (linkId: number) => {
     setSelectedLink(linkId);
   };
+
+  useEffect(() => {
+    console.log(courseId)
+    console.log(assignment)
+  }, [assignment])
 
   return (
     <>
@@ -40,7 +45,7 @@ const Assignments = () => {
       <div className="bg-gray-50 min-h-screen py-10 mt-12">
         <div className="max-w-5xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold">Assignments</h1>
+            <h1 className="text-3xl font-bold">{assignment?.name}</h1>
             <div className="space-x-4">
               <p className="mt-8 text-gray-600">Deadline: June 30, 2023</p>
             </div>
@@ -49,29 +54,22 @@ const Assignments = () => {
           <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
             <div className="col-span-1 p-4">
               <div className="w-full p-4 bg-white rounded-lg shadow-lg">
-                {assignmentContent.map((obj) => (
-                  <div key={obj.id}>
-                    <button
-                      onClick={() => handleLinkClick(obj.id)}
-                      className={`text-sm text-gray-500 underline cursor-pointer ${selectedLink === obj.id ? "font-bold" : ""
-                        }`}
-                    >
-                      {obj.label}
-                    </button>
-                  </div>
-                ))}
+                <div key={assignment.id}>
+                  <button
+                    onClick={() => handleLinkClick(obj.id)}
+                    className={`text-sm text-gray-500 underline cursor-pointer ${selectedLink === assignment?.id ? "font-bold" : ""
+                      }`}
+                  >
+                    Description
+                  </button>
+                </div>
               </div>
             </div>
             <div className="col-span-3 p-4">
               <div className="w-full p-4 bg-white rounded-lg shadow-lg ">
                 <div className="flex space-x-4">
-                  {assignmentContent.map((obj) => (
-                    selectedLink === obj.id && (
-                      <p key={obj.id} className="text-lg text-gray-800">
-                        {obj.content}
-                      </p>
-                    )
-                  ))}
+                  <div key={assignment?.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment?.description }}>
+                  </div>
                 </div>
               </div>
             </div>
@@ -93,12 +91,6 @@ const Assignments = () => {
               </div>
             </div>
           </div>
-
-
-
-
-
-
         </div>
       </div>
     </>
