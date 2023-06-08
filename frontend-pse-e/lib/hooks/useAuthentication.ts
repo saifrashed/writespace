@@ -2,6 +2,12 @@ import { useRouter } from "next/router";
 import { setCookie, removeCookie, getCookie } from "./cookie"
 import { useEffect, useState } from "react";
 
+/**
+ * Custom hook for user authentication.
+ * Manages token state and provides login and logout functions.
+ * Returns token, login, and logout.
+ * @returns Object
+ */
 function useAuthentication() {
   const router = useRouter();
   const [token, setToken] = useState<any>()
