@@ -4,9 +4,15 @@ import useCourses from "../../lib/hooks/useCourses"
 import { useEffect } from "react";
 import { Course } from "../../lib/hooks/dummy"
 import Link from "next/link";
+import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Courses = () => {
   const { courses, updateCourse } = useCourses();
+  const { token } = useAuthentication();
+
+  useEffect(() => {
+    console.log(token)
+  }, [token])
 
   return (
     <>
