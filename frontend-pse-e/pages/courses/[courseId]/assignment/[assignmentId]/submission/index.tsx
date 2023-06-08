@@ -75,10 +75,34 @@ const ViewSubmission: React.FC = () => {
       </Head>
 
       <NavBar />
+
+
+
       <div className="bg-gray-50 min-h-screen">
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-4 pt-20">
+          <div className="flex justify-center">
+            <div>
+              <input
+                ref={inputRef}
+                type="number"
+                className="border border-gray-300 rounded px-2 py-1"
+                min={1}
+                max={numPages}
+                onKeyDown={handleKeyPress}
+              />
+              <button
+                onClick={goToPage}
+                className="bg-yellow-500 text-white font-bold py-1 px-2 rounded"
+              >
+                Go
+              </button>
+            </div>
+            <p className="ml-4">
+              Page {pageNumber} of {numPages}
+            </p>
+          </div>
           <div
-            className="mt-12 max-w-md h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200"
+            className=" max-h-screen overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200"
             ref={pdfContainerRef}
           >
             <Document file="/sample.pdf" onLoadSuccess={onDocumentLoadSuccess}>
@@ -86,34 +110,14 @@ const ViewSubmission: React.FC = () => {
                 <Page
                   key={`page_${index + 1}`}
                   pageNumber={index + 1}
-                  width={400}
+                  width={1200}
                   renderTextLayer={false}
                 />
               ))}
             </Document>
           </div>
         </div>
-        <div className="flex justify-center">
-          <div>
-            <input
-              ref={inputRef}
-              type="number"
-              className="border border-gray-300 rounded px-2 py-1"
-              min={1}
-              max={numPages}
-              onKeyDown={handleKeyPress}
-            />
-            <button
-              onClick={goToPage}
-              className="bg-yellow-500 text-white font-bold py-1 px-2 rounded"
-            >
-              Go
-            </button>
-          </div>
-          <p className="ml-4">
-            Page {pageNumber} of {numPages}
-          </p>
-        </div>
+
       </div>
     </>
 

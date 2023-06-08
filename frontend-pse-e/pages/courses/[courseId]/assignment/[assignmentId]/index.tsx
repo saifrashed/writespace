@@ -18,8 +18,8 @@ const Assignments = () => {
   const [selectedLink, setSelectedLink] = useState<number>(1);
 
   const assignmentContent: ContentItem[] = [
-    { id: 1, label: "Description", content: "Content description"},
-    { id: 2, label: "Rubric", content: "Content rubric"},
+    { id: 1, label: "Description", content: "Content description" },
+    { id: 2, label: "Rubric", content: "Content rubric" },
   ];
 
   const handleLinkClick = (linkId: number) => {
@@ -46,25 +46,25 @@ const Assignments = () => {
             </div>
           </div>
 
-          <div className="flex">
-            <div className="flex-1 w-16 p-4 bg-white rounded-lg shadow-lg mr-4">
-              {assignmentContent.map((obj) => (
-                <div key={obj.id}>
-                  <button
-                    onClick={() => handleLinkClick(obj.id)}
-                    className={`text-sm text-gray-500 underline cursor-pointer ${
-                      selectedLink === obj.id ? "font-bold" : ""
-                    }`}
-                  >
-                    {obj.label}
-                  </button>
-                </div>
-              ))}
+          <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
+            <div className="col-span-1 p-4">
+              <div className="w-full p-4 bg-white rounded-lg shadow-lg">
+                {assignmentContent.map((obj) => (
+                  <div key={obj.id}>
+                    <button
+                      onClick={() => handleLinkClick(obj.id)}
+                      className={`text-sm text-gray-500 underline cursor-pointer ${selectedLink === obj.id ? "font-bold" : ""
+                        }`}
+                    >
+                      {obj.label}
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
-
-            <div className="flex-2 p-4 bg-white rounded-lg shadow-lg mx-2">
-              <div className="flex space-x-4">
-                <div className="w-96">
+            <div className="col-span-3 p-4">
+              <div className="w-full p-4 bg-white rounded-lg shadow-lg ">
+                <div className="flex space-x-4">
                   {assignmentContent.map((obj) => (
                     selectedLink === obj.id && (
                       <p key={obj.id} className="text-lg text-gray-800">
@@ -75,23 +75,30 @@ const Assignments = () => {
                 </div>
               </div>
             </div>
-
-            <div className="flex-1 p-4 bg-white rounded-lg shadow-lg ml-4">
-              {/* <div className="text-sm text-gray-500">Right Box</div> */}
-              <div className="flex flex-col mt-4">
-                <button className="block w-48 py-2 px-4 bg-yellow-500 text-white rounded-md">
-                  Upload file
-                </button>
-                <Link
-                  href={`/courses/${courseId}/assignment/${assignmentId}/submission`}
-                >
-                  <button className="block w-48 py-2 px-4 bg-yellow-500 text-white rounded-md mt-2">
-                    View submission
-                  </button>
-                </Link>
+            <div className="col-span-1 p-4 ">
+              <div className="w-full p-4 bg-white rounded-lg shadow-lg">
+                {/* <div className="text-sm text-gray-500">Right Box</div> */}
+                <div className="flex flex-col mt-4">
+                  {/* <button className="block w-full py-2 px-4 bg-yellow-500 text-white rounded-md">
+                    Upload file
+                  </button> */}
+                  <Link
+                    href={`/courses/${courseId}/assignment/${assignmentId}/submission`}
+                  >
+                    <button className="block w-full py-2 px-4 bg-yellow-500 text-white rounded-md mt-2">
+                      View submission
+                    </button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
+
+
+
+
+
+
         </div>
       </div>
     </>
