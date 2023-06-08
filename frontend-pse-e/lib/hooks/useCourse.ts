@@ -10,16 +10,18 @@ function useCourse(courseId: Number, token: string) {
 
     // Start off making an API call
     useEffect(() => {
-        const fetchCourse = async () => {
-            try {
-                const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}`, { token: token });
-                setCourseData(response.data)
-            } catch (error) {
-                console.log(error)
-                onError("Something went wrong")
-            }
-        };
-        fetchCourse();
+        if (token && courseId) {
+            const fetchCourse = async () => {
+                try {
+                    const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}`, { token: token });
+                    setCourseData(response.data)
+                } catch (error) {
+                    console.log(error)
+                    onError("Something went wrong")
+                }
+            };
+            fetchCourse();
+        }
     }, [courseId]);
 
     return { course: courseData };
