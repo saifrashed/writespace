@@ -74,7 +74,10 @@ const Assignments = () => {
             <div className="col-span-1 p-4 ">
               <div className="w-full p-4 bg-white rounded-lg shadow-lg">
                 {/* <div className="text-sm text-gray-500">Right Box</div> */}
+
                 <div className="flex flex-col">{/*<div className="flex flex-col mt-4">*/}
+                <Button onClick={togglePopup}>Upload file</Button>
+                  <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
                   <Link
                     href={`/courses/${courseId}/assignment/${assignmentId}/submission`}
                   >
@@ -82,8 +85,6 @@ const Assignments = () => {
                       View submission
                     </button>
                   </Link>
-                  <Button onClick={togglePopup}>Upload file</Button>
-                  <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
                 </div>
               </div>
             </div>

@@ -108,7 +108,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
         // TO DO: Change to side-wide popup-style.
         <div className="fixed inset-0 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg p-8 shadow-lg">
-                <h2 className="text-2xl mb-4">Upload assignment</h2>
+                <h2 className="text-3xl mb-4">Upload assignment</h2>
 
                 {/* File select browse button.*/}
                 <input type="file" onChange={(event) => {handleInputChange(event);}} />
