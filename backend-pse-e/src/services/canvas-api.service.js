@@ -5,8 +5,15 @@ const router = express.Router();
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 
-// Canvas api url
-const apiUrl = 'https://canvas.uva.nl/api/v1';
+// // Canvas api url (production environment, for now we can use this one because it works, but after the meeting with Gerrit it may change)
+// const apiUrl = 'https://canvas.uva.nl/api/v1';
+// Canvas api url (testing environment)
+const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
+
+// Developer key setup
+// const redirectUri = 'https://localhost:5000/signin-oidc';
+// const clientId = '?';
+// const clientSecret = '?';
 
 // Get general user information (is a post because a get cannot have a body)
 router.post('/get-user', (req, res) => {
@@ -16,6 +23,9 @@ router.post('/get-user', (req, res) => {
     headers: {
       // Authorization using the access token
       Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100
     }
   }).then(response => {
     res.json(response.data);
@@ -31,6 +41,9 @@ router.post('/courses', (req, res) => {
   axios.get(`${apiUrl}/courses`, {
     headers: {
       Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100
     }
   }).then(response => {
     res.json(response.data);
@@ -46,6 +59,9 @@ router.post('/assignments', (req, res) => {
   axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
     headers: {
       Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100
     }
   }).then(response => {
     res.json(response.data);
