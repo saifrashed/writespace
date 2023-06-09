@@ -56,7 +56,7 @@ const Assignments = () => {
             <div className="col-span-3 p-4">
               <div className="w-full p-4 bg-white rounded-lg shadow-lg ">
                 <div className="flex space-x-4">
-                  <div key={assignment?.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment?.description }}>
+                  <div key={assignment?.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment?.description ? assignment?.description : "" }}>
                   </div>
                 </div>
               </div>
