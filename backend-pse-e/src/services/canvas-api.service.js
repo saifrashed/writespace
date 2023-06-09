@@ -165,12 +165,4 @@ Flow:
 Test omgeving wordt elke maand leeggegooit, 1x per maand. Dan moet het opnieuw geconfigureerd worden.
 */
 
-// TODO: mail sturen naar Gerrit voor de client id en client secret.
-
-/*
-LTI: de gebruiker zit in canvas en opent een assignment, die assignment stuurt de gebruiker door naar jou tool, waarbij er 
-gegevens worden meegestuurt. Je krijg hier de gegevens aangeleverd. Tools zoals CodeGrade.
-LTI is ook lastiger te implementeren, terwijl dat andere gewoon een login mechanisme is.
-*/
-
 module.exports = router;
