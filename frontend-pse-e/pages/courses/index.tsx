@@ -14,11 +14,11 @@ const Courses = () => {
 
   const { courses: contextCourses } = useContext(Context);
   const { courses: fetchedCourses, getCourses } = useCourses();
-  
+
   useEffect(() => {
     getCourses(token)
   }, [])
-  
+
   const courses = contextCourses || fetchedCourses;
 
   const isLoading = courses.length === 0
@@ -45,9 +45,12 @@ const Courses = () => {
             <p className="max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600">A course selection that we pulled from your Canvas account.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5">
-            {courses.map((course: Course, index) => (
+            {courses.map((course: Course) => (
               <Link href={"/courses/" + course.id} key={course.id} onClick={() => handleClick(course)}>
-                <div className="flex flex-col justify-center items-center bg-yellow-500 bg-opacity-50 backdrop-blur hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 hover:scale-110 p-2 transition-all">
+                <motion.div
+                  key={course?.id}
+                  layoutId={course?.id.toString()}
+                  className="flex flex-col justify-center items-center bg-yellow-500 bg-opacity-50 backdrop-blur hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 p-2">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-12 h-12 text-white">
                     <title />
                     <g id="Complete">
@@ -59,15 +62,13 @@ const Courses = () => {
                       </g>
                     </g>
                   </svg>
-                  <motion.span
-                    key={course.id}
-                    layoutId={course.id}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
+                  <h5
                     className="text-black mt-2 font-medium text-center select-none">{course.name}
-                  </motion.span>
-                </div>
+                  </h5>
+                  <span
+                    className="mt-2 font-medium text-center select-none text-sm text-gray-500 dark:text-gray-400">{course.course_code}
+                  </span>
+                </motion.div>
               </Link>
             ))}
           </div>

@@ -47,6 +47,15 @@ const CourseOverview = () => {
     return date.toLocaleString('en-US', options);
   };
 
+  const calculateSubmittedPercentage = () => {
+    if (assignments?.length > 0) {
+      const submittedCount = assignments.filter((assignment) => assignment.has_submitted_submissions).length;
+      const totalCount = assignments.length;
+      const percentage = (submittedCount / totalCount) * 100 || 0;
+      return `${percentage.toFixed(2)}%`
+    }
+  };
+
   return (
     <>
       <Head>
@@ -59,20 +68,29 @@ const CourseOverview = () => {
       <NavBar />
 
       <div className="flex flex-col md:flex-row pt-20">
-        <div className="bg-white lg:border lg:border-gray-200 rounded-lg lg:shadow lg:dark:bg-gray-800 lg:dark:border-gray-700 p-8 md:min-h-screen flex items-center content-center justify-center">
-          <div className="flex flex-col items-center">
-            <motion.h5
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              layoutId={course?.id}
+        <div className="bg-white lg:border lg:border-gray-200 rounded-lg lg:shadow lg:dark:bg-gray-800 lg:dark:border-gray-700 p-5 md:min-h-screen flex items-center content-center justify-center">
+          <motion.div
+            layoutId={course?.id.toString()}
+            className="flex flex-col items-center rounded-2xl p-8 bg-yellow-500 bg-opacity-50 backdrop-blur z-10">
+            <h5
               className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">
               {course?.name}
-            </motion.h5>
-            <span className="text-sm text-gray-500 dark:text-gray-400 text-center">
+            </h5>
+            <span
+              className="mb-2 text-sm text-gray-500 dark:text-gray-400 text-center">
               {course?.course_code}
             </span>
-          </div>
+            {isLoading ? (
+              <div className="w-full h-2.5 animate-pulse">
+                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 mb-4"></div>
+              </div>
+            ) : (
+              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                <div style={{ width: calculateSubmittedPercentage() }} className={`bg-green-600 h-2.5 rounded-full dark:bg-green-500 w-0 transition-[width] ease`}></div>
+              </div>
+            )}
+
+          </motion.div>
         </div>
         <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
