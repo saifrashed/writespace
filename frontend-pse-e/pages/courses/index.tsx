@@ -1,19 +1,31 @@
+import { useContext, useEffect } from "react";
 import Head from "next/head";
-import Image from "next/image";
-import useCourses from "../../lib/hooks/useCourses"
-import { Course } from "../../lib/hooks/dummy"
 import Link from "next/link";
-import useAuthentication from "@/lib/hooks/useAuthentication";
+import { motion } from "framer-motion";
 import NavBar from "@/components/NavBar";
-import { useEffect } from "react";
+import useCourses from "@/lib/hooks/useCourses"
+import { Course } from "@/lib/hooks/dummy"
+import useAuthentication from "@/lib/hooks/useAuthentication";
+import { Context } from '@/Context';
 
 const Courses = () => {
   const { token } = useAuthentication();
-  const { courses, getCourses } = useCourses();
+  const { setCourse } = useContext(Context);
 
+  const { courses: contextCourses } = useContext(Context);
+  const { courses: fetchedCourses, getCourses } = useCourses();
+  
   useEffect(() => {
     getCourses(token)
   }, [])
+  
+  const courses = contextCourses || fetchedCourses;
+
+  const isLoading = courses.length === 0
+
+  const handleClick = (course: Course) => {
+    setCourse(course);
+  };
 
   return (
     <>
@@ -26,15 +38,15 @@ const Courses = () => {
 
       <NavBar />
 
-      <section className=" bg-gray-100 min-h-screen py-28">
-        <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <section className="bg-gray-100 min-h-screen py-28">
+        <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Select a Course</h2>
             <p className="max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600">A course selection that we pulled from your Canvas account.</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5">
             {courses.map((course: Course, index) => (
-              <Link href={"/courses/" + course.id} key={index}>
+              <Link href={"/courses/" + course.id} key={course.id} onClick={() => handleClick(course)}>
                 <div className="flex flex-col justify-center items-center bg-yellow-500 bg-opacity-50 backdrop-blur hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 hover:scale-110 p-2 transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-12 h-12 text-white">
                     <title />
@@ -47,11 +59,28 @@ const Courses = () => {
                       </g>
                     </g>
                   </svg>
-                  <span className="text-black mt-2 font-medium text-center select-none">{course.name}</span>
+                  <motion.span
+                    key={course.id}
+                    layoutId={course.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="text-black mt-2 font-medium text-center select-none">{course.name}
+                  </motion.span>
                 </div>
               </Link>
             ))}
           </div>
+          {isLoading && (
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5 animate-pulse">
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+              <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+            </div>
+          )}
         </div>
       </section >
     </>

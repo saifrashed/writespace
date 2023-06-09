@@ -19,10 +19,7 @@ function useAssigments() {
       onError("Something went wrong")
     }
   }
-
-
   return { assignments: assignmentsData, isLoading, getAssignments };
 }
-
 
 export default useAssigments;
