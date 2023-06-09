@@ -113,8 +113,9 @@ router.post('/courses/:courseId/:assignmentId', (req, res) => {
 Then here something with file upload!
 */
 
-// Get rubrics, see if the assignment contains a rubric id or something!
+// TODO: test this request in postman!
 // Get one rubric for an assignment with a user access token
+// NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
 router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
   const token = req.body.token;
   axios.get(`${apiUrl}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
@@ -132,5 +133,14 @@ router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
 // Upload submission for an assignment, this is a pdf file, contact Alessio for this!
 
 // Create assignment on canvas
+
+
+// TODO: use OAuth from Canvas documentation to extract access token?? Use Developer key settings??
+// Login request (not done yet, need developer key setup)
+// Route for initiating the login redirect
+router.get('/login', (req, res) => {
+  const authUrl = `${apiUrl}/login/oauth2/auth?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+  res.redirect(authUrl);
+});
 
 module.exports = router;
