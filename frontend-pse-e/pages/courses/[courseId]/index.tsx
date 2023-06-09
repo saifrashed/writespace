@@ -80,16 +80,9 @@ const CourseOverview = () => {
               className="mb-2 text-sm text-gray-500 dark:text-gray-400 text-center">
               {course?.course_code}
             </span>
-            {isLoading ? (
-              <div className="w-full h-2.5 animate-pulse">
-                <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 mb-4"></div>
-              </div>
-            ) : (
-              <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-                <div style={{ width: calculateSubmittedPercentage() }} className={`bg-green-600 h-2.5 rounded-full dark:bg-green-500 w-0 transition-[width] ease`}></div>
-              </div>
-            )}
-
+            <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+              <div style={{ width: calculateSubmittedPercentage() }} className={`bg-green-600 h-2.5 rounded-full dark:bg-green-500 w-0 transition-[width] ease`}></div>
+            </div>
           </motion.div>
         </div>
         <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
