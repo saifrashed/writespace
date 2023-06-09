@@ -101,19 +101,6 @@ router.post('/courses/:courseId/:assignmentId', (req, res) => {
   });
 });
 
-// get user role for course
-// TODO
-
-// Get assignments for a course that are written
-// TODO: see assignment returned, probably file uploads
-/*
-"submission_types": [
-            "online_upload"
-        ],
-Then here something with file upload!
-*/
-
-// TODO: test this request in postman!
 // Get one rubric for an assignment with a user access token
 // NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
 router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
@@ -130,9 +117,22 @@ router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
   });
 });
 
-// Upload submission for an assignment, this is a pdf file, contact Alessio for this!
+/*
+TODO: see user stories on github board, but this is the main overview:
+// get user role for course
+// TODO
 
-// Create assignment on canvas
+// Get assignments for a course that are written
+// TODO: see assignment returned, probably file uploads
+
+"submission_types": [
+            "online_upload"
+        ],
+Then here something with file upload!
+
+// Upload submission for an assignment, this is a pdf file, contact Alessio for this!
+// TODO: Create assignment on canvas
+*/
 
 
 // TODO: use OAuth from Canvas documentation to extract access token?? Use Developer key settings??
