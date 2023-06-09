@@ -115,22 +115,19 @@ Then here something with file upload!
 
 // Get rubrics, see if the assignment contains a rubric id or something!
 // Get one rubric for an assignment with a user access token
-router.post('/courses/:courseId/:assignmentId/rubric', (req, res) => {
+router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
   }).then(response => {
-    console.log("***********************************************************************");
-    console.log(response.data.rubric[0].id);
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
     res.status(500).json({ error: 'An error occurred.' });
   });
 });
-
 
 // Upload submission for an assignment, this is a pdf file, contact Alessio for this!
 
