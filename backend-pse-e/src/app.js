@@ -32,10 +32,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const testService = require('./services/test.service.js');
 const submissionService = require('./services/submission.service.js');
 const userService = require('./services/user.service.js');
+const quizScoreService = require('./services/quizScore.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
 app.use('/submission', submissionService);
 app.use('/user', userService);
+app.use('/quizScore', quizScoreService);
 const canvasService = require('./services/canvas-api.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
