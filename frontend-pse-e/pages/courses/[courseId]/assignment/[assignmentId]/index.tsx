@@ -37,7 +37,7 @@ const Assignments = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold">{assignment?.name}</h1>
             <div className="space-x-4">
-              <p className="mt-8 text-gray-600">Deadline: {new Date(assignment?.due_at).toLocaleString("en-GB")}</p>
+              <p className="mt-8 text-gray-600">Deadline: {assignment?.due_at}</p>
             </div>
           </div>
 
