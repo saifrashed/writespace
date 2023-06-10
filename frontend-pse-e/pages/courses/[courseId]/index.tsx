@@ -8,6 +8,7 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import { motion } from "framer-motion";
 import { useContext, useEffect } from 'react';
 import { Context } from '@/Context';
+import { Enrollment } from "@/lib/types";
 
 const CourseOverview = () => {
   const router = useRouter();
@@ -28,6 +29,9 @@ const CourseOverview = () => {
     }
   }, [router.query]);
 
+  const isTeacher = course?.enrollments?.some(
+    (enrollment: Enrollment) => enrollment?.type === "teacher"
+  );
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -62,52 +66,57 @@ const CourseOverview = () => {
               className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">
               {course?.name}
             </motion.h5>
-            <span className="text-sm text-gray-500 dark:text-gray-400">
+            <span className="text-sm text-gray-500 dark:text-gray-400 text-center">
               {course?.course_code}
             </span>
           </div>
         </div>
-        <div className="relative overflow-x-auto sm:rounded-lg sm:p-2 md:p-4 lg:p-8 md:w-4/5">
+        <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" className="px-1 py-1 sm:px-3 sm:py-2.5 md:px-6 md:py-3">
+                <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   Name
                 </th>
-                <th scope="col" className="px-1 py-1 sm:px-3 sm:py-2.5 md:px-6 md:py-3">
+                <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   Due At
                 </th>
-                <th scope="col" className="px-1 py-1 sm:px-3 sm:py-2.5 md:px-6 md:py-3">
+                <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   Submission Status
                 </th>
+                {isTeacher &&
+                  <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                  </th>
+                }
               </tr>
             </thead>
             <tbody>
               {assignments.map((assignment: Assignment, index) => (
                 assignment.published && (
-                  <tr
-                    key={index}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                  >
-                    <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
+                  <tr key={assignment?.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <Link
                         href={`/courses/${courseId}/assignment/${assignment.id}`}
-                      >{assignment.name}</Link></td>
-
-                    <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
+                      >{assignment.name}</Link>
+                    </th>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       {formatDate(assignment.due_at)}
                     </td>
-                    <td className="px-1 py-1 sm:px-3 sm:py-3 md:px-6 md:py-4">
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <div
                         className={`flex items-center ${assignment.has_submitted_submissions
-                          ? "text-emerald-400"
-                          : "text-red-500"
+                          ? ("text-emerald-400")
+                          : new Date() > new Date(assignment.due_at)
+                            ? ("text-orange-500")
+                            : ("text-red-500")
                           } font-bold`}
                       >
                         <div
                           className={`h-2.5 w-2.5 rounded-full ${assignment.has_submitted_submissions
-                            ? "bg-emerald-400"
-                            : "bg-red-500"
+                            ? ("bg-emerald-400")
+                            : new Date() > new Date(assignment.due_at)
+                              ? ("text-orange-500")
+                              : ("bg-red-500")
                             } mr-2`}
                         ></div>
                         {assignment.has_submitted_submissions
@@ -115,6 +124,24 @@ const CourseOverview = () => {
                           : "Not Submitted"}
                       </div>
                     </td>
+                    {isTeacher &&
+                      <td className="flex items-center px-3 py-2 space-x-3">
+                        <button className="flex p-2.5 bg-yellow-500 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
+                              <Link href={"/courses"}></Link>
+                            </path>
+                          </svg>
+                        </button>
+                        <button className="flex p-2.5 bg-red-500 rounded-xl hover:rounded-3xl hover:bg-red-600 transition-all duration-300 text-white">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"></path>
+                          </svg>
+                        </button>
+                        {/* <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                      <a href="#" className="font-medium text-red-600 dark:text-red-500 hover:underline">Remove</a> */}
+                      </td>
+                    }
                   </tr>
                 )
               ))}
@@ -161,7 +188,7 @@ const CourseOverview = () => {
             </div>
           )}
         </div>
-      </div>
+      </div >
     </>
   );
 };
