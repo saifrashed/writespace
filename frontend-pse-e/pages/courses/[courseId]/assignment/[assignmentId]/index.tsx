@@ -83,6 +83,13 @@ const Assignments = () => {
                       View submission
                     </button>
                   </Link>
+                  <Link
+                    href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
+                  >
+                    <button className="block w-full py-2 px-4 bg-yellow-500 text-white rounded-md mt-2">
+                      Grade submission
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
