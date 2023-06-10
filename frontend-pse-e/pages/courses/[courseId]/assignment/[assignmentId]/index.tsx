@@ -73,9 +73,7 @@ const Assignments = () => {
             </div>
             <div className="col-span-1 p-4 ">
               <div className="w-full p-4 bg-white rounded-lg shadow-lg">
-                {/* <div className="text-sm text-gray-500">Right Box</div> */}
-
-                <div className="flex flex-col">{/*<div className="flex flex-col mt-4">*/}
+                <div className="flex flex-col">
                   <Button onClick={togglePopup}>Upload file</Button>
                   <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
                   <Link
