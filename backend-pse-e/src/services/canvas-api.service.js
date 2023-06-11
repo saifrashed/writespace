@@ -12,8 +12,8 @@ const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
 
 // Developer key variables
 const redirectUri = 'https://localhost:5000/';
-const clientId = '104400000000000219';
-const clientSecret = 'JXTauByTlng3ATvTHQ9dLaM9w7GzCle93F2mOanqVcNXzG6eRwn16BGhCCSNP3ks';
+const { CLIENT_ID } = process.env;
+const { CLIENT_SECRET } = process.env;
 
 // Get general user information (is a post because a get cannot have a body)
 router.post('/get-user', (req, res) => {
@@ -139,7 +139,7 @@ Then here something with file upload!
 // Login request (not done yet, need developer key setup)
 // Route for initiating the login redirect
 router.get('/login', (req, res) => {
-  const authUrl = `${loginApiUrl}/login/oauth2/auth?client_id=${clientId}&response_type=code&state=1&redirect_uri=${redirectUri}`;
+  const authUrl = `${loginApiUrl}/login/oauth2/auth?client_id=${CLIENT_ID}&response_type=code&state=1&redirect_uri=${redirectUri}`;
   res.redirect(authUrl);
 });
 // TODO: to test this locally: go to this URL in your browser: localhost:5000/canvas-api/login
@@ -153,13 +153,14 @@ TODO: So, discuss with Saif and/or Devran how the FE can extract that from the U
 get the user access-key/token!
 */
 // After the /login request, the FE extracted the code and state from the URL in the browser
-// that can be used to make this request to actually get the user's access-key/token 
+// that can be used to make this request to actually get the user's access-key/token
+// NOTE: the code from the /login request can only be used for one request, otherwise it will give an error!!
 router.post('/get-user-token', (req, res) => {
   axios.post(`${loginApiUrl}/login/oauth2/token`, {}, {
     params: {
       grant_type: `authorization_code`,
-      client_id: clientId,
-      client_secret: clientSecret,
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
       redirect_uri: redirectUri,
       code: req.body.code
     }
@@ -170,8 +171,23 @@ router.post('/get-user-token', (req, res) => {
     res.status(500).json({ error: 'An error occurred.' });
   });
 });
-
-// 
+// Get new user token with refresh token (the refresh token from /get-user-token can be used infinitely!)
+router.post('/get-user-token/refresh', (req, res) => {
+  axios.post(`${loginApiUrl}/login/oauth2/token`, {}, {
+    params: {
+      grant_type: `refresh_token`,
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+      redirect_uri: redirectUri,
+      refresh_token: req.body.token
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
 
 // API: gebruiker logt in op jou tool, authoriseert dingen in canvas. Alles wat de gebruiker kan.
 // TODO: wij willen de API aparte website en met uva account login, dus de API.
