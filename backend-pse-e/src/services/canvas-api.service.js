@@ -11,9 +11,9 @@ const axios = require('axios');
 const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
 
 // Developer key setup
-// const redirectUri = 'https://localhost:5000/signin-oidc';
-// const clientId = '?';
-// const clientSecret = '?';
+const redirectUri = 'https://localhost:5000/';
+const clientId = '104400000000000219';
+const clientSecret = 'JXTauByTlng3ATvTHQ9dLaM9w7GzCle93F2mOanqVcNXzG6eRwn16BGhCCSNP3ks';
 
 // Get general user information (is a post because a get cannot have a body)
 router.post('/get-user', (req, res) => {
@@ -139,7 +139,19 @@ Then here something with file upload!
 // Login request (not done yet, need developer key setup)
 // Route for initiating the login redirect
 router.get('/login', (req, res) => {
-  const authUrl = `${apiUrl}/login/oauth2/auth?client_id=${clientId}&response_type=code&redirect_uri=${redirectUri}`;
+  const authUrl = `https://uvadlo-dev.test.instructure.com/login/oauth2/auth?client_id=${clientId}&response_type=code&state=1&redirect_uri=${redirectUri}`;
+  res.redirect(authUrl);
+});
+// TODO: to test this locally: go to this URL in your browser: localhost:5000/canvas-api/login
+/*
+TODO: after this (now you still get a tab with "Deze site kan geen beveiligde verbinding leveren", but that is because it is not handled
+in the FE, but you get the correct URL, with only "code" and "state", so there is no error, it is just because that URL is not handled
+in the FE!), you get the code and state in the frontend in the webbrowser, then the FE needs to send a request with the 
+received "code" and "state" to the backend to retrieve the user's access token!
+*/
+
+router.get('/user/token', (req, res) => {
+  const authUrl = `https://uvadlo-dev.test.instructure.com/login/oauth2/auth?client_id=${clientId}&response_type=code&state=1&redirect_uri=${redirectUri}`;
   res.redirect(authUrl);
 });
 
@@ -157,7 +169,7 @@ Daarna zou het moeten werken, met die key (vmg cliendId en ClientSecret).
 
 
 Flow:
-1. GET https://https://uvadlo-dev.test.instructure.com/login/oauth2/auth?client_id=<clientIdFromGerrit>&response_type=code&state=<Number, such as 1>&redirect_uri=<What I Sent to Gerrit, can be any>
+1. GET https://uvadlo-dev.test.instructure.com/login/oauth2/auth?client_id=<clientIdFromGerrit>&response_type=code&state=<Number, such as 1>&redirect_uri=<What I Sent to Gerrit, can be any>
 2. In the response it sends a code and state, the code can be used to ask the access token of the user.
   You get the access token and the refresh token, the access token expires after an hour. If you want a new one you can use the refresh token.
 3. Step 3 needs to happen server side because the secret is sent with it. grant_type is just the string "authorization_code"
