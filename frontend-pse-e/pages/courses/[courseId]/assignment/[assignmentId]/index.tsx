@@ -21,7 +21,7 @@ const Assignments = () => {
   const [showPopup, setShowPopup] = useState(false);
 
   const togglePopup = () => {
-      setShowPopup(!showPopup);
+    setShowPopup(!showPopup);
   };
 
 
@@ -73,16 +73,21 @@ const Assignments = () => {
             </div>
             <div className="col-span-1 p-4 ">
               <div className="w-full p-4 bg-white rounded-lg shadow-lg">
-                {/* <div className="text-sm text-gray-500">Right Box</div> */}
-
-                <div className="flex flex-col">{/*<div className="flex flex-col mt-4">*/}
-                <Button onClick={togglePopup}>Upload file</Button>
+                <div className="flex flex-col">
+                  <Button onClick={togglePopup}>Upload file</Button>
                   <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
                   <Link
-                    href={`/courses/${courseId}/assignment/${assignmentId}/submission`}
+                    href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}
                   >
                     <button className="block w-full py-2 px-4 bg-yellow-500 text-white rounded-md mt-2">
                       View submission
+                    </button>
+                  </Link>
+                  <Link
+                    href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
+                  >
+                    <button className="block w-full py-2 px-4 bg-yellow-500 text-white rounded-md mt-2">
+                      Grade submission
                     </button>
                   </Link>
                 </div>
