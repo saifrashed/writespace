@@ -81,7 +81,7 @@ const CourseOverview = () => {
               {course?.course_code}
             </span>
             <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
-              <div style={{ width: calculateSubmittedPercentage() }} className={`bg-green-600 h-2.5 rounded-full dark:bg-green-500 w-0 transition-[width] ease`}></div>
+              <div style={{ width: calculateSubmittedPercentage() }} className={`${course?.course_color || "bg-green-600"} opacity-60 saturate-150 h-2.5 rounded-full invert w-0 transition-[width] ease`}></div>
             </div>
           </motion.div>
         </div>
