@@ -5,12 +5,12 @@ const router = express.Router();
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 
-// // Canvas api url (production environment, for now we can use this one because it works, but after the meeting with Gerrit it may change)
-// const apiUrl = 'https://canvas.uva.nl/api/v1';
-// Canvas api url (testing environment)
+// Canvas api url (testing environment, the environment we need for this project)
 const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
+// apiUrl for logging in with OAuth2 (without the "/api/v1" part)
+const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
 
-// Developer key setup
+// Developer key variables
 const redirectUri = 'https://localhost:5000/';
 const clientId = '104400000000000219';
 const clientSecret = 'JXTauByTlng3ATvTHQ9dLaM9w7GzCle93F2mOanqVcNXzG6eRwn16BGhCCSNP3ks';
@@ -139,7 +139,7 @@ Then here something with file upload!
 // Login request (not done yet, need developer key setup)
 // Route for initiating the login redirect
 router.get('/login', (req, res) => {
-  const authUrl = `https://uvadlo-dev.test.instructure.com/login/oauth2/auth?client_id=${clientId}&response_type=code&state=1&redirect_uri=${redirectUri}`;
+  const authUrl = `${loginApiUrl}/login/oauth2/auth?client_id=${clientId}&response_type=code&state=1&redirect_uri=${redirectUri}`;
   res.redirect(authUrl);
 });
 // TODO: to test this locally: go to this URL in your browser: localhost:5000/canvas-api/login
@@ -148,12 +148,30 @@ TODO: after this (now you still get a tab with "Deze site kan geen beveiligde ve
 in the FE, but you get the correct URL, with only "code" and "state", so there is no error, it is just because that URL is not handled
 in the FE!), you get the code and state in the frontend in the webbrowser, then the FE needs to send a request with the 
 received "code" and "state" to the backend to retrieve the user's access token!
-*/
 
-router.get('/user/token', (req, res) => {
-  const authUrl = `https://uvadlo-dev.test.instructure.com/login/oauth2/auth?client_id=${clientId}&response_type=code&state=1&redirect_uri=${redirectUri}`;
-  res.redirect(authUrl);
+TODO: So, discuss with Saif and/or Devran how the FE can extract that from the URL to send the following request in the BE to 
+get the user access-key/token!
+*/
+// After the /login request, the FE extracted the code and state from the URL in the browser
+// that can be used to make this request to actually get the user's access-key/token 
+router.post('/get-user-token', (req, res) => {
+  axios.post(`${loginApiUrl}/login/oauth2/token`, {}, {
+    params: {
+      grant_type: `authorization_code`,
+      client_id: clientId,
+      client_secret: clientSecret,
+      redirect_uri: redirectUri,
+      code: req.body.code
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
 });
+
+// 
 
 // API: gebruiker logt in op jou tool, authoriseert dingen in canvas. Alles wat de gebruiker kan.
 // TODO: wij willen de API aparte website en met uva account login, dus de API.
