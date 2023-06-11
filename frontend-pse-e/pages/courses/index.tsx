@@ -39,12 +39,12 @@ const Courses = () => {
       <NavBar />
 
       <section className="bg-gray-100 min-h-screen py-28">
-        <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-7xl p-4">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Select a Course</h2>
             <p className="max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600">A course selection that we pulled from your Canvas account.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5">
+          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-5 gap-5">
             {courses.map((course: Course) => (
               <Link href={"/courses/" + course.id} key={course.id} onClick={() => handleClick(course)}>
                 <motion.div
