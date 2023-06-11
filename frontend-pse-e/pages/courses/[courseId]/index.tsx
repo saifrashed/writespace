@@ -71,7 +71,7 @@ const CourseOverview = () => {
         <div className="bg-white lg:border lg:border-gray-200 rounded-lg lg:shadow lg:dark:bg-gray-800 lg:dark:border-gray-700 p-5 md:min-h-screen flex items-center content-center justify-center">
           <motion.div
             layoutId={course?.id.toString()}
-            className="flex flex-col items-center rounded-2xl p-8 bg-yellow-500 bg-opacity-50 backdrop-blur z-10">
+            className={`flex flex-col items-center rounded-2xl p-8 ${course?.course_color || "bg-yellow-500"} bg-opacity-50 z-10`}>
             <h5
               className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">
               {course?.name}
