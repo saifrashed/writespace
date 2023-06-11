@@ -68,15 +68,15 @@ const Courses = () => {
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Select a Course</h2>
             <p className="max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600">A course selection that we pulled from your Canvas account.</p>
           </div>
-          <div className={`grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4 ${isLoading && "animate-pulse"}`}>
+          <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4 ${isLoading && "animate-pulse"}`}>
             {isLoading ? (
               <>
-                <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
-                <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
-                <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
-                <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
-                <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
-                <div className="h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
               </>
             ) : (
               <>
@@ -85,7 +85,7 @@ const Courses = () => {
                     <motion.div
                       key={course?.id}
                       layoutId={course?.id.toString()}
-                      className={`flex flex-col justify-center items-center ${cardColors[index]} bg-opacity-50 hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-64 p-2`}>
+                      className={`flex flex-col justify-center items-center ${cardColors[index]} bg-opacity-50 hover:cursor-pointer shadow-sm hover:shadow-lg rounded-2xl h-40 xs:h-64 p-2`}>
                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-12 h-12 text-white">
                         <title />
                         <g id="Complete">
