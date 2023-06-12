@@ -22,6 +22,8 @@ const Assignments = () => {
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
+  const isTeacher = false;
+
 
   console.log(submission?.grade)
 
@@ -65,13 +67,17 @@ const Assignments = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold">{assignment?.name}</h1>
             <div className="space-x-4">
-              <p className="mt-8 text-gray-600">Grade: {submission?.grade}</p>
+            { !isTeacher ? (
+              <p className="mt-8 text-gray-600">Grade: {submission?.grade}</p>) : null}
               {/* <p className="mt-8 text-gray-600">Grade: {formatDate(submission?.submitted_at)}</p> */}
             </div>
           </div>
           <div>
             <p className="mt-8 text-gray-600">Deadline: {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
           </div>
+
+
+        { !isTeacher ? (
 
           <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
             <div className="col-span-1 p-4">
@@ -117,6 +123,10 @@ const Assignments = () => {
               </div>
             </div>
           </div>
+          ) : null}
+
+
+
         </div>
       </div>
     </>
