@@ -117,6 +117,22 @@ router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
   });
 });
 
+// Get a user's role for a specific course
+router.post('/courses/:courseId/user-role', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    // Return enrollments information
+    res.json(response.data.enrollments[0]);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 /*
 TODO: see user stories on github board, but this is the main overview:
 // get user role for course
