@@ -120,9 +120,9 @@ router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
   });
 });
 
-// TODO: test this in postman!
 // Get a user's role for a specific course
-router.post('/courses/:courseId/user-role', (req, res) => {
+// The path is /user/role because otherwise the request does a different one!
+router.post('/courses/:courseId/user/role', (req, res) => {
   const token = req.body.token;
   axios.get(`${apiUrl}/courses/${req.params.courseId}`, {
     headers: {
