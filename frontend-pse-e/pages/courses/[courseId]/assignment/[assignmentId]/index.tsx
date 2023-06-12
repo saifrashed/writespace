@@ -41,7 +41,9 @@ const Assignments = () => {
       minute: 'numeric',
     };
 
-    return date.toLocaleString('en-US', options);
+    const formattedDate = date.toLocaleString('en-US', options);
+    return formattedDate
+    // return formattedDate.replace('at', '');
   };
 
   useEffect(() => {
@@ -66,16 +68,29 @@ const Assignments = () => {
         <div className="max-w-5xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold">{assignment?.name}</h1>
-            <div className="space-x-4">
-            { !isTeacher ? (
-              <p className="mt-8 text-gray-600">
-                <span className="font-bold">Grade: </span> {submission?.grade ? submission.grade : " Waiting to be graded"}</p>) : null}
-              {/* <p className="mt-8 text-gray-600">Grade: {formatDate(submission?.submitted_at)}</p> */}
-            </div>
           </div>
-          <div>
-            <p className="mt-8 text-gray-600">
-            <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
+
+          <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
+            <div className="col-span-1 p-4">
+              {/* <div>
+                <p className="mt-8 text-gray-600">
+                <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
+              </div> */}
+            </div>
+            <div className="col-span-3 p-4">
+              <div>
+                <p className="mt-8 text-gray-600">
+                <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
+              </div>
+            </div>
+            <div className="col-span-1 p-4 ">
+              <div className="space-x-4">
+                { !isTeacher ? (
+                    <p className="mt-8 text-gray-600">
+                    <span className="font-bold">Grade: </span> {submission?.grade ? submission.grade : " Waiting to be graded"}</p>) : null}
+                    {/* <p className="mt-8 text-gray-600">Submitted at: {formatDate(submission?.submitted_at)}</p> */}
+              </div>
+            </div>
           </div>
 
 
@@ -106,7 +121,7 @@ const Assignments = () => {
               <div className="w-full p-4 bg-white rounded-lg shadow-lg">
                 <div className="flex flex-col">
 
-                  <button onClick={togglePopup} className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded flex items-center">
+                  <button onClick={togglePopup} className="w-full bg-fuchsia-300 hover:bg-fuchsia-400 text-white font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
@@ -120,7 +135,7 @@ const Assignments = () => {
                   <Link
                     href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}
                   >
-                    <button className="mt-5 bg-pink-300 hover:bg-pink-400 text-white font-bold py-2 px-4 border-b-4 border-pink-500 hover:border-pink-500 rounded flex max-width items-center">
+                    <button className="w-full mt-5 bg-pink-300 hover:bg-pink-400 text-white font-bold py-2 px-4 border-b-4 border-pink-500 hover:border-pink-500 rounded flex max-width items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                       </svg>
@@ -137,6 +152,8 @@ const Assignments = () => {
                   </Link> */}
                 </div>
               </div>
+              <p className="mt-8 text-gray-600">
+              <span className="font-bold">Submission date: </span>{submission?.submitted_at ? formatDate(submission?.submitted_at) : "No submission yet" }</p>
             </div>
           </div>
           ) : null}
