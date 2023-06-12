@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { quiz } from '../data/quiz';
+import axios from 'axios';
+
 
 const Quiz = (quizId) => {
   let selectedQuiz = quiz[quizId['quizId']]
@@ -22,6 +24,38 @@ const Quiz = (quizId) => {
   const { question, choices, correctAnswer } = questions[activeQuestion]
 
   // append to the answers array
+
+
+  // API call met url http://localhost:5000/quizScore
+  // Om data van de user op te halen geef je de bv: http://localhost:5000/quizScore/findByUserId/user1
+  // het returned een object maar de keys komen niet overeen met de quizid
+  const saveQuiz = async (userId) =>{
+
+    try {
+      console.log(result.correctAnswers)
+      const response = await axios.post('http://localhost:5000/quizScore/save', {
+          userId: userId,
+          quizId: String(quizId.quizId),
+          latestScore: result.correctAnswers
+      });
+      console.log(response.data); // Handle the response data
+    } catch (error) {
+      if (error.response.status == 409) {
+        try {
+          const response = await axios.put('http://localhost:5000/quizScore/update/grade/', {
+            userId: userId,
+            quizId: String(quizId.quizId),
+            latestScore: result.correctAnswers
+          });
+          console.log(response.data); // Handle the response data
+        } catch (error) {
+          console.log(error)
+        }
+      }
+      console.error(error); // Handle the error
+    }
+  }
+
   const handleAnswers = () => {
 
     const answer = {
@@ -31,7 +65,6 @@ const Quiz = (quizId) => {
     };
 
     setAnswers(prevAnswers => [...prevAnswers, answer]);
-    console.log(answers)
   };
 
   // when the next button is clicked
@@ -51,14 +84,27 @@ const Quiz = (quizId) => {
 
     if (activeQuestion !== questions.length - 1) {
 
-    setActiveQuestion((prev) => prev + 1)
-    } else {
+      setActiveQuestion((prev) => prev + 1)
+    }
+    // When the last question is filled in
+    else {
+
       setShowResult(true);
     }
 
     setSelectedAnswer(false);
     setSelAnswer('');
+
+
   }
+
+  useEffect(() => {
+    if (showResult) {
+      saveQuiz('user4');
+    }
+  }, [showResult]);
+
+
 
   // when answer is selected
   const onAnswerSelected = (answer, index) => {
@@ -109,6 +155,7 @@ const Quiz = (quizId) => {
             <p>Correct Answers: {result.correctAnswers}</p>
             <p>Wrong Answers: {result.wrongAnswers}</p>
             <br />
+
             {answers.map((object, index) => (
               <div
               key={object.question}>

@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2022",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -15,9 +19,21 @@
     "jsx": "preserve",
     "incremental": true,
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "components/quiz.jsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "components/CourseSelection.tsx/ExploreCard.jsx",
+    "components/CourseSelection.tsx/ExploreCard.jsx",
+    "components/CourseSelection.tsx/ExploreCard.js",
+    "components/CourseSelection.tsx/Explore.jsx"
+, "lib/hooks/useExample.js", "Context.js"  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
