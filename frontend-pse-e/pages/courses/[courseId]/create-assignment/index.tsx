@@ -4,32 +4,79 @@ import useCourse from "@/lib/hooks/useCourse";
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { motion } from "framer-motion";
-import { useContext, useEffect } from 'react';
+import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Context } from '@/Context';
-import { Enrollment } from "@/lib/types";
+import { Assignment, Enrollment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
 
 const CreateAssignment = () => {
-    const router = useRouter();
+    const [assignmentName, setAssignmentName] = useState("");
+    const [description, setDescription] = useState("");
+    const [points, setPoints] = useState(0);
+    const [attempts, setAttempts] = useState<number>(-1);
+    const [gradingType, setGradingType] = useState("Points");
+    const [isCounted, setIsCounted] = useState(false);
+    const [isGroupAssignment, setIsGroupAssignment] = useState(false);
+    const [requirePeerReviews, setRequirePeerReviews] = useState(false);
+    const [isAnonymousGrading, setIsAnonymousGrading] = useState(false);
+   
 
+    const router = useRouter();
     const { courseId } = router.query;
     const { token } = useAuthentication();
 
-    const { course: contextCourse } = useContext(Context); // When pressing a course
-    const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url
+    const { course: contextCourse } = useContext(Context);
+    const { course: fetchedCourse, getCourse } = useCourse();
     const course = contextCourse || fetchedCourse;
 
     useEffect(() => {
         if (courseId && token) {
-            getCourse(parseInt(courseId.toString()), token)
+            getCourse(parseInt(courseId.toString()), token);
         }
     }, [router.query]);
+
+    const handleCreateAssignment = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        // Create the assignment object
+        const assignment: Assignment = {
+            name: assignmentName,
+            description: description,
+            points_possible: points,
+            grading_type: gradingType,
+            omit_from_final_grade: isCounted,
+            peer_reviews: requirePeerReviews,
+            anonymous_grading: isAnonymousGrading,
+            allowed_attempts: attempts
+        };
+
+        // Perform further actions with the assignment object (e.g., API call, state update, etc.)
+        console.log(assignment);
+    };
+
+
+    const handlePointsChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value === "" || parseInt(value) < 0) {
+            setPoints(0);
+        } else {
+            setPoints(parseInt(value));
+        }
+    };
+    const handleAttemptsChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (value === "" || parseInt(value) < 0) {
+            setAttempts(-1);
+        } else {
+            setAttempts(parseInt(value));
+        }
+    };
 
     const isTeacher = course?.enrollments?.some(
         (enrollment: Enrollment) => enrollment?.type === "teacher"
     )
 
-    console.log(course, isTeacher);
+    // const assignment: Assignment
 
     return (
         <>
@@ -63,36 +110,133 @@ const CreateAssignment = () => {
                         </span>
                     </motion.div>
                 </div>
-                <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
-                    <form className="w-full">
+                <div className="w-full relative overflow-x-auto shadow-md p-4 lg:p-8 md:w-4/5">
+                    <form className="w-full" onSubmit={handleCreateAssignment}>
                         <div className="mb-6">
-                            <label htmlFor="assignment-name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assignment Name</label>
-                            <input type="text" id="assignment-name" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" placeholder="Assignment Name" required />
+                            <label htmlFor="assignment-name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Assignment Name
+                            </label>
+                            <input
+                                type="text"
+                                id="assignment-name"
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                                placeholder="Assignment Name"
+                                required
+                                value={assignmentName}
+                                onChange={(e) => setAssignmentName(e.target.value)}
+                            />
                         </div>
-
-                        <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Description</label>
-                        <textarea id="message" rows={4} className="block mb-6 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"></textarea>
-
+                        <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Description
+                        </label>
+                        <textarea
+                            id="message"
+                            rows={4}
+                            className="block mb-6 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Description"
+                            value={description}
+                            onChange={(e) => setDescription(e.target.value)}
+                        ></textarea>
                         <label htmlFor="assignment_type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assignment Type</label>
                         <select disabled id="assignment_type" className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             <option>Written Assignment</option>
                         </select>
-
-                        {/* <div className="mb-6">
-                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
-                            <input type="password" id="password" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
-                        </div> */}
-                        {/* <div className="mb-6">
-                            <label htmlFor="repeat-password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Repeat password</label>
-                            <input type="password" id="repeat-password" className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light" required />
-                        </div> */}
+                        <label htmlFor="grading_type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            Grading Type
+                        </label>
+                        <select
+                            defaultValue={"Points"}
+                            id="grading_type"
+                            className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            onChange={(e) => setGradingType(e.target.value)}
+                            disabled
+                        >
+                            <option>Percentage</option>
+                            <option>Complete/incomplete</option>
+                            <option>Points</option>
+                            <option>Letter grade</option>
+                            <option>GPA scale</option>
+                            <option>Not graded</option>
+                        </select>
+                        <div className="mb-6">
+                            <label htmlFor="assignment-points" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Points
+                            </label>
+                            <input
+                                type="number"
+                                id="assignment-points"
+                                className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
+                                placeholder="0"
+                                required
+                                value={points}
+                                onChange={handlePointsChange}
+                            />
+                        </div>
+                        <div className="mb-6">
+                            <label htmlFor="assignment-attempts" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Attempts</label>
+                            <input
+                                type="number"
+                                id="assignment-attempts"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Unlimited"
+                                value={attempts}
+                                onChange={handleAttemptsChange}
+                            />
+                        </div>
                         <div className="flex items-start mb-6">
                             <div className="flex items-center h-5">
-                                <input id="terms" type="checkbox" value="" className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800" required />
+                                <input
+                                    id="assignment-points-checkbox"
+                                    type="checkbox"
+                                    value=""
+                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                                    checked={isCounted}
+                                    onChange={(e) => setIsCounted(e.target.checked)}
+                                />
                             </div>
-                            <label htmlFor="terms" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">I agree with the <a href="#" className="text-blue-600 hover:underline dark:text-blue-500">terms and conditions</a></label>
+                            <label htmlFor="assignment-points-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                Do not count this assignment towards the final grade
+                            </label>
                         </div>
-                        <button type="submit" className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create Assignment</button>
+                        <div className="flex items-start mb-6">
+                            <div className="flex items-center h-5">
+                                <input
+                                    disabled={!isGroupAssignment}
+                                    id="assignment-peer-checkbox"
+                                    type="checkbox"
+                                    value=""
+                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                                    checked={requirePeerReviews}
+                                    onChange={(e) => setRequirePeerReviews(e.target.checked)}
+                                />
+                            </div>
+                            <label htmlFor="assignment-peer-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                Require peer reviews
+                            </label>
+                        </div>
+                        <div className="flex items-start mb-6">
+                            <div className="flex items-center h-5">
+                                <input
+                                    id="assignment-anonymous-checkbox"
+                                    type="checkbox"
+                                    value=""
+                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                                    checked={isAnonymousGrading}
+                                    onChange={(e) => setIsAnonymousGrading(e.target.checked)}
+                                />
+                            </div>
+                            <label htmlFor="assignment-anonymous-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                Graders cannot view student names
+                            </label>
+                        </div>
+                        <div className="mb-6"></div>
+                        
+                       <button
+                            type="submit"
+                            className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        >
+                            Create Assignment
+                        </button>
                     </form>
                 </div>
             </div>
