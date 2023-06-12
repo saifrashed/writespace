@@ -29,6 +29,18 @@ const Assignments = () => {
     setShowPopup(!showPopup);
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric' as const, // Specify the type explicitly
+      hour: 'numeric',
+      minute: 'numeric',
+    };
+
+    return date.toLocaleString('en-US', options);
+  };
 
   useEffect(() => {
     if (courseId && assignmentId && token) {
@@ -53,8 +65,12 @@ const Assignments = () => {
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-3xl font-bold">{assignment?.name}</h1>
             <div className="space-x-4">
-              <p className="mt-8 text-gray-600">Deadline: {assignment?.due_at}</p>
+              <p className="mt-8 text-gray-600">Grade: {submission?.grade}</p>
+              {/* <p className="mt-8 text-gray-600">Grade: {formatDate(submission?.submitted_at)}</p> */}
             </div>
+          </div>
+          <div>
+            <p className="mt-8 text-gray-600">Deadline: {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
           </div>
 
           <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
@@ -70,6 +86,7 @@ const Assignments = () => {
               </div>
             </div>
             <div className="col-span-3 p-4">
+
               <div className="w-full p-4 bg-white rounded-lg shadow-lg ">
                 <div className="flex space-x-4">
                   <div key={assignment?.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment?.description ? assignment?.description : "" }}>
