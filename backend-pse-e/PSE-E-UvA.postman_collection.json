@@ -1,0 +1,192 @@
+{
+	"info": {
+		"_postman_id": "87e61370-80d9-4c71-a28a-19c2c83de3e7",
+		"name": "PSE-E-UvA",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "14877361",
+		"_collection_link": "https://new-world-86-pad-team-7.postman.co/workspace/Team-Workspace~d3f42447-f8b4-4df1-893c-c1469601f20c/collection/14877361-87e61370-80d9-4c71-a28a-19c2c83de3e7?action=share&creator=14877361&source=collection_link"
+	},
+	"item": [
+		{
+			"name": "Test requests",
+			"item": [
+				{
+					"name": "Getall",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:5000/test/getAll"
+					},
+					"response": []
+				},
+				{
+					"name": "Test post request",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"testingDBDemo\",\r\n    \"testId\" : 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/test/save"
+					},
+					"response": []
+				},
+				{
+					"name": "Test put request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\" : \"test\",\r\n    \"testId\" : 10242342\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/test/update/10"
+					},
+					"response": []
+				},
+				{
+					"name": "Get one by testId",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:5000/test/findByTestId/10242342"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete one test model by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:5000/test/delete/10242342"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Canvas-api",
+			"item": [
+				{
+					"name": "Get one user information",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\" : \"10440~D8gSQxpRIfQfZS2usqq8DVPeMXofcwkOZZ45LWiHAOILKXkbotbBWYCaGyopZEps\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/canvas-api/get-user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get courses with access token from FE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\" : \"10440~D8gSQxpRIfQfZS2usqq8DVPeMXofcwkOZZ45LWiHAOILKXkbotbBWYCaGyopZEps\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/canvas-api/courses"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all assignments of a course with access token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 56157,\r\n    \"token\" : \"10440~D8gSQxpRIfQfZS2usqq8DVPeMXofcwkOZZ45LWiHAOILKXkbotbBWYCaGyopZEps\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/canvas-api/assignments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get one course with courseId",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\" : \"10440~D8gSQxpRIfQfZS2usqq8DVPeMXofcwkOZZ45LWiHAOILKXkbotbBWYCaGyopZEps\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/canvas-api/courses/56157"
+					},
+					"response": []
+				},
+				{
+					"name": "Get one assignment from a course with courseId and assignmentId",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\" : \"10440~D8gSQxpRIfQfZS2usqq8DVPeMXofcwkOZZ45LWiHAOILKXkbotbBWYCaGyopZEps\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/canvas-api/courses/56157/6046"
+					},
+					"response": []
+				},
+				{
+					"name": "Get assignment rubric",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\" : \"10440~D8gSQxpRIfQfZS2usqq8DVPeMXofcwkOZZ45LWiHAOILKXkbotbBWYCaGyopZEps\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/canvas-api/courses/56157/rubrics/482"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

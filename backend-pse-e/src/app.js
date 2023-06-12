@@ -10,8 +10,9 @@ require('dotenv').config();
 // Database connection
 require('./config/databaseConfig').connect();
 
-const express = require('express');
-const cors = require('cors');
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require('body-parser');
 
 // Import ObjectId from MongoDB
 const { ObjectId } = require('mongodb');
@@ -21,14 +22,27 @@ const app = express();
 // Cross origin resource sharing
 app.use(cors(corsOptions));
 // Express
-app.use(express.json());
-app.use(express.json({ limit: '50mb' }));
+
+app.use(express.json())
+app.use(express.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ extended: true }));
+
 
 // ************************* Add new services here *************************
 // Import services here
 const testService = require('./services/test.service.js');
+const submissionService = require('./services/submission.service.js');
+const userService = require('./services/user.service.js');
+const quizScoreService = require('./services/quizScore.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
+app.use('/submission', submissionService);
+app.use('/user', userService);
+app.use('/quizScore', quizScoreService);
+const canvasService = require('./services/canvas-api.service.js');
+// Define new routes here with the start route
+app.use('/test', testService);
+app.use('/canvas-api', canvasService);
 
 // ************************* General requests *************************
 app.get('/', (req, res) => {
