@@ -124,7 +124,8 @@ const CourseOverview = () => {
                       >{assignment.name}</Link>
                     </th>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {formatDate(assignment.due_at)}
+                      {/* {formatDate(assignment.due_at)} */}
+                      {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
                     </td>
                     {isTeacher ? (
                       <td className="flex items-center justify-end px-3 py-2 space-x-3">

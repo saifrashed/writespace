@@ -10,6 +10,10 @@ const { encryptToken, decryptToken, auth } = require('../middleware/auth');
 
 // Canvas api url (testing environment, the environment we need for this project)
 const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
+// production
+// const apiUrl = 'https://canvas.uva.nl/api/v1';
+
+
 // apiUrl for logging in with OAuth2 (without the "/api/v1" part)
 const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
 
@@ -103,6 +107,22 @@ router.post('/courses/:courseId/:assignmentId', (req, res) => {
     res.status(500).json({ error: 'An error occurred.' });
   });
 });
+
+// Get an user its submission data for a specific assignment.
+router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 
 // Get one rubric for an assignment with a user access token
 // NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
