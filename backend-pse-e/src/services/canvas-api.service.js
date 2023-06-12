@@ -137,25 +137,6 @@ router.post('/courses/:courseId/user/role', (req, res) => {
   });
 });
 
-/*
-TODO: see user stories on github board, but this is the main overview:
-// get user role for course
-// TODO
-
-// Get assignments for a course that are written
-// TODO: see assignment returned, probably file uploads
-
-"submission_types": [
-            "online_upload"
-        ],
-Then here something with file upload!
-
-// Upload submission for an assignment, this is a pdf file, contact Alessio for this!
-// TODO: Create assignment on canvas
-*/
-
-// TODO: discuss with Saif and/or Devran how the FE can extract the code to do the requests for getting a user's token
-
 // Route for initiating the login redirect
 // Test this by going to this URL in your browser for example: localhost:5000/canvas-api/login
 router.get('/login', (req, res) => {
@@ -198,16 +179,5 @@ router.post('/get-user-token/refresh', (req, res) => {
     res.status(500).json({ error: 'An error occurred.' });
   });
 });
-
-
-/*
-TODO: Do this later, maybe next sprint because otherwise everything will stop working.
-Change all endpoints with token to this:
-router.post('/get-user-token/refresh', auth, (req, res) => {
-then change the endpoints to send the encryted tokens back to the FE, so that you send an encrypted 
-token to the FE.
-This needs to be done later because all endpoints need to be changed.
-*/
-
 
 module.exports = router;
