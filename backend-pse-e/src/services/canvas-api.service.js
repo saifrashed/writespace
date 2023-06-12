@@ -74,6 +74,25 @@ router.post('/assignments', (req, res) => {
   });
 });
 
+// Get all file upload (written) assignments
+router.post('/written-assignments', (req, res) => {
+  const { courseId, token } = req.body;
+  axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100,
+      submission: 'online_upload'
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 // Get one course with a user access token
 router.post('/courses/:courseId', (req, res) => {
   const token = req.body.token;
@@ -208,13 +227,6 @@ Then here something with file upload!
 
 // TODO: merge with backend
 
-/*
-TODO: Do this later, maybe next sprint because otherwise everything will stop working.
-Change all endpoints with token to this:
-router.post('/get-user-token/refresh', auth, (req, res) => {
-then change the endpoints to send the encryted tokens back to the FE, so that you send an encrypted 
-token to the FE.
-This needs to be done later because all endpoints need to be changed.
-*/
+
 
 module.exports = router;
