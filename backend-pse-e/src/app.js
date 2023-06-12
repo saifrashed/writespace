@@ -35,12 +35,14 @@ const submissionService = require('./services/submission.service.js');
 const userService = require('./services/user.service.js');
 const quizScoreService = require('./services/quizScore.service.js');
 const assignmentService = require('./services/assignment.service.js');
+const badgeService = require('./services/badge.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
 app.use('/submission', submissionService);
 app.use('/user', userService);
 app.use('/quizScore', quizScoreService);
 app.use('/assignment', assignmentService);
+app.use('/badge', badgeService);
 const canvasService = require('./services/canvas-api.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
