@@ -5,6 +5,9 @@ const router = express.Router();
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 
+// Import authentication functions
+const { encryptToken, decryptToken, auth } = require('../middleware/auth');
+
 // Canvas api url (testing environment, the environment we need for this project)
 const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
 // apiUrl for logging in with OAuth2 (without the "/api/v1" part)
@@ -117,6 +120,7 @@ router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
   });
 });
 
+// TODO: test this in postman!
 // Get a user's role for a specific course
 router.post('/courses/:courseId/user-role', (req, res) => {
   const token = req.body.token;
@@ -194,5 +198,16 @@ router.post('/get-user-token/refresh', (req, res) => {
     res.status(500).json({ error: 'An error occurred.' });
   });
 });
+
+
+/*
+TODO: Do this later, maybe next sprint because otherwise everything will stop working.
+Change all endpoints with token to this:
+router.post('/get-user-token/refresh', auth, (req, res) => {
+then change the endpoints to send the encryted tokens back to the FE, so that you send an encrypted 
+token to the FE.
+This needs to be done later because all endpoints need to be changed.
+*/
+
 
 module.exports = router;
