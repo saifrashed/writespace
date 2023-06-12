@@ -757,10 +757,6 @@ select {
   grid-column: span 3 / span 3;
 }
 
-.m-auto {
-  margin: auto;
-}
-
 .-mx-3 {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
@@ -1054,10 +1050,6 @@ select {
   align-content: center;
 }
 
-.items-start {
-  align-items: flex-start;
-}
-
 .items-center {
   align-items: center;
 }
@@ -1080,12 +1072,6 @@ select {
 
 .gap-5 {
   gap: 1.25rem;
-}
-
-.space-x-2 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .space-x-3 > :not([hidden]) ~ :not([hidden]) {
@@ -1131,14 +1117,6 @@ select {
   overflow-x: auto;
 }
 
-.overflow-y-auto {
-  overflow-y: auto;
-}
-
-.overflow-x-hidden {
-  overflow-x: hidden;
-}
-
 .whitespace-nowrap {
   white-space: nowrap;
 }
@@ -1167,26 +1145,12 @@ select {
   border-radius: 0.75rem;
 }
 
-.rounded-b {
-  border-bottom-right-radius: 0.25rem;
-  border-bottom-left-radius: 0.25rem;
-}
-
-.rounded-t {
-  border-top-left-radius: 0.25rem;
-  border-top-right-radius: 0.25rem;
-}
-
 .border {
   border-width: 1px;
 }
 
 .border-b {
   border-bottom-width: 1px;
-}
-
-.border-t {
-  border-top-width: 1px;
 }
 
 .border-gray-200 {
@@ -1206,11 +1170,6 @@ select {
 .bg-amber-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(245 158 11 / var(--tw-bg-opacity));
-}
-
-.bg-black {
-  --tw-bg-opacity: 1;
-  background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
 
 .bg-blue-500 {
@@ -1348,10 +1307,6 @@ select {
   background-color: rgb(202 138 4 / var(--tw-bg-opacity));
 }
 
-.bg-opacity-30 {
-  --tw-bg-opacity: 0.3;
-}
-
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;
 }
@@ -1405,10 +1360,6 @@ select {
   padding: 1.25rem;
 }
 
-.p-6 {
-  padding: 1.5rem;
-}
-
 .p-8 {
   padding: 2rem;
 }
@@ -1431,11 +1382,6 @@ select {
 .px-4 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-.px-5 {
-  padding-left: 1.25rem;
-  padding-right: 1.25rem;
 }
 
 .px-6 {
@@ -1740,10 +1686,6 @@ select {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
-.focus\:z-10:focus {
-  z-index: 10;
-}
-
 .focus\:bg-gray-100:focus {
   --tw-bg-opacity: 1;
   background-color: rgb(243 244 246 / var(--tw-bg-opacity));
@@ -1907,10 +1849,6 @@ select {
 }
 
 @media (min-width: 768px) {
-  .md\:inset-0 {
-    inset: 0px;
-  }
-
   .md\:min-h-screen {
     min-height: 100vh;
   }

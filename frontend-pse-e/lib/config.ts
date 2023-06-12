@@ -1,7 +1,7 @@
 const config = {
-    baseUrl: "https://writespace.onrender.com",
+    baseUrl: "http://localhost:5000",
 };
 
-// http://localhost:5000
+// https://writespace.onrender.com
 
 export default config;

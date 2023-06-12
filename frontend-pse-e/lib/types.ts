@@ -124,3 +124,18 @@ export interface Assignment {
     require_lockdown_browser: boolean;
     restrict_quantitative_data: boolean;
 }
+
+export interface User {
+    id: number;
+    name: string;
+    global_id: string;
+    effective_locale: string;
+}
+
+export interface TokenResponse {
+    access_token: string;
+    token_type: string;
+    user: User;
+    canvas_region: string;
+    expires_in: number;
+}
