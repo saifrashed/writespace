@@ -199,33 +199,19 @@ router.post('/get-user-token/refresh', (req, res) => {
   });
 });
 
+// TODO: user stories on GitHub board
+
+//TODO: how many people in the course and how many submissions for Devran?
+
 /*
-TODO: Devran endpoint: active courses only: URL ..../active-courses
-get start date of course + 1 year. Then get the date of today.
-If smaller than date 1 - (date of today - 1 year), return it.
+TODO: explain that from now on the test environment is used only, so a different access-token needs to be used.
+But this will probably be fixed with the login functionality in this sprint because you will need to login to 
+your UvA account and an access-token will be used for the test environment.
 
-
-TODO: how many people in the course and how many submissions?
-
-
-
-TODO: see user stories on github board, but this is the main overview:
-// get user role for course
-// TODO
-
-// Get assignments for a course that are written
-// TODO: see assignment returned, probably file uploads
-
-"submission_types": [
-            "online_upload"
-        ],
-Then here something with file upload!
-
-// Upload submission for an assignment, this is a pdf file, contact Alessio for this!
-// TODO: Create assignment on canvas
+TODO: invite all of our teammates (or only FE teammembers) to all the test courses I made on the test environment
+and make example data. Ask everyone what example data they need. And give everyone teacher role, then they can 
+change this themselves.
 */
-
-// TODO: merge with backend
 
 
 
