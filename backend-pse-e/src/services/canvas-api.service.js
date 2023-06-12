@@ -180,4 +180,41 @@ router.post('/get-user-token/refresh', (req, res) => {
   });
 });
 
+/*
+TODO: Devran endpoint: active courses only: URL ..../active-courses
+get start date of course + 1 year. Then get the date of today.
+If smaller than date 1 - (date of today - 1 year), return it.
+
+
+TODO: how many people in the course and how many submissions?
+
+
+
+TODO: see user stories on github board, but this is the main overview:
+// get user role for course
+// TODO
+
+// Get assignments for a course that are written
+// TODO: see assignment returned, probably file uploads
+
+"submission_types": [
+            "online_upload"
+        ],
+Then here something with file upload!
+
+// Upload submission for an assignment, this is a pdf file, contact Alessio for this!
+// TODO: Create assignment on canvas
+*/
+
+// TODO: merge with backend
+
+/*
+TODO: Do this later, maybe next sprint because otherwise everything will stop working.
+Change all endpoints with token to this:
+router.post('/get-user-token/refresh', auth, (req, res) => {
+then change the endpoints to send the encryted tokens back to the FE, so that you send an encrypted 
+token to the FE.
+This needs to be done later because all endpoints need to be changed.
+*/
+
 module.exports = router;
