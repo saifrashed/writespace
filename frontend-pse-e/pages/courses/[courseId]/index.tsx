@@ -20,7 +20,7 @@ const CourseOverview = () => {
   const { assignments, isLoading, getAssignments } = useAssignments();
 
   const { course: contextCourse } = useContext(Context); // When pressing a course
-  const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url 
+  const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url
   const course = contextCourse || fetchedCourse;
 
   useEffect(() => {
@@ -73,11 +73,11 @@ const CourseOverview = () => {
             layoutId={course?.id.toString()}
             className={`flex flex-col items-center rounded-2xl p-8 ${course?.course_color || "bg-yellow-500"} bg-opacity-50 z-10`}>
             <h5
-              className="mb-1 text-xl font-medium text-gray-900 dark:text-white text-center">
+              className="mb-1 text-xl font-medium text-white text-center">
               {course?.name}
             </h5>
             <span
-              className="mb-2 text-sm text-gray-500 dark:text-gray-400 text-center">
+              className="mb-2 text-sm text-center text-white opacity-60">
               {course?.course_code}
             </span>
             {isTeacher ? (
