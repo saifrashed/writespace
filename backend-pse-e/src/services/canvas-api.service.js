@@ -85,4 +85,19 @@ router.post('/courses/:courseId/:assignmentId', (req, res) => {
   });
 });
 
+// Get an user its submission data for a specific assignment.
+router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 module.exports = router;

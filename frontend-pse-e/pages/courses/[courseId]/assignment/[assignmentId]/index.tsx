@@ -8,6 +8,7 @@ import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import Button from "../../../../../components/stdButton";
 import UploadPopup from "../../../../../components/uploadPopup";
+import useSubmission from "@/lib/hooks/useSubmission";
 
 
 const Assignments = () => {
@@ -16,9 +17,13 @@ const Assignments = () => {
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
   const { assignment, getAssignment } = useAssignment()
+  const { submission, getSubmission } = useSubmission()
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
+
+
+  console.log(submission?.grade)
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -28,6 +33,7 @@ const Assignments = () => {
   useEffect(() => {
     if (courseId && assignmentId && token) {
       getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+      getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
     }
   }, [router.query]);
 
