@@ -9,7 +9,7 @@ const assignmentModel = new mongoose.Schema({
     deadline: Date,
     availableAt: Date,
     maxPoints: Number,
-    rubric : [{ criterium: String, description: String, points: Number }],
+    rubric : [{ criterium: String, subcriteria: [{description: String, points: Number }]}],
 });
 
 // Export the database model for MongoDB
