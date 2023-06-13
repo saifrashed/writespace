@@ -9,7 +9,7 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import Button from "../../../../../components/stdButton";
 import UploadPopup from "../../../../../components/uploadPopup";
 import useSubmission from "@/lib/hooks/useSubmission";
-
+import useEnrollments from "@/lib/hooks/useEnrollments";
 
 const Assignments = () => {
   const router = useRouter();
@@ -18,14 +18,15 @@ const Assignments = () => {
   const { token } = useAuthentication();
   const { assignment, getAssignment } = useAssignment()
   const { submission, getSubmission } = useSubmission()
+  const { enrollments, getEnrollments } = useEnrollments()
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
-  const isTeacher = false;
+  const isTeacher = true;
 
-
-  console.log(submission?.grade)
+  console.log(isTeacher)
+  console.log(enrollments)
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -47,9 +48,14 @@ const Assignments = () => {
   };
 
   useEffect(() => {
+    // Do API requests based on a user its role.
     if (courseId && assignmentId && token) {
-      getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-      getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+      if (isTeacher) {
+        getEnrollments(parseInt(courseId.toString()), token)
+      } else {
+        getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+        getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+      }
     }
   }, [router.query]);
 
