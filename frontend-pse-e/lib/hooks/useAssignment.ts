@@ -17,8 +17,19 @@ function useAssignment() {
       onError("Something went wrong")
     }
   }
+  const createAssignment = async (courseId: number, assignment: Assignment, token: string) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/assignments`, { token, assignment })
+      setAssignment(response.data)
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
+    }
+  }
 
-  return { assignment, getAssignment };
+
+
+  return { assignment, getAssignment, createAssignment };
 }
 
 export default useAssignment;

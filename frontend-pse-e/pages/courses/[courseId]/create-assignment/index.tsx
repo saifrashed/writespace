@@ -8,22 +8,24 @@ import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Context } from '@/Context';
 import { Assignment, Enrollment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
+import useAssignment from "@/lib/hooks/useAssignment";
 
 const CreateAssignment = () => {
     const [assignmentName, setAssignmentName] = useState("");
     const [description, setDescription] = useState("");
     const [points, setPoints] = useState(0);
     const [attempts, setAttempts] = useState<number>(-1);
-    const [gradingType, setGradingType] = useState("Points");
+    const [gradingType, setGradingType] = useState("points");
     const [isCounted, setIsCounted] = useState(false);
     const [isGroupAssignment, setIsGroupAssignment] = useState(false);
     const [requirePeerReviews, setRequirePeerReviews] = useState(false);
     const [isAnonymousGrading, setIsAnonymousGrading] = useState(false);
-   
+
 
     const router = useRouter();
     const { courseId } = router.query;
     const { token } = useAuthentication();
+    const { createAssignment } = useAssignment();
 
     const { course: contextCourse } = useContext(Context);
     const { course: fetchedCourse, getCourse } = useCourse();
@@ -38,8 +40,7 @@ const CreateAssignment = () => {
     const handleCreateAssignment = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // Create the assignment object
-        const assignment: Assignment = {
+        const assignment: Assignment | any = {
             name: assignmentName,
             description: description,
             points_possible: points,
@@ -49,9 +50,7 @@ const CreateAssignment = () => {
             anonymous_grading: isAnonymousGrading,
             allowed_attempts: attempts
         };
-
-        // Perform further actions with the assignment object (e.g., API call, state update, etc.)
-        console.log(assignment);
+        createAssignment(course?.id, assignment, token)
     };
 
 
@@ -75,8 +74,6 @@ const CreateAssignment = () => {
     const isTeacher = course?.enrollments?.some(
         (enrollment: Enrollment) => enrollment?.type === "teacher"
     )
-
-    // const assignment: Assignment
 
     return (
         <>
@@ -145,18 +142,18 @@ const CreateAssignment = () => {
                             Grading Type
                         </label>
                         <select
-                            defaultValue={"Points"}
+                            defaultValue={"points"}
                             id="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setGradingType(e.target.value)}
                             disabled
                         >
-                            <option>Percentage</option>
-                            <option>Complete/incomplete</option>
-                            <option>Points</option>
-                            <option>Letter grade</option>
-                            <option>GPA scale</option>
-                            <option>Not graded</option>
+                            <option>pass_fail</option>
+                            <option>percent</option>
+                            <option>points</option>
+                            <option>letter_grade</option>
+                            <option>gpa_scale</option>
+                            <option>not_graded</option>
                         </select>
                         <div className="mb-6">
                             <label htmlFor="assignment-points" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -230,8 +227,8 @@ const CreateAssignment = () => {
                             </label>
                         </div>
                         <div className="mb-6"></div>
-                        
-                       <button
+
+                        <button
                             type="submit"
                             className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
