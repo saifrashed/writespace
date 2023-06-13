@@ -106,6 +106,35 @@ router.post('/courses/:courseId/assignments', (req, res) => {
   });
 });
 
+// Update assignment (missing deadline attribute)
+router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
+  console.log(req.params);
+  const { courseId, assignmentId } = req.params
+  const { assignment, token } = req.body;
+
+  axios.put(`${apiUrl}/courses/${courseId}/assignments/${assignmentId}`, assignment, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }, params: {
+      "assignment[name]": assignment.name,
+      "assignment[description]": assignment.description,
+      "assignment[points_possible]": assignment.points_possible,
+      "assignment[grading_type]": assignment.grading_type,
+      "assignment[submission_types]": ['online_upload'], // written assignment standard
+      "assignment[allowed_attempts]": assignment.allowed_attempts,
+      "assignment[anonymous_grading]": assignment.anonymous_grading,
+      "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
+      "assignment[peer_reviews]": assignment.peer_reviews,
+      "assignment[published]": true // immediately publish assignment
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 // Get one course with a user access token
 router.post('/courses/:courseId', (req, res) => {
   const token = req.body.token;
