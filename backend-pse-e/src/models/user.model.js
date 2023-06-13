@@ -8,7 +8,7 @@ const badgeSchema = new mongoose.Schema({
   });
 
 const userModel = new mongoose.Schema({
-    userId: String,
+    userId: Number,
     experiencePoints: Number,
     level: Number,
     badges: {
@@ -19,16 +19,6 @@ const userModel = new mongoose.Schema({
       }]
     }
   });
-
-// const userModel = new mongoose.Schema({
-//     userId: String,
-//     experiencePoints: Number,
-//     level: Number,
-//     badges: [{ badgeId: Number, amount: Number,
-//         badgelist: [{ courseId: Number, assignmentId: Number, graderId: Number,
-//         comment: String}]
-//     }],
-// });
 
 // Export the database model for MongoDB
 module.exports = mongoose.model("user", userModel);

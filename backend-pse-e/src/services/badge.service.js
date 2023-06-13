@@ -22,7 +22,7 @@ const badgeModel = require("../models/badge.model.js");
 // Post request (creates something in the db)
 
 // Get request (gets something from the db)
-
+// Get all badges
 router.get("/getAll", async (req, res) => {
     try {
         // Find all tests
@@ -35,6 +35,7 @@ router.get("/getAll", async (req, res) => {
     }
 });
 
+// Get badge by badgeId
 router.get("/getBadge/:badgeId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -52,6 +53,7 @@ router.get("/getBadge/:badgeId", async (req, res) => {
     }
 });
 
+// Save new badge
 router.post('/save', upload.single('file'), async (req, res) => {
     try {
         // Variables for the model
@@ -88,6 +90,7 @@ router.post('/save', upload.single('file'), async (req, res) => {
     }
 });
 
+// Update badge XP
 router.put('/update/experiencePoints/', async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
@@ -116,6 +119,7 @@ router.put('/update/experiencePoints/', async (req, res) => {
     }
 });
 
+// Update badge name and description
 router.put('/update/namedescription/', async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
@@ -146,6 +150,7 @@ router.put('/update/namedescription/', async (req, res) => {
     }
 });
 
+// Update badge icon
 router.put('/update/icon/', async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
@@ -174,11 +179,12 @@ router.put('/update/icon/', async (req, res) => {
     }
 });
 
+// Delete badge
 router.delete('/delete/:badgeId', async (req, res) => {
     try {
         const badgeId = req.params.badgeId;
 
-        // Find the document by submissionId and remove it
+        // Find the document by badgeId and remove it
         const result = await badgeModel.deleteOne({ 'badgeId': badgeId });
 
         // Check if the document was found and deleted successfully
