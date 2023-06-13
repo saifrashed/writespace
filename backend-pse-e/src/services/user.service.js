@@ -23,7 +23,7 @@ const userModel = require("../models/user.model.js");
 
 // Get request (gets something from the db)
 // Get all users
-router.get("/getAll", async (req, res) => {
+router.get("/get-all", async (req, res) => {
     try {
         // Find all users
         const users = await userModel.find();
@@ -36,7 +36,7 @@ router.get("/getAll", async (req, res) => {
 });
 
 // Find users by userId
-router.get("/findByUserId/:userId", async (req, res) => {
+router.get("/find-by-user-id/:userId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await userModel.find({ 'userId': req.params.userId });
@@ -88,7 +88,7 @@ router.post('/save', async (req, res) => {
 });
 
 // Updates user XP
-router.put('/update/experiencePoints/', async (req, res) => {
+router.put('/update/experience-points/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const experiencePoints = req.body.experiencePoints
@@ -146,7 +146,7 @@ router.put('/update/level/', async (req, res) => {
 });
 
 // Add badge to user. Handles adding of new badges and adding to existing badges
-router.put('/update/addbadge/', async (req, res) => {
+router.put('/update/add-badge/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const newBadge = req.body.badgeId;
@@ -183,7 +183,7 @@ router.put('/update/addbadge/', async (req, res) => {
 });
 
 // Delete a badge
-router.put('/update/deletebadge/', async (req, res) => {
+router.put('/update/delete-badge/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;
