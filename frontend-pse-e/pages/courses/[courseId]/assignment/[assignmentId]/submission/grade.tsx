@@ -13,6 +13,7 @@ import {
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import axios from 'axios';
 
 
 const Grade = () => {
@@ -24,12 +25,14 @@ const Grade = () => {
     const noteEles: Map<number, HTMLElement> = new Map();
     const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(null);
     const [fileUrl, setFileUrl] = React.useState<string | null>(null);
+    const [filenotes, setFileNotes] = React.useState<Note[]>([]);
 
     const handleDocumentLoad = (e: DocumentLoadEvent) => {
         setCurrentDoc(e.doc);
         if (currentDoc && currentDoc !== e.doc) {
             // User opens new document
-            setNotes([]);
+            console.log(filenotes)
+            setNotes(filenotes)
         }
     };
 
@@ -68,8 +71,23 @@ const Grade = () => {
                     quote: props.selectedText,
                 };
                 setNotes(notes.concat([note]));
-                console.log(notes)
                 props.cancel();
+
+                console.log(note)
+
+                const body = {
+                    userId: "ales1708",
+                    assignmentId: "LeukeShit",
+                    newNote: note,
+                };
+
+                fetch('http://localhost:5000/submission/update/fileNotes/', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body),
+                })
             }
         };
 
@@ -211,40 +229,41 @@ const Grade = () => {
 
     React.useEffect(() => {
         const fetchSubmissionData = async () => {
-          try {
-            const response = await fetch('http://localhost:5000/submission/findSpecificSubmission?userId=ales1708&assignmentId=LeukeShit');
-            if (response.ok) {
-              const data = await response.json();
-              const binaryData = new Uint8Array(data[0].fileData.data);
-              const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
-              const fileUrl = URL.createObjectURL(fileBlob);
-      
-              setFileUrl(fileUrl);
-            } else {
-              console.error('Failed to fetch submission data');
+            try {
+                const response = await fetch('http://localhost:5000/submission/findSpecificSubmission?userId=ales1708&assignmentId=LeukeShit');
+                if (response.ok) {
+                    const data = await response.json();
+                    const binaryData = new Uint8Array(data[0].fileData.data);
+                    const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
+                    const fileUrl = URL.createObjectURL(fileBlob);
+
+                    setFileUrl(fileUrl);
+                    setFileNotes(data[0].fileNotes);
+                } else {
+                    console.error('Failed to fetch submission data');
+                }
+            } catch (error) {
+                console.error('Error fetching submission data:', error);
             }
-          } catch (error) {
-            console.error('Error fetching submission data:', error);
-          }
         };
-      
+
         fetchSubmissionData();
-    }, []);      
-      
+    }, []);
+
 
     return (
         <div style={{ height: '100vh' }}>
-          {fileUrl ? (
-            <Viewer
-              fileUrl={fileUrl}
-              plugins={[highlightPluginInstance, defaultLayoutPluginInstance]}
-              onDocumentLoad={handleDocumentLoad}
-            />
-          ) : (
-            <div>Loading PDF...</div>
-          )}
+            {fileUrl ? (
+                <Viewer
+                    fileUrl={fileUrl}
+                    plugins={[highlightPluginInstance, defaultLayoutPluginInstance]}
+                    onDocumentLoad={handleDocumentLoad}
+                />
+            ) : (
+                <div>Loading PDF...</div>
+            )}
         </div>
-      );
+    );
 };
 
 export default Grade;

@@ -147,7 +147,7 @@ router.put('/update/fileNotes/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId
-        const newNotes = req.body.newNotes;
+        const newNote = req.body.newNote;
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
@@ -156,7 +156,7 @@ router.put('/update/fileNotes/', async (req, res) => {
             },
             {
                 $push: {
-                    fileNotes: { $each: newNotes }
+                    fileNotes: newNote
                 }
             },
             { new: true }
