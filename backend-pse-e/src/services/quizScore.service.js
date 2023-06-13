@@ -21,6 +21,7 @@ const quizScoreModel = require('../models/quizScore.model.js');
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
+// Get all quiz scores
 router.get("/getAll", async (req, res) => {
     try {
         // Find all tests
@@ -33,6 +34,7 @@ router.get("/getAll", async (req, res) => {
     }
 });
 
+// Find all scores for a specific user
 router.get("/findByUserId/:userId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -50,6 +52,7 @@ router.get("/findByUserId/:userId", async (req, res) => {
     }
 });
 
+// Find all scores for a specific quiz
 router.get("/findByQuizId/:quizId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -67,6 +70,7 @@ router.get("/findByQuizId/:quizId", async (req, res) => {
     }
 });
 
+// Save new quiz score
 router.post('/save/', async (req, res) => {
    try {
         const quizId = req.body.quizId;
@@ -91,6 +95,7 @@ router.post('/save/', async (req, res) => {
    }
 });
 
+// Update quiz score. Automatically updates high score if latest score is higher
 router.put('/update/grade/', async (req, res) => {
     try {
         const userId = req.body.userId;

@@ -10,6 +10,7 @@ import { useContext, useEffect } from 'react';
 import { Context } from '@/Context';
 import { Course, Enrollment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
+import { formatDate } from "@/lib/date";
 
 const CourseOverview = () => {
   const router = useRouter();
@@ -34,19 +35,6 @@ const CourseOverview = () => {
   const isTeacher = course?.enrollments?.some(
     (enrollment: Enrollment) => enrollment?.type === "teacher"
   );
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric' as const, // Specify the type explicitly
-      hour: 'numeric',
-      minute: 'numeric',
-    };
-
-    return date.toLocaleString('en-US', options);
-  };
 
   const calculateSubmittedPercentage = () => {
     if (assignments?.length > 0) {
@@ -132,7 +120,8 @@ const CourseOverview = () => {
                       >{assignment.name}</Link>
                     </th>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      {formatDate(assignment.due_at)}
+                      {/* {formatDate(assignment.due_at)} */}
+                      {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
                     </td>
                     {isTeacher ? (
                       <td className="flex items-center justify-end px-3 py-2 space-x-3">
