@@ -210,6 +210,9 @@ const Assignments = () => {
                       Name
                     </th>
                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                      Student ID
+                    </th>
+                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
                       Submission Status
                     </th>
                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
@@ -226,6 +229,9 @@ const Assignments = () => {
                         Student name
                       </Link>
                     </th>
+                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
+                      student id
+                    </td>
                     <td scope="row" className="px-6 py-4 whitespace-nowrap">
                       submitted
                     </td>
