@@ -1,22 +1,27 @@
 import Head from "next/head";
 import Image from "next/image";
-import NavBar from "../../../../../components/NavBar";
+import NavBar from "@/components/NavBar";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from 'next/link';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
-import Button from "../../../../../components/stdButton";
-import UploadPopup from "../../../../../components/uploadPopup";
+import Button from "@/components/stdButton";
+import UploadPopup from "@/components/uploadPopup";
 import useSubmission from "@/lib/hooks/useSubmission";
 import { formatDate } from "@/lib/date";
+import { Context } from "@/Context";
+import { motion } from "framer-motion";
 
 const Assignments = () => {
   const router = useRouter();
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment, getAssignment } = useAssignment()
+  const { assignment: contextAssignment } = useContext(Context); // When pressing a course
+  const { assignment: fetchedAssignment, getAssignment } = useAssignment(); // When navigating to a course via url
+  const assignment = contextAssignment || fetchedAssignment;
+
   const { submission, getSubmission } = useSubmission()
 
   // For the upload popup.
@@ -28,12 +33,10 @@ const Assignments = () => {
     setShowPopup(!showPopup);
   };
 
-
-
   useEffect(() => {
     if (courseId && assignmentId && token) {
       getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-      getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+      // getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
     }
   }, [router.query]);
 
@@ -51,7 +54,7 @@ const Assignments = () => {
       <div className="bg-gray-50 min-h-screen py-10 mt-12">
         <div className="max-w-5xl mx-auto px-6">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-3xl font-bold">{assignment?.name}</h1>
+            <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
             <div className="space-x-4">
               {!isTeacher && (
                 <p className="mt-8 text-gray-600">
@@ -59,10 +62,10 @@ const Assignments = () => {
               {/* <p className="mt-8 text-gray-600">Grade: {formatDate(submission?.submitted_at)}</p> */}
             </div>
           </div>
-          <div>
+          <motion.div layoutId={assignment?.due_at?.toString()}>
             <p className="mt-8 text-gray-600">
               <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
-          </div>
+          </motion.div>
           {!isTeacher && (
             <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
               <div className="col-span-1 p-4">
