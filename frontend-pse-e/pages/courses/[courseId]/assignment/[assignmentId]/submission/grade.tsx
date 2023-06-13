@@ -23,6 +23,7 @@ const Grade = () => {
 
     const noteEles: Map<number, HTMLElement> = new Map();
     const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(null);
+    const [fileUrl, setFileUrl] = React.useState<string | null>(null);
 
     const handleDocumentLoad = (e: DocumentLoadEvent) => {
         setCurrentDoc(e.doc);
@@ -208,17 +209,42 @@ const Grade = () => {
     });
     const { activateTab } = defaultLayoutPluginInstance;
 
+    React.useEffect(() => {
+        const fetchSubmissionData = async () => {
+          try {
+            const response = await fetch('http://localhost:5000/submission/findSpecificSubmission?userId=ales1708&assignmentId=LeukeShit');
+            if (response.ok) {
+              const data = await response.json();
+              const binaryData = new Uint8Array(data[0].fileData.data);
+              const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
+              const fileUrl = URL.createObjectURL(fileBlob);
+      
+              setFileUrl(fileUrl);
+            } else {
+              console.error('Failed to fetch submission data');
+            }
+          } catch (error) {
+            console.error('Error fetching submission data:', error);
+          }
+        };
+      
+        fetchSubmissionData();
+    }, []);      
+      
+
     return (
-        <div
-            style={{ height: "100vh" }}
-        >
+        <div style={{ height: '100vh' }}>
+          {fileUrl ? (
             <Viewer
-                fileUrl={"/sample.pdf"}
-                plugins={[highlightPluginInstance, defaultLayoutPluginInstance]}
-                onDocumentLoad={handleDocumentLoad}
+              fileUrl={fileUrl}
+              plugins={[highlightPluginInstance, defaultLayoutPluginInstance]}
+              onDocumentLoad={handleDocumentLoad}
             />
+          ) : (
+            <div>Loading PDF...</div>
+          )}
         </div>
-    );
+      );
 };
 
 export default Grade;
