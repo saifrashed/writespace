@@ -53,6 +53,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
         .then((responseData) => {
             console.log(responseData);
             setFileUploadSuccess(true);
+            togglePopup();
         })
         .catch((error) => {
             console.error(error);
@@ -116,8 +117,8 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
                 {/* No plagiarism confirmation checkbox */}
                 <div className="flex items-center mb-4">
                     <input id="default-checkbox" type="checkbox" value=""
-                           className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
-                                  focus:ring-blue-500 dark:focus:ring-blue-600
+                           className="mt-5 w-4 h-4 text-purple-600 bg-gray-100 border-gray-300 rounded
+                                  focus:ring-purple-500 dark:focus:ring-purple-600
                                   dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700
                                   dark:border-gray-600"
 
@@ -126,7 +127,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
                                     setRemindConfirm(!event.target.checked);
                                   }} />
                     <label for="default-checkbox"
-                           className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                           className="mt-5 ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             I confirm the submitted work is my own.
                     </label>
                 </div>
@@ -166,7 +167,26 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
                     setFileUploadSuccess(false);
                 }}>Close</CloseButton>
 
-                {remindConfirm && (  // Show text to remind user to check checkbox.
+                <div className="mt-4">
+                    {remindConfirm && (
+                        <div className="mb-2">
+                        <p>Please confirm that the work submitted is your own.</p>
+                        </div>
+                    )}
+                    {remindFile && (
+                        <div className="mb-2">
+                        <p>Please upload a file.</p>
+                        </div>
+                    )}
+                    {fileUploadSuccess && (
+                        <div className="mb-2">
+                        <PopConfetti />
+                        <p>File successfully uploaded.</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* {remindConfirm && (  // Show text to remind user to check checkbox.
                     <p>Please confirm that the work submitted is your own.</p>
                 )}
                 {remindFile && (  // Show text to remind user they still need to upload file.
@@ -178,7 +198,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
                     <PopConfetti />
                     <p>File succesfully uploaded</p>
                     </>
-                )}
+                )} */}
 
             </div>
         </div>

@@ -6,7 +6,7 @@ import { Submission } from "../types";
 
 function useSubmission() {
     const { onSuccess, onError } = useNotification()
-    const [submissionData, setSubmissionData] = useState<Submission[]>([]);
+    const [submissionData, setSubmissionData] = useState<Submission>();
     const [isLoading, setIsLoading] = useState<Boolean>(true);
 
     const getSubmission = async (courseId: Number, assignmentId: Number, token: string) => {
