@@ -146,6 +146,34 @@ router.put('/update/namedescription/', async (req, res) => {
     }
 });
 
+router.put('/update/icon/', async (req, res) => {
+    try {
+        const badgeId = req.body.badgeId;
+        const iconId = req.body.iconId
+
+        const updatedBadge = await badgeModel.findOneAndUpdate(
+            {
+                'badgeId': badgeId,
+            },
+            {
+                $set: {
+                    'iconId': iconId
+                }
+            },
+            { new: true }
+        );
+
+        if (updatedBadge === null) {
+            return res.status(404).json({ error: 'Badge not found' });
+        }
+
+        res.status(200).json({ message: 'Badge updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
+});
+
 router.delete('/delete/:badgeId', async (req, res) => {
     try {
         const badgeId = req.params.badgeId;
