@@ -9,9 +9,9 @@ const axios = require('axios');
 const { encryptToken, decryptToken, auth } = require('../middleware/auth');
 
 // Canvas api url (testing environment, the environment we need for this project)
-const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
+// const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
 // production
-// const apiUrl = 'https://canvas.uva.nl/api/v1';
+const apiUrl = 'https://canvas.uva.nl/api/v1';
 
 
 // apiUrl for logging in with OAuth2 (without the "/api/v1" part)
