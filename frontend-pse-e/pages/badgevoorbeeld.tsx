@@ -18,7 +18,7 @@ const Home = () => {
     marginBottom: '150px',
   };
 
-  const badgeNumbers = [1, 2, 3, 5, 6, 7, 8];
+  const badgeNumbers = [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12];
   const badgeUrls = badgeNumbers.map((number) => `/badges/${number.toString()}.png`);
 
   return (
