@@ -26,15 +26,18 @@ const Grade = () => {
     const [currentDoc, setCurrentDoc] = React.useState<PdfJs.PdfDocument | null>(null);
     const [fileUrl, setFileUrl] = React.useState<string | null>(null);
     const [filenotes, setFileNotes] = React.useState<Note[]>([]);
+    const [isDocumentLoaded, setIsDocumentLoaded] = React.useState(false);
 
     const handleDocumentLoad = (e: DocumentLoadEvent) => {
         setCurrentDoc(e.doc);
-        if (currentDoc && currentDoc !== e.doc) {
-            // User opens new document
-            console.log(filenotes)
-            setNotes(filenotes)
-        }
+        setIsDocumentLoaded(true); // Markeer het document als geladen
     };
+
+    React.useEffect(() => {
+        if (isDocumentLoaded) {
+            setNotes(filenotes);
+        }
+    }, [isDocumentLoaded, filenotes]);
 
     const renderHighlightTarget = (props: RenderHighlightTargetProps) => (
         <div
