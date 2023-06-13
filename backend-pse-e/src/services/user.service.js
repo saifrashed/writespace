@@ -22,9 +22,10 @@ const userModel = require("../models/user.model.js");
 // Post request (creates something in the db)
 
 // Get request (gets something from the db)
+// Get all users
 router.get("/getAll", async (req, res) => {
     try {
-        // Find all tests
+        // Find all users
         const users = await userModel.find();
         // Return them in json form
         res.status(200).json(users);
@@ -34,7 +35,7 @@ router.get("/getAll", async (req, res) => {
     }
 });
 
-// Find submissions by assignmentId
+// Find users by userId
 router.get("/findByUserId/:userId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -52,8 +53,8 @@ router.get("/findByUserId/:userId", async (req, res) => {
     }
 });
 
-
-router.post('/save', upload.single('file'), async (req, res) => {
+// Save new user
+router.post('/save', async (req, res) => {
     try {
         // Variables for the model
         const userId = req.body.userId;
@@ -65,12 +66,14 @@ router.post('/save', upload.single('file'), async (req, res) => {
         }
         const experiencePoints = 0;
         const level = 1;
+        const badges = req.body.badges;
 
         // Create a new instance of the submission model
         const newUser = new userModel({
             userId: userId,
             experiencePoints: experiencePoints,
-            level: level
+            level: level,
+            badges: badges
         });
 
         // Save the newTest instance to the database
@@ -84,7 +87,7 @@ router.post('/save', upload.single('file'), async (req, res) => {
     }
 });
 
-
+// Updates user XP
 router.put('/update/experiencePoints/', async (req, res) => {
     try {
         const userId = req.body.userId;
@@ -113,7 +116,7 @@ router.put('/update/experiencePoints/', async (req, res) => {
     }
 });
 
-// Updates the submission Grade
+// Updates user level
 router.put('/update/level/', async (req, res) => {
     try {
         const userId = req.body.userId;
@@ -142,6 +145,91 @@ router.put('/update/level/', async (req, res) => {
     }
 });
 
+// Add badge to user. Handles adding of new badges and adding to existing badges
+router.put('/update/addbadge/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const newBadge = req.body.badgeId;
+        const courseId = req.body.courseId;
+        const assignmentId = req.body.assignmentId;
+        const graderId = req.body.graderId;
+        const comment = req.body.comment;
+
+        const userToUpdate = await userModel.findOne({ 'userId': userId });
+
+        if (userToUpdate === null) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const updateId = userToUpdate._id;
+        const badges = userToUpdate.badges;
+
+        if (badges.has(String(newBadge))) {
+            badgeToUpdate = badges.get(String(newBadge))[0];
+            badgeToUpdate.amount = badgeToUpdate.amount + 1;
+            badgeToUpdate.badgelist.push({ courseId: courseId, assignmentId: assignmentId, graderId: graderId, comment: comment });
+            badges.set(String(newBadge), badgeToUpdate);
+        } else {
+            badges.set(String(newBadge), { amount: 1, badgelist: [{ courseId: courseId, assignmentId: assignmentId, graderId: graderId, comment: comment }] });
+        }
+
+        updatedUser = await userModel.findByIdAndUpdate(updateId, { "badges": badges }, { new: true });
+
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
+});
+
+// Delete a badge
+router.put('/update/deletebadge/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const assignmentId = req.body.assignmentId;
+        const badgeId = req.body.badgeId
+
+        const userToUpdate = await userModel.findOne({ 'userId': userId });
+
+        if (userToUpdate === null) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const updateId = userToUpdate._id;
+        const badges = userToUpdate.badges;
+
+        if (badges.has(String(badgeId))) {
+            badgeToDelete = badges.get(String(badgeId))[0];
+            if (badgeToDelete.amount > 1) {
+                badgeToDelete.amount = badgeToDelete.amount - 1;
+                for (var i = 0; i < badgeToDelete.badgelist.length; i++) {
+                    if (badgeToDelete.badgelist[i].assignmentId === assignmentId) {
+                        badgeToDelete.badgelist.pop(i);
+                        badges.set(String(badgeId), badgeToDelete);
+                        break;
+                    }
+                }
+            }
+            else {
+                badges.delete(String(badgeId));
+            }
+
+        }
+
+        else {
+            return res.status(404).json({ error: 'Badge not found' });
+        }
+
+        await userModel.findByIdAndUpdate(updateId, { "badges": badges });
+
+        res.status(200).json({ message: 'Badge removed successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
+});
+
+
 // General update request
 // PUT request (updates something in the db)
 router.put('/update/', async (req, res) => {
@@ -150,7 +238,8 @@ router.put('/update/', async (req, res) => {
         const updatedUser = {
             userId: req.body.userId,
             experiencePoints: req.body.experiencePoints,
-            level: req.body.level
+            level: req.body.level,
+            badges: req.body.badges
         };
 
         // Find the existing test by testId and update it
@@ -173,7 +262,7 @@ router.put('/update/', async (req, res) => {
     }
 });
 
-
+// Delete user
 router.delete('/delete/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
