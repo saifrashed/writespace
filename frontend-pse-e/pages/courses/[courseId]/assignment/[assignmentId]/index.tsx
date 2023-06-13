@@ -69,7 +69,7 @@ const Assignments = () => {
           {!isTeacher && (
             <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
               <div className="col-span-1 p-4">
-                <div className="w-full p-4 bg-white rounded-lg shadow-lg">
+                <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                   <div key={assignment?.id}>
                     <button
                       className={`text-sm text-gray-500 underline cursor-pointer font-bold"}`}
@@ -80,7 +80,7 @@ const Assignments = () => {
                 </div>
               </div>
               <div className="col-span-3 p-4">
-                <div className="w-full p-4 bg-white rounded-lg shadow-lg ">
+                <div className="w-full p-4 bg-white rounded-lg border border-gray-200 ">
                   <div className="flex space-x-4">
                     <div key={assignment?.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment?.description ? assignment?.description : "No description available" }}>
                     </div>
@@ -88,7 +88,7 @@ const Assignments = () => {
                 </div>
               </div>
               <div className="col-span-1 p-4 ">
-                <div className="w-full p-4 bg-white rounded-lg shadow-lg">
+                <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                   <div className="flex flex-col">
                     <button onClick={togglePopup} className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded flex items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
