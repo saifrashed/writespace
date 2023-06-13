@@ -1,3 +1,5 @@
+import { HighlightArea, } from '@react-pdf-viewer/highlight';
+
 export interface Course {
     id: number;
     name: string;
@@ -125,17 +127,45 @@ export interface Assignment {
     restrict_quantitative_data: boolean;
 }
 
-export interface User {
-    id: number;
-    name: string;
-    global_id: string;
-    effective_locale: string;
+export interface Submission {
+    assignment_id: number;
+    assignment: any | null;
+    course: any | null;
+    attempt: number;
+    body: string;
+    grade: string;
+    grade_matches_current_submission: boolean;
+    html_url: string;
+    preview_url: string;
+    score: number;
+    submission_comments: any | null;
+    submission_type: string;
+    submitted_at: string;
+    url: string | null;
+    user_id: number;
+    grader_id: number;
+    graded_at: string;
+    user: any | null;
+    late: boolean;
+    assignment_visible: boolean;
+    excused: boolean;
+    missing: boolean;
+    late_policy_status: string;
+    points_deducted: number;
+    seconds_late: number;
+    workflow_state: string;
+    extra_attempts: number;
+    anonymous_id: string;
+    posted_at: string | null;
+    read_status: string;
+    redo_request: boolean;
 }
 
-export interface TokenResponse {
-    access_token: string;
-    token_type: string;
-    user: User;
-    canvas_region: string;
-    expires_in: number;
+
+
+export interface Note {
+    id: number;
+    content: string;
+    highlightAreas: HighlightArea[];
+    quote: string;
 }
