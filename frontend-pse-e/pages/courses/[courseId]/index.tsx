@@ -10,6 +10,7 @@ import { useContext, useEffect } from 'react';
 import { Context } from '@/Context';
 import { Enrollment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
+import { formatDate } from "@/lib/date";
 
 const CourseOverview = () => {
   const router = useRouter();
@@ -33,19 +34,6 @@ const CourseOverview = () => {
   const isTeacher = course?.enrollments?.some(
     (enrollment: Enrollment) => enrollment?.type === "teacher"
   );
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric' as const, // Specify the type explicitly
-      hour: 'numeric',
-      minute: 'numeric',
-    };
-
-    return date.toLocaleString('en-US', options);
-  };
 
   const calculateSubmittedPercentage = () => {
     if (assignments?.length > 0) {

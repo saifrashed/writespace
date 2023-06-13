@@ -110,7 +110,7 @@ const View: React.FC<DisplayNotesSidebarExampleProps> = () => {
 
     const jumpToNote = (note: Note) => {
         if (noteEles.has(note.id)) {
-            noteEles.get(note.id).scrollIntoView();
+            noteEles.get(note.id)?.scrollIntoView();
         }
     };
 
