@@ -94,11 +94,9 @@ router.post('/courses/:courseId', (req, res) => {
 });
 
 
-// https://canvas.uva.nl/api/v1/courses/40239/enrollments
-
+// Get all users enrolled in a course.
 router.post('/courses/:courseId/enrollments', (req, res) => {
   const token = req.body.token;
-  console.log("WERk")
   axios.get(`${apiUrl}/courses/${req.params.courseId}/enrollments`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -142,19 +140,19 @@ router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
 });
 
 // Get all submission data for a specific assignment (teacher).
-// router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, res) => {
-//   const token = req.body.token;
-//   axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
-//     headers: {
-//       Authorization: `Bearer ${token}`
-//     }
-//   }).then(response => {
-//     res.json(response.data);
-//   }).catch(error => {
-//     console.error('Error from Canvas API:', error);
-//     res.status(500).json({ error: 'An error occurred.' });
-//   });
-// });
+router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
 
 
 // Get one rubric for an assignment with a user access token
