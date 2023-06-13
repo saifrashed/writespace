@@ -156,6 +156,27 @@ router.post('/courses/:courseId/user/role', (req, res) => {
   });
 });
 
+// Get a list of students in the course
+router.post('/courses/:courseId/users/students', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/users`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100,
+      // Select only students
+      enrollment_type: ['student', 'student_view']
+    }
+  }).then(response => {
+    // Return enrollments information
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 // Route for initiating the login redirect
 // Test this by going to this URL in your browser for example: localhost:5000/canvas-api/login
 router.get('/login', (req, res) => {
