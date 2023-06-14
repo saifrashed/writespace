@@ -13,7 +13,6 @@ const { encryptToken, decryptToken, auth } = require('../middleware/auth');
 // production
 const apiUrl = 'https://canvas.uva.nl/api/v1';
 
-
 // apiUrl for logging in with OAuth2 (without the "/api/v1" part)
 const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
 
