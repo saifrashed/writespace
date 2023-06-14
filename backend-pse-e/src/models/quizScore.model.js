@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const quizScoreModel = new mongoose.Schema({
     quizId: Number,
-    userId: String,
+    userId: Number,
     latestScore: Number,
     highScore: Number
 });

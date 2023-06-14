@@ -97,8 +97,6 @@ router.get("/findSpecificSubmission/", async (req, res) => {
 // Post request (creates something in the db)
 router.post('/save', upload.single('file'), async (req, res) => {
     try {
-        console.log(req.body)
-        console.log(req.file)
         // Variables for the model
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;

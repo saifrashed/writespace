@@ -1,5 +1,22 @@
-@import "tailwindcss/base";
+@tailwind base;
 
-@import "tailwindcss/components";
+@tailwind components;
 
-@import "tailwindcss/utilities";
+@tailwind utilities;
+
+
+/* Custom CSS */
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    /* Hide scrollbar on Safari and Chrome */
+}
+
+.hide-scrollbar {
+    scrollbar-width: none;
+    /* Hide scrollbar on Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+    /* Hide scrollbar track on Safari and Chrome */
+}
