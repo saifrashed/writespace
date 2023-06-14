@@ -243,20 +243,4 @@ router.post('/get-user-token/refresh', (req, res) => {
   });
 });
 
-// TODO: user stories on GitHub board
-
-//TODO: how many people in the course and how many submissions for Devran?
-
-/*
-TODO: explain that from now on the test environment is used only, so a different access-token needs to be used.
-But this will probably be fixed with the login functionality in this sprint because you will need to login to 
-your UvA account and an access-token will be used for the test environment.
-
-TODO: invite all of our teammates (or only FE teammembers) to all the test courses I made on the test environment
-and make example data. Ask everyone what example data they need. And give everyone teacher role, then they can 
-change this themselves.
-*/
-
-
-
 module.exports = router;
