@@ -3,8 +3,8 @@
 // Simply editing the png is currently more time-efficient than changing code.
 
 // TO DO:
-// - Show title, description etc from database.
-// - Hoeveelheid xp gelinkt aan de badge.
+// - Show title, description, comment, xp from database.
+// - Prettier popup.
 import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
 import CloseButton from '@/components/closeButton';
@@ -15,13 +15,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const popupRef = useRef(null);
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
+  const handleMouseEnter = () => {setIsHovered(true);};
+  const handleMouseLeave = () => {setIsHovered(false);};
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -34,6 +29,14 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
       ? `scale(${resizeFactor + 0.1}) translateY(-40px)`
       : `scale(${resizeFactor})`,
   };
+
+  const smallBadge = {
+    transform: 'scale(0.3)',
+    position: 'relative',
+    top: '-7.5pt',  // To center badge.
+    left: '-7.5pt',
+  };
+
 
   // So that a click outside of the pop-up also closes it.
   useEffect(() => {
@@ -70,18 +73,26 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
     if (!showPopup) {
       return null;
     }
-
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50">
-        <div className="flex flex-rol">
+        <div className="flex flex-row">
+
+          {/* Badge image on top */}
+          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="w-20 h-20">
+              <div style={{ display: 'flex' }}>
+                <div style={smallBadge}>
+                  <BadgeTemplate pictureUrl={pictureUrl} />
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Popup window for title and description */}
-          <div
-            ref={popupRef}
-            style={{ width: '400pt' }}
-            className="bg-white rounded-lg p-8 shadow-lg ml-5"
-          >
+          <div ref={popupRef} className="bg-white rounded-lg p-8 shadow-lg ml-5 mr-5">
             <div className="flex items-start">
               <div className="ml-4">
+                <br/>
                 <h2 className="text-3xl mb-4">SMALL SCREEN</h2>
                 <p>
                   Hier placeholder text: "Awarded for providing insightful and well-supported
@@ -108,23 +119,15 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
         <div className="flex flex-rol">
           {/* Show badge on left side */}
           <div style={{ width: '200pt' }}>
-            <div
-              style={{
-                height: '300px',
-                position: 'relative',
-                top: '-10px',
-                left: '-10px', // Adjust positioning to taste
-              }}
-            >
+            <div style={{
+                height: '300px', position: 'relative',
+                top: '-10px', left: '-10px', // Adjust positioning to taste
+            }}>
               <BadgeTemplate pictureUrl={pictureUrl} />
             </div>
           </div>
           {/* Window for title and description */}
-          <div
-            ref={popupRef}
-            style={{ width: '400pt' }}
-            className="bg-white rounded-lg p-8 shadow-lg ml-5"
-          >
+          <div ref={popupRef} style={{ width: '400pt' }} className="bg-white rounded-lg p-8 shadow-lg ml-5">
             <div className="flex items-start">
               <div className="ml-4">
                 <h2 className="text-3xl mb-4">BIG SCREEN</h2>
@@ -155,7 +158,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
           <BadgeTemplate pictureUrl={pictureUrl} />
         </div>
       </div>
-      {/* Make pop-up responsive to window size.  */}
+      {/* Make pop-up responsive to window size. */}
       {isLargeScreen ? <LargeScreenBadgePopup /> : <SmallScreenBadgePopup />}
     </>
   );

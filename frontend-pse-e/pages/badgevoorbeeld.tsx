@@ -18,6 +18,13 @@ const Home = () => {
     marginBottom: '150px',
   };
 
+  const repositionStyle = {
+    position: 'relative',
+    top: '-10px',  // Image offset
+    left: '-10px',
+  };
+
+
   const badgeNumbers = [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12];
   const badgeUrls = badgeNumbers.map((number) => `/badges/${number.toString()}.png`);
 
@@ -27,7 +34,9 @@ const Home = () => {
       <div style={thisStyle}>
         {badgeUrls.map((url, index) => (
           <div style={badgeContainerStyle} key={index}>
-            <ScaledBadge resizeFactor={0.6} pictureUrl={url} />
+            <div style={repositionStyle}>
+              <ScaledBadge resizeFactor={0.6} pictureUrl={url} />
+            </div>
           </div>
         ))}
       </div>
