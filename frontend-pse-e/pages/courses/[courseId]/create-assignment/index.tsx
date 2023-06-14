@@ -53,7 +53,7 @@ const CreateAssignment = () => {
 
         try {
             await createAssignment(course?.id, assignment, token);
-            router.push(`/courses/${course?.id}`);
+            router.back()
         } catch (error) {
             console.error('Error creating assignment:', error);
         }

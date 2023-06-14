@@ -59,7 +59,7 @@ const EditAssignment = () => {
         if (courseId && assignmentId) {
             try {
                 await updateAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), assignment, token)
-                router.push(`/courses/${course?.id}`);
+                router.back()
             } catch (error) {
                 console.error('Error creating assignment:', error);
             }
