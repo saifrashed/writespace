@@ -21,7 +21,7 @@ const assignmentModel = require("../models/assignment.model.js");
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
-router.get("/getAll", async (req, res) => {
+router.get("/get-all", async (req, res) => {
     try {
         // Find all tests
         const assignments = await assignmentModel.find();
@@ -34,7 +34,7 @@ router.get("/getAll", async (req, res) => {
 });
 
 // Find submissions by assignmentId
-router.get("/findByCreatorId/:creatorId", async (req, res) => {
+router.get("/find-by-creator-id/:creatorId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await assignmentModel.find({ 'creatorId': req.params.creatorId });
@@ -52,7 +52,7 @@ router.get("/findByCreatorId/:creatorId", async (req, res) => {
 });
 
 // Find submissions by courseId
-router.get("/findByCourseId/:courseId", async (req, res) => {
+router.get("/find-by-course-id/:courseId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await assignmentModel.find({ 'coursId': req.params.courseId });
@@ -171,7 +171,7 @@ router.put('/update/name/', async (req, res) => {
     }
 });
 
-router.put('/update/maxPoints/', async (req, res) => {
+router.put('/update/max-points/', async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const maxPoints = req.body.maxPoints;
@@ -227,7 +227,7 @@ router.put('/update/deadline/', async (req, res) => {
     }
 });
 
-router.put('/update/availableAt/', async (req, res) => {
+router.put('/update/available-at/', async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const availableAt = req.body.availableAt;
