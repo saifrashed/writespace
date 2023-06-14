@@ -11,12 +11,10 @@ function useSubmission() {
 
   const getSubmission = async (courseId: Number, assignmentId: Number, token: string) => {
     try {
-      const response = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-
-
-      // setSubmissionData();
+      const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
+      const submission = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}/${user.data.id}`, { token });
+      setSubmissionData(submission.data);
       setIsLoading(false);
-
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
