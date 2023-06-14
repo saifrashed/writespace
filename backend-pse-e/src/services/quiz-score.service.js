@@ -38,7 +38,6 @@ router.get("/get-all", async (req, res) => {
 router.get("/find-by-user-id/:userId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
-
         const result = await quizScoreModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {

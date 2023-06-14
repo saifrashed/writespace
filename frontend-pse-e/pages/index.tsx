@@ -1,8 +1,5 @@
 import Head from "next/head";
 import Image from "next/image";
-import 'tailwindcss/tailwind.css';
-
-
 import NavBar from "../components/NavBar"
 import Link from 'next/link';
 import { useEffect, useState } from "react";
