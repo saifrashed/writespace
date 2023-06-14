@@ -3,7 +3,8 @@ name: backendCI
 on:
   push:
     branches:
-      - 'backend'
+      - backend
+      - ci_lighthouse
   pull_request:
     branches:
       - backend

@@ -25,6 +25,7 @@ describe('Server endpoints', () => {
     await new Promise((resolve) => setTimeout(resolve, 3000));
   });
 
+
   afterAll((done) => {
     server2.close(done);
     mongoose.connection.close();
@@ -38,7 +39,6 @@ describe('Server endpoints', () => {
     expect(response.status).toBe(200);
     expect(response.body).toBeDefined();
     expect(Array.isArray(response.body)).toBe(true);
-    submissionId = response.body[0]._id;
     assignmentId = response.body[0].assignmentId;
     userId = response.body[0].userId;
   });
