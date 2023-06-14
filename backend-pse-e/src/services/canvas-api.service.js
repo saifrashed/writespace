@@ -108,12 +108,13 @@ router.post('/written-assignments', (req, res) => {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
-      // Configure how many items are returned maximum
-      per_page: 100,
-      submission: 'online_upload'
+      order_by: "due_at"
     }
   }).then(response => {
-    res.json(response.data);
+    // Filter assignments by submission_types
+    res.json(response.data.filter(assignment => {
+      return assignment.submission_types.includes("online_upload");
+    }));
   }).catch(error => {
     console.error('Error from Canvas API:', error);
     res.status(500).json({ error: 'An error occurred.' });
