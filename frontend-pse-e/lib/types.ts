@@ -189,3 +189,10 @@ export interface User {
     time_zone: string | null;
     bio: string | null;
 }
+
+export interface UserDb {
+    userId: Number,
+    experiencePoints: Number,
+    level: Number,
+    badges: Object,
+}

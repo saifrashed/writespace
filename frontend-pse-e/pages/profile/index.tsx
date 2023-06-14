@@ -4,14 +4,16 @@ import Avatar from '@mui/material/Avatar';
 import ProgressBar from '@/components/ExpBrainBar';
 import badges from '../../data/badges';
 import ScaledBadge from '@/components/badge-template/Badge';
-import useBadges from "@/lib/hooks/useBadges";
+// import useBadges from "@/lib/hooks/useBadges";
+import useDbUser from "@/lib/hooks/useDbUser";
 import useUser from "@/lib/hooks/useUser";
 
 
 import { useEffect } from 'react';
 
 const Profile = () => {
-    const { badges: userBadges, getBadges } = useBadges();
+    // const { badges: userBadges, getBadges } = useBadges();
+    const { userData, getDbUser } = useDbUser();
     const { user, getUser } = useUser(String(1));
 
 
@@ -22,10 +24,13 @@ const Profile = () => {
     };
 
     useEffect(() => {
-      getBadges();
-      getUser(String(1));
+      getDbUser();
+      // getUser(String(1));
     }, [])
-    console.log(userBadges);
+
+
+    // console.log(userData[0].badges, "de USER DATA");
+
 
 
     return (
@@ -56,9 +61,9 @@ const Profile = () => {
               </div>
 
               <div className="flex flex-wrap justify-center">
-                {userBadges &&
+                {userData &&
                   badges.map((badge) => {
-                    const isBadgeOwned = userBadges.hasOwnProperty(badge.id);
+                    const isBadgeOwned = userData[0].badges.hasOwnProperty(badge.id);
                     return (
                       <div style={repositionStyle}>
                         <div className="flex items-center justify-center h-24 w-24 m-8 top--10 left--10" key={badge.id}>
