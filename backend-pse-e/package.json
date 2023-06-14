@@ -8,8 +8,6 @@
     "start": "ts-node src/index.js",
     "server": "nodemon src/index.js",
     "dev": "nodemon src/index.js",
-    "develop": "webpack --mode development",
-    "build": "webpack --mode production",
     "lint:ci": "eslint .",
     "lint": "eslint . --fix"
   },
