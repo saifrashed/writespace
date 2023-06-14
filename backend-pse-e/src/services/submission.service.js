@@ -21,7 +21,7 @@ const submissionModel = require("../models/submission.model.js");
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
-router.get("/getAll", async (req, res) => {
+router.get("/get-all", async (req, res) => {
     try {
         // Find all tests
         const submissions = await submissionModel.find();
@@ -34,7 +34,7 @@ router.get("/getAll", async (req, res) => {
 });
 
 // Find submissions by assignmentId
-router.get("/findByAssignmentId/:assignmentId", async (req, res) => {
+router.get("/find-by-assignment-id/:assignmentId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await submissionModel.find({ 'assignmentId': req.params.assignmentId });
@@ -52,7 +52,7 @@ router.get("/findByAssignmentId/:assignmentId", async (req, res) => {
 });
 
 // Find submissions by userId
-router.get("/findByUserId/:userId", async (req, res) => {
+router.get("/find-by-user-id/:userId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await submissionModel.find({ 'userId': req.params.userId });
@@ -71,7 +71,7 @@ router.get("/findByUserId/:userId", async (req, res) => {
 
 
 // Find submissions by id.
-router.get("/findSpecificSubmission/", async (req, res) => {
+router.get("/find-specific-submission/", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const userId = req.query.userId;
@@ -177,7 +177,7 @@ router.put('/update/fileNotes/', async (req, res) => {
 });
 
 // Updates the submission WhatifGrade
-router.put('/update/whatifgrade/', async (req, res) => {
+router.put('/update/whatif-grade/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId
@@ -317,7 +317,7 @@ router.put('/update/', upload.single('file'), async (req, res) => {
 });
 
 
-router.delete('/deleteAll/:assignmentId', async (req, res) => {
+router.delete('/delete-all/:assignmentId', async (req, res) => {
     try {
         const assignmentId = req.params.assignmentId;
 
@@ -338,7 +338,7 @@ router.delete('/deleteAll/:assignmentId', async (req, res) => {
 });
 
 // DELETE request (deletes something from the db)
-router.delete('/deleteOne/', async (req, res) => {
+router.delete('/delete-one/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;

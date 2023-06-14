@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const submissionModel = new mongoose.Schema({
-    userId: String,
-    assignmentId: String,
+    userId: Number,
+    assignmentId: Number,
     submissionDate: Date,
     submissionGrade: Number,
     submissionWhatifGrade: Number,
