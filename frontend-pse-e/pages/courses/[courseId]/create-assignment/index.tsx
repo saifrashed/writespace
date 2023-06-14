@@ -169,18 +169,16 @@ const CreateAssignment = () => {
                             Grading Type
                         </label>
                         <select
-                            defaultValue={"points"}
+                            value={gradingType || "points"}
                             id="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            onChange={(e) => setGradingType(e.target.value)}
-                            disabled
-                        >
-                            <option>pass_fail</option>
-                            <option>percent</option>
-                            <option>points</option>
-                            <option>letter_grade</option>
-                            <option>gpa_scale</option>
-                            <option>not_graded</option>
+                            onChange={(e) => setGradingType(e.target.value)}>
+                            <option value="pass_fail">Pass/Fail</option>
+                            <option value="percent">Percent</option>
+                            <option value="points">Points</option>
+                            <option value="letter_grade">Letter Grade</option>
+                            <option value="gpa_scale">GPA Scale</option>
+                            <option value="not_graded">Not Graded</option>
                         </select>
                         <div className="mb-6">
                             <label htmlFor="assignment-points" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">

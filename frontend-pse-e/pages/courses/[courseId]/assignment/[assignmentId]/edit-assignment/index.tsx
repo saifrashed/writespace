@@ -65,8 +65,6 @@ const EditAssignment = () => {
             setDueAt(formatDueDateNormal(assignment.due_at));
         }
     }, [assignment]);
-    console.log(dueAt);
-
 
     const handleUpdateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -203,9 +201,7 @@ const EditAssignment = () => {
                             value={gradingType || "points"}
                             id="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            onChange={(e) => setGradingType(e.target.value)}
-
-                        >
+                            onChange={(e) => setGradingType(e.target.value)}>
                             <option value="pass_fail">Pass/Fail</option>
                             <option value="percent">Percent</option>
                             <option value="points">Points</option>
