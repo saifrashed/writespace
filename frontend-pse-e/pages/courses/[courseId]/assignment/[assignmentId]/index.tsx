@@ -93,7 +93,7 @@ const Assignments = () => {
                       </svg>
                       <span className="ml-2">Submit</span>
                     </button>
-                    <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
+                    <UploadPopup showPopup={showPopup} togglePopup={togglePopup} assignmentId={assignmentId} />
                     <Link
                       href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}
                     >

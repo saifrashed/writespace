@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { Note } from '@/lib/types';
 import { useRouter } from 'next/router';
@@ -11,9 +11,11 @@ import {
     RenderHighlightTargetProps,
 } from '@react-pdf-viewer/highlight';
 import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-viewer/core';
+import useSubmission from '@/lib/hooks/useSubmission';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import useAuthentication from '@/lib/hooks/useAuthentication';
 
 
 const View: React.FC = () => {
@@ -23,17 +25,30 @@ const View: React.FC = () => {
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [grade, setGrade] = React.useState<number>(0);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
+    const { getSubmissionDocument, fileNotes, fileUrl } = useSubmission()
+    const { token } = useAuthentication()
+
+    useEffect(() => {
+        if (assignmentId) {
+            getSubmissionDocument(assignmentId.toString(), token)
+        }
+    }, [])
 
     let noteId = notes.length;
 
     const noteEles: Map<number, HTMLElement> = new Map();
-
 
     const jumpToNote = (note: Note) => {
         if (noteEles.has(note.id)) {
             noteEles.get(note.id)?.scrollIntoView();
         }
     };
+
+    const handleDocumentLoad = () => {
+        if (fileNotes) {
+            setNotes(fileNotes)
+        }
+    }
 
     const renderHighlights = (props: RenderHighlightsProps) => (
         <div>
@@ -108,7 +123,9 @@ const View: React.FC = () => {
                         </div>
                     </div>
                     <div style={{ height: "90vh" }}>
-                        <Viewer fileUrl={"/sample.pdf"} plugins={[highlightPluginInstance]} />
+                        {fileUrl && (
+                            <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} onDocumentLoad={handleDocumentLoad} />
+                        )}
                     </div>
                 </div>
 
@@ -131,7 +148,7 @@ const View: React.FC = () => {
                                             }}>
                                             <span className="sr-only">Close panel</span>
                                             <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
-                                                fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                                fill="none" viewBox="0 0 24 24" strokeWidth="2"
                                                 stroke="currentColor" aria-hidden="true">
                                                 <path strokeLinecap="round" strokeLinejoin="round"
                                                     d="M6 18L18 6M6 6l12 12" />
