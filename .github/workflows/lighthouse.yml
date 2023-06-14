@@ -1,6 +1,5 @@
 name: lighthouse benchmark
 
-
 on:
   push:
     branches:

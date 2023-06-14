@@ -13,8 +13,8 @@ on:
       - closed
 
 jobs:
-  backend CI:
-    name: Lint backend code base
+  backend_CI:
+    name: Lint/test backend code base
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/heads/backend/') || github.event_name == 'merge'
 
@@ -24,7 +24,7 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install packages backend
-        run: cd ./backend-pse-e && npm install
+        run: cd ./backend-pse-e && npm ci
 
       - name: Run Eslint
         run: cd ./backend-pse-e && npm run lint:ci
