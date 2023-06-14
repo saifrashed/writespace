@@ -2,10 +2,8 @@ name: backendCI
 
 on:
   push:
-    branches-ignore:
-      - '*'
-    paths-ignore:
-      - 'frontend-pse-e/**'
+    branches:
+      - 'backend/**'
   pull_request:
     branches:
       - backend
@@ -16,7 +14,6 @@ jobs:
   backend_CI:
     name: Lint/test backend code base
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/backend/') || github.event_name == 'merge'
 
     steps:
       - name: Checkout
