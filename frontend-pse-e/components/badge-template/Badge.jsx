@@ -9,7 +9,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
 import CloseButton from '@/components/closeButton';
 
-const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
+const ScaledBadge = ({ resizeFactor, pictureUrl, title,
+                       description, commentary, xp}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -36,6 +37,25 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
     top: '-7.5pt',  // To center badge.
     left: '-7.5pt',
   };
+
+
+    {/* Window for title and description */}
+    const PopupWindow = () => {
+      return (
+        <>
+          <div className="flex items-start">
+            <div className="ml-4">
+              <br/>
+              <h2 className="text-3xl mb-4">{title}</h2>
+              <p><em>"{description}"</em></p>
+              <p><b>Commentary:</b> {commentary}</p>
+              <p style={{ textAlign: 'right' }}><b>XP:</b> {xp}</p>
+            </div>
+          </div>
+          <CloseButton onClick={togglePopup}>Close</CloseButton>
+        </>
+      )
+    }
 
 
   // So that a click outside of the pop-up also closes it.
@@ -90,19 +110,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
 
           {/* Popup window for title and description */}
           <div ref={popupRef} className="bg-white rounded-lg p-8 shadow-lg ml-5 mr-5">
-            <div className="flex items-start">
-              <div className="ml-4">
-                <br/>
-                <h2 className="text-3xl mb-4">SMALL SCREEN</h2>
-                <p>
-                  Hier placeholder text: "Awarded for providing insightful and well-supported
-                  interpretations of data, texts, or research findings in their academic writing
-                  assignments."
-                </p>
-                <p>Placeholder text voor de comment van de teacher.</p>
-              </div>
-            </div>
-            <CloseButton onClick={togglePopup}>Close</CloseButton>
+            <PopupWindow />
           </div>
         </div>
       </div>
@@ -127,19 +135,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
             </div>
           </div>
           {/* Window for title and description */}
-          <div ref={popupRef} style={{ width: '400pt' }} className="bg-white rounded-lg p-8 shadow-lg ml-5">
-            <div className="flex items-start">
-              <div className="ml-4">
-                <h2 className="text-3xl mb-4">BIG SCREEN</h2>
-                <p>
-                  Hier placeholder text: "Awarded for providing insightful and well-supported
-                  interpretations of data, texts, or research findings in their academic writing
-                  assignments."
-                </p>
-                <p>Placeholder text voor de comment van de teacher.</p>
-              </div>
-            </div>
-            <CloseButton onClick={togglePopup}>Close</CloseButton>
+          <div ref={popupRef} style={{ maxWidth: '400pt' }} className="bg-white rounded-lg p-8 shadow-lg ml-5 mr-5">
+            <PopupWindow />
           </div>
         </div>
       </div>

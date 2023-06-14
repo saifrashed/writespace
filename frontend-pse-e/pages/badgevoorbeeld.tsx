@@ -24,7 +24,6 @@ const Home = () => {
     left: '-10px',
   };
 
-
   const badgeNumbers = [1, 2, 3, 5, 6, 7, 8, 9, 10, 11, 12];
   const badgeUrls = badgeNumbers.map((number) => `/badges/${number.toString()}.png`);
 
@@ -35,7 +34,11 @@ const Home = () => {
         {badgeUrls.map((url, index) => (
           <div style={badgeContainerStyle} key={index}>
             <div style={repositionStyle}>
-              <ScaledBadge resizeFactor={0.6} pictureUrl={url} />
+              <ScaledBadge resizeFactor={0.6} pictureUrl={url}
+                title={"Wording wizard"}
+                description={"Given to students who exhibit outstanding word choice and literary devices in their writing."}
+                commentary={"Goed gedaan man! Ik zie je hier echt beter in worden"}
+                xp={"100"}/>
             </div>
           </div>
         ))}
