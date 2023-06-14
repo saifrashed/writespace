@@ -9,13 +9,6 @@ import BottomBanner from "@/components/badge-template/bottomBanner"
 
 const BadgeTemplate = ({ pictureUrl }) => {
 
-  const containerStyle = {
-    position: 'relative',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  };
-
   const pictureStyle = {
     maxWidth: '120pt',
     maxHeight: '120pt',
@@ -35,7 +28,7 @@ const BadgeTemplate = ({ pictureUrl }) => {
   };
 
   return (
-    <div style={containerStyle}>
+    <div>
       <div style={componentStyle}>
         <BadgeBg/>
       </div>

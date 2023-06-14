@@ -12,7 +12,6 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
 
   const badgeScale = {
     transition: 'transform 0.3s ease',
-    transformOrigin: 'bottom',
     transform: isHovered ? `scale(${resizeFactor + 0.1}) translateY(-40px)`
                          : `scale(${resizeFactor})`,
     // zIndex: isHovered ? 1 : 0,  // Bring to foreground.
@@ -27,7 +26,6 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
       <div
         style={badgeScale}
         onMouseEnter={handleMouseEnter}
@@ -35,7 +33,6 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
       >
         <BadgeTemplate pictureUrl={pictureUrl} />
       </div>
-    </div>
   );
 };
 

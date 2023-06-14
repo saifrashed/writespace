@@ -46,7 +46,7 @@ const Profile = () => {
                   badges.map((badge) => {
                     const isBadgeOwned = userBadges.hasOwnProperty(badge.id);
                     return (
-                      <div className="m-10 flex items-center justify-center h-24 w-24" key={badge.id}>
+                      <div className="flex items-center justify-center h-24 w-24 m-8 top--10 left--10" key={badge.id}>
                         <ScaledBadge resizeFactor={0.5} pictureUrl={`/badges/${badge.id.toString()}.png`} />
                       </div>
                     );
