@@ -151,7 +151,6 @@ router.post('/courses/:courseId/assignments', (req, res) => {
 
 // Update assignment (missing deadline attribute)
 router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
-  console.log(req.params);
   const { courseId, assignmentId } = req.params
   const { assignment, token } = req.body;
 
@@ -169,6 +168,23 @@ router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
       "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
       "assignment[peer_reviews]": assignment.peer_reviews,
       "assignment[published]": true // immediately publish assignment
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
+// Delete assignment
+router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
+  const { courseId, assignmentId } = req.params
+  const token = req.headers.authorization.split(' ')[1];
+
+  axios.delete(`${apiUrl}/courses/${courseId}/assignments/${assignmentId}`, {}, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
   }).then(response => {
     res.json(response.data);

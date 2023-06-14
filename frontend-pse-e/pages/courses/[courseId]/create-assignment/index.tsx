@@ -37,7 +37,7 @@ const CreateAssignment = () => {
         }
     }, [router.query]);
 
-    const handleCreateAssignment = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const assignment: Assignment | any = {
@@ -50,9 +50,14 @@ const CreateAssignment = () => {
             anonymous_grading: isAnonymousGrading,
             allowed_attempts: attempts
         };
-        createAssignment(course?.id, assignment, token)
-    };
 
+        try {
+            await createAssignment(course?.id, assignment, token);
+            router.push(`/courses/${course?.id}`);
+        } catch (error) {
+            console.error('Error creating assignment:', error);
+        }
+    };
 
     const handlePointsChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;

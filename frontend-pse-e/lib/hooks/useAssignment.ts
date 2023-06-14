@@ -35,10 +35,22 @@ function useAssignment() {
       onError("Something went wrong")
     }
   }
-
-
-
-  return { assignment, getAssignment, createAssignment, updateAssignment };
+  const deleteAssignment = async (courseId: number, assignmentId: number, token: string) => {
+    try {
+      await axios.delete(
+        `${config.baseUrl}/canvas-api/courses/${courseId}/assignments/${assignmentId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
+    }
+  }
+  return { assignment, getAssignment, createAssignment, updateAssignment, deleteAssignment };
 }
 
 export default useAssignment;

@@ -43,7 +43,7 @@ const EditAssignment = () => {
     const [requirePeerReviews, setRequirePeerReviews] = useState(assignment?.peer_reviews);
     const [isAnonymousGrading, setIsAnonymousGrading] = useState(assignment?.anonymous_grading);
 
-    const handleUpdateAssignment = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleUpdateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const assignment: Assignment | any = {
@@ -57,7 +57,12 @@ const EditAssignment = () => {
             allowed_attempts: attempts
         };
         if (courseId && assignmentId) {
-            updateAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), assignment, token)
+            try {
+                await updateAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), assignment, token)
+                router.push(`/courses/${course?.id}`);
+            } catch (error) {
+                console.error('Error creating assignment:', error);
+            }
         }
     };
 
