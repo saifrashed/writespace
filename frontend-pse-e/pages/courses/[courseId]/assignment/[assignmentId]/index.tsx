@@ -2,7 +2,7 @@ import Head from "next/head";
 import Image from "next/image";
 import NavBar from "../../../../../components/NavBar";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Link from 'next/link';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
@@ -13,22 +13,29 @@ import useEnrollments from "@/lib/hooks/useEnrollments";
 import useSubmissions from "@/lib/hooks/useSubmissions";
 import useUsers from "@/lib/hooks/useUsers";
 
+
 import { formatDate } from "@/lib/date";
+import useCourse from "@/lib/hooks/useCourse";
+import { Enrollment } from "@/lib/types";
+import { Context } from "@/Context";
 
 const Assignments = () => {
   const router = useRouter();
   // Accessing query parameters from the router object
-  const { courseId, assignmentId, isTeacher } = router.query;
+  const { courseId, assignmentId} = router.query;
   const { token } = useAuthentication();
   const { assignment, getAssignment } = useAssignment()
   const { submission, getSubmission } = useSubmission()
   const { submissions, getSubmissions } = useSubmissions()
   const { enrollments, getEnrollments } = useEnrollments()
   const { users, getUsers } = useUsers()
-  // The isTeacher data from the previous page is a string.
-  // To use a single boolean for the role distinction a new state
-  // needed to be created.
-  const [isStudent, setIsStudent] = useState<boolean>();
+
+  const { course: contextCourse } = useContext(Context); // When pressing a course
+  const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url
+  const course = contextCourse || fetchedCourse;
+
+  const isTeacher = course?.enrollments?.some((enrollment: Enrollment) => enrollment?.type === "teacher");
+  // const [isTeacher, setIsTeacher] = useState(false)
 
 
   // For the upload popup.
@@ -43,23 +50,56 @@ const Assignments = () => {
   };
 
 
-
   useEffect(() => {
     // Do API requests based on a user its role.
     if (courseId && assignmentId && token) {
-      if (isTeacher == "true") {
-        // getEnrollments(parseInt(courseId.toString()), token)
-        setIsStudent(false);
-        getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-        getUsers(parseInt(courseId.toString()), token)
-      } else {
-        setIsStudent(true);
-        getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-        getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-      }
+      getCourse(parseInt(courseId.toString()), token)
+
     }
   }, [router.query]);
 
+
+  // useEffect(() => {
+  //   console.log(course)
+  //   setIsTeacher(course?.enrollments?.some((enrollment: Enrollment) => enrollment?.type === "teacher"))
+  // }, [course]);
+
+  useEffect(()=>{
+    if (courseId && assignmentId && token) {
+
+      getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+      if (isTeacher) {
+        console.log(1);
+
+        // getEnrollments(parseInt(courseId.toString()), token)
+        getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+        getUsers(parseInt(courseId.toString()), token)
+      } else {
+        getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+      }
+    }
+  }, [isTeacher])
+
+  // if (courseId && assignmentId && token) {
+  //   getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token);
+
+  //   if (!isTeacher) {
+  //     getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token);
+  //   } else {
+  //     console.log(1);
+  //     getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token);
+  //     getUsers(parseInt(courseId.toString()), token);
+  //   }
+  // }
+
+
+  // useEffect(()=>{
+
+
+  // },[assignment])
+
+
+  console.log(isTeacher)
   return (
     <>
       <Head>
@@ -88,7 +128,7 @@ const Assignments = () => {
             </div>
             <div className="col-span-1 p-4 ">
               <div className="space-x-4">
-                { isStudent ? (
+                { !isTeacher ? (
                     <p className="mt-8 text-gray-600">
                     <span className="font-bold">Grade: </span> {submission?.grade ? <span> {submission.grade} / {assignment?.points_possible} </span> : " Waiting to be graded"}</p>) : null}
                     {/* <p className="mt-8 text-gray-600">Submitted at: {formatDate(submission?.submitted_at)}</p> */}
@@ -97,7 +137,7 @@ const Assignments = () => {
           </div>
 
 
-        { isStudent ? (
+        { !isTeacher ? (
 
           <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
             <div className="col-span-1 p-4">
@@ -199,7 +239,7 @@ const Assignments = () => {
           </div>
           ) : null}
 
-{ !isStudent && submissions.length > 0 ? (
+{ isTeacher && submissions.length > 0 ? (
   <div className="flex justify-center">
     <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
       <table className="w-full text-sm text-left bg-white">
