@@ -28,19 +28,11 @@ const Assignments = () => {
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
-  const isTeacher = true;
-
-  console.log(submissions);
-  console.log(users);
+  const isTeacher = false;
 
   const getUserDataById = (user_id: Number) => {
     return users.find((user) => user.id === user_id) || null;
   };
-
-  const user_id = 293080; // Replace with the desired user_id
-  const userData = getUserDataById(user_id);
-
-  console.log(userData?.name)
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -103,7 +95,7 @@ const Assignments = () => {
               <div className="space-x-4">
                 { !isTeacher ? (
                     <p className="mt-8 text-gray-600">
-                    <span className="font-bold">Grade: </span> {submission?.grade ? submission.grade : " Waiting to be graded"}</p>) : null}
+                    <span className="font-bold">Grade: </span> {submission?.grade ? <span> {submission.grade} / {assignment?.points_possible} </span> : " Waiting to be graded"}</p>) : null}
                     {/* <p className="mt-8 text-gray-600">Submitted at: {formatDate(submission?.submitted_at)}</p> */}
               </div>
             </div>
@@ -212,55 +204,57 @@ const Assignments = () => {
           </div>
           ) : null}
 
-        { isTeacher ?(
-          <div className="flex justify-center">
-            <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
-              <table className="w-full text-sm text-left bg-white">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                      Name
-                    </th>
-                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                      Student ID
-                    </th>
-                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                      Submission Status
-                    </th>
-                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                      Grade Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th scope="row" className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
-                      >
-                        Student name
-                      </Link>
-                    </th>
-                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
-                      student id
-                    </td>
-                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
-                      submitted
-                    </td>
-                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
-                      Graded
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row" className="px-6 py-4 whitespace-nowrap">
-                      Student name
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : null}
+{isTeacher && submissions.length > 0 ? (
+  <div className="flex justify-center">
+    <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
+      <table className="w-full text-sm text-left bg-white">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" className="px-6 py-4 whitespace-nowrap">
+              Name
+            </th>
+            <th scope="col" className="px-6 py-4 whitespace-nowrap">
+              Student ID
+            </th>
+            <th scope="col" className="px-6 py-4 whitespace-nowrap">
+              Submission Status
+            </th>
+            <th scope="col" className="px-6 py-4 whitespace-nowrap">
+              Grade Status
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {submissions.map((obj) => (
+            <tr
+              key={obj.id}
+              className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+            >
+              <td className="px-6 py-4 whitespace-nowrap">
+                <Link
+                  href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
+                >
+                  {getUserDataById(obj.user_id)?.name || "Unknown"}
+                </Link>
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {obj.user_id}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {obj.submitted_at ? "Submitted" : "Not Submitted"}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap">
+                {obj.grade ? "Graded" : "Not Graded"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+) : null}
+
+
 
         </div>
       </div>
