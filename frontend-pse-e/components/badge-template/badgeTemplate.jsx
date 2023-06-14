@@ -21,11 +21,9 @@ const BadgeTemplate = ({ pictureUrl }) => {
     maxHeight: '120pt',
     width: 'auto',  // Keep aspect ratio.
     height: 'auto',
-
-    position: 'fixed',
+    position: 'relative',
     top: '65pt',  // Image offset to position somewhat in middle of badge.
     left: '65pt',
-
   };
 
   const componentStyle = {  // So that the badge components align.

@@ -4,7 +4,7 @@
 
 // The badge background svg.
 // This component should only be called in badgeTemplate.jsx
-// The colors can be changed by editing the stop-color="#<hexcode>" attributes
+// The colors can be changed by editing the stop-color="#<hexcode>" attributes.
 import React from "react";
 
 const BadgeBg = () => {
