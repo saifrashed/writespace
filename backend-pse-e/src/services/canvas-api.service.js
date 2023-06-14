@@ -101,6 +101,25 @@ router.post('/assignments', (req, res) => {
   });
 });
 
+// Get all file upload (written) assignments
+router.post('/written-assignments', (req, res) => {
+  const { courseId, token } = req.body;
+  axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100,
+      submission: 'online_upload'
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 // Create assignment (missing deadline attribute)
 router.post('/courses/:courseId/assignments', (req, res) => {
   const { courseId } = req.params
