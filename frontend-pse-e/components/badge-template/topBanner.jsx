@@ -19,8 +19,8 @@ const TopBanner = () => {
   <defs>
     <linearGradient id="gradientTB" gradientUnits="objectBoundingBox" x1="0" y1="0"
      x2="1.20871550980016" y2="0.555831534029364" spreadMethod="pad">
-      <stop stop-color="#62ca54" offset="0.1039" stop-opacity="1"/>
-      <stop stop-color="#70bbff" offset="0.831168831168831" stop-opacity="1"/>
+      <stop stop-color="#70bbff" offset="0.1039" stop-opacity="1"/>
+      <stop stop-color="#62ca54" offset="0.831168831168831" stop-opacity="1"/>
     </linearGradient>
    </defs>
   <path id="shape0" transform="matrix(1 0.0219987826959742 2.44929359829471e-16 1

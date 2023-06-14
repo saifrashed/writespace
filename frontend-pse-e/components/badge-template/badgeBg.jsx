@@ -1,3 +1,7 @@
+// #a855f7 (paars)
+// #62ca54 (green)
+// #70bbff (blauw)
+
 // The badge background svg.
 // This component should only be called in badgeTemplate.jsx
 // The colors can be changed by editing the stop-color="#<hexcode>" attributes
