@@ -38,7 +38,9 @@ const Home = () => {
                 title={"Wording wizard"}
                 description={"Given to students who exhibit outstanding word choice and literary devices in their writing."}
                 commentary={"Goed gedaan man! Ik zie je hier echt beter in worden"}
-                xp={"100"}/>
+                xp={"100"}
+                unlocked={true}
+                />
             </div>
           </div>
         ))}

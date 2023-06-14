@@ -7,7 +7,7 @@ import BadgeBg from "@/components/badge-template/badgeBg"
 import TopBanner from "@/components/badge-template/topBanner"
 import BottomBanner from "@/components/badge-template/bottomBanner"
 
-const BadgeTemplate = ({ pictureUrl }) => {
+const BadgeTemplate = ({ pictureUrl, unlocked }) => {
 
   const containerStyle = {
     position: 'relative',
@@ -40,9 +40,13 @@ const BadgeTemplate = ({ pictureUrl }) => {
       <div style={componentStyle}>
         <TopBanner/>
       </div>
-      <div style={componentStyle}>
-        <img src={pictureUrl} alt="Badge Picture" style={pictureStyle} />
-      </div>
+      {/* Don't show image for badges that haven't been unlocked yet. */}
+      {unlocked ? (
+        <div style={componentStyle}>
+          <img src={pictureUrl} alt="Badge Picture" style={pictureStyle} />
+        </div>
+        ) : null
+      }
       <div style={componentStyle}>
         <BottomBanner/>
       </div>
