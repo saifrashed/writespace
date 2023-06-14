@@ -16,7 +16,6 @@ function useSubmission() {
           const responseSubmission = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}/${responseUser.data.id}`, { token });
           setSubmissionData(responseSubmission.data);
           setIsLoading(false);
-          console.log(responseSubmission.data)
         } else {
           onError("Something went wrong");
           throw new Error('Invalid response from get-user endpoint');

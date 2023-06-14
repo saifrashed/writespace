@@ -11,6 +11,8 @@ import UploadPopup from "../../../../../components/uploadPopup";
 import useSubmission from "@/lib/hooks/useSubmission";
 import useEnrollments from "@/lib/hooks/useEnrollments";
 import useSubmissions from "@/lib/hooks/useSubmissions";
+import useUsers from "@/lib/hooks/useUsers";
+
 
 const Assignments = () => {
   const router = useRouter();
@@ -21,15 +23,24 @@ const Assignments = () => {
   const { submission, getSubmission } = useSubmission()
   const { submissions, getSubmissions } = useSubmissions()
   const { enrollments, getEnrollments } = useEnrollments()
+  const { users, getUsers } = useUsers()
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
   const isTeacher = true;
 
-  console.log(isTeacher)
-  console.log(enrollments)
-  console.log(submissions)
+  console.log(submissions);
+  console.log(users);
+
+  const getUserDataById = (user_id: Number) => {
+    return users.find((user) => user.id === user_id) || null;
+  };
+
+  const user_id = 293080; // Replace with the desired user_id
+  const userData = getUserDataById(user_id);
+
+  console.log(userData?.name)
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -52,8 +63,9 @@ const Assignments = () => {
     // Do API requests based on a user its role.
     if (courseId && assignmentId && token) {
       if (isTeacher) {
-        getEnrollments(parseInt(courseId.toString()), token)
+        // getEnrollments(parseInt(courseId.toString()), token)
         getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+        getUsers(parseInt(courseId.toString()), token)
       } else {
         getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
         getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)

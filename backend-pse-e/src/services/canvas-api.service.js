@@ -94,6 +94,21 @@ router.post('/courses/:courseId', (req, res) => {
 });
 
 
+// Get all user enrolled in a course without non official users (TestPerson).
+router.post('/courses/:courseId/users', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/users`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 // Get all users enrolled in a course.
 router.post('/courses/:courseId/enrollments', (req, res) => {
   const token = req.body.token;

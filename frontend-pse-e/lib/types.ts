@@ -216,3 +216,24 @@ export interface Enrollment {
     current_period_unposted_current_grade: string | null | undefined;
     current_period_unposted_final_grade: string | null | undefined;
   }
+
+  export interface User {
+    id: number;
+    name: string;
+    sortable_name: string;
+    last_name: string;
+    first_name: string;
+    short_name: string;
+    sis_user_id: string | null;
+    sis_import_id: number | null;
+    integration_id: string | null;
+    login_id: string;
+    avatar_url: string | null;
+    avatar_state: string | null;
+    enrollments: Enrollment[] | null;
+    email: string | null;
+    locale: string | null;
+    last_login: string | null;
+    time_zone: string | null;
+    bio: string | null;
+}
