@@ -19,8 +19,8 @@ const BottomBanner = () => {
   <defs>
     <linearGradient id="gradientBB" gradientUnits="objectBoundingBox" x1="0" y1="0"
      x2="1.38339781255396" y2="-0.227571673726306" spreadMethod="pad">
-      <stop stop-color="#808080" offset="0" stop-opacity="1"/>
-      <stop stop-color="#292929" offset="0.728571428571429" stop-opacity="1"/>
+      <stop stop-color="#62ca54" offset="0" stop-opacity="1"/>
+      <stop stop-color="#70bbff" offset="0.728571428571429" stop-opacity="1"/>
     </linearGradient>
    </defs>
   <path id="shape0" transform="matrix(-1 0 0 -1 212.519677736637 166.640521212607)" fill="#4c4c4c"

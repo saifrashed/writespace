@@ -19,14 +19,14 @@ const BadgeBg = () => {
       <defs>
         <radialGradient id="gradientBg" gradientUnits="objectBoundingBox" cx="0"
          cy="0" fx="0" fy="0" r="1.4142135623731" spreadMethod="pad">
-          <stop stop-color="#cccccc" offset="0" stop-opacity="1"/>
+          <stop stop-color="#A855F780" offset="0" stop-opacity="1"/>
           <stop stop-color="#f2f2f2" offset="0.5" stop-opacity="1"/>
-          <stop stop-color="#ffffff" offset="1" stop-opacity="1"/>
+          <stop stop-color="#A855F780" offset="1" stop-opacity="1"/>
         </radialGradient>
       </defs>
       <rect id="shape0" transform="matrix(-0.577337840861106 -0.577337840861106 0.577337840861106
         -0.577337840861106 126.991834848926 231.994954097084)" fill="url(#gradientBg)"
-        fill-rule="evenodd" stroke="#666666" stroke-width="7.2" stroke-linecap="square"
+        fill-rule="evenodd" stroke="#706f7d" stroke-width="7.2" stroke-linecap="square"
         stroke-linejoin="miter" stroke-miterlimit="1.92" width="186.24" height="186.48"/>
     </svg>
   `;

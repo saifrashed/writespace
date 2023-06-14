@@ -5,17 +5,28 @@ import ProgressBar from '@/components/ExpBrainBar';
 import badges from '../../data/badges';
 import ScaledBadge from '@/components/badge-template/Badge';
 import useBadges from "@/lib/hooks/useBadges";
+import useUser from "@/lib/hooks/useUser";
 
 
 import { useEffect } from 'react';
 
 const Profile = () => {
     const { badges: userBadges, getBadges } = useBadges();
+    const { user, getUser } = useUser(String(1));
+
+
+    const repositionStyle = {
+      position: 'relative',
+      top: '-40px',  // Image offset
+      left: '-80px',
+    };
 
     useEffect(() => {
       getBadges();
+      getUser(String(1));
     }, [])
     console.log(userBadges);
+
 
     return (
         <>
@@ -28,17 +39,20 @@ const Profile = () => {
           <NavBar />
 
         <div className="flex h-screen">
-          <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-8 md:w-1/5 md:h-[100vh] flex items-center content-center justify-center overflow-y-auto">
-            <div className="flex justify-center">
-            <Avatar
-            sx={{ width: 150, height: 150 }}
-            alt="henk">H</Avatar>
+          <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-8 md:w-1/5 md:h-[100vh] flex items-start content-center justify-center overflow-y-auto">
+            <div className="flex justify-center mt-20">
+              <Avatar
+                sx={{ width: 150,
+                      height: 150,
+                      border: '2px solid black' }}
+                src="/badges/12.png"
+              />
             </div>
           </div>
 
           <div className="w-full relative shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5 overflow-x-hidden">
-              <div className="flex flex-col">
-                <ProgressBar bgcolor="orange" progress="30" height={30} />
+              <div className="flex flex-col mt-20 justify-center items-center">
+                <ProgressBar bgcolor="orange" progress="30" height={35} />
               </div>
 
               <div className="flex flex-wrap justify-center">
@@ -46,8 +60,10 @@ const Profile = () => {
                   badges.map((badge) => {
                     const isBadgeOwned = userBadges.hasOwnProperty(badge.id);
                     return (
-                      <div className="flex items-center justify-center h-24 w-24 m-8 top--10 left--10" key={badge.id}>
-                        <ScaledBadge resizeFactor={0.5} pictureUrl={`/badges/${badge.id.toString()}.png`} />
+                      <div style={repositionStyle}>
+                        <div className="flex items-center justify-center h-24 w-24 m-8 top--10 left--10" key={badge.id}>
+                          <ScaledBadge resizeFactor={0.5} pictureUrl={`/badges/${badge.id.toString()}.png`} />
+                        </div>
                       </div>
                     );
                   })}
