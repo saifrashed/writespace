@@ -10,6 +10,7 @@ const submissionModel = new mongoose.Schema({
     filetype: String,
     filename: String,
     fileData: Buffer, // Field to store file data
+    fileNotes: [Object]
 });
 
 // Export the database model for MongoDB

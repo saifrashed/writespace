@@ -13,12 +13,11 @@ const { encryptToken, decryptToken, auth } = require('../middleware/auth');
 // production
 const apiUrl = 'https://canvas.uva.nl/api/v1';
 
-
 // apiUrl for logging in with OAuth2 (without the "/api/v1" part)
 const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
 
 // Developer key variables
-const redirectUri = 'https://localhost:5000/';
+const redirectUri = 'http://localhost:3000/';
 const { CLIENT_ID } = process.env;
 const { CLIENT_SECRET } = process.env;
 
@@ -187,7 +186,10 @@ router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
       Authorization: `Bearer ${token}`
     }
   }).then(response => {
-    res.json(response.data);
+    // Filter assignments by submission_types
+    res.json(response.data.filter(assignment => {
+      return assignment.submission_types.includes("online_upload");
+    }));
   }).catch(error => {
     console.error('Error from Canvas API:', error);
     res.status(500).json({ error: 'An error occurred.' });
