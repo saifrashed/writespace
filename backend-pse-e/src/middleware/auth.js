@@ -3,7 +3,7 @@ const CryptoJS = require('crypto-js');
 require('dotenv').config(); // Load environment variables from .env file
 const axios = require('axios');
 // Canvas apiUrl
-const { apiUrl } = require('../services/canvas-api.service.js');
+const { API_URL } = process.env;
 
 function encryptToken(token) {
     const clientSecret = process.env.CLIENT_SECRET; // Retrieve client secret from .env file
@@ -18,6 +18,29 @@ const decryptToken = (encryptedToken) => {
     return decryptedToken;
 }
 
+// This is the authentication function for the canvas-api requests. This is a bit 
+// different because the canvas-api has its own authentication, this is just decryption
+const authCanvas = (req, res, next) => {
+    const token =
+        req.body.token || req.query.token || req.headers["x-access-token"];
+
+    if (!token) {
+        return res.status(403).send("A token is required for authentication");
+    }
+    try {
+        // Decrypt the token
+        const decryptedToken = decryptToken(token);
+        // Edit the body by adding the decrypted token
+        req.body.token = decryptedToken;
+    } catch (err) {
+        return res.status(401).send("Invalid Token");
+    }
+    // Continue to the next the next middleware function in the request-response cycle.
+    return next();
+};
+
+// This is the authentication for all of our own requests. The canvas api has its own
+// authentication, so you cannot do another request since it already gives an error.
 const auth = (req, res, next) => {
     const token =
         req.body.token || req.query.token || req.headers["x-access-token"];
@@ -29,21 +52,25 @@ const auth = (req, res, next) => {
         // Decrypt the token
         const decryptedToken = decryptToken(token);
 
-        // Check if the user exists
-        // axios.get(`${apiUrl}/users/self`, {
+        // TODO: does it need to be 2 separate functions?? ask Devran for advice maybe.
+        // TODO: first try to do it within this request as well. The only exception is the refresh token, think of something.
+
+        // Check if the user exists by making a request to the /get-user endpoint
+        // axios.get(`${API_URL}/users/self`, {
         //     headers: {
         //         // Authorization using the access token
         //         Authorization: `Bearer ${decryptedToken}`
         //     }
         // }).then(response => {
-        //     console.log(response);
-        //     // Edit the request body with the new values if the user is valid
+        //     console.log("*******************************************************************************");
+        //     console.log(response.data);
+        //     // Edit the request body with the new values if the user is valid.
         //     req.body.token = decryptedToken;
         //     // Put the userId of the user with the access token in the body
         //     // req.body.userId = userId;
         // }).catch(error => {
-        //     // User does not exist or something went wrong
-        //     return res.status(403).send("User does not exist");
+        //     console.log("ERROR!!!*******************************************************************************");
+        //     return res.status(404).send("User not found");
         // });
     } catch (err) {
         return res.status(401).send("Invalid Token");
@@ -55,5 +82,6 @@ const auth = (req, res, next) => {
 module.exports = {
     encryptToken,
     decryptToken,
+    authCanvas,
     auth
 };
