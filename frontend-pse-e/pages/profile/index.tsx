@@ -67,7 +67,8 @@ const Profile = () => {
                     return (
                       <div style={repositionStyle}>
                         <div className="flex items-center justify-center h-24 w-24 m-8 top--10 left--10" key={badge.id}>
-                          <ScaledBadge resizeFactor={0.5} pictureUrl={`/badges/${badge.id.toString()}.png`} />
+                          <ScaledBadge resizeFactor={0.5} pictureUrl={`/badges/${badge.id.toString()}.png`} title={badge.title}
+                          description={badge.description} commentary={'no comment'} xp={String(badge.exp)} unlocked={isBadgeOwned} />
                         </div>
                       </div>
                     );
