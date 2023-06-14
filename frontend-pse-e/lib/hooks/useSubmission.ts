@@ -38,7 +38,7 @@ function useSubmission() {
       }
 
       const response = await axios.put(`${config.backendUrl}/submission//update/fileNotes/`, body);
-      
+
       // Correcte versie voor later
       // const body = {
       //   token: token,
@@ -61,20 +61,23 @@ function useSubmission() {
       const userId = "ales1708";
       const assignmentId = "LeukeShit"
 
-      const body = {
-        userId: userId,
-        assignmentId: assignmentId,
-        file: file
+      const formData = new FormData();
+      formData.append("file", file, file.name);
+      formData.append("userId", userId);
+      formData.append("assignmentId", assignmentId);
+
+      const headers = {
+        'Content-Type': 'multipart/form-data'
       }
 
       // Correcte versie voor later
-      // const body = {
-      //   token: token,
-      //   assignmentId: assignmentId,
-      //   file: file
-      // }
+      // const formData = new FormData();
+      // formData.append("file", file, file.name);
+      // formData.append("userId", userId);
+      // formData.append("assignmentId", assignmentId);
 
-      const response = await axios.post(`${config.backendUrl}/submission/save`, body);
+      const response = await axios.post(`${config.backendUrl}/submission/save`, formData, { headers: headers });
+
       if (response.status === 200) {
         console.log("Submission submitted");
       }
@@ -102,7 +105,7 @@ function useSubmission() {
 
       setFileUrl(fileUrl);
       setFileNotes(fileNotes);
-    
+
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
