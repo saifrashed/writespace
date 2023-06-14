@@ -21,12 +21,7 @@ const Assignments = () => {
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
-
   const isTeacher = false;
-
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
 
   useEffect(() => {
     if (courseId && assignmentId && token) {
@@ -75,23 +70,17 @@ const Assignments = () => {
               <div className="col-span-1 p-4 ">
                 <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                   <div className="flex flex-col">
-
-
-
                     <a
                       className="inline-flex items-center gap-2  text-center rounded border border-indigo-600 px-8 py-3 text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
-                      onClick={togglePopup}
+                      onClick={() => { setShowPopup(!showPopup) }}
                     >
                       <span className="text-sm font-medium"> Submit </span>
-
                       <i className="fa-solid fa-upload"></i>
                     </a>
-
                     <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}
                       className="inline-flex items-center text-center gap-2 rounded border border-indigo-600 mt-2 px-8 py-3 bg-indigo-600 text-white hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
                     >
                       <span className="text-sm font-medium"> View </span>
-
                       <i className="fa-solid fa-eye"></i>
                     </Link>
                   </div>
@@ -99,7 +88,6 @@ const Assignments = () => {
               </div>
             </div>
           )}
-
           {isTeacher && (
             <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
               <table className="w-full text-sm text-left">

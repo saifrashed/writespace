@@ -1,10 +1,8 @@
-import { useState } from "react";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import Link from "next/link";
 
 const NavBar = ({ showLogout = true }) => {
     const { logout } = useAuthentication();
-
 
     return (
         <>
