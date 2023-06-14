@@ -1,22 +1,12 @@
-/*
- * Example usage:
- * const [showPopup, setShowPopup] = useState(false);
- * const togglePopup = () => { setShowPopup(!showPopup); };
- * and in html:
- * <Button onClick={togglePopup}>Upload here</Button>
- * <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
- *
- * STILL TO DO:
- * - Accept files larger than 1MB
- * - Make style popup window to conform to entire website.
- * - Is this compatible with backend?
- */
 import React, { useState } from "react";
 import Button from "./stdButton";
 import CloseButton from "./closeButton";
 import PopConfetti from '../components/popConfetti';
 
-const UploadPopup = ({ showPopup, togglePopup }) => {
+import useSubmission from "@/lib/hooks/useSubmission";
+import useAuthentication from "@/lib/hooks/useAuthentication";
+
+const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
 
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
     const [uploadedFile, setUploadedFile] = useState(null);
@@ -24,6 +14,8 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
     const [remindConfirm, setRemindConfirm] = useState(false);
     const [remindFile, setRemindFile] = useState(false);
     const fileSizeLimit = 1 * 1048576;  // 1MB
+    const { submitSubmission } = useSubmission()
+    const { token } = useAuthentication()
 
     // Security measure: Remove shady characters from file name.
     const sanitizeString = (string) => {
@@ -34,29 +26,6 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
             sanitizedString = "nofilename.pdf";
         }
         return sanitizedString;
-    };
-
-    // Send the uploaded file to the backend.
-    const storeFileUpload = (file) => {
-
-        const formData = new FormData();
-        formData.append('pdfFile', file);
-
-        fetch('/api/fileupload', {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-            .then((response) => response.json())
-            .then((responseData) => {
-                console.log(responseData);
-                setFileUploadSuccess(true);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
     };
 
     const handleInputChange = (event) => {  // When a user uploads a file.
@@ -142,7 +111,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
 
                 {uploadedFile && isConfirmed && (  // Valid submission with checked box.
                     // Confirm button sends file to backend.
-                    <Button onClick={() => storeFileUpload(uploadedFile.file)}>Confirm</Button>
+                    <Button onClick={() => submitSubmission(token, assignmentId, uploadedFile.file)}>Confirm</Button>
                 )}
                 {!uploadedFile && (  // Trigger for reminder file upload.
                     <Button onClick={() => {
