@@ -104,11 +104,11 @@ const CreateAssignment = () => {
                         className={`flex flex-col items-center rounded-2xl p-8 ${course?.course_color || "bg-yellow-500"} bg-opacity-50 z-10`}>
                         <h5
                             className="mb-1 text-xl font-medium text-white text-center">
-                            {course?.name}
+                            {course?.name || "Course Name"}
                         </h5>
                         <span
                             className="mb-2 text-sm text-center text-white opacity-60">
-                            {course?.course_code}
+                            {course?.course_code || "Course Code"}
                         </span>
                     </motion.div>
                 </div>
