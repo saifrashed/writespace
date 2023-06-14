@@ -158,3 +158,12 @@ export interface Submission {
     read_status: string;
     redo_request: boolean;
 }
+
+export interface Badge {
+    includes(badge: { id: number; title: string; description: string; exp: number; }): unknown;
+    badgeId: Number,
+    iconId: Number,
+    experiencePoints: Number,
+    name: String,
+    description: String,
+}

@@ -770,6 +770,10 @@ select {
   grid-column: span 3 / span 3;
 }
 
+.m-10 {
+  margin: 2.5rem;
+}
+
 .m-auto {
   margin: auto;
 }
@@ -911,6 +915,10 @@ select {
   height: 0.625rem;
 }
 
+.h-24 {
+  height: 6rem;
+}
+
 .h-4 {
   height: 1rem;
 }
@@ -941,6 +949,10 @@ select {
 
 .h-full {
   height: 100%;
+}
+
+.h-screen {
+  height: 100vh;
 }
 
 .min-h-screen {
@@ -1053,6 +1065,16 @@ select {
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
+.-translate-x-10 {
+  --tw-translate-x: -2.5rem;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
+.translate-x-full {
+  --tw-translate-x: 100%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+
 .scale-150 {
   --tw-scale-x: 1.5;
   --tw-scale-y: 1.5;
@@ -1093,6 +1115,10 @@ select {
 
 .flex-col {
   flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .content-center {
@@ -1637,10 +1663,6 @@ select {
   font-weight: 700;
 }
 
-.font-extralight {
-  font-weight: 200;
-}
-
 .font-light {
   font-weight: 300;
 }
@@ -2128,12 +2150,6 @@ select {
 
   .md\:flex-row {
     flex-direction: row;
-  }
-
-  .md\:truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 
   .md\:p-4 {
