@@ -23,7 +23,7 @@ const badgeModel = require("../models/badge.model.js");
 
 // Get request (gets something from the db)
 // Get all badges
-router.get("/getAll", async (req, res) => {
+router.get("/get-all", async (req, res) => {
     try {
         // Find all tests
         const badges = await badgeModel.find();
@@ -36,7 +36,7 @@ router.get("/getAll", async (req, res) => {
 });
 
 // Get badge by badgeId
-router.get("/getBadge/:badgeId", async (req, res) => {
+router.get("/get-badge/:badgeId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await badgeModel.find({ 'badgeId': req.params.badgeId });
@@ -54,7 +54,7 @@ router.get("/getBadge/:badgeId", async (req, res) => {
 });
 
 // Save new badge
-router.post('/save', upload.single('file'), async (req, res) => {
+router.post('/save', async (req, res) => {
     try {
         // Variables for the model
         const badgeId = req.body.badgeId;
@@ -91,7 +91,7 @@ router.post('/save', upload.single('file'), async (req, res) => {
 });
 
 // Update badge XP
-router.put('/update/experiencePoints/', async (req, res) => {
+router.put('/update/experience-points/', async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
         const experiencePoints = req.body.experiencePoints
@@ -120,7 +120,7 @@ router.put('/update/experiencePoints/', async (req, res) => {
 });
 
 // Update badge name and description
-router.put('/update/namedescription/', async (req, res) => {
+router.put('/update/name-description/', async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
         const name = req.body.name;

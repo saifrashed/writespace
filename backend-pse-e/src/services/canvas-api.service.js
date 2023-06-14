@@ -17,7 +17,7 @@ const apiUrl = 'https://canvas.uva.nl/api/v1';
 const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
 
 // Developer key variables
-const redirectUri = 'https://localhost:5000/';
+const redirectUri = 'http://localhost:3000/';
 const { CLIENT_ID } = process.env;
 const { CLIENT_SECRET } = process.env;
 
@@ -59,6 +59,29 @@ router.post('/courses', (req, res) => {
   });
 });
 
+// Get all courses that are relevant (such as not closed)
+router.post('/relevant-courses', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100,
+      // Include 'concluded' and 'term' for the courses
+      include: ['concluded', 'term']
+    }
+  }).then(response => {
+    // Filter out unrelevant courses. There is a property "concluded", if this
+    // is true the course is done and the course is not relevant anymore.
+    const relevantCourses = response.data.filter(course => !course.concluded);
+    res.json(relevantCourses);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
 // Get all assignments of a course with a user access token
 router.post('/assignments', (req, res) => {
   const { courseId, token } = req.body;
@@ -71,6 +94,26 @@ router.post('/assignments', (req, res) => {
     }
   }).then(response => {
     res.json(response.data);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
+// Get all file upload (written) assignments
+router.post('/written-assignments', (req, res) => {
+  const { courseId, token } = req.body;
+  axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }, params: {
+      order_by: "due_at"
+    }
+  }).then(response => {
+    // Filter assignments by submission_types
+    res.json(response.data.filter(assignment => {
+      return assignment.submission_types.includes("online_upload");
+    }));
   }).catch(error => {
     console.error('Error from Canvas API:', error);
     res.status(500).json({ error: 'An error occurred.' });
@@ -196,6 +239,27 @@ router.post('/courses/:courseId/user/role', (req, res) => {
   }).then(response => {
     // Return enrollments information
     res.json(response.data.enrollments[0]);
+  }).catch(error => {
+    console.error('Error from Canvas API:', error);
+    res.status(500).json({ error: 'An error occurred.' });
+  });
+});
+
+// Get a list of students in the course
+router.post('/courses/:courseId/users/students', (req, res) => {
+  const token = req.body.token;
+  axios.get(`${apiUrl}/courses/${req.params.courseId}/users`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }, params: {
+      // Configure how many items are returned maximum
+      per_page: 100,
+      // Select only students
+      enrollment_type: ['student', 'student_view']
+    }
+  }).then(response => {
+    // Return enrollments information
+    res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
     res.status(500).json({ error: 'An error occurred.' });
