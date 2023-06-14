@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { quiz } from '../data/quiz';
+import { quiz } from '../public/data/quiz';
 import Quiz from './quiz.jsx'
 
 const quizMenu = () => {
@@ -12,12 +12,12 @@ const quizMenu = () => {
     const [quizMenu, setQuizMenu] = useState(false)
 
     const openPopup = () => {
-      setIsOpen(true);
-      setQuizMenu(true)
+        setIsOpen(true);
+        setQuizMenu(true)
     };
 
     const closePopup = () => {
-      setIsOpen(false);
+        setIsOpen(false);
     };
 
     const openQuiz = (quizId) => {
@@ -38,12 +38,12 @@ const quizMenu = () => {
             {!isOpen ? (
 
                 <button onClick={openPopup}>
-                Open Quizmenu
+                    Open Quizmenu
                 </button>
             ) : (
-            <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
+                <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
 
-                <div className="bg-white p-6 rounded-lg max-w-3xl overflow-y-auto max-h-[90vh]">
+                    <div className="bg-white p-6 rounded-lg max-w-3xl overflow-y-auto max-h-[90vh]">
                         <button onClick={closePopup}>
                             Close quizmenu
                         </button>
@@ -51,34 +51,34 @@ const quizMenu = () => {
 
                         {quizMenu ? (
 
-                        <div>
-                            <h1 className>Quiz menu: </h1>
-                            {Object.entries(quiz).map(([key, value]) => (
-                                <div className="text-base text-indigo-900 bg-white border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer"
-                                key={value['topic']}
-                                style={{ cursor: 'pointer' }}
-                                onClick={() =>  openQuiz(key)}
-                              >
-                                {value['topic']}
-                              </div>
-                            ))}
-                        </div>
+                            <div>
+                                <h1 className>Quiz menu: </h1>
+                                {Object.entries(quiz).map(([key, value]) => (
+                                    <div className="text-base text-indigo-900 bg-white border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer"
+                                        key={value['topic']}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => openQuiz(key)}
+                                    >
+                                        {value['topic']}
+                                    </div>
+                                ))}
+                            </div>
                         ) : (
-                        <div>
-                            {showButton && (
-                                <button onClick={closeQuiz} className="cursor-pointer bg-black-500 py-2 px-4">
-                                    close quiz
-                                </button>
-                            )}
-                            {selectedQuiz && (
-                                <Quiz quizId={selectedQuiz}/>
-                            )}
-                        </div>
+                            <div>
+                                {showButton && (
+                                    <button onClick={closeQuiz} className="cursor-pointer bg-black-500 py-2 px-4">
+                                        close quiz
+                                    </button>
+                                )}
+                                {selectedQuiz && (
+                                    <Quiz quizId={selectedQuiz} />
+                                )}
+                            </div>
                         )}
                     </div>
 
-            </div>)
-        }
+                </div>)
+            }
 
 
         </div>
