@@ -6,7 +6,9 @@ module.exports = {
     },
     "extends": [
         "eslint:recommended",
-        "plugin:react/recommended"
+        "plugin:react/recommended",
+        "next", 
+        "next/core-web-vitals"
     ],
     "parserOptions": {
         "ecmaVersion": "latest",
@@ -16,5 +18,11 @@ module.exports = {
         "react"
     ],
     "rules": {
-    }
+        "react/react-in-jsx-scope": "off"
+    },
+    "settings": {
+        "react": {
+          "version": "detect"
+        }
+      }
 }
