@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - frontend
+  pull_request:
+    branches:
+      - frontend
+
+jobs:
+  check_frontend:
+    name: Lint/test/build frontend code base
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+
+      - name: Install packages frontend
+        run: cd ./frontend-pse-e && npm ci
+      - name: Run Eslint
+        run: cd ./frontend-pse-e && npm run lint:ci
+      - name: Run Tests
+        run: npm run ci:test
+      - name: Bundle and Output
+        run: npm run build

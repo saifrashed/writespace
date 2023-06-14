@@ -1,21 +1,34 @@
-name: CI
+name: backend CI
 
-on: push 
+on:
+  push:
+    branches-ignore:
+      - '*'
+    paths-ignore:
+      - 'frontend-pse-e/**'
+  pull_request:
+    branches:
+      - backend
+  merge:
+    branches:
+      - backend
 
 jobs:
-  eslint:
-   name: Lint code base 
-   runs-on: ubuntu-latest
+  backend CI:
+    name: Lint backend code base
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/backend/') || github.event_name == 'merge'
 
-   steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - uses: actions/setup-node@v3
-    
-    - name: Install packages backend
-      run: cd ./backend-pse-e && npm install
-    
-    - name: Run Eslint
-      run: cd ./backend-pse-e && npm run lint:ci
-    
-      
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+
+      - name: Install packages backend
+        run: cd ./backend-pse-e && npm install
+
+      - name: Run Eslint
+        run: cd ./backend-pse-e && npm run lint:ci
+
+      - name: Run Tests
+        run: npm run ci:test

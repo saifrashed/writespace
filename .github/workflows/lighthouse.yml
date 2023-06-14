@@ -1,0 +1,28 @@
+name: lighthouse benchmark
+
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+
+jobs:
+  lighthouse:
+    name: Run lighthouse benchmark
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+
+      - name: Install packages
+        run: cd ./frontend-pse-e && npm ci
+
+      - name: Run lighthouse
+        run: cd ./frontend-pse-e && npm run lighthouse:ci
