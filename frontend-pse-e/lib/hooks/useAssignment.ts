@@ -21,6 +21,7 @@ function useAssignment() {
     try {
       const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/assignments`, { token, assignment })
       setAssignment(response.data)
+      onSuccess(`Succesfully created "${assignment?.name}"`)
     } catch (error) {
       console.log(error)
       onError("Something went wrong")
@@ -30,6 +31,7 @@ function useAssignment() {
     try {
       const response = await axios.put(`${config.baseUrl}/canvas-api/courses/${courseId}/assignments/${assignmentId}`, { token, assignment })
       setAssignment(response.data)
+      onSuccess(`Succesfully updated "${assignment?.name}"`)
     } catch (error) {
       console.log(error)
       onError("Something went wrong")
@@ -37,8 +39,7 @@ function useAssignment() {
   }
   const deleteAssignment = async (courseId: number, assignmentId: number, token: string) => {
     try {
-      await axios.delete(
-        `${config.baseUrl}/canvas-api/courses/${courseId}/assignments/${assignmentId}`,
+      await axios.delete(`${config.baseUrl}/canvas-api/courses/${courseId}/assignments/${assignmentId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

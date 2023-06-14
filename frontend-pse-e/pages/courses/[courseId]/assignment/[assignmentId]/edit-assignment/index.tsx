@@ -12,7 +12,6 @@ import useAssignment from "@/lib/hooks/useAssignment";
 
 const EditAssignment = () => {
 
-
     const router = useRouter();
     const { courseId, assignmentId } = router.query;
     const { token } = useAuthentication();
@@ -26,6 +25,16 @@ const EditAssignment = () => {
     const { assignment: fetchedAssignment, getAssignment } = useAssignment();
     const assignment = contextAssignment || fetchedAssignment;
 
+    const [assignmentName, setAssignmentName] = useState<string>(assignment?.name || "");
+    const [description, setDescription] = useState<string>(assignment?.description || "");
+    const [points, setPoints] = useState<number>(assignment?.points_possible || 0);
+    const [attempts, setAttempts] = useState<number>(assignment?.allowed_attempts || -1);
+    const [gradingType, setGradingType] = useState<string>(assignment?.grading_type || "");
+    const [isGroupAssignment, setIsGroupAssignment] = useState<boolean>(false);
+    const [isCounted, setIsCounted] = useState<boolean>(assignment?.omit_from_final_grade || false);
+    const [requirePeerReviews, setRequirePeerReviews] = useState<boolean>(assignment?.peer_reviews || false);
+    const [isAnonymousGrading, setIsAnonymousGrading] = useState<boolean>(assignment?.anonymous_grading || false);
+
     useEffect(() => {
         if (courseId && assignmentId && token) {
             getCourse(parseInt(courseId.toString()), token);
@@ -33,15 +42,18 @@ const EditAssignment = () => {
         }
     }, [router.query]);
 
-    const [assignmentName, setAssignmentName] = useState(assignment?.name);
-    const [description, setDescription] = useState(assignment?.description);
-    const [points, setPoints] = useState(assignment?.points_possible);
-    const [attempts, setAttempts] = useState<number>(assignment?.allowed_attempts);
-    const [gradingType, setGradingType] = useState(assignment?.grading_type);
-    const [isGroupAssignment, setIsGroupAssignment] = useState(false);
-    const [isCounted, setIsCounted] = useState(assignment?.omit_from_final_grade);
-    const [requirePeerReviews, setRequirePeerReviews] = useState(assignment?.peer_reviews);
-    const [isAnonymousGrading, setIsAnonymousGrading] = useState(assignment?.anonymous_grading);
+    useEffect(() => {
+        if (assignment) {
+            setAssignmentName(assignment.name);
+            setDescription(assignment.description);
+            setPoints(assignment.points_possible);
+            setAttempts(assignment.allowed_attempts);
+            setGradingType(assignment.grading_type);
+            setIsCounted(assignment.omit_from_final_grade);
+            setRequirePeerReviews(assignment.peer_reviews);
+            setIsAnonymousGrading(assignment.anonymous_grading);
+        }
+    }, [assignment]);
 
     const handleUpdateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -65,7 +77,6 @@ const EditAssignment = () => {
             }
         }
     };
-
 
     const handlePointsChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -112,11 +123,11 @@ const EditAssignment = () => {
                         className={`flex flex-col items-center rounded-2xl p-8 ${course?.course_color || "bg-yellow-500"} bg-opacity-50 z-10`}>
                         <h5
                             className="mb-1 text-xl font-medium text-white text-center">
-                            {course?.name}
+                            {course?.name || "Course Name"}
                         </h5>
                         <span
                             className="mb-2 text-sm text-center text-white opacity-60">
-                            {course?.course_code}
+                            {course?.course_code || "Course Code"}
                         </span>
                     </motion.div>
                 </div>
@@ -155,18 +166,18 @@ const EditAssignment = () => {
                             Grading Type
                         </label>
                         <select
-                            defaultValue={gradingType}
+                            value={gradingType || "points"}
                             id="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             onChange={(e) => setGradingType(e.target.value)}
-                            disabled
+                            
                         >
-                            <option>pass_fail</option>
-                            <option>percent</option>
-                            <option>points</option>
-                            <option>letter_grade</option>
-                            <option>gpa_scale</option>
-                            <option>not_graded</option>
+                            <option value="pass_fail">Pass/Fail</option>
+                            <option value="percent">Percent</option>
+                            <option value="points">Points</option>
+                            <option value="letter_grade">Letter Grade</option>
+                            <option value="gpa_scale">GPA Scale</option>
+                            <option value="not_graded">Not Graded</option>
                         </select>
                         <div className="mb-6">
                             <label htmlFor="assignment-points" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -176,7 +187,7 @@ const EditAssignment = () => {
                                 type="number"
                                 id="assignment-points"
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                placeholder={points}
+                                placeholder={points?.toString()}
                                 required
                                 value={points}
                                 onChange={handlePointsChange}
