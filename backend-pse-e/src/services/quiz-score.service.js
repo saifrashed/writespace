@@ -14,7 +14,7 @@ const upload = multer({ storage: storage });
 
 // ************************* Copy and change this with the model you added *************************
 // Import models for this service (../ goes up one directory)
-const quizScoreModel = require('../models/quizScore.model.js');
+const quizScoreModel = require('../models/quiz-score.model.js');
 // ************************* Copy and change this with the model you added *************************
 
 // ************************* Requests for this service (examples below) *************************
@@ -22,7 +22,7 @@ const quizScoreModel = require('../models/quizScore.model.js');
 
 // Get request (gets something from the db)
 // Get all quiz scores
-router.get("/getAll", async (req, res) => {
+router.get("/get-all", async (req, res) => {
     try {
         // Find all tests
         const quizScores = await quizScoreModel.find();
@@ -35,9 +35,10 @@ router.get("/getAll", async (req, res) => {
 });
 
 // Find all scores for a specific user
-router.get("/findByUserId/:userId", async (req, res) => {
+router.get("/find-by-user-id/:userId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
+
         const result = await quizScoreModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
@@ -53,7 +54,7 @@ router.get("/findByUserId/:userId", async (req, res) => {
 });
 
 // Find all scores for a specific quiz
-router.get("/findByQuizId/:quizId", async (req, res) => {
+router.get("/find-by-quiz-id/:quizId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'quizId': req.params.quizId });
@@ -126,7 +127,7 @@ router.put('/update/grade/', async (req, res) => {
 });
 
 // Delete quiz score by quizId
-router.delete('/deleteAllByQuiz/:quizId', async (req, res) => {
+router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
     try {
         const quizId = req.params.quizId;
 
@@ -147,7 +148,7 @@ router.delete('/deleteAllByQuiz/:quizId', async (req, res) => {
 });
 
 // Delete quiz score by userId
-router.delete('/deleteAllByUser/:userId', async (req, res) => {
+router.delete('/delete-all-by-user/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
 
@@ -168,7 +169,7 @@ router.delete('/deleteAllByUser/:userId', async (req, res) => {
 });
 
 // Delete quiz score for specific user and quiz
-router.delete('/deleteOne/', async (req, res) => {
+router.delete('/delete-one/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const quizId = req.body.quizId;

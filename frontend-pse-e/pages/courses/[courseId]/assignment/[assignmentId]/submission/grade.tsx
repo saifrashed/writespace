@@ -1,11 +1,11 @@
 import NavBar from '@/components/NavBar';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { Note } from '@/lib/types';
 import { useRouter } from 'next/router';
 import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
-
+import useSubmission from '@/lib/hooks/useSubmission';
 
 import {
     highlightPlugin,
@@ -18,6 +18,7 @@ import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-vie
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import useAuthentication from '@/lib/hooks/useAuthentication';
 
 
 const Grade: React.FC = () => {
@@ -29,8 +30,19 @@ const Grade: React.FC = () => {
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const [showModal, setShowModal] = React.useState<boolean>(false);
+    const { gradeSubmission, getSubmissionDocument, fileUrl } = useSubmission()
+    const { token } = useAuthentication()
+
+    useEffect(() => {
+        if (assignmentId) {
+            getSubmissionDocument(assignmentId.toString(), token)
+        }
+    }, [])
+
 
     let noteId = notes.length;
+
+
 
     const noteEles: Map<number, HTMLElement> = new Map();
 
@@ -212,7 +224,10 @@ const Grade: React.FC = () => {
                             </div>
                         </div>
                         <div style={{ height: "90vh" }}>
-                            <Viewer fileUrl={"/sample.pdf"} plugins={[highlightPluginInstance]} />
+                            {fileUrl && (
+                                <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} />
+
+                            )}
                         </div>
                     </div>
 
@@ -235,7 +250,7 @@ const Grade: React.FC = () => {
                                                 }}>
                                                 <span className="sr-only">Close panel</span>
                                                 <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                                    fill="none" viewBox="0 0 24 24" strokeWidth="2"
                                                     stroke="currentColor" aria-hidden="true">
                                                     <path strokeLinecap="round" strokeLinejoin="round"
                                                         d="M6 18L18 6M6 6l12 12" />
@@ -286,7 +301,7 @@ const Grade: React.FC = () => {
                                     <span className="sr-only">Close modal</span>
                                 </button>
                                 <div className="p-6 text-center">
-                                    <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <h3 className="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to submit this grade?</h3>
                                     <button data-modal-hide="popup-modal" onClick={() => { setIsSubmitted(true); setShowModal(false) }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Yes, I'm sure
@@ -351,7 +366,7 @@ export default Grade;
                                 <span className="sr-only">Close modal</span>
                             </button>
                             <div className="p-6 text-center">
-                                <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                 <h3 className="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to delete this product?</h3>
                                 <button data-modal-hide="popup-modal" type="button" className="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                     Yes, I'm sure
