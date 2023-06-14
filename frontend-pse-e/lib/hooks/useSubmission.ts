@@ -11,16 +11,12 @@ function useSubmission() {
 
   const getSubmission = async (courseId: Number, assignmentId: Number, token: string) => {
     try {
-      const responseUser = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-      if (responseUser.data && responseUser.data.id) {
-        const responseSubmission = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}/${responseUser.data.id}`, { token });
-        setSubmissionData(responseSubmission.data);
-        setIsLoading(false);
-        console.log(responseSubmission.data)
-      } else {
-        onError("Something went wrong");
-        throw new Error('Invalid response from get-user endpoint');
-      }
+      const response = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
+
+
+      // setSubmissionData();
+      setIsLoading(false);
+
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
