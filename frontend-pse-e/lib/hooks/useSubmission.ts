@@ -54,10 +54,12 @@ function useSubmission() {
     }
   }
 
-  const submitSubmission = async (token: string, assignmentId: number, file: Buffer) => {
+  const submitSubmission = async (token: string, assignmentId: string, file: File) => {
     try {
+
+      // const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
+
       const userId = "ales1708";
-      const assignmentId = "LeukeShit"
 
       const formData = new FormData();
       formData.append("file", file, file.name);
@@ -85,12 +87,16 @@ function useSubmission() {
     }
   }
 
-  const getSubmissionDocument = async (assignmentId: number, token: string) => {
+  const getSubmissionDocument = async (assignmentId: string, token: string) => {
     try {
       // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
       const userId = "ales1708";
-      const assignmentId = "LeukeShit"
+      const assignmentId = "LeukeShit";
+
+
       const response = await axios.get(`${config.backendUrl}/submission/findSpecificSubmission?userId=${userId}&assignmentId=${assignmentId}`);
+
+      console.log(response)
 
       // Correcte versie voor later
       // const response = await axios.get(`${config.backendUrl}/submission/findSpecificSubmission?token=${token}&assignmentId=${assignmentId}`);
