@@ -1,16 +1,12 @@
 // Component for a badge that on click shows a pop-up with its info.
 // Works best on pngs with same width as height and at least 1000x1000 pixels.
 // Simply editing the png is currently more time-efficient than changing code.
-
-// TO DO:
-// - Show title, description, comment, xp from database.
-// - Prettier popup.
 import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
 import CloseButton from '@/components/closeButton';
 
 const ScaledBadge = ({ resizeFactor, pictureUrl, title,
-                       description, commentary, xp}) => {
+                       description, commentary, xp, unlocked}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -39,24 +35,23 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   };
 
 
-    {/* Window for title and description */}
-    const PopupWindow = () => {
-      return (
-        <>
-          <div className="flex items-start">
-            <div className="ml-4">
-              <br/>
-              <h2 className="text-3xl mb-4">{title}</h2>
-              <p><em>"{description}"</em></p>
-              <p><b>Commentary:</b> {commentary}</p>
-              <p style={{ textAlign: 'right' }}><b>XP:</b> {xp}</p>
-            </div>
+  {/* Window for title and description */}
+  const PopupWindow = () => {
+    return (
+      <>
+        <div className="flex items-start">
+          <div className="ml-4">
+            <br />
+            <h2 className="text-3xl mb-4">{unlocked ? title : 'Locked Badge'}</h2>
+            <p><em>"{description}"</em></p>
+            <p><b>Commentary:</b> {unlocked ? commentary : 'No commentary yet.'}</p>
+            <p style={{ textAlign: 'right' }}><b>XP:</b> {unlocked ? xp : '--'}</p>
           </div>
-          <CloseButton onClick={togglePopup}>Close</CloseButton>
-        </>
-      )
-    }
-
+        </div>
+        <CloseButton onClick={togglePopup}>Close</CloseButton>
+      </>
+    );
+  };
 
   // So that a click outside of the pop-up also closes it.
   useEffect(() => {
@@ -74,11 +69,11 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   // To make pop-up responsive to window size.
   useEffect(() => {
     const handleWindowResize = () => {
-      setIsLargeScreen(window.innerWidth > 768);
+      setIsLargeScreen(window.innerWidth > 800);
     };
 
     if (typeof window !== 'undefined') {
-      setIsLargeScreen(window.innerWidth > 768);
+      setIsLargeScreen(window.innerWidth > 800);
       window.addEventListener('resize', handleWindowResize);
     }
 
@@ -102,7 +97,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
             <div className="w-20 h-20">
               <div style={{ display: 'flex' }}>
                 <div style={smallBadge}>
-                  <BadgeTemplate pictureUrl={pictureUrl} />
+                  <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
                 </div>
               </div>
             </div>
@@ -131,11 +126,12 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
                 height: '300px', position: 'relative',
                 top: '-10px', left: '-10px', // Adjust positioning to taste
             }}>
-              <BadgeTemplate pictureUrl={pictureUrl} />
+              <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
             </div>
           </div>
           {/* Window for title and description */}
-          <div ref={popupRef} style={{ maxWidth: '400pt' }} className="bg-white rounded-lg p-8 shadow-lg ml-5 mr-5">
+          <div ref={popupRef} style={{ maxWidth: '400pt' }}
+               className="bg-white rounded-lg p-8 shadow-lg ml-5 mr-5">
             <PopupWindow />
           </div>
         </div>
@@ -152,7 +148,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
           onMouseLeave={handleMouseLeave}
           onClick={togglePopup}
         >
-          <BadgeTemplate pictureUrl={pictureUrl} />
+          <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
         </div>
       </div>
       {/* Make pop-up responsive to window size. */}
