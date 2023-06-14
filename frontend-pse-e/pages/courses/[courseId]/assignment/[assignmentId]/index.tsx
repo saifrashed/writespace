@@ -13,6 +13,7 @@ import useEnrollments from "@/lib/hooks/useEnrollments";
 import useSubmissions from "@/lib/hooks/useSubmissions";
 import useUsers from "@/lib/hooks/useUsers";
 
+import { formatDate } from "@/lib/date";
 
 const Assignments = () => {
   const router = useRouter();
@@ -41,18 +42,7 @@ const Assignments = () => {
     setShowPopup(!showPopup);
   };
 
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    const options: Intl.DateTimeFormatOptions = {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric' as const, // Specify the type explicitly
-      hour: 'numeric',
-      minute: 'numeric',
-    };
 
-    return date.toLocaleString('en-US', options);
-  };
 
   useEffect(() => {
     // Do API requests based on a user its role.

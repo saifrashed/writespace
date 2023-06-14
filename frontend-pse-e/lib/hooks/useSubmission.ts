@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../config";
 import { useNotification } from "./useNotification";
-import { Submission } from "../types";
+import { Note, Submission } from "../types";
 
 function useSubmission() {
     const { onSuccess, onError } = useNotification()
@@ -30,4 +30,4 @@ function useSubmission() {
 
  }
 
-  export default useSubmission;
+export default useSubmission;

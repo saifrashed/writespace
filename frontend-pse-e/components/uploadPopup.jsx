@@ -112,7 +112,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
                 <h2 className="text-3xl mb-4">Upload assignment</h2>
 
                 {/* File select browse button.*/}
-                <input type="file" onChange={(event) => {handleInputChange(event);}} />
+                <input type="file" onChange={(event) => { handleInputChange(event); }} />
 
                 {/* No plagiarism confirmation checkbox */}
                 <div className="flex items-center mb-4">
@@ -136,8 +136,8 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
                 {/* To show name sanitize functionality. */}
                 {uploadedFile && (  // Show metadata.
                     <>
-                    <p>Sanitized filename: {uploadedFile.name}</p>
-                    <p>File size: {uploadedFile.size / 1000} kbytes</p>
+                        <p>Sanitized filename: {uploadedFile.name}</p>
+                        <p>File size: {uploadedFile.size / 1000} kbytes</p>
                     </>
                 )}
 
@@ -195,8 +195,8 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
 
                 {fileUploadSuccess && (
                     <>
-                    <PopConfetti />
-                    <p>File succesfully uploaded</p>
+                        <PopConfetti />
+                        <p>File succesfully uploaded</p>
                     </>
                 )} */}
 

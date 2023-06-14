@@ -1,3 +1,5 @@
+import { HighlightArea, } from '@react-pdf-viewer/highlight';
+
 export interface Course {
     id: number;
     name: string;
@@ -236,4 +238,11 @@ export interface Enrollment {
     last_login: string | null;
     time_zone: string | null;
     bio: string | null;
+}
+
+export interface Note {
+    id: number;
+    content: string;
+    highlightAreas: HighlightArea[];
+    quote: string;
 }
