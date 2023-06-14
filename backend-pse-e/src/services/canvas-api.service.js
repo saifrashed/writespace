@@ -138,7 +138,8 @@ router.post('/courses/:courseId/assignments', (req, res) => {
       "assignment[anonymous_grading]": assignment.anonymous_grading,
       "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
       "assignment[peer_reviews]": assignment.peer_reviews,
-      "assignment[published]": true // immediately publish assignment
+      "assignment[published]": true, // immediately publish assignment
+      "assignment[due_at]": assignment.due_at 
     }
   }).then(response => {
     res.json(response.data);
@@ -166,7 +167,8 @@ router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
       "assignment[anonymous_grading]": assignment.anonymous_grading,
       "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
       "assignment[peer_reviews]": assignment.peer_reviews,
-      "assignment[published]": true // immediately publish assignment
+      "assignment[published]": true, // immediately publish assignment
+      "assignment[due_at]": assignment.due_at 
     }
   }).then(response => {
     res.json(response.data);

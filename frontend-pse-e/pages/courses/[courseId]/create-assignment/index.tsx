@@ -20,7 +20,7 @@ const CreateAssignment = () => {
     const [isGroupAssignment, setIsGroupAssignment] = useState(false);
     const [requirePeerReviews, setRequirePeerReviews] = useState(false);
     const [isAnonymousGrading, setIsAnonymousGrading] = useState(false);
-
+    const [dueAt, setDueAt] = useState<string>('');
 
     const router = useRouter();
     const { courseId } = router.query;
@@ -39,6 +39,7 @@ const CreateAssignment = () => {
 
     const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const isoDate = dueAt && dueAt !== '' ? formatDueDate(dueAt) : null
 
         const assignment: Assignment | any = {
             name: assignmentName,
@@ -48,7 +49,8 @@ const CreateAssignment = () => {
             omit_from_final_grade: isCounted,
             peer_reviews: requirePeerReviews,
             anonymous_grading: isAnonymousGrading,
-            allowed_attempts: attempts
+            allowed_attempts: attempts,
+            due_at: isoDate
         };
 
         try {
@@ -74,6 +76,26 @@ const CreateAssignment = () => {
         } else {
             setAttempts(parseInt(value));
         }
+    };
+
+    const handleDueAtChange = (e: ChangeEvent<HTMLInputElement>) => {
+        let inputValue = e.target.value;
+        setDueAt(inputValue);
+    };
+
+    const formatDueDate = (inputValue: string) => {
+        // Remove any non-numeric characters
+        const numericValue = inputValue.replace(/\D/g, '');
+
+        // Extract the day, month, and year from the numeric value
+        const day = numericValue.slice(6, 8).padStart(2, '0'); // Pad with leading zero if necessary
+        const month = numericValue.slice(4, 6).padStart(2, '0'); // Pad with leading zero if necessary
+        const year = numericValue.slice(0, 4);
+
+        // Format the date as ISO 8601
+        const isoDate = `${year}-${month}-${day}T00:00:00Z`;
+
+        return isoDate;
     };
 
     const isTeacher = course?.enrollments?.some(
@@ -185,6 +207,19 @@ const CreateAssignment = () => {
                                 onChange={handleAttemptsChange}
                             />
                         </div>
+                        <label htmlFor="assignment-deadline" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deadline</label>
+                        <div className="relative mb-6">
+                            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"></path></svg>
+                            </div>
+                            <input
+                                id="assignment-deadline"
+                                type="date"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="dd-mm-yyyy"
+                                value={dueAt}
+                                onChange={handleDueAtChange} />
+                        </div>
                         <div className="flex items-start mb-6">
                             <div className="flex items-center h-5">
                                 <input
@@ -231,8 +266,6 @@ const CreateAssignment = () => {
                                 Graders cannot view student names
                             </label>
                         </div>
-                        <div className="mb-6"></div>
-
                         <button
                             type="submit"
                             className="text-white bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
