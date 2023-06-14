@@ -5,7 +5,6 @@
 // TO DO:
 // - Show title, description etc from database.
 // - Hoeveelheid xp gelinkt aan de badge.
-
 import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
 import CloseButton from '@/components/closeButton';
@@ -13,11 +12,16 @@ import CloseButton from '@/components/closeButton';
 const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
-  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 768);
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
   const popupRef = useRef(null);
 
-  const handleMouseEnter = () => {setIsHovered(true);};
-  const handleMouseLeave = () => {setIsHovered(false);};
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
@@ -50,16 +54,19 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
       setIsLargeScreen(window.innerWidth > 768);
     };
 
-    window.addEventListener('resize', handleWindowResize);
+    if (typeof window !== 'undefined') {
+      setIsLargeScreen(window.innerWidth > 768);
+      window.addEventListener('resize', handleWindowResize);
+    }
 
     return () => {
-      window.removeEventListener('resize', handleWindowResize);
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('resize', handleWindowResize);
+      }
     };
   }, []);
 
-
   const SmallScreenBadgePopup = () => {
-
     if (!showPopup) {
       return null;
     }
@@ -67,10 +74,12 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50">
         <div className="flex flex-rol">
-
-          {/* Popup window for title and description. */}
-          <div ref={popupRef} style={{width: '400pt'}}
-               className="bg-white rounded-lg p-8 shadow-lg ml-5">
+          {/* Popup window for title and description */}
+          <div
+            ref={popupRef}
+            style={{ width: '400pt' }}
+            className="bg-white rounded-lg p-8 shadow-lg ml-5"
+          >
             <div className="flex items-start">
               <div className="ml-4">
                 <h2 className="text-3xl mb-4">SMALL SCREEN</h2>
@@ -90,7 +99,6 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
   };
 
   const LargeScreenBadgePopup = () => {
-
     if (!showPopup) {
       return null;
     }
@@ -98,19 +106,25 @@ const ScaledBadge = ({ resizeFactor, pictureUrl }) => {
     return (
       <div className="fixed inset-0 flex items-center justify-center z-50">
         <div className="flex flex-rol">
-
-          {/* Show badge on left side. */}
-          <div style={{width: '200pt'}} >
-            <div style={{height: '300px',position: 'relative',
-              top: '-10px', left: '-10px' // Adjust positioning to taste.
-            }}>
+          {/* Show badge on left side */}
+          <div style={{ width: '200pt' }}>
+            <div
+              style={{
+                height: '300px',
+                position: 'relative',
+                top: '-10px',
+                left: '-10px', // Adjust positioning to taste
+              }}
+            >
               <BadgeTemplate pictureUrl={pictureUrl} />
             </div>
           </div>
-
-          {/* Window for title and description. */}
-          <div ref={popupRef} style={{width: '400pt'}}
-               className="bg-white rounded-lg p-8 shadow-lg ml-5">
+          {/* Window for title and description */}
+          <div
+            ref={popupRef}
+            style={{ width: '400pt' }}
+            className="bg-white rounded-lg p-8 shadow-lg ml-5"
+          >
             <div className="flex items-start">
               <div className="ml-4">
                 <h2 className="text-3xl mb-4">BIG SCREEN</h2>
