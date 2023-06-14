@@ -1,4 +1,4 @@
-export const quiz = {
+export const quizList = {
   0: {
     topic: 'Schrijfproces',
     totalQuestions: 14,
