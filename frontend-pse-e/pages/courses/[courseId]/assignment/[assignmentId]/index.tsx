@@ -17,18 +17,21 @@ import useUsers from "@/lib/hooks/useUsers";
 const Assignments = () => {
   const router = useRouter();
   // Accessing query parameters from the router object
-  const { courseId, assignmentId } = router.query;
+  const { courseId, assignmentId, isTeacher } = router.query;
   const { token } = useAuthentication();
   const { assignment, getAssignment } = useAssignment()
   const { submission, getSubmission } = useSubmission()
   const { submissions, getSubmissions } = useSubmissions()
   const { enrollments, getEnrollments } = useEnrollments()
   const { users, getUsers } = useUsers()
+  // The isTeacher data from the previous page is a string.
+  // To use a single boolean for the role distinction a new state
+  // needed to be created.
+  const [isStudent, setIsStudent] = useState<boolean>();
+
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
-
-  const isTeacher = false;
 
   const getUserDataById = (user_id: Number) => {
     return users.find((user) => user.id === user_id) || null;
@@ -54,11 +57,13 @@ const Assignments = () => {
   useEffect(() => {
     // Do API requests based on a user its role.
     if (courseId && assignmentId && token) {
-      if (isTeacher) {
+      if (isTeacher == "true") {
         // getEnrollments(parseInt(courseId.toString()), token)
+        setIsStudent(false);
         getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
         getUsers(parseInt(courseId.toString()), token)
       } else {
+        setIsStudent(true);
         getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
         getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
       }
@@ -93,7 +98,7 @@ const Assignments = () => {
             </div>
             <div className="col-span-1 p-4 ">
               <div className="space-x-4">
-                { !isTeacher ? (
+                { isStudent ? (
                     <p className="mt-8 text-gray-600">
                     <span className="font-bold">Grade: </span> {submission?.grade ? <span> {submission.grade} / {assignment?.points_possible} </span> : " Waiting to be graded"}</p>) : null}
                     {/* <p className="mt-8 text-gray-600">Submitted at: {formatDate(submission?.submitted_at)}</p> */}
@@ -102,7 +107,7 @@ const Assignments = () => {
           </div>
 
 
-        { !isTeacher ? (
+        { isStudent ? (
 
           <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
             <div className="col-span-1 p-4">
@@ -204,7 +209,7 @@ const Assignments = () => {
           </div>
           ) : null}
 
-{isTeacher && submissions.length > 0 ? (
+{ !isStudent && submissions.length > 0 ? (
   <div className="flex justify-center">
     <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
       <table className="w-full text-sm text-left bg-white">
