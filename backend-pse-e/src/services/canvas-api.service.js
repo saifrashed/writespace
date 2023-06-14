@@ -220,6 +220,10 @@ router.post('/get-user-token', (req, res) => {
       code: req.body.code
     }
   }).then(response => {
+    // Encrypt tokens
+    response.data.access_token = encryptToken(response.data.access_token);
+    response.data.refresh_token = encryptToken(response.data.refresh_token);
+    // Send back the edited response
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
@@ -227,7 +231,7 @@ router.post('/get-user-token', (req, res) => {
   });
 });
 // Get new user token with refresh token (the refresh token from /get-user-token can be used infinitely!)
-router.post('/get-user-token/refresh', (req, res) => {
+router.post('/get-user-token/refresh', auth, (req, res) => {
   axios.post(`${loginApiUrl}/login/oauth2/token`, {}, {
     params: {
       grant_type: `refresh_token`,
@@ -237,6 +241,9 @@ router.post('/get-user-token/refresh', (req, res) => {
       refresh_token: req.body.token
     }
   }).then(response => {
+    // Encrypt tokens
+    response.data.access_token = encryptToken(response.data.access_token);
+    // Send back the edited response
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);

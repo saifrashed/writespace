@@ -25,6 +25,8 @@ const auth = (req, res, next) => {
     try {
         const decoded = decryptToken(token);
         req.body.token = decoded;
+
+        // req.body.userId = userId;
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }
