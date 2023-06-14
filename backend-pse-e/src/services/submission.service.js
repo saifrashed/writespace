@@ -97,7 +97,6 @@ router.get("/find-specific-submission/", async (req, res) => {
 // Post request (creates something in the db)
 router.post('/save', upload.single('file'), async (req, res) => {
     try {
-        // Variables for the model
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;
 
@@ -125,7 +124,8 @@ router.post('/save', upload.single('file'), async (req, res) => {
             submissionStatus: submissionStatus,
             filetype: filetype,
             filename: filename,
-            fileData: fileData
+            fileData: fileData,
+            fileNotes: []
         });
 
         // Save the newTest instance to the database
@@ -139,7 +139,42 @@ router.post('/save', upload.single('file'), async (req, res) => {
     }
 });
 
+// Voegt notes to the submission
+router.put('/update/fileNotes/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const assignmentId = req.body.assignmentId
+        const newNotes = req.body.notes;
+        const newGrade = req.body.grade;
+        const status = "graded"
 
+        const updatedSubmission = await submissionModel.findOneAndUpdate(
+            {
+                'assignmentId': assignmentId,
+                'userId': userId
+            },
+            {
+                $push: {
+                    fileNotes: { $each: newNotes }
+                },
+                $set: {
+                    submissionGrade: newGrade,
+                    submissionStatus: status
+                }
+            },
+            { new: true }
+        );
+
+        if (updatedSubmission === null) {
+            return res.status(404).json({ error: 'Submission not found' });
+        }
+
+        res.status(200).json({ message: 'Submission updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
+});
 
 // Updates the submission WhatifGrade
 router.put('/update/whatif-grade/', async (req, res) => {
