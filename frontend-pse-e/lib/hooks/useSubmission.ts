@@ -85,15 +85,19 @@ function useSubmission() {
       const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
       const response = await axios.get(`${config.baseUrl}/submission/find-specific-submission?userId=${user.data.id}&assignmentId=${assignmentId}`);
 
-      // console.log(response);
-      const data = await response.data;
-      const binaryData = new Uint8Array(data[0].fileData.data);
-      const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
-      const fileUrl = URL.createObjectURL(fileBlob);
-      const fileNotes = data[0].fileNotes;
 
-      setFileUrl(fileUrl);
-      setFileNotes(fileNotes);
+      const data = await response.data;
+
+      if (data[0]?.fileData.data) {
+        const binaryData = new Uint8Array(data[0].fileData.data);
+        const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
+        const fileUrl = URL.createObjectURL(fileBlob);
+        const fileNotes = data[0].fileNotes;
+
+
+        setFileUrl(fileUrl);
+        setFileNotes(fileNotes);
+      }
     } catch (error) {
       console.log(error);
       onError("Something went wrong");

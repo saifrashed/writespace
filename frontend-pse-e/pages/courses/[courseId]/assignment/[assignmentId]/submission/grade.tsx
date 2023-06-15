@@ -181,12 +181,10 @@ const Grade: React.FC = () => {
                     <div className='w-full'>
                         <div className="bg-white flex justify-center items-center overflow-x-scroll w-full" style={{ height: "10vh" }}>
                             <div>
-                                <Link href={`/courses/${courseId}/assignment/${assignmentId}`}>
-                                    <button
-                                        className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
-                                        Go back
-                                    </button>
-                                </Link>
+                                <button onClick={() => { router.back() }}
+                                    className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
+                                    Go back
+                                </button>
                             </div>
 
                             <div>
@@ -239,7 +237,7 @@ const Grade: React.FC = () => {
                         </div>
                         <div style={{ height: "90vh" }}>
                             {fileUrl && (
-                                <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} onDocumentLoad={handleDocumentLoad}/>
+                                <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} onDocumentLoad={handleDocumentLoad} />
                             )}
                         </div>
                     </div>
@@ -336,12 +334,10 @@ const Grade: React.FC = () => {
                             animationData={submittedAnimationData}
                         />
                         <p className="text-3xl font-bold mb-5">Grade has been submitted!</p>
-                        <Link href={`/courses/${courseId}/assignment/${assignmentId}/students`}>
-                            <button
-                                className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
-                                Go back
-                            </button>
-                        </Link>
+                        <button onClick={() => { router.back() }}
+                            className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
+                            Go back
+                        </button>
                     </div>
                 </>
             )}
