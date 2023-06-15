@@ -15,6 +15,7 @@ import {
     RenderHighlightsProps,
     RenderHighlightTargetProps,
 } from '@react-pdf-viewer/highlight';
+
 import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-viewer/core';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
@@ -29,7 +30,7 @@ const Grade: React.FC = () => {
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const { gradeSubmission, getSubmissionDocument, fileUrl } = useSubmission()
+    const { gradeSubmission, getSubmissionDocument, fileUrl, fileNotes } = useSubmission()
     const { token } = useAuthentication()
 
     useEffect(() => {
@@ -41,6 +42,12 @@ const Grade: React.FC = () => {
     useEffect(() => {
         console.log(fileUrl)
     }, [fileUrl])
+
+    const handleDocumentLoad = () => {
+        if (fileNotes) {
+            setNotes(fileNotes);
+        }
+    };
 
     let noteId = notes.length;
 
@@ -223,10 +230,16 @@ const Grade: React.FC = () => {
                                     Submit grade
                                 </button>
                             </div>
+                            <div>
+                                <button
+                                    className="px-4 py-2 inline-block bg-gray-100  hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full" onClick={() => { setShowModal(true) }}>
+                                    Assign badges
+                                </button>
+                            </div>
                         </div>
                         <div style={{ height: "90vh" }}>
                             {fileUrl && (
-                                <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} />
+                                <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} onDocumentLoad={handleDocumentLoad}/>
                             )}
                         </div>
                     </div>
@@ -300,7 +313,7 @@ const Grade: React.FC = () => {
                                 <div className="p-6 text-center">
                                     <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <h3 className="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to submit this grade?</h3>
-                                    <button data-modal-hide="popup-modal" onClick={() => { setIsSubmitted(true); setShowModal(false) }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                    <button data-modal-hide="popup-modal" onClick={() => { setIsSubmitted(true); setShowModal(false); gradeSubmission(grade, notes, token, assignmentId) }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Yes, I'm sure
                                     </button>
                                     <button data-modal-hide="popup-modal" onClick={() => { setShowModal(false) }} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
