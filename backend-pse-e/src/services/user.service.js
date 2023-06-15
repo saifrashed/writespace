@@ -42,7 +42,7 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
         const result = await userModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -109,7 +109,7 @@ router.put('/update/picture/', async (req, res) => {
         );
 
         if (updatedUser === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         res.status(200).json({ message: 'User updated successfully' });
@@ -128,7 +128,7 @@ router.put('/update/experience-points/', async (req, res) => {
         const userToUpdate = await userModel.findOne({ 'userId': userId });
 
         if (userToUpdate === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         const updateId = userToUpdate._id;
@@ -174,7 +174,7 @@ router.put('/update/level/', async (req, res) => {
         );
 
         if (updatedUser === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         res.status(200).json({ message: 'User updated successfully' });
@@ -197,7 +197,7 @@ router.put('/update/add-badge/', async (req, res) => {
         const userToUpdate = await userModel.findOne({ 'userId': userId });
 
         if (userToUpdate === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         const updateId = userToUpdate._id;
@@ -231,7 +231,7 @@ router.put('/update/delete-badge/', async (req, res) => {
         const userToUpdate = await userModel.findOne({ 'userId': userId });
 
         if (userToUpdate === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         const updateId = userToUpdate._id;
@@ -256,7 +256,7 @@ router.put('/update/delete-badge/', async (req, res) => {
         }
 
         else {
-            return res.status(404).json({ error: 'Badge not found' });
+            return res.status(200).json({ message: 'Badge not found' });
         }
 
         await userModel.findByIdAndUpdate(updateId, { "badges": badges });
@@ -292,7 +292,7 @@ router.put('/update/', async (req, res) => {
 
         // Check if the test was found and updated successfully
         if (result.nModified === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         res.status(200).json({ message: 'User updated successfully' });
@@ -312,7 +312,7 @@ router.delete('/delete/:userId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful

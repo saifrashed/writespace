@@ -40,7 +40,7 @@ router.get("/find-by-assignment-id/:assignmentId", async (req, res) => {
         const result = await submissionModel.find({ 'assignmentId': req.params.assignmentId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -58,7 +58,7 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
         const result = await submissionModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -83,7 +83,7 @@ router.get("/find-specific-submission/", async (req, res) => {
         });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -197,7 +197,7 @@ router.put('/update/whatif-grade/', async (req, res) => {
         );
 
         if (updatedSubmission === null) {
-            return res.status(404).json({ error: 'Submission not found' });
+            return res.status(200).json({ message: 'Submission not found' });
         }
 
         res.status(200).json({ message: 'Submission updated successfully' });
@@ -232,7 +232,7 @@ router.put('/update/grade/', async (req, res) => {
         );
 
         if (updatedSubmission === null) {
-            return res.status(404).json({ error: 'Submission not found' });
+            return res.status(200).json({ message: 'Submission not found' });
         }
 
         res.status(200).json({ message: 'Submission updated successfully' });
@@ -271,7 +271,7 @@ router.put('/update/file/', upload.single('file'), async (req, res) => {
         );
 
         if (updatedSubmission === null) {
-            return res.status(404).json({ error: 'Submission not found' });
+            return res.status(200).json({ message: 'Submission not found' });
         }
 
         res.status(200).json({ message: 'Submission updated successfully' });
@@ -306,7 +306,7 @@ router.put('/update/', upload.single('file'), async (req, res) => {
 
         // Check if the test was found and updated successfully
         if (result.nModified === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         res.status(200).json({ message: 'Submission updated successfully' });
@@ -326,7 +326,7 @@ router.delete('/delete-all/:assignmentId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
@@ -351,7 +351,7 @@ router.delete('/delete-one/', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
