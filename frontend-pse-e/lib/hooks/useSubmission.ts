@@ -26,8 +26,8 @@ function useSubmission() {
   const gradeSubmission = async (grade: number, notes: Note[], token: string, assignmentId: number) => {
     try {
       // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
-      const userId = "ales1708";
-      const assignmentId = "LeukeShit"
+      const userId = 10;
+      const assignmentId = 10;
       const body = {
         userId: userId,
         assignmentId: assignmentId,
@@ -35,7 +35,7 @@ function useSubmission() {
         notes: notes
       }
 
-      const response = await axios.put(`${config.backendUrl}/submission//update/fileNotes/`, body);
+      const response = await axios.put(`${config.baseUrl}/submission//update/fileNotes/`, body);
 
       // Correcte versie voor later
       // const body = {
@@ -68,7 +68,7 @@ function useSubmission() {
         'Content-Type': 'multipart/form-data'
       }
 
-      const response = await axios.post(`${config.backendUrl}/submission/save`, formData, { headers: headers });
+      const response = await axios.post(`${config.baseUrl}/submission/save`, formData, { headers: headers });
 
       if (response.status === 200) {
         console.log("Submission submitted");
@@ -79,17 +79,25 @@ function useSubmission() {
     }
   }
 
+  useEffect(() => {
+    getSubmissionDocument();
+  }, []);
+
   const getSubmissionDocument = async (assignmentId: string, token: string) => {
     try {
       // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
-      const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-      const response = await axios.get(`${config.backendUrl}/submission/findSpecificSubmission?userId=${user.data.id}&assignmentId=${assignmentId}`);
+      // const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
+      // const response = await axios.get(`${config.backendUrl}/submission/find-specific-submission/?userId=${user.data.id}&assignmentId=${assignmentId}`);
+      const assignmentId = 10;
+      const userId = 10;
+      const response = await axios.get(`${config.baseUrl}/submission/find-specific-submission/?userId=${userId}&assignmentId=${assignmentId}`);
 
+      // console.log(response);
       const data = await response.data;
       const binaryData = new Uint8Array(data[0].fileData.data);
       const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
       const fileUrl = URL.createObjectURL(fileBlob);
-      const fileNotes = data[0].notes;
+      const fileNotes = data[0].fileNotes;
 
       setFileUrl(fileUrl);
       setFileNotes(fileNotes);
