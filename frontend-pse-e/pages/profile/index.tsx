@@ -31,6 +31,7 @@ const Profile = () => {
 
       <div className="flex h-screen">
         <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-8 md:w-1/5 md:h-[100vh] flex items-start content-center justify-center overflow-y-auto">
+
           <div className="flex flex-col items-center justify-center mt-20">
             <Avatar
               sx={{ width: 150, height: 150, border: '2px solid black' }}
@@ -48,6 +49,7 @@ const Profile = () => {
         </div>
 
         <div className="w-full relative shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5 overflow-x-hidden">
+
           <div className="flex flex-col mt-20 justify-center items-center">
             {/* <ProgressBar bgcolor="orange" progress="30" height={35} /> */}
           </div>
@@ -58,21 +60,24 @@ const Profile = () => {
               <div
                 className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
                 // className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-                style={{ width: `${userData[0].experiencePoints / 50}%` }}
+                style={{height: "20px", width: `${userData[0].experiencePoints / 50}%` }}
               >
-                {`${userData[0].experiencePoints / 50}%`}
+              <span className="h-full flex items-center justify-center">{`${userData[0].experiencePoints / 50}%`}</span>
               </div>
+
             </div>
           )}
           </div>
 
           {/* <div className="flex flex-wrap justify-center gap-22"> */}
+         <p className="mt-20 mb-8 text-2xl font-bold">Badges</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+
             {userData &&
               badges.map((badge) => {
                 const isBadgeOwned = userData[0].badges.hasOwnProperty(badge.id);
                 return (
-                  <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center my-20" key={badge.id}>
+                  <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-36" key={badge.id}>
                     <ScaledBadge
                       resizeFactor={0.5}
                       pictureUrl={`/badges/${badge.id.toString()}.png`}
@@ -86,10 +91,6 @@ const Profile = () => {
                 );
               })}
           </div>
-
-
-
-
 
         </div>
       </div>
