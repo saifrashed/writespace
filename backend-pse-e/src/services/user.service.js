@@ -42,7 +42,7 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
         const result = await userModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -64,6 +64,8 @@ router.post('/save', async (req, res) => {
         if (alreadyExists.length !== 0) {
             return res.status(409).json({ error: 'You cant have two users with the same Id' })
         }
+
+        const pictureId = 0;
         const experiencePoints = 0;
         const level = 1;
         const badges = req.body.badges;
@@ -71,6 +73,7 @@ router.post('/save', async (req, res) => {
         // Create a new instance of the submission model
         const newUser = new userModel({
             userId: userId,
+            pictureId: pictureId,
             experiencePoints: experiencePoints,
             level: level,
             badges: badges
@@ -87,11 +90,11 @@ router.post('/save', async (req, res) => {
     }
 });
 
-// Updates user XP
-router.put('/update/experience-points/', async (req, res) => {
+// Updates user picture
+router.put('/update/picture/', async (req, res) => {
     try {
         const userId = req.body.userId;
-        const experiencePoints = req.body.experiencePoints
+        const pictureId = req.body.pictureId;
 
         const updatedUser = await userModel.findOneAndUpdate(
             {
@@ -99,15 +102,51 @@ router.put('/update/experience-points/', async (req, res) => {
             },
             {
                 $set: {
-                    'experiencePoints': experiencePoints
+                    'pictureId': pictureId
                 }
             },
             { new: true }
         );
 
         if (updatedUser === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
+
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
+});
+
+// Updates user XP
+router.put('/update/experience-points/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const XPToAdd = req.body.experiencePoints
+
+        const userToUpdate = await userModel.findOne({ 'userId': userId });
+
+        if (userToUpdate === null) {
+            return res.status(200).json({ message: 'User not found' });
+        }
+
+        const updateId = userToUpdate._id;
+        let userXP = userToUpdate.experiencePoints;
+        userXP = userXP + XPToAdd;
+        let level = userToUpdate.level;
+        while (userXP >= levelThresholds[level]) {
+            level = level + 1;
+        }
+        const updatedUser = await userModel.findByIdAndUpdate( updateId,
+            {
+                $set: {
+                    'experiencePoints': userXP,
+                    'level': level
+                }
+            },
+            { new: true }
+        );
 
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
@@ -135,7 +174,7 @@ router.put('/update/level/', async (req, res) => {
         );
 
         if (updatedUser === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         res.status(200).json({ message: 'User updated successfully' });
@@ -158,7 +197,7 @@ router.put('/update/add-badge/', async (req, res) => {
         const userToUpdate = await userModel.findOne({ 'userId': userId });
 
         if (userToUpdate === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         const updateId = userToUpdate._id;
@@ -192,7 +231,7 @@ router.put('/update/delete-badge/', async (req, res) => {
         const userToUpdate = await userModel.findOne({ 'userId': userId });
 
         if (userToUpdate === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         const updateId = userToUpdate._id;
@@ -217,7 +256,7 @@ router.put('/update/delete-badge/', async (req, res) => {
         }
 
         else {
-            return res.status(404).json({ error: 'Badge not found' });
+            return res.status(200).json({ message: 'Badge not found' });
         }
 
         await userModel.findByIdAndUpdate(updateId, { "badges": badges });
@@ -237,6 +276,7 @@ router.put('/update/', async (req, res) => {
         const userId = req.body.userId;
         const updatedUser = {
             userId: req.body.userId,
+            pictureId: req.body.pictureId,
             experiencePoints: req.body.experiencePoints,
             level: req.body.level,
             badges: req.body.badges
@@ -252,7 +292,7 @@ router.put('/update/', async (req, res) => {
 
         // Check if the test was found and updated successfully
         if (result.nModified === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         res.status(200).json({ message: 'User updated successfully' });
@@ -272,7 +312,7 @@ router.delete('/delete/:userId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
@@ -282,6 +322,39 @@ router.delete('/delete/:userId', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete data from the database' });
     }
 });
+
+const levelThresholds = [
+    0,     // Level 1 threshold
+    100,   // Level 2 threshold
+    300,   // Level 3 threshold
+    600,   // Level 4 threshold
+    1000,  // Level 5 threshold
+    1500,  // Level 6 threshold
+    2100,  // Level 7 threshold
+    2800,  // Level 8 threshold
+    3600,  // Level 9 threshold
+    4500,  // Level 10 threshold
+    5500,  // Level 11 threshold
+    6600,  // Level 12 threshold
+    7800,  // Level 13 threshold
+    9100,  // Level 14 threshold
+    10500, // Level 15 threshold
+    12000, // Level 16 threshold
+    13600, // Level 17 threshold
+    15300, // Level 18 threshold
+    17100, // Level 19 threshold
+    19000, // Level 20 threshold
+    21000, // Level 21 threshold
+    23100, // Level 22 threshold
+    25300, // Level 23 threshold
+    27600, // Level 24 threshold
+    30000, // Level 25 threshold
+    32500, // Level 26 threshold
+    35100, // Level 27 threshold
+    37800, // Level 28 threshold
+    40600, // Level 29 threshold
+    43500  // Level 30 threshold
+  ];
 
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
