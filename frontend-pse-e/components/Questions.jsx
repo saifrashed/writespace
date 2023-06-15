@@ -6,6 +6,7 @@ import useQuiz from '@/lib/hooks/useQuiz';
 
 const Questions = (quizId) => {
   const { saveQuiz } = useQuiz();
+  // saveQuiz(30, 400, 400);
 
   let selectedQuiz = quizList[quizId['quizId']]
   const [answers, setAnswers] = useState([])
@@ -52,8 +53,8 @@ const Questions = (quizId) => {
     }
     // When the last question is filled in
     else {
-
       setShowResult(true);
+      // saveQuiz(30, quizId.quizId, result.correctAnswers);
     }
 
     setSelectedAnswer(false);
@@ -70,6 +71,12 @@ const Questions = (quizId) => {
       setSelectedAnswer(false)
     }
   }
+  useEffect(() => {
+    if (showResult) {
+      saveQuiz(30, quizId.quizId, result.correctAnswers);
+    }
+
+  }, [showResult]);
 
   return (
     <>

@@ -4,41 +4,41 @@ import config from "../config";
 
 function useQuiz() {
 
-  // const saveQuiz = async (userId: number, quizId: number, latestScore: number) => {
-  //   try {
-  //     const response = await axios.post(`${config.baseUrl}/quizScore/save`, {
-  //       userId: userId,
-  //       quizId: String(quizId),
-  //       latestScore: latestScore
-  //     });
+  const saveQuiz = async (userId: number, quizId: number, latestScore: number) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/quiz-score/save`, {
+        userId: userId,
+        quizId: quizId,
+        latestScore: latestScore
+      });
+      console.log(response)
+      return response.data;
+    } catch (error) {
+      const axiosError = error as AxiosError;
 
-  //     return response.data;
-  //   } catch (error) {
-  //     const axiosError = error as AxiosError;
+      if (axiosError && axiosError?.response?.status == 409) {
+        updateQuiz(userId, quizId, latestScore)
+      }
+      console.log(error)
+    }
+  };
 
-  //     if (axiosError && axiosError?.response?.status == 409) {
-  //       updateQuiz(userId, String(quizId), latestScore)
-  //     }
-  //     console.log(error)
-  //   }
-  // };
+  const updateQuiz = async (userId: number, quizId: number, latestScore: number) => {
+    try {
+      const response = await axios.put(`${config.baseUrl}/quiz-score/update/grade/`, {
+        userId: userId,
+        quizId: quizId,
+        latestScore: latestScore
+      });
 
-  // const updateQuiz = async (userId: number, quizId: string, latestScore: number) => {
-  //   try {
-  //     const response = await axios.put(`${config.baseUrl}/quizScore/update/grade/`, {
-  //       userId: userId,
-  //       quizId: String(quizId),
-  //       latestScore: latestScore
-  //     });
-
-  //     return response.data;
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // };
+      return response.data;
+    } catch (error) {
+      console.log(error)
+    }
+  };
 
 
-  return {};
+  return { saveQuiz };
 }
 
 export default useQuiz;
