@@ -12,7 +12,7 @@ const NavBar = ({ showLogout = true }) => {
                         <nav className="relative h-16 lg:h-20">
                             <div className="absolute -translate-x-1/2 inset-y-5 left-1/2">
                                 <div className="flex-shrink-0">
-                                    <Link href="/">
+                                    <Link href="/courses">
                                         <img className="w-auto h-8 lg:h-10" src="/brand/logo.png" alt="" />
                                     </Link>
                                 </div>
