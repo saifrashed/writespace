@@ -64,6 +64,8 @@ router.post('/save', async (req, res) => {
         if (alreadyExists.length !== 0) {
             return res.status(409).json({ error: 'You cant have two users with the same Id' })
         }
+
+        const pictureId = 0;
         const experiencePoints = 0;
         const level = 1;
         const badges = req.body.badges;
@@ -71,6 +73,7 @@ router.post('/save', async (req, res) => {
         // Create a new instance of the submission model
         const newUser = new userModel({
             userId: userId,
+            pictureId: pictureId,
             experiencePoints: experiencePoints,
             level: level,
             badges: badges
@@ -84,6 +87,35 @@ router.post('/save', async (req, res) => {
     } catch (error) {
         console.error('Error saving data to MongoDB:', error);
         res.status(500).json({ error: 'Failed to save data to the database' });
+    }
+});
+
+// Updates user picture
+router.put('/update/picture/', async (req, res) => {
+    try {
+        const userId = req.body.userId;
+        const pictureId = req.body.pictureId;
+
+        const updatedUser = await userModel.findOneAndUpdate(
+            {
+                'userId': userId,
+            },
+            {
+                $set: {
+                    'pictureId': pictureId
+                }
+            },
+            { new: true }
+        );
+
+        if (updatedUser === null) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        res.status(200).json({ message: 'User updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
     }
 });
 
@@ -237,6 +269,7 @@ router.put('/update/', async (req, res) => {
         const userId = req.body.userId;
         const updatedUser = {
             userId: req.body.userId,
+            pictureId: req.body.pictureId,
             experiencePoints: req.body.experiencePoints,
             level: req.body.level,
             badges: req.body.badges
