@@ -6,7 +6,7 @@ const router = express.Router();
 const axios = require('axios');
 
 // Import authentication functions
-const { encryptToken, decryptToken, authCanvas, auth } = require('../middleware/auth');
+const { encryptToken, decryptToken, authDecrypt, auth } = require('../middleware/auth');
 
 // Canvas api URL
 const { API_URL } = process.env;
@@ -230,7 +230,7 @@ router.post('/get-user-token', (req, res) => {
   });
 });
 // Get new user token with refresh token (the refresh token from /get-user-token can be used infinitely!)
-router.post('/get-user-token/refresh', authCanvas, (req, res) => {
+router.post('/get-user-token/refresh', authDecrypt, (req, res) => {
   axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
     params: {
       grant_type: `refresh_token`,

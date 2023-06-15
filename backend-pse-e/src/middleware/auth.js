@@ -20,7 +20,7 @@ const decryptToken = (encryptedToken) => {
 
 // This is the authentication function for the canvas-api requests. This is a bit 
 // different because the canvas-api has its own authentication, this is just decryption
-const authCanvas = (req, res, next) => {
+const authDecrypt = (req, res, next) => {
     const token =
         req.body.token || req.query.token || req.headers["x-access-token"];
 
@@ -51,27 +51,32 @@ const auth = (req, res, next) => {
     try {
         // Decrypt the token
         const decryptedToken = decryptToken(token);
+        let userNotFound = false;
 
-        // TODO: does it need to be 2 separate functions?? ask Devran for advice maybe.
-        // TODO: first try to do it within this request as well. The only exception is the refresh token, think of something.
-
-        // Check if the user exists by making a request to the /get-user endpoint
-        // axios.get(`${API_URL}/users/self`, {
-        //     headers: {
-        //         // Authorization using the access token
-        //         Authorization: `Bearer ${decryptedToken}`
-        //     }
-        // }).then(response => {
-        //     console.log("*******************************************************************************");
-        //     console.log(response.data);
-        //     // Edit the request body with the new values if the user is valid.
-        //     req.body.token = decryptedToken;
-        //     // Put the userId of the user with the access token in the body
-        //     // req.body.userId = userId;
-        // }).catch(error => {
-        //     console.log("ERROR!!!*******************************************************************************");
-        //     return res.status(404).send("User not found");
-        // });
+        // Check if the user exists in canvas
+        axios.get(`${API_URL}/users/self`, {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${decryptedToken}`
+            }
+        }).then(response => {
+            console.log("*******************************************************************************");
+            console.log(response.data);
+            // Edit the request body with the new values if the user is valid.
+            req.body.token = decryptedToken;
+            // Put the userId of the user with the access token in the body so that 
+            // the request can use the userId of the canvas account
+            req.body.userId = userId;
+        }).catch(error => {
+            console.log("ERROR!!!*******************************************************************************");
+            // User not found, so set boolean to true
+            userNotFound = true;
+        });
+        // If the user is not found return this status (done outside the axios)
+        // otherwise, it recognizes it as the axios header and it will crash!
+        if (userNotFound) {
+            return res.status(404).send("User not found or token expired");
+        }
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }
@@ -82,6 +87,6 @@ const auth = (req, res, next) => {
 module.exports = {
     encryptToken,
     decryptToken,
-    authCanvas,
+    authDecrypt,
     auth
 };
