@@ -48,7 +48,8 @@ const Assignments = () => {
           <div className="md:flex items-center justify-between mb-6 px-5">
             {!isTeacher && (
               <p className="mt-8 text-gray-600">
-                <span className="font-bold">Grade: </span> {submission?.grade ? Number(submission.grade).toFixed(1) : " Waiting to be graded"}
+                <span className="font-bold">Grade: </span> {submission?.grade ? <span> {submission.grade} / {assignment?.points_possible} </span> : " Waiting to be graded"}
+
               </p>
             )}
 
@@ -90,6 +91,47 @@ const Assignments = () => {
                     </Link>
                   </div>
                 </div>
+
+                <p className="mt-8 text-gray-600">
+                  {submission?.submitted_at ? (
+                    <span className="flex items-center text-green-500">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
+                        />
+                      </svg>
+                      <span className="ml-2">Submitted</span>
+                    </span>
+                  ) : (
+                    <span className="flex items-center text-orange-500">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <span className="ml-2">Not Submitted</span>
+                    </span>
+                  )}
+
+                  <span className="font-bold">Submission date: </span>{submission?.submitted_at ? formatDate(submission?.submitted_at) : "-"}</p>
               </div>
             </div>
           )}
