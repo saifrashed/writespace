@@ -57,24 +57,16 @@ function useSubmission() {
   const submitSubmission = async (token: string, assignmentId: string, file: File) => {
     try {
 
-      // const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-
-      const userId = "ales1708";
+      const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
 
       const formData = new FormData();
       formData.append("file", file, file.name);
-      formData.append("userId", userId);
+      formData.append("userId", user.data.id);
       formData.append("assignmentId", assignmentId);
 
       const headers = {
         'Content-Type': 'multipart/form-data'
       }
-
-      // Correcte versie voor later
-      // const formData = new FormData();
-      // formData.append("file", file, file.name);
-      // formData.append("userId", userId);
-      // formData.append("assignmentId", assignmentId);
 
       const response = await axios.post(`${config.backendUrl}/submission/save`, formData, { headers: headers });
 
@@ -90,16 +82,8 @@ function useSubmission() {
   const getSubmissionDocument = async (assignmentId: string, token: string) => {
     try {
       // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
-      const userId = "ales1708";
-      const assignmentId = "LeukeShit";
-
-
-      const response = await axios.get(`${config.backendUrl}/submission/findSpecificSubmission?userId=${userId}&assignmentId=${assignmentId}`);
-
-      console.log(response)
-
-      // Correcte versie voor later
-      // const response = await axios.get(`${config.backendUrl}/submission/findSpecificSubmission?token=${token}&assignmentId=${assignmentId}`);
+      const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
+      const response = await axios.get(`${config.backendUrl}/submission/findSpecificSubmission?userId=${user.data.id}&assignmentId=${assignmentId}`);
 
       const data = await response.data;
       const binaryData = new Uint8Array(data[0].fileData.data);
@@ -109,7 +93,6 @@ function useSubmission() {
 
       setFileUrl(fileUrl);
       setFileNotes(fileNotes);
-
     } catch (error) {
       console.log(error);
       onError("Something went wrong");

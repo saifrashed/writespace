@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import useSubmission from '@/lib/hooks/useSubmission';
+import useAuthentication from '@/lib/hooks/useAuthentication';
 
 import {
     highlightPlugin,
@@ -18,8 +19,6 @@ import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-vie
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import useAuthentication from '@/lib/hooks/useAuthentication';
-
 
 const Grade: React.FC = () => {
     const router = useRouter();
@@ -39,10 +38,11 @@ const Grade: React.FC = () => {
         }
     }, [])
 
+    useEffect(() => {
+        console.log(fileUrl)
+    }, [fileUrl])
 
     let noteId = notes.length;
-
-
 
     const noteEles: Map<number, HTMLElement> = new Map();
 
@@ -204,6 +204,7 @@ const Grade: React.FC = () => {
                                         type="number"
                                         value={grade}
                                         max={10}
+                                        readOnly
                                         className="h-10 w-16 rounded border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
                                     />
 
@@ -226,7 +227,6 @@ const Grade: React.FC = () => {
                         <div style={{ height: "90vh" }}>
                             {fileUrl && (
                                 <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} />
-
                             )}
                         </div>
                     </div>
@@ -258,10 +258,9 @@ const Grade: React.FC = () => {
                                             </button>
                                         </div>
                                         <span className="text-white text-xl font-light">
-                                            Here are all the notes that the student will see.
+                                            Comments about your assignment.
                                         </span>
                                     </div>
-
                                     <div className="relative  flex-1">
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
@@ -292,12 +291,11 @@ const Grade: React.FC = () => {
                         </div>
                     </div>
 
-
                     <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full " + (showModal ? " " : " hidden")}>
                         <div className="relative w-full max-w-md max-h-full mx-auto">
                             <div className="relative bg-white rounded-lg shadow ">
                                 <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
-                                    <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" onClick={() => { setShowModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                    <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" onClick={() => { setShowModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                                     <span className="sr-only">Close modal</span>
                                 </button>
                                 <div className="p-6 text-center">
@@ -362,7 +360,7 @@ export default Grade;
                     <div className="relative w-full max-w-md max-h-full mx-auto">
                         <div className="relative bg-white rounded-lg shadow ">
                             <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
-                                <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                                 <span className="sr-only">Close modal</span>
                             </button>
                             <div className="p-6 text-center">

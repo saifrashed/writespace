@@ -3,6 +3,11 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { Note } from '@/lib/types';
 import { useRouter } from 'next/router';
+import useSubmission from '@/lib/hooks/useSubmission';
+import useAssignment from "@/lib/hooks/useAssignment";
+import useAuthentication from '@/lib/hooks/useAuthentication';
+
+
 import {
     highlightPlugin,
     MessageIcon,
@@ -11,26 +16,23 @@ import {
     RenderHighlightTargetProps,
 } from '@react-pdf-viewer/highlight';
 import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-viewer/core';
-import useSubmission from '@/lib/hooks/useSubmission';
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
-import useAuthentication from '@/lib/hooks/useAuthentication';
-
 
 const View: React.FC = () => {
     const router = useRouter();
     const { courseId, assignmentId } = router.query;
-    const [message, setMessage] = React.useState('');
     const [notes, setNotes] = React.useState<Note[]>([]);
-    const [grade, setGrade] = React.useState<number>(0);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
-    const { getSubmissionDocument, fileNotes, fileUrl } = useSubmission()
+    const { getSubmissionDocument, getSubmission, submission, fileNotes, fileUrl } = useSubmission()
     const { token } = useAuthentication()
+    const { assignment, getAssignment } = useAssignment()
 
     useEffect(() => {
-        if (assignmentId) {
+        if (assignmentId && courseId) {
             getSubmissionDocument(assignmentId.toString(), token)
+            getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
         }
     }, [])
 
@@ -118,7 +120,7 @@ const View: React.FC = () => {
                         <div>
                             <button
                                 className="px-4 py-2 inline-block bg-gray-100 text-gray-800 text-sm font-medium rounded-full cursor-default">
-                                Grade: 9
+                                Grade: {submission?.grade ? Number(submission.grade).toFixed(1) : " Waiting to be graded"}
                             </button>
                         </div>
                     </div>
@@ -156,14 +158,12 @@ const View: React.FC = () => {
                                         </button>
                                     </div>
                                     <span className="text-white text-xl font-light">
-                                        Here are all the notes that the student will see.
+                                        Comments about your assignment.
                                     </span>
                                 </div>
-
-                                <div className="relative  flex-1">
+                                <div className="relative flex-1">
                                     <div className="absolute inset-0 ">
                                         <ul className="divide-y divide-gray-200">
-
                                             {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
                                             {notes.map((note) => {
                                                 return (
@@ -189,9 +189,6 @@ const View: React.FC = () => {
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
         </div>
     );

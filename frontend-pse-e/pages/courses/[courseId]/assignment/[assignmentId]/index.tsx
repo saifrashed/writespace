@@ -48,7 +48,7 @@ const Assignments = () => {
           <div className="md:flex items-center justify-between mb-6 px-5">
             {!isTeacher && (
               <p className="mt-8 text-gray-600">
-                <span className="font-bold">Grade: </span> {submission?.grade ? submission.grade : " Waiting to be graded"}
+                <span className="font-bold">Grade: </span> {submission?.grade ? Number(submission.grade).toFixed(1) : " Waiting to be graded"}
               </p>
             )}
 
