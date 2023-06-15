@@ -73,7 +73,7 @@ const Questions = (quizId) => {
   }
   useEffect(() => {
     if (showResult) {
-      saveQuiz(30, quizId.quizId, result.correctAnswers);
+      saveQuiz(50, quizId.quizId, result.correctAnswers);
     }
 
   }, [showResult]);

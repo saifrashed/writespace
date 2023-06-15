@@ -25,7 +25,7 @@ function useQuiz() {
 
   const updateQuiz = async (userId: number, quizId: number, latestScore: number) => {
     try {
-      const response = await axios.put(`${config.baseUrl}/quiz-score/update/grade/`, {
+      const response = await axios.put(`${config.baseUrl}/quiz-score/update/grade`, {
         userId: userId,
         quizId: quizId,
         latestScore: latestScore
