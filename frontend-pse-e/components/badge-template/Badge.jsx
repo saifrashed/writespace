@@ -25,6 +25,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     transform: isHovered
       ? `scale(${resizeFactor + 0.1}) translateY(-40px)`
       : `scale(${resizeFactor})`,
+
+    cursor: isHovered ? 'pointer' : '',
   };
 
   const smallBadge = {
