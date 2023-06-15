@@ -26,7 +26,7 @@ const View: React.FC = () => {
     const { courseId, assignmentId } = router.query;
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
-    const { getSubmissionDocument, getSubmission, submission, fileNotes, fileUrl } = useSubmission()
+    const { getSubmissionDocument, getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission()
     const { token } = useAuthentication()
     const { assignment, getAssignment } = useAssignment()
 
@@ -35,8 +35,7 @@ const View: React.FC = () => {
             getSubmissionDocument(assignmentId.toString(), token)
             getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
         }
-    }, [])
-
+    }, [assignmentId, courseId])
 
 
     let noteId = notes.length;
@@ -57,8 +56,8 @@ const View: React.FC = () => {
 
     const renderHighlights = (props: RenderHighlightsProps) => (
         <div>
-            {notes.map((note) => (
-                <React.Fragment key={note.id}>
+            {notes.map((note, index) => (
+                <React.Fragment key={index}>
                     {note.highlightAreas
                         .filter((area) => area.pageIndex === props.pageIndex)
                         .map((area, idx) => (
@@ -123,7 +122,7 @@ const View: React.FC = () => {
                             <div>
                                 <button
                                     className="px-4 py-2 inline-block bg-gray-100 text-gray-800 text-sm font-medium rounded-full cursor-default">
-                                    Grade: {submission?.grade ? Number(submission.grade).toFixed(1) : " Waiting to be graded"}
+                                    Grade: {grade ? grade : " Waiting to be graded"}
                                 </button>
                             </div>
                         </div>
@@ -168,9 +167,9 @@ const View: React.FC = () => {
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
                                                 {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
-                                                {notes.map((note) => {
+                                                {notes.map((note, index) => {
                                                     return (
-                                                        <li className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
+                                                        <li className="block hover:bg-gray-50 cursor-pointer" key={index} onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
                                                             <div className="px-4 py-4 sm:px-6">
                                                                 <div
                                                                     className="items-center justify-between">

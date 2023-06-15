@@ -37,11 +37,8 @@ const Grade: React.FC = () => {
         if (assignmentId) {
             getSubmissionDocument(assignmentId.toString(), token)
         }
-    }, [])
+    }, [assignmentId])
 
-    useEffect(() => {
-        console.log(fileUrl)
-    }, [fileUrl])
 
     const handleDocumentLoad = () => {
         if (fileNotes) {
@@ -130,8 +127,8 @@ const Grade: React.FC = () => {
 
     const renderHighlights = (props: RenderHighlightsProps) => (
         <div>
-            {notes.map((note) => (
-                <React.Fragment key={note.id}>
+            {notes.map((note, index) => (
+                <React.Fragment key={index}>
                     {note.highlightAreas
                         .filter((area) => area.pageIndex === props.pageIndex)
                         .map((area, idx) => (
@@ -276,9 +273,9 @@ const Grade: React.FC = () => {
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
                                                 {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
-                                                {notes.map((note) => {
+                                                {notes.map((note, index) => {
                                                     return (
-                                                        <li className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
+                                                        <li key={index} className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
                                                             <div className="px-4 py-4 sm:px-6">
                                                                 <div
                                                                     className="items-center justify-between">

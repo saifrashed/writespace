@@ -10,6 +10,7 @@ function useSubmission() {
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [fileNotes, setFileNotes] = useState<Note[] | null>(null);
+  const [grade, setGrade] = useState<number | null>(0);
 
   const getSubmission = async (courseId: number, assignmentId: number, token: string) => {
     try {
@@ -25,25 +26,31 @@ function useSubmission() {
 
   const gradeSubmission = async (grade: number, notes: Note[], token: string, assignmentId: number) => {
     try {
-      // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
-      const userId = 10;
-      const assignmentId = 10;
+      // // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
+      // const userId = 10;
+      // const assignmentId = 10;
+      // const body = {
+      //   userId: userId,
+      //   assignmentId: assignmentId,
+      //   grade: grade,
+      //   notes: notes
+      // }
+
+      const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
+
+      // Correcte versie voor later
       const body = {
-        userId: userId,
+        userId: user.data.id,
         assignmentId: assignmentId,
         grade: grade,
         notes: notes
       }
 
-      const response = await axios.put(`${config.baseUrl}/submission//update/fileNotes/`, body);
+      const response = await axios.put(`${config.baseUrl}/submission/update/fileNotes/`, body);
 
-      // Correcte versie voor later
-      // const body = {
-      //   token: token,
-      //   assignmentId: assignmentId,
-      //   grade: grade,
-      //   notes: notes
-      // }
+
+      console.log(response)
+      console.log(body)
 
       if (response.status === 200) {
         console.log("Grade submitted");
@@ -69,6 +76,8 @@ function useSubmission() {
       }
 
       const response = await axios.post(`${config.baseUrl}/submission/save`, formData, { headers: headers });
+
+      console.log(response)
 
       if (response.status === 200) {
         console.log("Submission submitted");
@@ -97,6 +106,7 @@ function useSubmission() {
 
         setFileUrl(fileUrl);
         setFileNotes(fileNotes);
+        setGrade(data[0].submissionGrade)
       }
     } catch (error) {
       console.log(error);
@@ -104,7 +114,7 @@ function useSubmission() {
     }
   };
 
-  return { submission: submissionData, isLoading, fileUrl, fileNotes, getSubmission, getSubmissionDocument, submitSubmission, gradeSubmission };
+  return { submission: submissionData, isLoading, fileUrl, fileNotes, grade, getSubmission, getSubmissionDocument, submitSubmission, gradeSubmission };
 
 }
 
