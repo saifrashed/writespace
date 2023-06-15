@@ -9,9 +9,9 @@ const axios = require('axios');
 const { encryptToken, decryptToken, auth } = require('../middleware/auth');
 
 // Canvas api url (testing environment, the environment we need for this project)
-const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
+// const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
 // production
-// const apiUrl = 'https://canvas.uva.nl/api/v1';
+const apiUrl = 'https://canvas.uva.nl/api/v1';
 
 // apiUrl for logging in with OAuth2 (without the "/api/v1" part)
 const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
@@ -139,7 +139,7 @@ router.post('/courses/:courseId/assignments', (req, res) => {
       "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
       "assignment[peer_reviews]": assignment.peer_reviews,
       "assignment[published]": true, // immediately publish assignment
-      "assignment[due_at]": assignment.due_at 
+      "assignment[due_at]": assignment.due_at
     }
   }).then(response => {
     res.json(response.data);
@@ -168,7 +168,7 @@ router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
       "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
       "assignment[peer_reviews]": assignment.peer_reviews,
       "assignment[published]": true, // immediately publish assignment
-      "assignment[due_at]": assignment.due_at 
+      "assignment[due_at]": assignment.due_at
     }
   }).then(response => {
     res.json(response.data);

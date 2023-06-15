@@ -12,7 +12,6 @@ function useAssigments() {
   const getAssignments = async (courseId: Number, token: string) => {
     try {
       const response = await axios.post(`${config.baseUrl}/canvas-api/assignments`, { token, courseId });
-      // const response = await axios.post(`${config.baseUrl}/written-assignments`, { token, courseId });
       setAssignmentsData(response.data)
       setIsLoading(false)
     } catch (error) {

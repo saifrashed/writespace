@@ -1,9 +1,6 @@
 import { useRouter } from "next/router";
 import { setCookie, removeCookie, getCookie } from "../cookie"
 import { useEffect, useState } from "react";
-import axios, { AxiosResponse } from 'axios';
-import config from "../config";
-import { TokenResponse } from "../types";
 
 /**
  * Custom hook for user authentication.
@@ -15,12 +12,9 @@ function useAuthentication() {
   const router = useRouter();
   const [token, setToken] = useState<any>(getCookie("pse-token"))
 
-  const login = async (code: string) => {
+  const login = async (token: string) => {
     try {
-      const response: AxiosResponse<TokenResponse> = await axios.post<TokenResponse>(`${config.baseUrl}/canvas-api/get-user-token`, { code: code });
-
-      setCookie("pse-token", response.data.access_token)
-
+      setCookie("pse-token", token)
       await router.push("/courses");
     } catch (error) {
       console.log(error)

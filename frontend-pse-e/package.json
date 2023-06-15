@@ -28,8 +28,6 @@
     "react-canvas-confetti": "^1.4.0",
     "react-dom": "18.2.0",
     "react-hot-toast": "^2.4.1",
-    "react-pdf": "^7.1.1",
-    "react-popover": "^0.5.10",
     "tailwindcss": "^3.2.4"
   },
   "devDependencies": {

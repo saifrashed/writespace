@@ -11,17 +11,12 @@ function useSubmission() {
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [fileNotes, setFileNotes] = useState<Note[] | null>(null);
 
-  const getSubmission = async (courseId: Number, assignmentId: Number, token: string) => {
+  const getSubmission = async (courseId: number, assignmentId: number, token: string) => {
     try {
-      const responseUser = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-      if (responseUser.data && responseUser.data.id) {
-        const responseSubmission = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}/${responseUser.data.id}`, { token });
-        setSubmissionData(responseSubmission.data);
-        setIsLoading(false);
-      } else {
-        onError("Something went wrong");
-        throw new Error('Invalid response from get-user endpoint');
-      }
+      const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
+      const submission = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}/${user.data.id}`, { token });
+      setSubmissionData(submission.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
