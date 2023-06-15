@@ -79,10 +79,6 @@ function useSubmission() {
     }
   }
 
-  useEffect(() => {
-    getSubmissionDocument();
-  }, []);
-
   const getSubmissionDocument = async (assignmentId: string, token: string) => {
     try {
       // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
