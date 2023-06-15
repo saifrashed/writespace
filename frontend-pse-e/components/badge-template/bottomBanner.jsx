@@ -4,6 +4,7 @@
 import React from "react";
 
 const BottomBanner = () => {
+
   const svgCode = `
   <?xml version="1.0" standalone="no"?>
   <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"

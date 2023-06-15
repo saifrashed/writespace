@@ -8,7 +8,6 @@ import TopBanner from "@/components/badge-template/topBanner"
 import BottomBanner from "@/components/badge-template/bottomBanner"
 
 const BadgeTemplate = ({ pictureUrl, unlocked }) => {
-
   const containerStyle = {
     position: 'relative',
     display: 'flex',
@@ -35,10 +34,10 @@ const BadgeTemplate = ({ pictureUrl, unlocked }) => {
   return (
     <div style={containerStyle}>
       <div style={componentStyle}>
-        <BadgeBg/>
+        <BadgeBg unlocked={unlocked}/>
       </div>
       <div style={componentStyle}>
-        <TopBanner/>
+        <TopBanner unlocked={unlocked}/>
       </div>
       {/* Don't show image for badges that haven't been unlocked yet. */}
       {unlocked ? (
@@ -48,7 +47,7 @@ const BadgeTemplate = ({ pictureUrl, unlocked }) => {
         ) : null
       }
       <div style={componentStyle}>
-        <BottomBanner/>
+        <BottomBanner unlocked={unlocked}/>
       </div>
     </div>
   );

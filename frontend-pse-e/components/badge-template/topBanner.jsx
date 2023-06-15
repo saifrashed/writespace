@@ -3,7 +3,7 @@
 // The colors can be changed by editing the stop-color="#<hexcode>" attributes
 import React from "react";
 
-const TopBanner = () => {
+const TopBanner = ({ unlocked }) => {
   const svgCode = `
   <?xml version="1.0" standalone="no"?>
   <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
