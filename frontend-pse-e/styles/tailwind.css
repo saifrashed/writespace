@@ -738,10 +738,6 @@ select {
   bottom: 0px;
 }
 
-.-left-10 {
-  left: -2.5rem;
-}
-
 .left-0 {
   left: 0px;
 }
@@ -752,10 +748,6 @@ select {
 
 .right-0 {
   right: 0px;
-}
-
-.-top-10 {
-  top: -2.5rem;
 }
 
 .top-0 {
@@ -778,8 +770,8 @@ select {
   grid-column: span 3 / span 3;
 }
 
-.m-8 {
-  margin: 2rem;
+.m-20 {
+  margin: 5rem;
 }
 
 .m-auto {
@@ -937,10 +929,6 @@ select {
 
 .h-20 {
   height: 5rem;
-}
-
-.h-24 {
-  height: 6rem;
 }
 
 .h-4 {
