@@ -91,7 +91,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
       return null;
     }
     return (
-      <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
         <div className="flex flex-row">
 
           {/* Badge image on top */}
@@ -120,7 +120,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     }
 
     return (
-      <div className="fixed inset-0 flex items-center justify-center z-50">
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-50">
         <div className="flex flex-rol">
           {/* Show badge on left side */}
           <div style={{ width: '200pt' }}>

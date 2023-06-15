@@ -34,7 +34,7 @@ const Profile = () => {
 
           <div className="flex flex-col items-center justify-center mt-20">
             <Avatar
-              sx={{ width: 150, height: 150, border: '2px solid black' }}
+              sx={{ width: 150, height: 150, border: '3px solid #706f7d' }}
               src="/badges/12.png"
             />
             {/* <p>{user?.name}</p> */}
@@ -42,7 +42,7 @@ const Profile = () => {
               {userData && (
                 <div>
                   <div className="mt-4 text-center font-bold"> Level {userData[0].level}</div>
-                  <div className="mt-4 text-center font-bold"> EXP {userData[0].experiencePoints}</div>
+                  <div className="mt-4 text-center font-bold"> XP {userData[0].experiencePoints}</div>
                 </div>
               )}
           </div>
@@ -58,11 +58,11 @@ const Profile = () => {
           {userData && (
             <div>
               <div
-                className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
                 // className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-                style={{height: "20px", width: `${userData[0].experiencePoints / 50}%` }}
+                style={{height: "20px", width: `${userData[0].experiencePoints / 50} XP` }}
               >
-              <span className="h-full flex items-center justify-center">{`${userData[0].experiencePoints / 50}%`}</span>
+              <span className="h-full flex items-center justify-center">{`${userData[0].experiencePoints / 50} XP`}</span>
               </div>
 
             </div>
@@ -70,7 +70,7 @@ const Profile = () => {
           </div>
 
           {/* <div className="flex flex-wrap justify-center gap-22"> */}
-         <p className="mt-20 mb-8 text-2xl font-bold">Badges</p>
+         <p className="mt-20 mb-8 text-2xl font-bold flex justify-center sm:mt-10 sm:mb-4 md:text-2xl">Badges</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
 
             {userData &&
