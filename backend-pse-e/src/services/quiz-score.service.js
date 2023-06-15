@@ -14,14 +14,15 @@ const upload = multer({ storage: storage });
 
 // ************************* Copy and change this with the model you added *************************
 // Import models for this service (../ goes up one directory)
-const quizScoreModel = require('../models/quizScore.model.js');
+const quizScoreModel = require('../models/quiz-score.model.js');
 // ************************* Copy and change this with the model you added *************************
 
 // ************************* Requests for this service (examples below) *************************
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
-router.get("/getAll", async (req, res) => {
+// Get all quiz scores
+router.get("/get-all", async (req, res) => {
     try {
         // Find all tests
         const quizScores = await quizScoreModel.find();
@@ -33,7 +34,8 @@ router.get("/getAll", async (req, res) => {
     }
 });
 
-router.get("/findByUserId/:userId", async (req, res) => {
+// Find all scores for a specific user
+router.get("/find-by-user-id/:userId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'userId': req.params.userId });
@@ -50,7 +52,8 @@ router.get("/findByUserId/:userId", async (req, res) => {
     }
 });
 
-router.get("/findByQuizId/:quizId", async (req, res) => {
+// Find all scores for a specific quiz
+router.get("/find-by-quiz-id/:quizId", async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'quizId': req.params.quizId });
@@ -67,6 +70,7 @@ router.get("/findByQuizId/:quizId", async (req, res) => {
     }
 });
 
+// Save new quiz score
 router.post('/save/', async (req, res) => {
    try {
         const quizId = req.body.quizId;
@@ -91,6 +95,7 @@ router.post('/save/', async (req, res) => {
    }
 });
 
+// Update quiz score. Automatically updates high score if latest score is higher
 router.put('/update/grade/', async (req, res) => {
     try {
         const userId = req.body.userId;
@@ -121,7 +126,7 @@ router.put('/update/grade/', async (req, res) => {
 });
 
 // Delete quiz score by quizId
-router.delete('/deleteAllByQuiz/:quizId', async (req, res) => {
+router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
     try {
         const quizId = req.params.quizId;
 
@@ -142,7 +147,7 @@ router.delete('/deleteAllByQuiz/:quizId', async (req, res) => {
 });
 
 // Delete quiz score by userId
-router.delete('/deleteAllByUser/:userId', async (req, res) => {
+router.delete('/delete-all-by-user/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
 
@@ -163,7 +168,7 @@ router.delete('/deleteAllByUser/:userId', async (req, res) => {
 });
 
 // Delete quiz score for specific user and quiz
-router.delete('/deleteOne/', async (req, res) => {
+router.delete('/delete-one/', async (req, res) => {
     try {
         const userId = req.body.userId;
         const quizId = req.body.quizId;

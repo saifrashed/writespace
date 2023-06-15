@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 
 const submissionModel = new mongoose.Schema({
-    userId: String,
-    assignmentId: String,
+    userId: Number,
+    assignmentId: Number,
     submissionDate: Date,
     submissionGrade: Number,
     submissionWhatifGrade: Number,
@@ -10,6 +10,7 @@ const submissionModel = new mongoose.Schema({
     filetype: String,
     filename: String,
     fileData: Buffer, // Field to store file data
+    fileNotes: [Object]
 });
 
 // Export the database model for MongoDB
