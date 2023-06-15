@@ -6,10 +6,10 @@ import React, { useEffect, useState } from "react";
 import Link from 'next/link';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
-import UploadPopup from "../../../../../components/UploadPopup";
+import UploadPopup from "@/components/uploadPopup";
 import useSubmission from "@/lib/hooks/useSubmission";
 import { formatDate } from "@/lib/date";
-import Quiz from "@/components/Quiz"
+import Quiz from "@/components/quiz"
 
 const Assignments = () => {
   const router = useRouter();

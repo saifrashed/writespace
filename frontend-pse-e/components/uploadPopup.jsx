@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import PopConfetti from './PopConfetti';
+import PopConfetti from './popConfetti';
 import useSubmission from "@/lib/hooks/useSubmission";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import Lottie from "lottie-react"
