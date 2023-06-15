@@ -6,7 +6,7 @@ const router = express.Router();
 const axios = require('axios');
 
 // Import authentication functions
-const { encryptToken, decryptToken, authDecrypt, auth } = require('../middleware/auth');
+const { encryptToken, decryptToken, authCanvas, auth } = require('../middleware/auth');
 
 // Canvas api URL
 const { API_URL } = process.env;
@@ -17,8 +17,22 @@ const { CANVAS_REDIRECT_URI } = process.env;
 const { CLIENT_ID } = process.env;
 const { CLIENT_SECRET } = process.env;
 
+function errorFunctionCanvas(error) {
+  if (!error) {
+    return {
+      error: 'An error occurred.'
+    }
+  } else {
+    return {
+      error: 'An error occurred.',
+      status: error.response.status,
+      statusText: error.response.statusText
+    };
+  }
+}
+
 // Get general user information (is a post because a get cannot have a body)
-router.post('/get-user', auth, (req, res) => {
+router.post('/get-user', authCanvas, (req, res) => {
   const token = req.body.token;
   // Canvas API url
   axios.get(`${API_URL}/users/self`, {
@@ -33,7 +47,7 @@ router.post('/get-user', auth, (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -51,7 +65,7 @@ router.post('/courses', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -74,7 +88,7 @@ router.post('/relevant-courses', (req, res) => {
     res.json(relevantCourses);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -92,7 +106,7 @@ router.post('/assignments', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -112,7 +126,7 @@ router.post('/written-assignments', (req, res) => {
     }));
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -127,7 +141,7 @@ router.post('/courses/:courseId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -142,7 +156,7 @@ router.post('/courses/:courseId/:assignmentId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -158,7 +172,7 @@ router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -175,7 +189,7 @@ router.post('/courses/:courseId/user/role', (req, res) => {
     res.json(response.data.enrollments[0]);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -196,7 +210,7 @@ router.post('/courses/:courseId/users/students', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 
@@ -226,11 +240,11 @@ router.post('/get-user-token', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 // Get new user token with refresh token (the refresh token from /get-user-token can be used infinitely!)
-router.post('/get-user-token/refresh', authDecrypt, (req, res) => {
+router.post('/get-user-token/refresh', authCanvas, (req, res) => {
   axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
     params: {
       grant_type: `refresh_token`,
@@ -246,7 +260,7 @@ router.post('/get-user-token/refresh', authDecrypt, (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errorFunctionCanvas(error));
   });
 });
 

@@ -20,7 +20,7 @@ const decryptToken = (encryptedToken) => {
 
 // This is the authentication function for the canvas-api requests. This is a bit 
 // different because the canvas-api has its own authentication, this is just decryption
-const authDecrypt = (req, res, next) => {
+const authCanvas = (req, res, next) => {
     const token =
         req.body.token || req.query.token || req.headers["x-access-token"];
 
@@ -87,6 +87,6 @@ const auth = (req, res, next) => {
 module.exports = {
     encryptToken,
     decryptToken,
-    authDecrypt,
+    authCanvas,
     auth
 };
