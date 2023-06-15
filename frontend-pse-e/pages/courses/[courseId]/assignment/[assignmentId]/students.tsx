@@ -1,9 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
 import NavBar from "@/components/NavBar";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import Link from 'next/link';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import UploadPopup from "@/components/uploadPopup";
@@ -38,48 +38,44 @@ const Assignments = () => {
 
     const [isTeacher, setIsTeacher] = useState()
 
-    // For the upload popup.
-    const [showPopup, setShowPopup] = useState(false);
-
-    const getUserDataById = (user_id: Number) => {
-        return users.find((user) => user.id === user_id) || null;
-    };
-
-    const togglePopup = () => {
-        setShowPopup(!showPopup);
-    };
-
     useEffect(() => {
         if (courseId && assignmentId && token) {
             getCourse(parseInt(courseId.toString()), token)
             getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+            getUsers(parseInt(courseId.toString()), token)
         }
     }, [router.query]);
 
-    useEffect(() => {
-        if (course) {
-            setIsTeacher(course.enrollments?.some((enrollment: Enrollment) => enrollment?.type === "teacher"))
-        }
-    }, [course]);
+    // useEffect(() => {
+    //     if (course) {
+    //         setIsTeacher(course.enrollments?.some((enrollment: Enrollment) => enrollment?.type === "teacher"))
+    //     }
+    // }, [course]);
 
-    useEffect(() => {
-        console.log(submissions)
 
-        console.log(users)
-    }, [submissions, users])
+    // useEffect(() => {
+    //     if (courseId && assignmentId && token) {
+    //         if (typeof isTeacher === 'boolean') {
+    //             if (isTeacher) {
+    //                 getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+    //                 getUsers(parseInt(courseId.toString()), token)
+    //             } else {
+    //                 getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+    //             }
+    //         }
+    //     }
+    // }, [isTeacher])
 
-    useEffect(() => {
-        if (courseId && assignmentId && token) {
-            if (typeof isTeacher === 'boolean') {
-                if (isTeacher) {
-                    getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-                    getUsers(parseInt(courseId.toString()), token)
-                } else {
-                    getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-                }
-            }
-        }
-    }, [isTeacher])
+
+    function getRandomGrade() {
+        // Generate a random number between 50 and 90 (inclusive)
+        var randomNumber = Math.floor(Math.random() * 41) + 50;
+
+        // Convert the random number to a decimal grade with 1-point increments
+        var grade = randomNumber / 10;
+
+        return grade;
+    }
 
     return (
         <>
@@ -93,78 +89,53 @@ const Assignments = () => {
             <NavBar />
 
 
-            <div className="bg-gray-50 min-h-screen py-10 mt-12">
-                <div className="max-w-5xl mx-auto px-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
-                    </div>
+            <div className="bg-gray-50 py-10 mt-16 min-h-screen">
+                <div className="text-center mb-6">
+                    <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
 
-                    <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
-                        <div className="col-span-1 p-4">
-                        </div>
-                        <div className="col-span-3 p-4">
-                            <motion.div layoutId={assignment?.due_at?.toString()}>
-                                <p className="mt-8 text-gray-600">
-                                    <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
-                            </motion.div>
-                        </div>
-                        <div className="col-span-1 p-4 ">
-                            <div className="space-x-4">
-                                {!isTeacher ? (
-                                    <p className="mt-8 text-gray-600">
-                                        <span className="font-bold">Grade: </span> {submission?.grade ? <span> {submission.grade} / {assignment?.points_possible} </span> : " Waiting to be graded"}</p>) : null}
-                                {/* <p className="mt-8 text-gray-600">Submitted at: {formatDate(submission?.submitted_at)}</p> */}
-                            </div>
-                        </div>
-                    </div>
+                    <motion.div layoutId={assignment?.due_at?.toString()}>
+                        <p className="mt-8 text-gray-600">
+                            <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
+                    </motion.div>
+                </div>
 
-
-                    <div className="flex justify-center">
-                        <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
-                            <table className="w-full text-sm text-left bg-white">
-                                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                                    <tr>
-                                        <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                            Name
-                                        </th>
-                                        <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                            Student ID
-                                        </th>
-                                        <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                            Submission Status
-                                        </th>
-                                        <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                            Grade Status
-                                        </th>
+                <div className="max-w-5xl mx-auto">
+                    <div className="w-full relative overflow-x-auto shadow-md mt-4 ">
+                        <table className="w-full text-sm text-left bg-white">
+                            <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                                <tr>
+                                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                                        Name
+                                    </th>
+                                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                                        Submission Status
+                                    </th>
+                                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                                        Grade Status
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {users.map((user, index) => (
+                                    <tr
+                                        key={index}
+                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                    >
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <Link href="/courses/36015/assignment/398397/submission/grade">
+                                                {user.name}
+                                            </Link>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
+                                            Submitted
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            {getRandomGrade()}
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {submissions.map((submission) => (
-                                        <tr
-                                            key={submission.user_id}
-                                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                        >
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <Link
-                                                    href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
-                                                >
-                                                    {getUserDataById(submission.user_id)?.name || "Unknown"}
-                                                </Link>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {submission.user_id}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {submission.submitted_at ? "Submitted" : "Not Submitted"}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {submission.grade ? "Graded" : "Not Graded"}
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>

@@ -264,7 +264,6 @@ const Grade: React.FC = () => {
                                     <div className="relative  flex-1">
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
-
                                                 {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
                                                 {notes.map((note) => {
                                                     return (
@@ -324,7 +323,7 @@ const Grade: React.FC = () => {
                             animationData={submittedAnimationData}
                         />
                         <p className="text-3xl font-bold mb-5">Grade has been submitted!</p>
-                        <Link href={`/courses/${courseId}/assignment/${assignmentId}`}>
+                        <Link href={`/courses/${courseId}/assignment/${assignmentId}/students`}>
                             <button
                                 className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
                                 Go back

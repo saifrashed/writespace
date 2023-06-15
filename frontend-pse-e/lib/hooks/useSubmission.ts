@@ -35,7 +35,7 @@ function useSubmission() {
         notes: notes
       }
 
-      const response = await axios.put(`${config.backendUrl}/submission//update/fileNotes/`, body);
+      const response = await axios.put(`${config.baseUrl}/submission//update/fileNotes/`, body);
 
       // Correcte versie voor later
       // const body = {
@@ -68,7 +68,7 @@ function useSubmission() {
         'Content-Type': 'multipart/form-data'
       }
 
-      const response = await axios.post(`${config.backendUrl}/submission/save`, formData, { headers: headers });
+      const response = await axios.post(`${config.baseUrl}/submission/save`, formData, { headers: headers });
 
       if (response.status === 200) {
         console.log("Submission submitted");
@@ -83,7 +83,7 @@ function useSubmission() {
     try {
       // Voor nu nog ff Hardcoded, endpoint wordt vrijdag gefixt
       const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-      const response = await axios.get(`${config.backendUrl}/submission/findSpecificSubmission?userId=${user.data.id}&assignmentId=${assignmentId}`);
+      const response = await axios.get(`${config.baseUrl}/submission/find-specific-submission?userId=${user.data.id}&assignmentId=${assignmentId}`);
 
       const data = await response.data;
       const binaryData = new Uint8Array(data[0].fileData.data);
