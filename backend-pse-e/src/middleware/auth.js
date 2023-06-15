@@ -53,6 +53,8 @@ const auth = (req, res, next) => {
         const decryptedToken = decryptToken(token);
         let userNotFound = false;
 
+        // TODO: finish this function and test it for all other requests that are not to the canvas-api
+
         // Check if the user exists in canvas
         axios.get(`${API_URL}/users/self`, {
             headers: {
