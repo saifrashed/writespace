@@ -1,80 +1,34 @@
 import Head from "next/head";
 import Image from "next/image";
-import NavBar from "@/components/NavBar";
+import NavBar from "../../../../../components/NavBar";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from 'next/link';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
-import Button from "@/components/stdButton";
-import UploadPopup from "@/components/uploadPopup";
+import UploadPopup from "../../../../../components/UploadPopup";
 import useSubmission from "@/lib/hooks/useSubmission";
-import useEnrollments from "@/lib/hooks/useEnrollments";
-import useSubmissions from "@/lib/hooks/useSubmissions";
-import useUsers from "@/lib/hooks/useUsers";
-
 import { formatDate } from "@/lib/date";
-import { motion } from "framer-motion";
-import useCourse from "@/lib/hooks/useCourse";
-import { Enrollment } from "@/lib/types";
-import { Context } from "@/Context";
+import Quiz from "@/components/Quiz"
 
 const Assignments = () => {
   const router = useRouter();
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment: contextAssignment } = useContext(Context); // When pressing a course
-  const { assignment: fetchedAssignment, getAssignment } = useAssignment(); // When navigating to a course via url
-  const assignment = contextAssignment || fetchedAssignment;
-
+  const { assignment, getAssignment } = useAssignment()
   const { submission, getSubmission } = useSubmission()
-  const { submissions, getSubmissions } = useSubmissions()
-  const { enrollments, getEnrollments } = useEnrollments()
-  const { users, getUsers } = useUsers()
-
-  const { course: contextCourse } = useContext(Context); // When pressing a course
-  const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url
-  const course = contextCourse || fetchedCourse;
-
-  const [isTeacher, setIsTeacher] = useState()
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
-
-  const getUserDataById = (user_id: Number) => {
-    return users.find((user) => user.id === user_id) || null;
-  };
-
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
+  const isTeacher = false;
 
   useEffect(() => {
     if (courseId && assignmentId && token) {
-      getCourse(parseInt(courseId.toString()), token)
       getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+      getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
     }
   }, [router.query]);
-
-  useEffect(() => {
-    if (course) {
-      setIsTeacher(course.enrollments?.some((enrollment: Enrollment) => enrollment?.type === "teacher"))
-    }
-  }, [course]);
-
-  useEffect(() => {
-    if (courseId && assignmentId && token) {
-      if (typeof isTeacher === 'boolean') {
-        if (isTeacher) {
-          getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-          getUsers(parseInt(courseId.toString()), token)
-        } else {
-          getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-        }
-      }
-    }
-  }, [isTeacher])
 
   return (
     <>
@@ -87,49 +41,26 @@ const Assignments = () => {
 
       <NavBar />
 
-      <div className="bg-gray-50 min-h-screen py-10 mt-12">
+      <div className="bg-gray-50 min-h-screen py-10 mt-14">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="flex items-center justify-between mb-6">
-            <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
+          <h1 className="text-3xl font-bold px-5">{assignment?.name}</h1>
+
+          <div className="md:flex items-center justify-between mb-6 px-5">
+            {!isTeacher && (
+              <p className="mt-8 text-gray-600">
+                <span className="font-bold">Grade: </span> {submission?.grade ? submission.grade : " Waiting to be graded"}
+              </p>
+            )}
+
+            <p className="mt-8 text-gray-600">
+              <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
-            <div className="col-span-1 p-4">
-            </div>
-            <div className="col-span-3 p-4">
-              <motion.div layoutId={assignment?.due_at?.toString()}>
-                <p className="mt-8 text-gray-600">
-                  <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
-              </motion.div>
-            </div>
-            <div className="col-span-1 p-4 ">
-              <div className="space-x-4">
-                {!isTeacher ? (
-                  <p className="mt-8 text-gray-600">
-                    <span className="font-bold">Grade: </span> {submission?.grade ? <span> {submission.grade} / {assignment?.points_possible} </span> : " Waiting to be graded"}</p>) : null}
-                {/* <p className="mt-8 text-gray-600">Submitted at: {formatDate(submission?.submitted_at)}</p> */}
-              </div>
-            </div>
-          </div>
-
-
-          {!isTeacher ? (
-
+          {!isTeacher && (
             <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
-              <div className="col-span-1 p-4">
-                <div className="w-full p-4 bg-white rounded-lg shadow-lg">
-                  <div key={assignment?.id}>
-                    <button
-                      className={`text-sm text-gray-500 underline cursor-pointer font-bold"}`}
-                    >
-                      Description
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-3 p-4">
-
-                <div className="w-full p-4 bg-white rounded-lg shadow-lg ">
+              <div className="col-span-4 p-4">
+                <div className="w-full p-4 bg-white rounded-lg border border-gray-200 ">
                   <div className="flex space-x-4">
                     <div key={assignment?.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment?.description ? assignment?.description : "No description available" }}>
                     </div>
@@ -137,135 +68,70 @@ const Assignments = () => {
                 </div>
               </div>
               <div className="col-span-1 p-4 ">
-                <div className="w-full p-4 bg-white rounded-lg shadow-lg">
+                <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                   <div className="flex flex-col">
-
-                    <button onClick={togglePopup} className="w-full bg-fuchsia-300 hover:bg-fuchsia-400 text-white font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded flex items-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                      </svg>
-                      <span className="ml-2">Submit</span>
-                    </button>
-
-
-                    <UploadPopup showPopup={showPopup} togglePopup={togglePopup} />
-
-
-                    <Link
-                      href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}
+                    <a
+                      className="inline-flex items-center gap-2  text-center rounded border border-indigo-600 px-8 py-3 text-indigo-600 hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
+                      onClick={() => { setShowPopup(!showPopup) }}
                     >
-                      <button className="w-full mt-5 bg-pink-300 hover:bg-pink-400 text-white font-bold py-2 px-4 border-b-4 border-pink-500 hover:border-pink-500 rounded flex max-width items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9zm3.75 11.625a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
-                        </svg>
-
-                        <span className="ml-2">View</span>
-                      </button>
+                      <span className="text-sm font-medium"> Submit </span>
+                      <i className="fa-solid fa-upload"></i>
+                    </a>
+                    <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}
+                      className="inline-flex items-center text-center gap-2 rounded border border-indigo-600 mt-2 px-8 py-3 bg-indigo-600 text-white hover:bg-indigo-600 hover:text-white focus:outline-none focus:ring active:bg-indigo-500"
+                    >
+                      <span className="text-sm font-medium"> View </span>
+                      <i className="fa-solid fa-eye"></i>
                     </Link>
-                    {/* <Link
-                    href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
-                  >
-                    <button className="block w-full py-2 px-4 bg-yellow-500 text-white rounded-md mt-2">
-                      Grade submission
-                    </button>
-                  </Link> */}
                   </div>
                 </div>
-                <p className="mt-8 text-gray-600">
-                  {submission?.submitted_at ? (
-                    <span className="flex items-center text-green-500">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
-                        />
-                      </svg>
-                      <span className="ml-2">Submitted</span>
-                    </span>
-                  ) : (
-                    <span className="flex items-center text-orange-500">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth="1.5"
-                        stroke="currentColor"
-                        className="w-6 h-6"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      <span className="ml-2">Not Submitted</span>
-                    </span>
-                  )}
-
-                  <span className="font-bold">Submission date: </span>{submission?.submitted_at ? formatDate(submission?.submitted_at) : "-"}</p>
               </div>
             </div>
-          ) : null}
-
-          {isTeacher && submissions.length > 0 ? (
-            <div className="flex justify-center">
-              <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
-                <table className="w-full text-sm text-left bg-white">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                        Name
-                      </th>
-                      <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                        Student ID
-                      </th>
-                      <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                        Submission Status
-                      </th>
-                      <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                        Grade Status
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {submissions.map((submission) => (
-                      <tr
-                        key={submission.user_id}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+          )}
+          {isTeacher && (
+            <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-gray-700 uppercase bg-white-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
+                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                      Name
+                    </th>
+                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                      Submission Status
+                    </th>
+                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                      Grade Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" className="px-6 py-4 whitespace-nowrap">
+                      <Link
+                        href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
                       >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <Link
-                            href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
-                          >
-                            {getUserDataById(submission.user_id)?.name || "Unknown"}
-                          </Link>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {submission.user_id}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {submission.submitted_at ? "Submitted" : "Not Submitted"}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {submission.grade ? "Graded" : "Not Graded"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        Student name
+                      </Link>
+                    </th>
+                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
+                      submitted
+                    </td>
+                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
+                      Graded
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row" className="px-6 py-4 whitespace-nowrap">
+                      Student name
+                    </th>
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          ) : null}
+          )}
 
-
+          <Quiz />
+          <UploadPopup showPopup={showPopup} togglePopup={togglePopup} assignmentId={assignmentId} />
 
         </div>
       </div>
