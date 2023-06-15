@@ -123,23 +123,30 @@ router.put('/update/picture/', async (req, res) => {
 router.put('/update/experience-points/', async (req, res) => {
     try {
         const userId = req.body.userId;
-        const experiencePoints = req.body.experiencePoints
+        const XPToAdd = req.body.experiencePoints
 
-        const updatedUser = await userModel.findOneAndUpdate(
-            {
-                'userId': userId,
-            },
+        const userToUpdate = await userModel.findOne({ 'userId': userId });
+
+        if (userToUpdate === null) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const updateId = userToUpdate._id;
+        let userXP = userToUpdate.experiencePoints;
+        userXP = userXP + XPToAdd;
+        let level = userToUpdate.level;
+        while (userXP >= levelThresholds[level]) {
+            level = level + 1;
+        }
+        const updatedUser = await userModel.findByIdAndUpdate( updateId,
             {
                 $set: {
-                    'experiencePoints': experiencePoints
+                    'experiencePoints': userXP,
+                    'level': level
                 }
             },
             { new: true }
         );
-
-        if (updatedUser === null) {
-            return res.status(404).json({ error: 'User not found' });
-        }
 
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
@@ -315,6 +322,39 @@ router.delete('/delete/:userId', async (req, res) => {
         res.status(500).json({ error: 'Failed to delete data from the database' });
     }
 });
+
+const levelThresholds = [
+    0,     // Level 1 threshold
+    100,   // Level 2 threshold
+    300,   // Level 3 threshold
+    600,   // Level 4 threshold
+    1000,  // Level 5 threshold
+    1500,  // Level 6 threshold
+    2100,  // Level 7 threshold
+    2800,  // Level 8 threshold
+    3600,  // Level 9 threshold
+    4500,  // Level 10 threshold
+    5500,  // Level 11 threshold
+    6600,  // Level 12 threshold
+    7800,  // Level 13 threshold
+    9100,  // Level 14 threshold
+    10500, // Level 15 threshold
+    12000, // Level 16 threshold
+    13600, // Level 17 threshold
+    15300, // Level 18 threshold
+    17100, // Level 19 threshold
+    19000, // Level 20 threshold
+    21000, // Level 21 threshold
+    23100, // Level 22 threshold
+    25300, // Level 23 threshold
+    27600, // Level 24 threshold
+    30000, // Level 25 threshold
+    32500, // Level 26 threshold
+    35100, // Level 27 threshold
+    37800, // Level 28 threshold
+    40600, // Level 29 threshold
+    43500  // Level 30 threshold
+  ];
 
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
