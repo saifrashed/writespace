@@ -4,7 +4,7 @@ import config from "../config";
 import { useNotification } from "./useNotification";
 import { User } from "../types";
 
-function useUser(token: string) {
+function useUser() {
   const [user, setUser] = useState<User>();
   const { onSuccess, onError } = useNotification()
 
