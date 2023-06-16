@@ -122,7 +122,7 @@ const Assignments = () => {
                                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link href="/courses/36015/assignment/398397/submission/grade">
+                                            <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}>
                                                 {user.name}
                                             </Link>
                                         </td>
