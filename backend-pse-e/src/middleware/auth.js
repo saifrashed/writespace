@@ -57,7 +57,8 @@ const auth = async (req, res, next) => {
         let userNotFound = false;
 
         // Check if the user exists in canvas (await to first do this before the request)
-        await axios.get(`${API_URL}/users/self`, {
+        // TODO: change to try-catch
+        const response = await axios.get(`${API_URL}/users/self`, {
             headers: {
                 // Authorization using the access token
                 Authorization: `Bearer ${decryptedToken}`
@@ -67,7 +68,7 @@ const auth = async (req, res, next) => {
             req.body.token = decryptedToken;
             // Put the id of the user with the access token in the body so that 
             // the request can use the userId of the canvas account for the db
-            req.body.userId = response.data.id;
+            res.data.userId = response.data.id;
         }).catch(error => {
             // User not found, so set boolean to true
             userNotFound = true;
@@ -90,6 +91,20 @@ module.exports = {
     authCanvas,
     auth
 };
+
+// TODO: check if it can be in one auth function.
+/*
+TODO: put the userId in the response: res.locals
+res.headers(bearer) = decryptedToken.
+
+
+TODO: in backend chat
+1. Try catch, await and async gebruiken (geen .then/catch gebruiken)
+2. Routes GEEN camalCase, doel moet duidelijk zijn: user-create, not userCreate. 
+    NOT: user/:courseId/:assignmentId. Dit wordt een POST met dit in de body.
+3. Canvas-api wordt verwijderd, alles van assignments komt in de assignments service, alles van users komt in user service.
+4. Try-catch van alle requests wordt 400 voor een error en 200 bij success.
+*/
 
 
 // TODO: add "auth" to all other requests in the BE and FE needs to add header (bearer) in get requests and body token for others, ask Saif or Devran!
