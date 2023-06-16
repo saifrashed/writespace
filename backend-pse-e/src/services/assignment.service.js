@@ -6,6 +6,12 @@ const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const { auth } = require('../middleware/auth');
+
+// Require axios for communicating with the canvas api
+const axios = require('axios');
+// Canvas api URL
+const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -21,7 +27,7 @@ const assignmentModel = require("../models/assignment.model.js");
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
-router.get("/get-all", async (req, res) => {
+router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
         const assignments = await assignmentModel.find();
@@ -34,7 +40,7 @@ router.get("/get-all", async (req, res) => {
 });
 
 // Find submissions by assignmentId
-router.get("/find-by-creator-id/:creatorId", async (req, res) => {
+router.get("/find-by-creator-id/:creatorId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await assignmentModel.find({ 'creatorId': req.params.creatorId });
@@ -52,7 +58,7 @@ router.get("/find-by-creator-id/:creatorId", async (req, res) => {
 });
 
 // Find submissions by courseId
-router.get("/find-by-course-id/:courseId", async (req, res) => {
+router.get("/find-by-course-id/:courseId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await assignmentModel.find({ 'coursId': req.params.courseId });
@@ -70,12 +76,12 @@ router.get("/find-by-course-id/:courseId", async (req, res) => {
 });
 
 // Post request (creates something in the db)
-router.post('/save', async (req, res) => {
+router.post('/save', auth, async (req, res) => {
     try {
         // Variables for the model
         const assignmentId = req.body.assignmentId;
 
-        const alreadyExists = await assignmentModel.find({ 'assignmentId': assignmentId});
+        const alreadyExists = await assignmentModel.find({ 'assignmentId': assignmentId });
 
         if (alreadyExists.length !== 0) {
             return res.status(409).json({ error: 'An assignment with this Id already exists' })
@@ -115,7 +121,7 @@ router.post('/save', async (req, res) => {
     }
 });
 
-router.put('/update/description/', async (req, res) => {
+router.put('/update/description/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const description = req.body.description;
@@ -143,7 +149,7 @@ router.put('/update/description/', async (req, res) => {
     }
 });
 
-router.put('/update/name/', async (req, res) => {
+router.put('/update/name/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const name = req.body.name;
@@ -171,7 +177,7 @@ router.put('/update/name/', async (req, res) => {
     }
 });
 
-router.put('/update/max-points/', async (req, res) => {
+router.put('/update/max-points/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const maxPoints = req.body.maxPoints;
@@ -199,7 +205,7 @@ router.put('/update/max-points/', async (req, res) => {
     }
 });
 
-router.put('/update/deadline/', async (req, res) => {
+router.put('/update/deadline/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const deadline = req.body.deadline;
@@ -227,7 +233,7 @@ router.put('/update/deadline/', async (req, res) => {
     }
 });
 
-router.put('/update/available-at/', async (req, res) => {
+router.put('/update/available-at/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const availableAt = req.body.availableAt;
@@ -255,7 +261,7 @@ router.put('/update/available-at/', async (req, res) => {
     }
 });
 
-router.put('/update/rubric/', async (req, res) => {
+router.put('/update/rubric/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const rubric = req.body.rubric;
@@ -284,7 +290,7 @@ router.put('/update/rubric/', async (req, res) => {
 });
 
 
-router.delete('/delete/:assignmentId', async (req, res) => {
+router.delete('/delete/:assignmentId', auth, async (req, res) => {
     try {
         const assignmentId = req.params.assignmentId;
 
@@ -305,7 +311,7 @@ router.delete('/delete/:assignmentId', async (req, res) => {
 });
 
 // DELETE request (deletes something from the db)
-router.delete('/delete/:courseId', async (req, res) => {
+router.delete('/delete/:courseId', auth, async (req, res) => {
     try {
         const courseId = req.params.courseId;
 
@@ -324,6 +330,116 @@ router.delete('/delete/:courseId', async (req, res) => {
     } catch (error) {
         console.error('Error deleting data from MongoDB:', error);
         res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// Create assignment (missing deadline attribute)
+router.post('/courses/:courseId/assignments', auth, (req, res) => {
+    const { courseId } = req.params
+    const { assignment } = req.body;
+
+    axios.post(`${API_URL}/courses/${courseId}/assignments`, assignment, {
+        headers: {
+            Authorization: `Bearer ${req.headers["bearer"]}`
+        }, params: {
+            "assignment[name]": assignment.name,
+            "assignment[description]": assignment.description,
+            "assignment[points_possible]": assignment.points_possible,
+            "assignment[grading_type]": assignment.grading_type,
+            "assignment[submission_types]": ['online_upload'], // written assignment standard
+            "assignment[allowed_attempts]": assignment.allowed_attempts,
+            "assignment[anonymous_grading]": assignment.anonymous_grading,
+            "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
+            "assignment[peer_reviews]": assignment.peer_reviews,
+            "assignment[published]": true, // immediately publish assignment
+            "assignment[due_at]": assignment.due_at
+        }
+    }).then(response => {
+        res.json(response.data);
+    }).catch(error => {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
+    });
+});
+
+// Update assignment (missing deadline attribute)
+router.put('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
+    const { courseId, assignmentId } = req.params
+    const { assignment } = req.body;
+
+    axios.put(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, assignment, {
+        headers: {
+            Authorization: `Bearer ${req.headers["bearer"]}`
+        }, params: {
+            "assignment[name]": assignment.name,
+            "assignment[description]": assignment.description,
+            "assignment[points_possible]": assignment.points_possible,
+            "assignment[grading_type]": assignment.grading_type,
+            "assignment[submission_types]": ['online_upload'], // written assignment standard
+            "assignment[allowed_attempts]": assignment.allowed_attempts,
+            "assignment[anonymous_grading]": assignment.anonymous_grading,
+            "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
+            "assignment[peer_reviews]": assignment.peer_reviews,
+            "assignment[published]": true, // immediately publish assignment
+            "assignment[due_at]": assignment.due_at
+        }
+    }).then(response => {
+        res.json(response.data);
+    }).catch(error => {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
+    });
+});
+
+// Delete assignment
+router.delete('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
+    const { courseId, assignmentId } = req.params
+
+    axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {}, {
+        headers: {
+            Authorization: `Bearer ${req.headers["bearer"]}`
+        }
+    }).then(response => {
+        // Filter assignments by submission_types
+        res.json(response.data.filter(assignment => {
+            return assignment.submission_types.includes("online_upload");
+        }));
+    }).catch(error => {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
+    });
+});
+
+// Get one assignment from a course with a user access token
+router.get('/courses/:courseId/:assignmentId', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/:assignmentId.' });
+    }
+});
+
+// Get one rubric for an assignment with a user access token
+// NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
+router.get('/courses/:courseId/rubrics/:rubricId', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/rubrics/:rubricId.' });
     }
 });
 
