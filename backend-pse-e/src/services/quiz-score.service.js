@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const { auth } = require('../middleware/auth');
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -22,7 +23,7 @@ const quizScoreModel = require('../models/quiz-score.model.js');
 
 // Get request (gets something from the db)
 // Get all quiz scores
-router.get("/get-all", async (req, res) => {
+router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
         const quizScores = await quizScoreModel.find();
@@ -35,7 +36,7 @@ router.get("/get-all", async (req, res) => {
 });
 
 // Find all scores for a specific user
-router.get("/find-by-user-id/:userId", async (req, res) => {
+router.get("/find-by-user-id/:userId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'userId': req.params.userId });
@@ -53,7 +54,7 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
 });
 
 // Find all scores for a specific quiz
-router.get("/find-by-quiz-id/:quizId", async (req, res) => {
+router.get("/find-by-quiz-id/:quizId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'quizId': req.params.quizId });
@@ -71,7 +72,7 @@ router.get("/find-by-quiz-id/:quizId", async (req, res) => {
 });
 
 // Save new quiz score
-router.post('/save/', async (req, res) => {
+router.post('/save/', auth, async (req, res) => {
    try {
         const quizId = req.body.quizId;
         const userId = req.body.userId;
@@ -96,7 +97,7 @@ router.post('/save/', async (req, res) => {
 });
 
 // Update quiz score. Automatically updates high score if latest score is higher
-router.put('/update/grade/', async (req, res) => {
+router.put('/update/grade/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const quizId = req.body.quizId;
@@ -126,7 +127,7 @@ router.put('/update/grade/', async (req, res) => {
 });
 
 // Delete quiz score by quizId
-router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
+router.delete('/delete-all-by-quiz/:quizId', auth, async (req, res) => {
     try {
         const quizId = req.params.quizId;
 
@@ -147,7 +148,7 @@ router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
 });
 
 // Delete quiz score by userId
-router.delete('/delete-all-by-user/:userId', async (req, res) => {
+router.delete('/delete-all-by-user/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
 
@@ -168,7 +169,7 @@ router.delete('/delete-all-by-user/:userId', async (req, res) => {
 });
 
 // Delete quiz score for specific user and quiz
-router.delete('/delete-one/', async (req, res) => {
+router.delete('/delete-one/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const quizId = req.body.quizId;
