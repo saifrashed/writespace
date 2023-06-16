@@ -34,12 +34,11 @@ function errFunCanvas(error) {
 
 // Get general user information (is a post because a get cannot have a body)
 router.post('/get-user', auth, (req, res) => {
-  const token = req.headers["bearer"];
   // Canvas API url
   axios.get(`${API_URL}/users/self`, {
     headers: {
       // Authorization using the access token
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       // Configure how many items are returned maximum
       per_page: 100
@@ -54,10 +53,9 @@ router.post('/get-user', auth, (req, res) => {
 
 // Route to get assignments for a course with a user access token
 router.post('/courses', auth, (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       // Configure how many items are returned maximum
       per_page: 100
@@ -72,10 +70,9 @@ router.post('/courses', auth, (req, res) => {
 
 // Get all courses that are relevant (such as not closed)
 router.post('/relevant-courses', auth, (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       // Configure how many items are returned maximum
       per_page: 100,
@@ -95,10 +92,10 @@ router.post('/relevant-courses', auth, (req, res) => {
 
 // Get all assignments of a course with a user access token
 router.post('/assignments', auth, (req, res) => {
-  const { courseId, token } = req.body;
+  const { courseId } = req.body;
   axios.get(`${API_URL}/courses/${courseId}/assignments`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       // Configure how many items are returned maximum
       per_page: 100
@@ -113,10 +110,10 @@ router.post('/assignments', auth, (req, res) => {
 
 // Get all file upload (written) assignments
 router.post('/written-assignments', auth, (req, res) => {
-  const { courseId, token } = req.body;
+  const { courseId } = req.body;
   axios.get(`${API_URL}/courses/${courseId}/assignments`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       order_by: "due_at"
     }
@@ -134,11 +131,11 @@ router.post('/written-assignments', auth, (req, res) => {
 // Create assignment (missing deadline attribute)
 router.post('/courses/:courseId/assignments', (req, res) => {
   const { courseId } = req.params
-  const { assignment, token } = req.body;
+  const { assignment } = req.body;
 
   axios.post(`${API_URL}/courses/${courseId}/assignments`, assignment, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       "assignment[name]": assignment.name,
       "assignment[description]": assignment.description,
@@ -163,11 +160,11 @@ router.post('/courses/:courseId/assignments', (req, res) => {
 // Update assignment (missing deadline attribute)
 router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
   const { courseId, assignmentId } = req.params
-  const { assignment, token } = req.body;
+  const { assignment } = req.body;
 
   axios.put(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, assignment, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       "assignment[name]": assignment.name,
       "assignment[description]": assignment.description,
@@ -192,11 +189,10 @@ router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
 // Delete assignment
 router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
   const { courseId, assignmentId } = req.params
-  const token = req.headers.authorization.split(' ')[1];
 
   axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {}, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     // Filter assignments by submission_types
@@ -211,10 +207,9 @@ router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
 
 // Get one course with a user access token
 router.post('/courses/:courseId', auth, (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     res.json(response.data);
@@ -227,10 +222,9 @@ router.post('/courses/:courseId', auth, (req, res) => {
 
 // Get all user enrolled in a course without non official users (TestPerson).
 router.post('/courses/:courseId/users', (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     res.json(response.data);
@@ -242,10 +236,9 @@ router.post('/courses/:courseId/users', (req, res) => {
 
 // Get all users enrolled in a course.
 router.post('/courses/:courseId/enrollments', (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/enrollments`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     res.json(response.data);
@@ -257,10 +250,9 @@ router.post('/courses/:courseId/enrollments', (req, res) => {
 
 // Get one assignment from a course with a user access token
 router.post('/courses/:courseId/:assignmentId', auth, (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     res.json(response.data);
@@ -272,10 +264,9 @@ router.post('/courses/:courseId/:assignmentId', auth, (req, res) => {
 
 // Get an user its submission data for a specific assignment.
 router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     res.json(response.data);
@@ -287,10 +278,9 @@ router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
 
 // Get all submission data for a specific assignment (teacher).
 router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     res.json(response.data);
@@ -304,10 +294,9 @@ router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, re
 // Get one rubric for an assignment with a user access token
 // NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
 router.post('/courses/:courseId/rubrics/:rubricId', auth, (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     res.json(response.data);
@@ -320,10 +309,9 @@ router.post('/courses/:courseId/rubrics/:rubricId', auth, (req, res) => {
 // Get a user's role for a specific course
 // The path is /user/role because otherwise the request does a different one!
 router.post('/courses/:courseId/user/role', auth, (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }
   }).then(response => {
     // Return enrollments information
@@ -336,10 +324,9 @@ router.post('/courses/:courseId/user/role', auth, (req, res) => {
 
 // Get a list of students in the course
 router.post('/courses/:courseId/users/students', auth, (req, res) => {
-  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
-      Authorization: `Bearer ${token}`
+      Authorization: `Bearer ${req.headers["bearer"]}`
     }, params: {
       // Configure how many items are returned maximum
       per_page: 100,
