@@ -9,6 +9,7 @@ const badgeSchema = new mongoose.Schema({
 
 const userModel = new mongoose.Schema({
     userId: Number,
+    pictureId: Number,
     experiencePoints: Number,
     level: Number,
     badges: {

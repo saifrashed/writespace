@@ -38,7 +38,7 @@ router.get('/findByTestId/:testId', auth, async (req, res) => {
     const test = await TestModel.find({ 'test.testId': req.params.testId });
     // If the object is not fount give an error
     if (test.length === 0) {
-      return res.status(404).json({ error: 'Object not found' });
+      return res.status(200).json({ message: 'Object not found' });
     }
 
     // Handle success case here
@@ -94,7 +94,7 @@ router.put('/update/:testId', auth, async (req, res) => {
 
     // Check if the test was found and updated successfully
     if (result.nModified === 0) {
-      return res.status(404).json({ error: 'Object not found' });
+      return res.status(200).json({ message: 'Object not found' });
     }
 
     res.status(200).json({ message: 'Test updated successfully' });
@@ -114,7 +114,7 @@ router.delete('/delete/:testId', auth, async (req, res) => {
 
     // Check if the document was found and deleted successfully
     if (result.deletedCount === 0) {
-      return res.status(404).json({ error: 'Object not found' });
+      return res.status(200).json({ message: 'Object not found' });
     }
 
     // Delete successful

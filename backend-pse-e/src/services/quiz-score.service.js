@@ -41,7 +41,7 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
         const result = await quizScoreModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -59,7 +59,7 @@ router.get("/find-by-quiz-id/:quizId", async (req, res) => {
         const result = await quizScoreModel.find({ 'quizId': req.params.quizId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -105,7 +105,7 @@ router.put('/update/grade/', async (req, res) => {
         const submissionToUpdate = await quizScoreModel.findOne({ 'userId': userId, 'quizId': quizId });
 
         if (submissionToUpdate === null) {
-            return res.status(404).json({ error: 'Submission not found' });
+            return res.status(200).json({ message: 'Submission not found' });
         }
 
         documentId = submissionToUpdate._id;
@@ -135,7 +135,7 @@ router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
@@ -156,7 +156,7 @@ router.delete('/delete-all-by-user/:userId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
@@ -181,7 +181,7 @@ router.delete('/delete-one/', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful

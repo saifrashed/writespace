@@ -42,7 +42,7 @@ router.get("/get-badge/:badgeId", async (req, res) => {
         const result = await badgeModel.find({ 'badgeId': req.params.badgeId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -109,7 +109,7 @@ router.put('/update/experience-points/', async (req, res) => {
         );
 
         if (updatedBadge === null) {
-            return res.status(404).json({ error: 'Badge not found' });
+            return res.status(200).json({ message: 'Badge not found' });
         }
 
         res.status(200).json({ message: 'Badge updated successfully' });
@@ -140,7 +140,7 @@ router.put('/update/name-description/', async (req, res) => {
         );
 
         if (updatedBadge === null) {
-            return res.status(404).json({ error: 'Badge not found' });
+            return res.status(200).json({ message: 'Badge not found' });
         }
 
         res.status(200).json({ message: 'Badge updated successfully' });
@@ -169,7 +169,7 @@ router.put('/update/icon/', async (req, res) => {
         );
 
         if (updatedBadge === null) {
-            return res.status(404).json({ error: 'Badge not found' });
+            return res.status(200).json({ message: 'Badge not found' });
         }
 
         res.status(200).json({ message: 'Badge updated successfully' });
@@ -189,7 +189,7 @@ router.delete('/delete/:badgeId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful

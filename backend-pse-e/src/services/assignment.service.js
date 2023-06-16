@@ -40,7 +40,7 @@ router.get("/find-by-creator-id/:creatorId", async (req, res) => {
         const result = await assignmentModel.find({ 'creatorId': req.params.creatorId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -58,7 +58,7 @@ router.get("/find-by-course-id/:courseId", async (req, res) => {
         const result = await assignmentModel.find({ 'coursId': req.params.courseId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -133,7 +133,7 @@ router.put('/update/description/', async (req, res) => {
         );
 
         if (updatedDescription === null) {
-            return res.status(404).json({ error: 'Assignment not found' });
+            return res.status(200).json({ message: 'Assignment not found' });
         }
 
         res.status(200).json({ message: 'Assignment updated successfully' });
@@ -161,7 +161,7 @@ router.put('/update/name/', async (req, res) => {
         );
 
         if (updatedName === null) {
-            return res.status(404).json({ error: 'Assignment not found' });
+            return res.status(200).json({ message: 'Assignment not found' });
         }
 
         res.status(200).json({ message: 'Assignment updated successfully' });
@@ -189,7 +189,7 @@ router.put('/update/max-points/', async (req, res) => {
         );
 
         if (updatedMaxPoints === null) {
-            return res.status(404).json({ error: 'Assignment not found' });
+            return res.status(200).json({ message: 'Assignment not found' });
         }
 
         res.status(200).json({ message: 'Assignment updated successfully' });
@@ -217,7 +217,7 @@ router.put('/update/deadline/', async (req, res) => {
         );
 
         if (updatedDeadline === null) {
-            return res.status(404).json({ error: 'Assignment not found' });
+            return res.status(200).json({ message: 'Assignment not found' });
         }
 
         res.status(200).json({ message: 'Assignment updated successfully' });
@@ -245,7 +245,7 @@ router.put('/update/available-at/', async (req, res) => {
         );
 
         if (updatedAvailableAt === null) {
-            return res.status(404).json({ error: 'Assignment not found' });
+            return res.status(200).json({ message: 'Assignment not found' });
         }
 
         res.status(200).json({ message: 'Assignment updated successfully' });
@@ -273,7 +273,7 @@ router.put('/update/rubric/', async (req, res) => {
         );
 
         if (updatedRubric === null) {
-            return res.status(404).json({ error: 'Assignment not found' });
+            return res.status(200).json({ message: 'Assignment not found' });
         }
 
         res.status(200).json({ message: 'Assignment updated successfully' });
@@ -293,7 +293,7 @@ router.delete('/delete/:assignmentId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
@@ -316,7 +316,7 @@ router.delete('/delete/:courseId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful

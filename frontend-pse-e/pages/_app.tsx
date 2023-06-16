@@ -14,7 +14,7 @@ const App = ({ Component, pageProps }: AppProps) => {
     <>
       <Toaster position="bottom-right" />
       <AnimatePresence>
-        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.6.172/build/pdf.worker.min.js">
           <Provider>
             <Component {...pageProps} />
           </Provider>
