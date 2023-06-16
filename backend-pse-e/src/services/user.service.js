@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const { auth } = require('../middleware/auth');
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -23,7 +24,7 @@ const userModel = require("../models/user.model.js");
 
 // Get request (gets something from the db)
 // Get all users
-router.get("/get-all", async (req, res) => {
+router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all users
         const users = await userModel.find();
@@ -36,7 +37,7 @@ router.get("/get-all", async (req, res) => {
 });
 
 // Find users by userId
-router.get("/find-by-user-id/:userId", async (req, res) => {
+router.get("/find-by-user-id/:userId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await userModel.find({ 'userId': req.params.userId });
@@ -54,7 +55,7 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
 });
 
 // Save new user
-router.post('/save', async (req, res) => {
+router.post('/save', auth, async (req, res) => {
     try {
         // Variables for the model
         const userId = req.body.userId;
@@ -91,7 +92,7 @@ router.post('/save', async (req, res) => {
 });
 
 // Updates user picture
-router.put('/update/picture/', async (req, res) => {
+router.put('/update/picture/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const pictureId = req.body.pictureId;
@@ -120,7 +121,7 @@ router.put('/update/picture/', async (req, res) => {
 });
 
 // Updates user XP
-router.put('/update/experience-points/', async (req, res) => {
+router.put('/update/experience-points/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const XPToAdd = req.body.experiencePoints
@@ -156,7 +157,7 @@ router.put('/update/experience-points/', async (req, res) => {
 });
 
 // Updates user level
-router.put('/update/level/', async (req, res) => {
+router.put('/update/level/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const newLevel = req.body.level;
@@ -185,7 +186,7 @@ router.put('/update/level/', async (req, res) => {
 });
 
 // Add badge to user. Handles adding of new badges and adding to existing badges
-router.put('/update/add-badge/', async (req, res) => {
+router.put('/update/add-badge/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const newBadge = req.body.badgeId;
@@ -222,7 +223,7 @@ router.put('/update/add-badge/', async (req, res) => {
 });
 
 // Delete a badge
-router.put('/update/delete-badge/', async (req, res) => {
+router.put('/update/delete-badge/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;
@@ -271,7 +272,7 @@ router.put('/update/delete-badge/', async (req, res) => {
 
 // General update request
 // PUT request (updates something in the db)
-router.put('/update/', async (req, res) => {
+router.put('/update/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const updatedUser = {
@@ -303,7 +304,7 @@ router.put('/update/', async (req, res) => {
 });
 
 // Delete user
-router.delete('/delete/:userId', async (req, res) => {
+router.delete('/delete/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
 
