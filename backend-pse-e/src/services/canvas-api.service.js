@@ -136,7 +136,7 @@ router.post('/courses/:courseId/assignments', (req, res) => {
   const { courseId } = req.params
   const { assignment, token } = req.body;
 
-  axios.post(`${apiUrl}/courses/${courseId}/assignments`, assignment, {
+  axios.post(`${API_URL}/courses/${courseId}/assignments`, assignment, {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
@@ -165,7 +165,7 @@ router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
   const { courseId, assignmentId } = req.params
   const { assignment, token } = req.body;
 
-  axios.put(`${apiUrl}/courses/${courseId}/assignments/${assignmentId}`, assignment, {
+  axios.put(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, assignment, {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
@@ -194,7 +194,7 @@ router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
   const { courseId, assignmentId } = req.params
   const token = req.headers.authorization.split(' ')[1];
 
-  axios.delete(`${apiUrl}/courses/${courseId}/assignments/${assignmentId}`, {}, {
+  axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {}, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -228,7 +228,7 @@ router.post('/courses/:courseId', authCanvas, (req, res) => {
 // Get all user enrolled in a course without non official users (TestPerson).
 router.post('/courses/:courseId/users', (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/users`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -243,7 +243,7 @@ router.post('/courses/:courseId/users', (req, res) => {
 // Get all users enrolled in a course.
 router.post('/courses/:courseId/enrollments', (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/enrollments`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}/enrollments`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -273,7 +273,7 @@ router.post('/courses/:courseId/:assignmentId', authCanvas, (req, res) => {
 // Get an user its submission data for a specific assignment.
 router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -288,7 +288,7 @@ router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
 // Get all submission data for a specific assignment (teacher).
 router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
