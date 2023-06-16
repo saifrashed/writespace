@@ -345,7 +345,7 @@ router.get('/get-user-canvas', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /get-user-canvas.' });
+        res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
     }
 });
 
@@ -364,7 +364,7 @@ router.get('/courses', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /courses.' });
+        res.status(500).json({ error: 'An error occurred in /courses.' });
     }
 });
 
@@ -388,7 +388,7 @@ router.get('/relevant-courses', auth, async (req, res) => {
         res.json(relevantCourses);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /relevant-courses.' });
+        res.status(500).json({ error: 'An error occurred in /relevant-courses.' });
     }
 });
 
@@ -408,7 +408,7 @@ router.get('/assignments', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /assignments.' });
+        res.status(500).json({ error: 'An error occurred in /assignments.' });
     }
 });
 
@@ -424,7 +424,7 @@ router.get('/courses/:courseId', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId.' });
     }
 });
 
@@ -446,7 +446,7 @@ router.post('/written-assignments', auth, async (req, res) => {
         }));
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /written-assignments.' });
+        res.status(500).json({ error: 'An error occurred in /written-assignments.' });
     }
 });
 
@@ -462,7 +462,7 @@ router.post('/courses/:courseId/users', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/users.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/users.' });
     }
 });
 
@@ -478,11 +478,9 @@ router.post('/courses/:courseId/enrollments', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/enrollments.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/enrollments.' });
     }
 });
-
-
 
 const levelThresholds = [
     0,     // Level 1 threshold

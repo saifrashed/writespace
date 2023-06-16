@@ -8,6 +8,11 @@ const { ObjectId } = require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
+// Require axios for communicating with the canvas api
+const axios = require('axios');
+// Canvas api URL
+const { API_URL } = process.env;
+
 // Configure multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -360,6 +365,38 @@ router.delete('/delete-one/', auth, async (req, res) => {
     } catch (error) {
         console.error('Error deleting data from MongoDB:', error);
         res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// Get an user its submission data for a specific assignment.
+router.post('/courses/:courseId/:assignmentId/:userId', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/:assignmentId/:userId.' });
+    }
+});
+
+// Get all submission data for a specific assignment (teacher).
+router.post('/courses/:courseId/assignments/:assignmentId/submissions', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId/submissions.' });
     }
 });
 

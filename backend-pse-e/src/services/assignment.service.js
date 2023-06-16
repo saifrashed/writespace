@@ -358,7 +358,7 @@ router.post('/courses/:courseId/assignments', auth, (req, res) => {
         res.json(response.data);
     }).catch(error => {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in POST /courses/:courseId/assignments/:assignmentId.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
     });
 });
 
@@ -387,7 +387,7 @@ router.put('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
         res.json(response.data);
     }).catch(error => {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in PUT /courses/:courseId/assignments/:assignmentId.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
     });
 });
 
@@ -406,7 +406,7 @@ router.delete('/courses/:courseId/assignments/:assignmentId', auth, (req, res) =
         }));
     }).catch(error => {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in DELETE /courses/:courseId/assignments/:assignmentId.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
     });
 });
 
@@ -422,7 +422,7 @@ router.get('/courses/:courseId/:assignmentId', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/:assignmentId.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/:assignmentId.' });
     }
 });
 
@@ -439,7 +439,7 @@ router.get('/courses/:courseId/rubrics/:rubricId', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/rubrics/:rubricId.' });
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/rubrics/:rubricId.' });
     }
 });
 
