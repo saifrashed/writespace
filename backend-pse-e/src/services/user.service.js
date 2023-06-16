@@ -6,6 +6,12 @@ const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const { auth } = require('../middleware/auth');
+
+// Require axios for communicating with the canvas api
+const axios = require('axios');
+// Canvas api URL
+const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -23,7 +29,7 @@ const userModel = require("../models/user.model.js");
 
 // Get request (gets something from the db)
 // Get all users
-router.get("/get-all", async (req, res) => {
+router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all users
         const users = await userModel.find();
@@ -36,7 +42,7 @@ router.get("/get-all", async (req, res) => {
 });
 
 // Find users by userId
-router.get("/find-by-user-id/:userId", async (req, res) => {
+router.get("/find-by-user-id/:userId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await userModel.find({ 'userId': req.params.userId });
@@ -54,7 +60,7 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
 });
 
 // Save new user
-router.post('/save', async (req, res) => {
+router.post('/save', auth, async (req, res) => {
     try {
         // Variables for the model
         const userId = req.body.userId;
@@ -91,7 +97,7 @@ router.post('/save', async (req, res) => {
 });
 
 // Updates user picture
-router.put('/update/picture/', async (req, res) => {
+router.put('/update/picture/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const pictureId = req.body.pictureId;
@@ -120,7 +126,7 @@ router.put('/update/picture/', async (req, res) => {
 });
 
 // Updates user XP
-router.put('/update/experience-points/', async (req, res) => {
+router.put('/update/experience-points/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const XPToAdd = req.body.experiencePoints
@@ -138,7 +144,7 @@ router.put('/update/experience-points/', async (req, res) => {
         while (userXP >= levelThresholds[level]) {
             level = level + 1;
         }
-        const updatedUser = await userModel.findByIdAndUpdate( updateId,
+        const updatedUser = await userModel.findByIdAndUpdate(updateId,
             {
                 $set: {
                     'experiencePoints': userXP,
@@ -156,7 +162,7 @@ router.put('/update/experience-points/', async (req, res) => {
 });
 
 // Updates user level
-router.put('/update/level/', async (req, res) => {
+router.put('/update/level/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const newLevel = req.body.level;
@@ -185,7 +191,7 @@ router.put('/update/level/', async (req, res) => {
 });
 
 // Add badge to user. Handles adding of new badges and adding to existing badges
-router.put('/update/add-badge/', async (req, res) => {
+router.put('/update/add-badge/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const newBadge = req.body.badgeId;
@@ -222,7 +228,7 @@ router.put('/update/add-badge/', async (req, res) => {
 });
 
 // Delete a badge
-router.put('/update/delete-badge/', async (req, res) => {
+router.put('/update/delete-badge/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;
@@ -271,7 +277,7 @@ router.put('/update/delete-badge/', async (req, res) => {
 
 // General update request
 // PUT request (updates something in the db)
-router.put('/update/', async (req, res) => {
+router.put('/update/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const updatedUser = {
@@ -303,7 +309,7 @@ router.put('/update/', async (req, res) => {
 });
 
 // Delete user
-router.delete('/delete/:userId', async (req, res) => {
+router.delete('/delete/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
 
@@ -320,6 +326,159 @@ router.delete('/delete/:userId', async (req, res) => {
     } catch (error) {
         console.error('Error deleting data from MongoDB:', error);
         res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// Get general user information (is a post because a get cannot have a body)
+router.get('/get-user-canvas', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/users/self`, {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
+    }
+});
+
+// Route to get assignments for a course with a user access token
+router.get('/courses', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses.' });
+    }
+});
+
+// Get all courses that are relevant (such as not closed)
+router.get('/relevant-courses', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100,
+                // Include 'concluded' and 'term' for the courses
+                include: ['concluded', 'term']
+            }
+        });
+        // Filter out unrelevant courses. There is a property "concluded", if this
+        // is true the course is done and the course is not relevant anymore.
+        const relevantCourses = response.data.filter(course => !course.concluded);
+        res.json(relevantCourses);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /relevant-courses.' });
+    }
+});
+
+// Get all assignments of a course with a user access token
+router.get('/assignments', auth, async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /assignments.' });
+    }
+});
+
+// Get one course with a user access token
+router.get('/courses/:courseId', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId.' });
+    }
+});
+
+// Get all file upload (written) assignments
+router.post('/written-assignments', auth, async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                order_by: "due_at"
+            }
+        });
+        // Filter assignments by submission_types
+        res.json(response.data.filter(assignment => {
+            return assignment.submission_types.includes("online_upload");
+        }));
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /written-assignments.' });
+    }
+});
+
+// Get all user enrolled in a course without non official users (TestPerson).
+router.post('/courses/:courseId/users', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/users.' });
+    }
+});
+
+// Get all users enrolled in a course.
+router.post('/courses/:courseId/enrollments', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/enrollments`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/enrollments.' });
     }
 });
 
@@ -354,7 +513,7 @@ const levelThresholds = [
     37800, // Level 28 threshold
     40600, // Level 29 threshold
     43500  // Level 30 threshold
-  ];
+];
 
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
