@@ -4,6 +4,12 @@
 # all node_modules one directory further
 /*/node_modules
 
+# Package-lock.json
+/*package-lock.json
+/*/package-lock.json
+package-lock.json
+
+
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
