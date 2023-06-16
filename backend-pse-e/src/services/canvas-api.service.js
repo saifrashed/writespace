@@ -6,26 +6,37 @@ const router = express.Router();
 const axios = require('axios');
 
 // Import authentication functions
-const { encryptToken, decryptToken, auth } = require('../middleware/auth');
+const { encryptToken, authCanvas } = require('../middleware/auth');
 
-// Canvas api url (testing environment, the environment we need for this project)
-// const apiUrl = 'https://uvadlo-dev.test.instructure.com/api/v1';
-// production
-const apiUrl = 'https://canvas.uva.nl/api/v1';
-
-// apiUrl for logging in with OAuth2 (without the "/api/v1" part)
-const loginApiUrl = 'https://uvadlo-dev.test.instructure.com';
-
+// Canvas api URL
+const { API_URL } = process.env;
+// Login api URL
+const { LOGIN_API_URL } = process.env;
 // Developer key variables
-const redirectUri = 'http://localhost:3000/';
+const { CANVAS_REDIRECT_URI } = process.env;
 const { CLIENT_ID } = process.env;
 const { CLIENT_SECRET } = process.env;
 
+function errFunCanvas(error) {
+  console.log(error);
+  if (!error.response.status || !error.response.statusText) {
+    return {
+      error: 'An error occurred.'
+    }
+  } else {
+    return {
+      error: 'An error occurred.',
+      status: error.response.status,
+      statusText: error.response.statusText
+    };
+  }
+}
+
 // Get general user information (is a post because a get cannot have a body)
-router.post('/get-user', (req, res) => {
+router.post('/get-user', authCanvas, (req, res) => {
   const token = req.body.token;
   // Canvas API url
-  axios.get(`${apiUrl}/users/self`, {
+  axios.get(`${API_URL}/users/self`, {
     headers: {
       // Authorization using the access token
       Authorization: `Bearer ${token}`
@@ -37,14 +48,14 @@ router.post('/get-user', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Route to get assignments for a course with a user access token
-router.post('/courses', (req, res) => {
+router.post('/courses', authCanvas, (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses`, {
+  axios.get(`${API_URL}/courses`, {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
@@ -55,14 +66,14 @@ router.post('/courses', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Get all courses that are relevant (such as not closed)
-router.post('/relevant-courses', (req, res) => {
+router.post('/relevant-courses', authCanvas, (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses`, {
+  axios.get(`${API_URL}/courses`, {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
@@ -78,14 +89,14 @@ router.post('/relevant-courses', (req, res) => {
     res.json(relevantCourses);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Get all assignments of a course with a user access token
-router.post('/assignments', (req, res) => {
+router.post('/assignments', authCanvas, (req, res) => {
   const { courseId, token } = req.body;
-  axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
+  axios.get(`${API_URL}/courses/${courseId}/assignments`, {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
@@ -96,14 +107,14 @@ router.post('/assignments', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Get all file upload (written) assignments
-router.post('/written-assignments', (req, res) => {
+router.post('/written-assignments', authCanvas, (req, res) => {
   const { courseId, token } = req.body;
-  axios.get(`${apiUrl}/courses/${courseId}/assignments`, {
+  axios.get(`${API_URL}/courses/${courseId}/assignments`, {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
@@ -116,7 +127,7 @@ router.post('/written-assignments', (req, res) => {
     }));
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
@@ -199,9 +210,9 @@ router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
 });
 
 // Get one course with a user access token
-router.post('/courses/:courseId', (req, res) => {
+router.post('/courses/:courseId', authCanvas, (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -209,7 +220,7 @@ router.post('/courses/:courseId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
@@ -245,9 +256,9 @@ router.post('/courses/:courseId/enrollments', (req, res) => {
 });
 
 // Get one assignment from a course with a user access token
-router.post('/courses/:courseId/:assignmentId', (req, res) => {
+router.post('/courses/:courseId/:assignmentId', authCanvas, (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -255,7 +266,7 @@ router.post('/courses/:courseId/:assignmentId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
@@ -292,9 +303,9 @@ router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, re
 
 // Get one rubric for an assignment with a user access token
 // NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
-router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
+router.post('/courses/:courseId/rubrics/:rubricId', authCanvas, (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -302,15 +313,15 @@ router.post('/courses/:courseId/rubrics/:rubricId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Get a user's role for a specific course
 // The path is /user/role because otherwise the request does a different one!
-router.post('/courses/:courseId/user/role', (req, res) => {
+router.post('/courses/:courseId/user/role', authCanvas, (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -319,14 +330,14 @@ router.post('/courses/:courseId/user/role', (req, res) => {
     res.json(response.data.enrollments[0]);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Get a list of students in the course
-router.post('/courses/:courseId/users/students', (req, res) => {
+router.post('/courses/:courseId/users/students', authCanvas, (req, res) => {
   const token = req.body.token;
-  axios.get(`${apiUrl}/courses/${req.params.courseId}/users`, {
+  axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
       Authorization: `Bearer ${token}`
     }, params: {
@@ -340,29 +351,33 @@ router.post('/courses/:courseId/users/students', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Route for initiating the login redirect
 // Test this by going to this URL in your browser for example: localhost:5000/canvas-api/login
 router.get('/login', (req, res) => {
-  const authUrl = `${loginApiUrl}/login/oauth2/auth?client_id=${CLIENT_ID}&response_type=code&state=1&redirect_uri=${redirectUri}`;
+  const authUrl = `${LOGIN_API_URL}/login/oauth2/auth?client_id=${CLIENT_ID}&response_type=code&state=1&redirect_uri=${CANVAS_REDIRECT_URI}`;
   res.redirect(authUrl);
 });
 // After the /login request, the FE extracted the code from the URL in the browser
 // that can be used to make this request to actually get the user's access-key/token
 // NOTE: the code from the /login request can only be used for ONE request, otherwise it will give an error!!
 router.post('/get-user-token', (req, res) => {
-  axios.post(`${loginApiUrl}/login/oauth2/token`, {}, {
+  axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
     params: {
       grant_type: `authorization_code`,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
-      redirect_uri: redirectUri,
+      redirect_uri: CANVAS_REDIRECT_URI,
       code: req.body.code
     }
   }).then(response => {
+    // Encrypt tokens
+    response.data.access_token = encryptToken(response.data.access_token);
+    response.data.refresh_token = encryptToken(response.data.refresh_token);
+    // Send back the edited response
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
@@ -370,20 +385,23 @@ router.post('/get-user-token', (req, res) => {
   });
 });
 // Get new user token with refresh token (the refresh token from /get-user-token can be used infinitely!)
-router.post('/get-user-token/refresh', (req, res) => {
-  axios.post(`${loginApiUrl}/login/oauth2/token`, {}, {
+router.post('/get-user-token/refresh', authCanvas, (req, res) => {
+  axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
     params: {
       grant_type: `refresh_token`,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
-      redirect_uri: redirectUri,
+      redirect_uri: CANVAS_REDIRECT_URI,
       refresh_token: req.body.token
     }
   }).then(response => {
+    // Encrypt tokens
+    response.data.access_token = encryptToken(response.data.access_token);
+    // Send back the edited response
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json({ error: 'An error occurred, refresh token does not exist?' });
   });
 });
 

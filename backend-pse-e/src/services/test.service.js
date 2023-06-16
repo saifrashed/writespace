@@ -6,6 +6,9 @@ const express = require('express');
 
 const router = express.Router();
 const { ObjectId } = require('mongodb');
+// Authentication, GET requests have the token in the header, all other requests have the token in the body!
+const { auth } = require('../middleware/auth');
+
 // ************************* This can be coppied for every new service *************************
 
 // ************************* Copy and change this with the model you added *************************
@@ -17,7 +20,7 @@ const TestModel = require('../models/test.model.js');
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
-router.get('/getAll', async (req, res) => {
+router.get('/getAll', auth, async (req, res) => {
   try {
     // Find all tests
     const tests = await TestModel.find();
@@ -29,7 +32,7 @@ router.get('/getAll', async (req, res) => {
   }
 });
 // This gets one test with an ObjectId from MongoDB
-router.get('/findByTestId/:testId', async (req, res) => {
+router.get('/findByTestId/:testId', auth, async (req, res) => {
   try {
     // Find the object using an attribute of the object
     const test = await TestModel.find({ 'test.testId': req.params.testId });
@@ -47,7 +50,7 @@ router.get('/findByTestId/:testId', async (req, res) => {
 });
 
 // Post request (creates something in the db)
-router.post('/save', async (req, res) => {
+router.post('/save', auth, async (req, res) => {
   try {
     // Variables for the model
     const { username } = req.body;
@@ -73,7 +76,7 @@ router.post('/save', async (req, res) => {
 });
 
 // PUT request (updates something in the db)
-router.put('/update/:testId', async (req, res) => {
+router.put('/update/:testId', auth, async (req, res) => {
   try {
     const { testId } = req.params;
     const updatedTest = {
@@ -102,7 +105,7 @@ router.put('/update/:testId', async (req, res) => {
 });
 
 // DELETE request (deletes something from the db)
-router.delete('/delete/:testId', async (req, res) => {
+router.delete('/delete/:testId', auth, async (req, res) => {
   try {
     const { testId } = req.params;
 
