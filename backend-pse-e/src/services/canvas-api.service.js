@@ -18,7 +18,6 @@ const { CLIENT_ID } = process.env;
 const { CLIENT_SECRET } = process.env;
 
 function errFunCanvas(error) {
-  console.log(error);
   if (!error.response.status || !error.response.statusText) {
     return {
       error: 'An error occurred.'
@@ -129,7 +128,7 @@ router.post('/written-assignments', auth, (req, res) => {
 });
 
 // Create assignment (missing deadline attribute)
-router.post('/courses/:courseId/assignments', (req, res) => {
+router.post('/courses/:courseId/assignments', auth, (req, res) => {
   const { courseId } = req.params
   const { assignment } = req.body;
 
@@ -153,12 +152,12 @@ router.post('/courses/:courseId/assignments', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Update assignment (missing deadline attribute)
-router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
+router.put('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
   const { courseId, assignmentId } = req.params
   const { assignment } = req.body;
 
@@ -182,12 +181,12 @@ router.put('/courses/:courseId/assignments/:assignmentId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Delete assignment
-router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
+router.delete('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
   const { courseId, assignmentId } = req.params
 
   axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {}, {
@@ -201,7 +200,7 @@ router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
     }));
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
@@ -221,7 +220,7 @@ router.post('/courses/:courseId', auth, (req, res) => {
 
 
 // Get all user enrolled in a course without non official users (TestPerson).
-router.post('/courses/:courseId/users', (req, res) => {
+router.post('/courses/:courseId/users', auth, (req, res) => {
   axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
       Authorization: `Bearer ${req.headers["bearer"]}`
@@ -230,12 +229,12 @@ router.post('/courses/:courseId/users', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Get all users enrolled in a course.
-router.post('/courses/:courseId/enrollments', (req, res) => {
+router.post('/courses/:courseId/enrollments', auth, (req, res) => {
   axios.get(`${API_URL}/courses/${req.params.courseId}/enrollments`, {
     headers: {
       Authorization: `Bearer ${req.headers["bearer"]}`
@@ -244,7 +243,7 @@ router.post('/courses/:courseId/enrollments', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
@@ -263,7 +262,7 @@ router.post('/courses/:courseId/:assignmentId', auth, (req, res) => {
 });
 
 // Get an user its submission data for a specific assignment.
-router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
+router.post('/courses/:courseId/:assignmentId/:userId', auth, (req, res) => {
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
     headers: {
       Authorization: `Bearer ${req.headers["bearer"]}`
@@ -272,12 +271,12 @@ router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
 // Get all submission data for a specific assignment (teacher).
-router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, res) => {
+router.post('/courses/:courseId/assignments/:assignmentId/submissions', auth, (req, res) => {
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
     headers: {
       Authorization: `Bearer ${req.headers["bearer"]}`
@@ -286,7 +285,7 @@ router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, re
     res.json(response.data);
   }).catch(error => {
     console.error('Error from Canvas API:', error);
-    res.status(500).json({ error: 'An error occurred.' });
+    res.status(500).json(errFunCanvas(error));
   });
 });
 
@@ -308,7 +307,7 @@ router.post('/courses/:courseId/rubrics/:rubricId', auth, (req, res) => {
 
 // Get a user's role for a specific course
 // The path is /user/role because otherwise the request does a different one!
-router.post('/courses/:courseId/user/role', auth, (req, res) => {
+router.post('/courses/:courseId/user/role', auth, async (req, res) => {
   axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
       Authorization: `Bearer ${req.headers["bearer"]}`
