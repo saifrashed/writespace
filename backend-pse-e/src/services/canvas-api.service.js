@@ -6,7 +6,7 @@ const router = express.Router();
 const axios = require('axios');
 
 // Import authentication functions
-const { encryptToken, authCanvas } = require('../middleware/auth');
+const { encryptToken, auth } = require('../middleware/auth');
 
 // Canvas api URL
 const { API_URL } = process.env;
@@ -33,7 +33,7 @@ function errFunCanvas(error) {
 }
 
 // Get general user information (is a post because a get cannot have a body)
-router.post('/get-user', authCanvas, (req, res) => {
+router.post('/get-user', auth, (req, res) => {
   const token = req.body.token;
   // Canvas API url
   axios.get(`${API_URL}/users/self`, {
@@ -53,7 +53,7 @@ router.post('/get-user', authCanvas, (req, res) => {
 });
 
 // Route to get assignments for a course with a user access token
-router.post('/courses', authCanvas, (req, res) => {
+router.post('/courses', auth, (req, res) => {
   const token = req.body.token;
   axios.get(`${API_URL}/courses`, {
     headers: {
@@ -71,7 +71,7 @@ router.post('/courses', authCanvas, (req, res) => {
 });
 
 // Get all courses that are relevant (such as not closed)
-router.post('/relevant-courses', authCanvas, (req, res) => {
+router.post('/relevant-courses', auth, (req, res) => {
   const token = req.body.token;
   axios.get(`${API_URL}/courses`, {
     headers: {
@@ -94,7 +94,7 @@ router.post('/relevant-courses', authCanvas, (req, res) => {
 });
 
 // Get all assignments of a course with a user access token
-router.post('/assignments', authCanvas, (req, res) => {
+router.post('/assignments', auth, (req, res) => {
   const { courseId, token } = req.body;
   axios.get(`${API_URL}/courses/${courseId}/assignments`, {
     headers: {
@@ -112,7 +112,7 @@ router.post('/assignments', authCanvas, (req, res) => {
 });
 
 // Get all file upload (written) assignments
-router.post('/written-assignments', authCanvas, (req, res) => {
+router.post('/written-assignments', auth, (req, res) => {
   const { courseId, token } = req.body;
   axios.get(`${API_URL}/courses/${courseId}/assignments`, {
     headers: {
@@ -210,7 +210,7 @@ router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
 });
 
 // Get one course with a user access token
-router.post('/courses/:courseId', authCanvas, (req, res) => {
+router.post('/courses/:courseId', auth, (req, res) => {
   const token = req.body.token;
   axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
@@ -256,7 +256,7 @@ router.post('/courses/:courseId/enrollments', (req, res) => {
 });
 
 // Get one assignment from a course with a user access token
-router.post('/courses/:courseId/:assignmentId', authCanvas, (req, res) => {
+router.post('/courses/:courseId/:assignmentId', auth, (req, res) => {
   const token = req.body.token;
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
     headers: {
@@ -303,7 +303,7 @@ router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, re
 
 // Get one rubric for an assignment with a user access token
 // NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
-router.post('/courses/:courseId/rubrics/:rubricId', authCanvas, (req, res) => {
+router.post('/courses/:courseId/rubrics/:rubricId', auth, (req, res) => {
   const token = req.body.token;
   axios.get(`${API_URL}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
     headers: {
@@ -319,7 +319,7 @@ router.post('/courses/:courseId/rubrics/:rubricId', authCanvas, (req, res) => {
 
 // Get a user's role for a specific course
 // The path is /user/role because otherwise the request does a different one!
-router.post('/courses/:courseId/user/role', authCanvas, (req, res) => {
+router.post('/courses/:courseId/user/role', auth, (req, res) => {
   const token = req.body.token;
   axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
@@ -335,7 +335,7 @@ router.post('/courses/:courseId/user/role', authCanvas, (req, res) => {
 });
 
 // Get a list of students in the course
-router.post('/courses/:courseId/users/students', authCanvas, (req, res) => {
+router.post('/courses/:courseId/users/students', auth, (req, res) => {
   const token = req.body.token;
   axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
@@ -385,7 +385,7 @@ router.post('/get-user-token', (req, res) => {
   });
 });
 // Get new user token with refresh token (the refresh token from /get-user-token can be used infinitely!)
-router.post('/get-user-token/refresh', authCanvas, (req, res) => {
+router.post('/get-user-token/refresh', auth, (req, res) => {
   axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
     params: {
       grant_type: `refresh_token`,
