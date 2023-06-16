@@ -21,8 +21,9 @@ const decryptToken = (encryptedToken) => {
 // This is the authentication function for the canvas-api requests. This is a bit 
 // different because the canvas-api has its own authentication, this is just decryption
 const authCanvas = (req, res, next) => {
+    // Get the token from the body or header
     const token =
-        req.body.token || req.query.token || req.headers["bearer"];
+        req.body.token || req.headers["bearer"];
 
     if (!token) {
         return res.status(403).send("A token is required for authentication");
@@ -41,9 +42,11 @@ const authCanvas = (req, res, next) => {
 
 // This is the authentication for all of our own requests. The canvas api has its own
 // authentication, so you cannot do another request since it already gives an error.
+// GET requests have the token in the header, all other requests have the token in the body!
 const auth = async (req, res, next) => {
+    // Get the token from the body or header
     const token =
-        req.body.token || req.query.token || req.headers["bearer"];
+        req.body.token || req.headers["bearer"];
 
     if (!token) {
         return res.status(403).send("A token is required for authentication");
@@ -87,3 +90,6 @@ module.exports = {
     authCanvas,
     auth
 };
+
+
+// TODO: add "auth" to all other requests in the BE and FE needs to add header (bearer) in get requests and body token for others, ask Saif or Devran!

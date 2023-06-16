@@ -6,7 +6,7 @@ const express = require('express');
 
 const router = express.Router();
 const { ObjectId } = require('mongodb');
-// Authentication
+// Authentication, GET requests have the token in the header, all other requests have the token in the body!
 const { auth } = require('../middleware/auth');
 
 // ************************* This can be coppied for every new service *************************
