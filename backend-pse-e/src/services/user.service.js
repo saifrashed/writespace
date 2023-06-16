@@ -27,6 +27,19 @@ const userModel = require("../models/user.model.js");
 // Define a route without the starting route defined in app.js
 // Post request (creates something in the db)
 
+// Function to get the level of a user based on their experience points
+function getLevel(experiencePoints, levelThresholds) {
+    let level = 1;
+    while (experiencePoints >= levelThresholds[level]) {
+      level++;
+      if (level >= levelThresholds.length) {
+        // Handle the case where the user exceeds the highest level threshold
+        break;
+      }
+    }
+    return level;
+  }
+
 // Get request (gets something from the db)
 // Get all users
 router.get("/get-all", auth, async (req, res) => {
@@ -45,14 +58,18 @@ router.get("/get-all", auth, async (req, res) => {
 router.get("/find-by-user-id/:userId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
-        const result = await userModel.find({ 'userId': req.params.userId });
+        const result = await userModel.findOne({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
             return res.status(200).json({ message: 'Object not found' });
         }
 
+        const level = getLevel(result.experiencePoints, levelThresholds);
+        plainResult = result.toObject();
+        plainResult.level = level;
+
         // Handle success case here
-        res.status(200).json(result);
+        res.status(200).json(plainResult);
     } catch (error) {
         console.error('Error from MongoDB:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -161,35 +178,6 @@ router.put('/update/experience-points/', auth, async (req, res) => {
     }
 });
 
-// Updates user level
-router.put('/update/level/', auth, async (req, res) => {
-    try {
-        const userId = req.body.userId;
-        const newLevel = req.body.level;
-
-        const updatedUser = await userModel.findOneAndUpdate(
-            {
-                'userId': userId
-            },
-            {
-                $set: {
-                    'level': newLevel
-                }
-            },
-            { new: true }
-        );
-
-        if (updatedUser === null) {
-            return res.status(200).json({ message: 'User not found' });
-        }
-
-        res.status(200).json({ message: 'User updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
-
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badge/', auth, async (req, res) => {
     try {
@@ -207,16 +195,9 @@ router.put('/update/add-badge/', auth, async (req, res) => {
         }
 
         const updateId = userToUpdate._id;
-        const badges = userToUpdate.badges;
+        let badges = userToUpdate.badges;
 
-        if (badges.has(String(newBadge))) {
-            badgeToUpdate = badges.get(String(newBadge))[0];
-            badgeToUpdate.amount = badgeToUpdate.amount + 1;
-            badgeToUpdate.badgelist.push({ courseId: courseId, assignmentId: assignmentId, graderId: graderId, comment: comment });
-            badges.set(String(newBadge), badgeToUpdate);
-        } else {
-            badges.set(String(newBadge), { amount: 1, badgelist: [{ courseId: courseId, assignmentId: assignmentId, graderId: graderId, comment: comment }] });
-        }
+        badges.push({ "badgeId": newBadge, "courseId": courseId, "assignmentId": assignmentId, "graderId": graderId, "comment": comment });
 
         updatedUser = await userModel.findByIdAndUpdate(updateId, { "badges": badges }, { new: true });
 
@@ -242,26 +223,21 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
 
         const updateId = userToUpdate._id;
         const badges = userToUpdate.badges;
+        let badgePresent = false;
 
-        if (badges.has(String(badgeId))) {
-            badgeToDelete = badges.get(String(badgeId))[0];
-            if (badgeToDelete.amount > 1) {
-                badgeToDelete.amount = badgeToDelete.amount - 1;
-                for (var i = 0; i < badgeToDelete.badgelist.length; i++) {
-                    if (badgeToDelete.badgelist[i].assignmentId === assignmentId) {
-                        badgeToDelete.badgelist.pop(i);
-                        badges.set(String(badgeId), badgeToDelete);
-                        break;
-                    }
-                }
+        for (let i = 0; i < badges.length; i++) {
+            const b = badges[i];
+            if (
+              b.badgeId === badgeId &&
+              b.assignmentId === assignmentId
+            ) {
+              badges.splice(i, 1); // Remove the object at the found index
+              badgePresent = true;
+              break;
             }
-            else {
-                badges.delete(String(badgeId));
-            }
+          }
 
-        }
-
-        else {
+        if (!badgePresent) {
             return res.status(200).json({ message: 'Badge not found' });
         }
 
