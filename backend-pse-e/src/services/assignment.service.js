@@ -8,6 +8,11 @@ const { ObjectId } = require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
+// Require axios for communicating with the canvas api
+const axios = require('axios');
+// Canvas api URL
+const { API_URL } = process.env;
+
 // Configure multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -76,7 +81,7 @@ router.post('/save', auth, async (req, res) => {
         // Variables for the model
         const assignmentId = req.body.assignmentId;
 
-        const alreadyExists = await assignmentModel.find({ 'assignmentId': assignmentId});
+        const alreadyExists = await assignmentModel.find({ 'assignmentId': assignmentId });
 
         if (alreadyExists.length !== 0) {
             return res.status(409).json({ error: 'An assignment with this Id already exists' })
@@ -325,6 +330,116 @@ router.delete('/delete/:courseId', auth, async (req, res) => {
     } catch (error) {
         console.error('Error deleting data from MongoDB:', error);
         res.status(500).json({ error: 'Failed to delete data from the database' });
+    }
+});
+
+// Create assignment (missing deadline attribute)
+router.post('/courses/:courseId/assignments', auth, (req, res) => {
+    const { courseId } = req.params
+    const { assignment } = req.body;
+
+    axios.post(`${API_URL}/courses/${courseId}/assignments`, assignment, {
+        headers: {
+            Authorization: `Bearer ${req.headers["bearer"]}`
+        }, params: {
+            "assignment[name]": assignment.name,
+            "assignment[description]": assignment.description,
+            "assignment[points_possible]": assignment.points_possible,
+            "assignment[grading_type]": assignment.grading_type,
+            "assignment[submission_types]": ['online_upload'], // written assignment standard
+            "assignment[allowed_attempts]": assignment.allowed_attempts,
+            "assignment[anonymous_grading]": assignment.anonymous_grading,
+            "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
+            "assignment[peer_reviews]": assignment.peer_reviews,
+            "assignment[published]": true, // immediately publish assignment
+            "assignment[due_at]": assignment.due_at
+        }
+    }).then(response => {
+        res.json(response.data);
+    }).catch(error => {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in POST /courses/:courseId/assignments/:assignmentId.' });
+    });
+});
+
+// Update assignment (missing deadline attribute)
+router.put('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
+    const { courseId, assignmentId } = req.params
+    const { assignment } = req.body;
+
+    axios.put(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, assignment, {
+        headers: {
+            Authorization: `Bearer ${req.headers["bearer"]}`
+        }, params: {
+            "assignment[name]": assignment.name,
+            "assignment[description]": assignment.description,
+            "assignment[points_possible]": assignment.points_possible,
+            "assignment[grading_type]": assignment.grading_type,
+            "assignment[submission_types]": ['online_upload'], // written assignment standard
+            "assignment[allowed_attempts]": assignment.allowed_attempts,
+            "assignment[anonymous_grading]": assignment.anonymous_grading,
+            "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
+            "assignment[peer_reviews]": assignment.peer_reviews,
+            "assignment[published]": true, // immediately publish assignment
+            "assignment[due_at]": assignment.due_at
+        }
+    }).then(response => {
+        res.json(response.data);
+    }).catch(error => {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in PUT /courses/:courseId/assignments/:assignmentId.' });
+    });
+});
+
+// Delete assignment
+router.delete('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
+    const { courseId, assignmentId } = req.params
+
+    axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {}, {
+        headers: {
+            Authorization: `Bearer ${req.headers["bearer"]}`
+        }
+    }).then(response => {
+        // Filter assignments by submission_types
+        res.json(response.data.filter(assignment => {
+            return assignment.submission_types.includes("online_upload");
+        }));
+    }).catch(error => {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in DELETE /courses/:courseId/assignments/:assignmentId.' });
+    });
+});
+
+// Get one assignment from a course with a user access token
+router.get('/courses/:courseId/:assignmentId', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/:assignmentId.' });
+    }
+});
+
+// Get one rubric for an assignment with a user access token
+// NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
+router.get('/courses/:courseId/rubrics/:rubricId', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/rubrics/:rubricId.' });
     }
 });
 

@@ -413,9 +413,8 @@ router.get('/assignments', auth, async (req, res) => {
 });
 
 // Get one course with a user access token
-router.post('/courses/:courseId', auth, async (req, res) => {
+router.get('/courses/:courseId', auth, async (req, res) => {
     try {
-        const { courseId } = req.body;
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${req.params.courseId}`, {
             headers: {
@@ -425,9 +424,65 @@ router.post('/courses/:courseId', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in GET /assignments.' });
+        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId.' });
     }
 });
+
+// Get all file upload (written) assignments
+router.post('/written-assignments', auth, async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                order_by: "due_at"
+            }
+        });
+        // Filter assignments by submission_types
+        res.json(response.data.filter(assignment => {
+            return assignment.submission_types.includes("online_upload");
+        }));
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /written-assignments.' });
+    }
+});
+
+// Get all user enrolled in a course without non official users (TestPerson).
+router.post('/courses/:courseId/users', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/users.' });
+    }
+});
+
+// Get all users enrolled in a course.
+router.post('/courses/:courseId/enrollments', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/enrollments`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /courses/:courseId/enrollments.' });
+    }
+});
+
+
 
 const levelThresholds = [
     0,     // Level 1 threshold
