@@ -58,16 +58,3 @@ module.exports = {
     decryptToken,
     auth
 };
-
-/*
-TODO: export postman into project and send to everyone in discord.
-
-TODO: in backend chat dit zeggen met @everyone
-1. Try catch, await and async gebruiken (geen .then/catch gebruiken)
-2. Routes GEEN camalCase, doel moet duidelijk zijn: user-create, not userCreate.
-    NOT: user/:courseId/:assignmentId. Dit wordt een POST met dit in de body.
-3. Canvas-api wordt verwijderd, alles van assignments komt in de assignments service, alles van users komt in user service.
-4. Try-catch van alle requests wordt 400 voor een error en 200 bij success.
-5. Ik heb bij alle bestaande requests authenticatie toegevoegt en getest daarna, 
-    als iets niet werkt of als ik iets gemist hebt laat het me vooral weten dan zal ik ernaar kijken.
-*/
