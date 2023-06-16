@@ -66,7 +66,8 @@ const auth = async (req, res, next) => {
             });
             // Edit the request body with the new values if the user is valid.
             console.log(req.headers.bearer);
-            req.headers.bearer = decryptedToken;
+            console.log(req.headers["bearer"]);
+            req.headers["bearer"] = decryptedToken;
             // Put the id of the user in the response
             res.locals.userId = response.data.id;
             console.log(res.locals.userId);
@@ -113,6 +114,12 @@ module.exports = {
 /*
 TODO: put the userId in the response: res.locals
 res.headers(bearer) = decryptedToken.
+
+TODO: update everything: the token needs to be in the header for every request, so ALL requests!
+
+TODO: first change all canvas-api to try-catch and token from header (not token variable, but req.headers.bearer), 
+    then test everything in postman if the try-catch still works.
+    Then remove canvas-api and paste every request in the correct service, such as users.
 
 
 TODO: in backend chat

@@ -6,7 +6,7 @@ const router = express.Router();
 const axios = require('axios');
 
 // Import authentication functions
-const { encryptToken, auth } = require('../middleware/auth');
+const { encryptToken, decryptToken, auth } = require('../middleware/auth');
 
 // Canvas api URL
 const { API_URL } = process.env;
@@ -34,7 +34,7 @@ function errFunCanvas(error) {
 
 // Get general user information (is a post because a get cannot have a body)
 router.post('/get-user', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   // Canvas API url
   axios.get(`${API_URL}/users/self`, {
     headers: {
@@ -54,7 +54,7 @@ router.post('/get-user', auth, (req, res) => {
 
 // Route to get assignments for a course with a user access token
 router.post('/courses', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -72,7 +72,7 @@ router.post('/courses', auth, (req, res) => {
 
 // Get all courses that are relevant (such as not closed)
 router.post('/relevant-courses', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -211,7 +211,7 @@ router.delete('/courses/:courseId/assignments/:assignmentId', (req, res) => {
 
 // Get one course with a user access token
 router.post('/courses/:courseId', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -227,7 +227,7 @@ router.post('/courses/:courseId', auth, (req, res) => {
 
 // Get all user enrolled in a course without non official users (TestPerson).
 router.post('/courses/:courseId/users', (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -242,7 +242,7 @@ router.post('/courses/:courseId/users', (req, res) => {
 
 // Get all users enrolled in a course.
 router.post('/courses/:courseId/enrollments', (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/enrollments`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -257,7 +257,7 @@ router.post('/courses/:courseId/enrollments', (req, res) => {
 
 // Get one assignment from a course with a user access token
 router.post('/courses/:courseId/:assignmentId', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -272,7 +272,7 @@ router.post('/courses/:courseId/:assignmentId', auth, (req, res) => {
 
 // Get an user its submission data for a specific assignment.
 router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -287,7 +287,7 @@ router.post('/courses/:courseId/:assignmentId/:userId', (req, res) => {
 
 // Get all submission data for a specific assignment (teacher).
 router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -304,7 +304,7 @@ router.post('/courses/:courseId/assignments/:assignmentId/submissions', (req, re
 // Get one rubric for an assignment with a user access token
 // NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
 router.post('/courses/:courseId/rubrics/:rubricId', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -320,7 +320,7 @@ router.post('/courses/:courseId/rubrics/:rubricId', auth, (req, res) => {
 // Get a user's role for a specific course
 // The path is /user/role because otherwise the request does a different one!
 router.post('/courses/:courseId/user/role', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -336,7 +336,7 @@ router.post('/courses/:courseId/user/role', auth, (req, res) => {
 
 // Get a list of students in the course
 router.post('/courses/:courseId/users/students', auth, (req, res) => {
-  const token = req.body.token;
+  const token = req.headers["bearer"];
   axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
     headers: {
       Authorization: `Bearer ${token}`
@@ -384,15 +384,16 @@ router.post('/get-user-token', (req, res) => {
     res.status(500).json({ error: 'An error occurred.' });
   });
 });
-// Get new user token with refresh token (the refresh token from /get-user-token can be used infinitely!)
-router.post('/get-user-token/refresh', auth, (req, res) => {
+// Get new user token with refresh token (the refresh token from can be used infinitely!)
+router.post('/get-user-token/refresh', (req, res) => {
   axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
     params: {
       grant_type: `refresh_token`,
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
       redirect_uri: CANVAS_REDIRECT_URI,
-      refresh_token: req.body.token
+      // Decrypt refresh token (no auth because refresh token does NOT retrieve a user)
+      refresh_token: decryptToken(req.headers["bearer"])
     }
   }).then(response => {
     // Encrypt tokens
