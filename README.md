@@ -1,4 +1,4 @@
-# Project Name
+# Writespace (PSE)
 
 ## Description
 
@@ -8,6 +8,9 @@ A brief description of the project.
 
 - [Installation](#installation)
 - [Usage](#usage)
+- [Backend Architecture](#backend-architecture)
+- [App Architecture](#app-architecture)
+- [Database Diagram](#database-diagram)
 - [Configuration](#configuration)
 - [Contributing](#contributing)
 - [License](#license)
@@ -19,6 +22,18 @@ Instructions on how to install the project and its dependencies. Include any pre
 ## Usage
 
 Provide examples and instructions on how to use the project. Explain the main features and functionality.
+
+## Backend Architecture
+
+Explain the architecture and components of the project's backend. Provide an overview of the server infrastructure, APIs, and any other relevant information.
+
+## App Architecture
+
+Explain the architecture and components of the project's app or frontend. Describe the framework, libraries, and technologies used, along with their roles in the app.
+
+## Database Diagram
+
+Include a diagram showcasing the database structure and relationships used in the project. You can either provide an image or describe the entities and their connections in text.
 
 ## Configuration
 
@@ -43,10 +58,3 @@ Provide contact information for the project maintainers or authors if necessary.
 ## Acknowledgments
 
 Optional section to acknowledge any contributors, libraries, or resources used in the project.
-You can copy and paste the above Markdown code into your README file and fill in the appropriate information for each section.
-
-
-
-
-
-
