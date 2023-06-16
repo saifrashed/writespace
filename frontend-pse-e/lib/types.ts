@@ -246,3 +246,19 @@ export interface Note {
     highlightAreas: HighlightArea[];
     quote: string;
 }
+
+
+
+export interface TokenResponse {
+    access_token: string;
+    token_type: string;
+    user: {
+        id: number;
+        name: string;
+        global_id: string;
+        effective_locale: string;
+    };
+    canvas_region: string;
+    refresh_token: string;
+    expires_in: number;
+}
