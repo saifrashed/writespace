@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const { auth } = require('../middleware/auth');
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -21,7 +22,7 @@ const assignmentModel = require("../models/assignment.model.js");
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
-router.get("/get-all", async (req, res) => {
+router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
         const assignments = await assignmentModel.find();
@@ -34,7 +35,7 @@ router.get("/get-all", async (req, res) => {
 });
 
 // Find submissions by assignmentId
-router.get("/find-by-creator-id/:creatorId", async (req, res) => {
+router.get("/find-by-creator-id/:creatorId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await assignmentModel.find({ 'creatorId': req.params.creatorId });
@@ -52,7 +53,7 @@ router.get("/find-by-creator-id/:creatorId", async (req, res) => {
 });
 
 // Find submissions by courseId
-router.get("/find-by-course-id/:courseId", async (req, res) => {
+router.get("/find-by-course-id/:courseId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await assignmentModel.find({ 'coursId': req.params.courseId });
@@ -70,7 +71,7 @@ router.get("/find-by-course-id/:courseId", async (req, res) => {
 });
 
 // Post request (creates something in the db)
-router.post('/save', async (req, res) => {
+router.post('/save', auth, async (req, res) => {
     try {
         // Variables for the model
         const assignmentId = req.body.assignmentId;
@@ -115,7 +116,7 @@ router.post('/save', async (req, res) => {
     }
 });
 
-router.put('/update/description/', async (req, res) => {
+router.put('/update/description/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const description = req.body.description;
@@ -143,7 +144,7 @@ router.put('/update/description/', async (req, res) => {
     }
 });
 
-router.put('/update/name/', async (req, res) => {
+router.put('/update/name/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const name = req.body.name;
@@ -171,7 +172,7 @@ router.put('/update/name/', async (req, res) => {
     }
 });
 
-router.put('/update/max-points/', async (req, res) => {
+router.put('/update/max-points/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const maxPoints = req.body.maxPoints;
@@ -199,7 +200,7 @@ router.put('/update/max-points/', async (req, res) => {
     }
 });
 
-router.put('/update/deadline/', async (req, res) => {
+router.put('/update/deadline/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const deadline = req.body.deadline;
@@ -227,7 +228,7 @@ router.put('/update/deadline/', async (req, res) => {
     }
 });
 
-router.put('/update/available-at/', async (req, res) => {
+router.put('/update/available-at/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const availableAt = req.body.availableAt;
@@ -255,7 +256,7 @@ router.put('/update/available-at/', async (req, res) => {
     }
 });
 
-router.put('/update/rubric/', async (req, res) => {
+router.put('/update/rubric/', auth, async (req, res) => {
     try {
         const assignmentId = req.body.assignmentId
         const rubric = req.body.rubric;
@@ -284,7 +285,7 @@ router.put('/update/rubric/', async (req, res) => {
 });
 
 
-router.delete('/delete/:assignmentId', async (req, res) => {
+router.delete('/delete/:assignmentId', auth, async (req, res) => {
     try {
         const assignmentId = req.params.assignmentId;
 
@@ -305,7 +306,7 @@ router.delete('/delete/:assignmentId', async (req, res) => {
 });
 
 // DELETE request (deletes something from the db)
-router.delete('/delete/:courseId', async (req, res) => {
+router.delete('/delete/:courseId', auth, async (req, res) => {
     try {
         const courseId = req.params.courseId;
 
