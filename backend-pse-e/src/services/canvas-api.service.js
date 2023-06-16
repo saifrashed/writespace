@@ -2,12 +2,11 @@
 const express = require('express');
 const router = express.Router();
 
-// Require axios for communicating with the canvas api
-const axios = require('axios');
 
 // Import authentication functions
 const { encryptToken, decryptToken, auth } = require('../middleware/auth');
-
+// Require axios for communicating with the canvas api
+const axios = require('axios');
 // Canvas api URL
 const { API_URL } = process.env;
 // Login api URL
@@ -17,95 +16,11 @@ const { CANVAS_REDIRECT_URI } = process.env;
 const { CLIENT_ID } = process.env;
 const { CLIENT_SECRET } = process.env;
 
-function errFunCanvas(error) {
-  if (!error.response.status || !error.response.statusText) {
-    return {
-      error: 'An error occurred.'
-    }
-  } else {
-    return {
-      error: 'An error occurred.',
-      status: error.response.status,
-      statusText: error.response.statusText
-    };
-  }
-}
 
-// Get general user information (is a post because a get cannot have a body)
-router.post('/get-user', auth, (req, res) => {
-  // Canvas API url
-  axios.get(`${API_URL}/users/self`, {
-    headers: {
-      // Authorization using the access token
-      Authorization: `Bearer ${req.headers["bearer"]}`
-    }, params: {
-      // Configure how many items are returned maximum
-      per_page: 100
-    }
-  }).then(response => {
-    res.json(response.data);
-  }).catch(error => {
-    console.error('Error from Canvas API:', error);
-    res.status(500).json(errFunCanvas(error));
-  });
-});
 
-// Route to get assignments for a course with a user access token
-router.post('/courses', auth, (req, res) => {
-  axios.get(`${API_URL}/courses`, {
-    headers: {
-      Authorization: `Bearer ${req.headers["bearer"]}`
-    }, params: {
-      // Configure how many items are returned maximum
-      per_page: 100
-    }
-  }).then(response => {
-    res.json(response.data);
-  }).catch(error => {
-    console.error('Error from Canvas API:', error);
-    res.status(500).json(errFunCanvas(error));
-  });
-});
 
-// Get all courses that are relevant (such as not closed)
-router.post('/relevant-courses', auth, (req, res) => {
-  axios.get(`${API_URL}/courses`, {
-    headers: {
-      Authorization: `Bearer ${req.headers["bearer"]}`
-    }, params: {
-      // Configure how many items are returned maximum
-      per_page: 100,
-      // Include 'concluded' and 'term' for the courses
-      include: ['concluded', 'term']
-    }
-  }).then(response => {
-    // Filter out unrelevant courses. There is a property "concluded", if this
-    // is true the course is done and the course is not relevant anymore.
-    const relevantCourses = response.data.filter(course => !course.concluded);
-    res.json(relevantCourses);
-  }).catch(error => {
-    console.error('Error from Canvas API:', error);
-    res.status(500).json(errFunCanvas(error));
-  });
-});
 
-// Get all assignments of a course with a user access token
-router.post('/assignments', auth, (req, res) => {
-  const { courseId } = req.body;
-  axios.get(`${API_URL}/courses/${courseId}/assignments`, {
-    headers: {
-      Authorization: `Bearer ${req.headers["bearer"]}`
-    }, params: {
-      // Configure how many items are returned maximum
-      per_page: 100
-    }
-  }).then(response => {
-    res.json(response.data);
-  }).catch(error => {
-    console.error('Error from Canvas API:', error);
-    res.status(500).json(errFunCanvas(error));
-  });
-});
+
 
 // Get all file upload (written) assignments
 router.post('/written-assignments', auth, (req, res) => {
@@ -204,19 +119,7 @@ router.delete('/courses/:courseId/assignments/:assignmentId', auth, (req, res) =
   });
 });
 
-// Get one course with a user access token
-router.post('/courses/:courseId', auth, (req, res) => {
-  axios.get(`${API_URL}/courses/${req.params.courseId}`, {
-    headers: {
-      Authorization: `Bearer ${req.headers["bearer"]}`
-    }
-  }).then(response => {
-    res.json(response.data);
-  }).catch(error => {
-    console.error('Error from Canvas API:', error);
-    res.status(500).json(errFunCanvas(error));
-  });
-});
+
 
 
 // Get all user enrolled in a course without non official users (TestPerson).

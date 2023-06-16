@@ -42,7 +42,8 @@ const auth = async (req, res, next) => {
             req.headers["bearer"] = decryptedToken;
             // Put the id of the user in the response
             res.locals.userId = response.data.id;
-        } catch (err) {
+        } catch (error) {
+            console.log(error);
             return res.status(404).send("User not found or token expired");
         }
     } catch (err) {
@@ -58,17 +59,8 @@ module.exports = {
     auth
 };
 
-// TODO: check if it can be in one auth function.
 /*
-TODO: put the userId in the response: res.locals
-res.headers(bearer) = decryptedToken.
-
-TODO: update everything: the token needs to be in the header for every request, so ALL requests!
-
-TODO: first change all canvas-api to try-catch and token from header (not token variable, but req.headers.bearer), 
-    then test everything in postman if the try-catch still works.
-    Then remove canvas-api and paste every request in the correct service, such as users.
-
+TODO: export postman into project and send to everyone in discord.
 
 TODO: in backend chat dit zeggen met @everyone
 1. Try catch, await and async gebruiken (geen .then/catch gebruiken)
@@ -79,6 +71,3 @@ TODO: in backend chat dit zeggen met @everyone
 5. Ik heb bij alle bestaande requests authenticatie toegevoegt en getest daarna, 
     als iets niet werkt of als ik iets gemist hebt laat het me vooral weten dan zal ik ernaar kijken.
 */
-
-
-// TODO: add "auth" to all other requests in the BE and FE needs to add header (bearer) in get requests and body token for others, ask Saif or Devran!

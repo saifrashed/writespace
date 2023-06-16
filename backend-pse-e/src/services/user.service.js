@@ -8,6 +8,11 @@ const { ObjectId } = require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
+// Require axios for communicating with the canvas api
+const axios = require('axios');
+// Canvas api URL
+const { API_URL } = process.env;
+
 // Configure multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -139,7 +144,7 @@ router.put('/update/experience-points/', auth, async (req, res) => {
         while (userXP >= levelThresholds[level]) {
             level = level + 1;
         }
-        const updatedUser = await userModel.findByIdAndUpdate( updateId,
+        const updatedUser = await userModel.findByIdAndUpdate(updateId,
             {
                 $set: {
                     'experiencePoints': userXP,
@@ -324,6 +329,106 @@ router.delete('/delete/:userId', auth, async (req, res) => {
     }
 });
 
+// Get general user information (is a post because a get cannot have a body)
+router.get('/get-user-canvas', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/users/self`, {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /get-user-canvas.' });
+    }
+});
+
+// Route to get assignments for a course with a user access token
+router.get('/courses', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /courses.' });
+    }
+});
+
+// Get all courses that are relevant (such as not closed)
+router.get('/relevant-courses', auth, async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100,
+                // Include 'concluded' and 'term' for the courses
+                include: ['concluded', 'term']
+            }
+        });
+        // Filter out unrelevant courses. There is a property "concluded", if this
+        // is true the course is done and the course is not relevant anymore.
+        const relevantCourses = response.data.filter(course => !course.concluded);
+        res.json(relevantCourses);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /relevant-courses.' });
+    }
+});
+
+// Get all assignments of a course with a user access token
+router.get('/assignments', auth, async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /assignments.' });
+    }
+});
+
+// Get one course with a user access token
+router.post('/courses/:courseId', auth, async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in GET /assignments.' });
+    }
+});
+
 const levelThresholds = [
     0,     // Level 1 threshold
     100,   // Level 2 threshold
@@ -355,7 +460,7 @@ const levelThresholds = [
     37800, // Level 28 threshold
     40600, // Level 29 threshold
     43500  // Level 30 threshold
-  ];
+];
 
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************

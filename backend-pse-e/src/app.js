@@ -43,9 +43,11 @@ app.use('/user', userService);
 app.use('/quiz-score', quizScoreService);
 app.use('/assignment', assignmentService);
 app.use('/badge', badgeService);
-const canvasService = require('./services/canvas-api.service.js');
 // Define new routes here with the start route
 app.use('/test', testService);
+
+// TODO: remove these two
+const canvasService = require('./services/canvas-api.service.js');
 app.use('/canvas-api', canvasService);
 
 // ************************* General requests *************************
