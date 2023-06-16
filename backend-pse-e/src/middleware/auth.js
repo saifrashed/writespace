@@ -1,6 +1,9 @@
 // Encryt and decrypt functions
 const CryptoJS = require('crypto-js');
 require('dotenv').config(); // Load environment variables from .env file
+const axios = require('axios');
+// Canvas apiUrl
+const { API_URL } = process.env;
 
 function encryptToken(token) {
     const clientSecret = process.env.CLIENT_SECRET; // Retrieve client secret from .env file
@@ -15,19 +18,38 @@ const decryptToken = (encryptedToken) => {
     return decryptedToken;
 }
 
-const auth = (req, res, next) => {
+// Authentication function
+const auth = async (req, res, next) => {
+    // Get the token from the header (or body, but every token should be in the header!)
     const token =
-        req.body.token || req.query.token || req.headers["x-access-token"];
+        req.headers["bearer"] || req.body.token;
 
     if (!token) {
         return res.status(403).send("A token is required for authentication");
     }
     try {
-        const decoded = decryptToken(token);
-        req.body.token = decoded;
+        // Decrypt the token
+        const decryptedToken = decryptToken(token);
+
+        // Check if the user exists in canvas (await to first do this before the request)
+        try {
+            const response = await axios.get(`${API_URL}/users/self`, {
+                headers: {
+                    Authorization: `Bearer ${decryptedToken}`,
+                },
+            });
+            // Edit the request body with the new values if the user is valid.
+            req.headers["bearer"] = decryptedToken;
+            // Put the id of the user in the response
+            res.locals.userId = response.data.id;
+        } catch (error) {
+            console.log(error);
+            return res.status(404).send("User not found or token expired");
+        }
     } catch (err) {
         return res.status(401).send("Invalid Token");
     }
+    // Continue to the next the next middleware function in the request-response cycle.
     return next();
 };
 
