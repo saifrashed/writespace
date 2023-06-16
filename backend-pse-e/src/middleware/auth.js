@@ -22,7 +22,7 @@ const decryptToken = (encryptedToken) => {
 // different because the canvas-api has its own authentication, this is just decryption
 const authCanvas = (req, res, next) => {
     const token =
-        req.body.token || req.query.token || req.headers["x-access-token"];
+        req.body.token || req.query.token || req.headers["bearer"];
 
     if (!token) {
         return res.status(403).send("A token is required for authentication");
@@ -41,9 +41,9 @@ const authCanvas = (req, res, next) => {
 
 // This is the authentication for all of our own requests. The canvas api has its own
 // authentication, so you cannot do another request since it already gives an error.
-const auth = (req, res, next) => {
+const auth = async (req, res, next) => {
     const token =
-        req.body.token || req.query.token || req.headers["x-access-token"];
+        req.body.token || req.query.token || req.headers["bearer"];
 
     if (!token) {
         return res.status(403).send("A token is required for authentication");
@@ -53,24 +53,19 @@ const auth = (req, res, next) => {
         const decryptedToken = decryptToken(token);
         let userNotFound = false;
 
-        // TODO: finish this function and test it for all other requests that are not to the canvas-api
-
-        // Check if the user exists in canvas
-        axios.get(`${API_URL}/users/self`, {
+        // Check if the user exists in canvas (await to first do this before the request)
+        await axios.get(`${API_URL}/users/self`, {
             headers: {
                 // Authorization using the access token
                 Authorization: `Bearer ${decryptedToken}`
             }
         }).then(response => {
-            console.log("*******************************************************************************");
-            console.log(response.data);
             // Edit the request body with the new values if the user is valid.
             req.body.token = decryptedToken;
-            // Put the userId of the user with the access token in the body so that 
-            // the request can use the userId of the canvas account
-            req.body.userId = userId;
+            // Put the id of the user with the access token in the body so that 
+            // the request can use the userId of the canvas account for the db
+            req.body.userId = response.data.id;
         }).catch(error => {
-            console.log("ERROR!!!*******************************************************************************");
             // User not found, so set boolean to true
             userNotFound = true;
         });

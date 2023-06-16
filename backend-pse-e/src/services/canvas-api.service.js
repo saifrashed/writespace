@@ -6,7 +6,7 @@ const router = express.Router();
 const axios = require('axios');
 
 // Import authentication functions
-const { encryptToken, decryptToken, authCanvas, auth } = require('../middleware/auth');
+const { encryptToken, authCanvas } = require('../middleware/auth');
 
 // Canvas api URL
 const { API_URL } = process.env;
