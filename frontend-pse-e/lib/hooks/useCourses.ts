@@ -5,10 +5,16 @@ import axios from 'axios'
 import { useNotification } from "./useNotification";
 import { Context } from "@/Context";
 
-function useCourses() {
+function useCourses(token='') {
   const { onSuccess, onError } = useNotification()
   const [coursesData, setCoursesData] = useState<Course[]>([]);
   const { setCourses } = useContext(Context);
+
+  useEffect(() => {
+    if (token) {
+      getCourses(token)
+    }
+  }, [])
 
   const getCourses = async (token: string) => {
     try {

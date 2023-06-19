@@ -14,11 +14,7 @@ const Courses = () => {
   const { setCourse } = useContext(Context);
 
   const { courses: contextCourses } = useContext(Context);
-  const { courses: fetchedCourses, getCourses } = useCourses();
-
-  useEffect(() => {
-    getCourses(token)
-  }, [])
+  const { courses: fetchedCourses } = useCourses(token);
 
   const courses = contextCourses || fetchedCourses;
 

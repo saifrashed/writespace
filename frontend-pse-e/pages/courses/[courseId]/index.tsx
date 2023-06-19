@@ -2,21 +2,18 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import useAssignments from "../../../lib/hooks/useAssignments"
 import useCourse from "@/lib/hooks/useCourse";
-import { Assignment } from "../../../lib/hooks/dummy"
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { motion } from "framer-motion";
 import { useContext, useEffect, useState } from 'react';
 import { Context } from '@/Context';
-import { Course, Enrollment } from "@/lib/types";
+import { Assignment, Course, Enrollment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
 import { formatDate } from "@/lib/date";
 import useAssignment from "@/lib/hooks/useAssignment";
 
 const CourseOverview = () => {
   const router = useRouter();
-  const [isDeleted, setIsDeleted] = useState<boolean>(false);
-  const [showModal, setShowModal] = useState<boolean>(false);
 
   const { courseId } = router.query;
   const { token } = useAuthentication();
@@ -27,20 +24,15 @@ const CourseOverview = () => {
   // const { deleteAssignment } = useAssignment()
 
   const { course: contextCourse } = useContext(Context); // When pressing a course
-  const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url
+  const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
   const course = contextCourse || fetchedCourse;
 
-
-  useEffect(() => {
-    if (courseId && token) {
-      getAssignments(parseInt(courseId.toString()), token)
-      getCourse(parseInt(courseId.toString()), token)
-    }
-  }, [router.query]);
-
-  const isTeacher = course?.enrollments?.some(
-    (enrollment: Enrollment) => enrollment?.type === "teacher"
-  );
+  // useEffect(() => {
+  //   if (courseId && token) {
+  //     // getAssignments(parseInt(courseId.toString()), token)
+  //     getCourse(parseInt(courseId.toString()), token)
+  //   }
+  // }, [router.query]);
 
   const calculateSubmittedPercentage = () => {
     if (assignments?.length > 0) {
@@ -91,7 +83,7 @@ const CourseOverview = () => {
               className="mb-2 text-sm text-center text-white opacity-60">
               {course?.course_code || "Course Code"}
             </span>
-            {isTeacher ? (
+            {role === 'teacher' ? (
               <Link href={`/courses/${course?.id}/create-assignment`} key={course?.id} onClick={() => handleSetCourse(course, course?.course_color)}>
                 <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 focus:outline-none font-medium rounded-2xl text-sm px-2.5 py-2.5 text-center inline-flex items-center">
                   <svg className="h-5 w-5 me-1" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -117,7 +109,7 @@ const CourseOverview = () => {
                 <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   Due At
                 </th>
-                {isTeacher ? (
+                {role === 'teacher' ? (
                   <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   </th>
                 ) : (
@@ -133,14 +125,14 @@ const CourseOverview = () => {
                   <tr key={assignment?.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <motion.th layoutId={assignment?.name} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <Link
-                        href={`/courses/${courseId}/assignment/${assignment.id}${(isTeacher ? "/students" : "")}`}
+                        href={`/courses/${courseId}/assignment/${assignment.id}${(role === 'teacher' ? "/students" : "")}`}
                         onClick={() => handleSetAssignment(assignment)}
                       >{assignment.name}</Link>
                     </motion.th>
                     <motion.td layoutId={assignment?.due_at?.toString()} className="px-6 py-4 whitespace-nowrap">
                       {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
                     </motion.td>
-                    {isTeacher ? (
+                    {role === 'teacher' ? (
                       <td className="flex items-center justify-end px-3 py-2 space-x-3">
                         <Link
                           href={`/courses/${courseId}/assignment/${assignment.id}/edit-assignment`}
