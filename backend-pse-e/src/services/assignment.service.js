@@ -334,9 +334,8 @@ router.delete('/delete/:courseId', auth, async (req, res) => {
 });
 
 // Create assignment (missing deadline attribute)
-router.post('/courses/:courseId/assignments', auth, (req, res) => {
-    const { courseId } = req.params
-    const { assignment } = req.body;
+router.post('/create', auth, (req, res) => {
+    const { assignment, courseId } = req.body;
 
     axios.post(`${API_URL}/courses/${courseId}/assignments`, assignment, {
         headers: {
@@ -363,9 +362,8 @@ router.post('/courses/:courseId/assignments', auth, (req, res) => {
 });
 
 // Update assignment (missing deadline attribute)
-router.put('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
-    const { courseId, assignmentId } = req.params
-    const { assignment } = req.body;
+router.put('/update', auth, (req, res) => {
+    const { assignment, courseId, assignmentId } = req.body;
 
     axios.put(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, assignment, {
         headers: {
@@ -392,7 +390,7 @@ router.put('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
 });
 
 // Delete assignment
-router.delete('/courses/:courseId/assignments/:assignmentId', auth, (req, res) => {
+router.delete('/delete/:courseId/:assignmentId', auth, (req, res) => {
     const { courseId, assignmentId } = req.params
 
     axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {}, {
@@ -411,10 +409,12 @@ router.delete('/courses/:courseId/assignments/:assignmentId', auth, (req, res) =
 });
 
 // Get one assignment from a course with a user access token
-router.get('/courses/:courseId/:assignmentId', auth, async (req, res) => {
+router.get('/get-one', auth, async (req, res) => {
     try {
+        const { courseId, assignmentId } = req.body;
+        
         // Canvas API url
-        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}`, {
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {
             headers: {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
@@ -426,20 +426,45 @@ router.get('/courses/:courseId/:assignmentId', auth, async (req, res) => {
     }
 });
 
-// Get one rubric for an assignment with a user access token
-// NOTE: the rubricId must be used from the rubric_settings, NOT the rubric object!
-router.get('/courses/:courseId/rubrics/:rubricId', auth, async (req, res) => {
+// Get all assignments of a course with a user access token
+router.post('/get-all', auth, async (req, res) => {
     try {
+        const { courseId } = req.body;
         // Canvas API url
-        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/rubrics/${req.params.rubricId}`, {
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
             headers: {
                 Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Configure how many items are returned maximum
+                per_page: 100
             }
         });
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in /courses/:courseId/rubrics/:rubricId.' });
+        res.status(500).json({ error: 'An error occurred in /assignments.' });
+    }
+});
+
+// Get all file upload (written) assignments
+router.post('/written-assignments', auth, async (req, res) => {
+    try {
+        const { courseId } = req.body;
+        // Canvas API url
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                order_by: "due_at"
+            }
+        });
+        // Filter assignments by submission_types
+        res.json(response.data.filter(assignment => {
+            return assignment.submission_types.includes("online_upload");
+        }));
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /written-assignments.' });
     }
 });
 

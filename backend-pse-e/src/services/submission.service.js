@@ -114,7 +114,6 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
 
         const submissionDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }); // Off by two hours
         const submissionGrade = null;
-        const submissionWhatifGrade = null;
         const submissionStatus = "ungraded";
         const filetype = req.file.mimetype;
         const filename = req.file.originalname;
@@ -124,10 +123,9 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
         const newSubmission = new submissionModel({
             userId: userId,
             assignmentId: assignmentId,
-            submissionDate: submissionDate,
-            submissionGrade: submissionGrade,
-            submissionWhatifGrade: submissionWhatifGrade,
-            submissionStatus: submissionStatus,
+            date: submissionDate,
+            grade: submissionGrade,
+            status: submissionStatus,
             filetype: filetype,
             filename: filename,
             fileData: fileData,
@@ -164,8 +162,8 @@ router.put('/update/fileNotes/', auth, async (req, res) => {
                     fileNotes: { $each: newNotes }
                 },
                 $set: {
-                    submissionGrade: newGrade,
-                    submissionStatus: status
+                    grade: newGrade,
+                    status: status
                 }
             },
             { new: true }
@@ -182,36 +180,6 @@ router.put('/update/fileNotes/', auth, async (req, res) => {
     }
 });
 
-// Updates the submission WhatifGrade
-router.put('/update/whatif-grade/', auth, async (req, res) => {
-    try {
-        const userId = req.body.userId;
-        const assignmentId = req.body.assignmentId
-        const newWhatifGrade = req.body.submissionWhatifGrade;
-
-        const updatedSubmission = await submissionModel.findOneAndUpdate(
-            {
-                'assignmentId': assignmentId,
-                'userId': userId
-            },
-            {
-                $set: {
-                    'submissionWhatifGrade': newWhatifGrade
-                }
-            },
-            { new: true }
-        );
-
-        if (updatedSubmission === null) {
-            return res.status(200).json({ message: 'Submission not found' });
-        }
-
-        res.status(200).json({ message: 'Submission updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
 
 // Updates the submission Grade
 router.put('/update/grade/', auth, async (req, res) => {
@@ -220,7 +188,6 @@ router.put('/update/grade/', auth, async (req, res) => {
         const assignmentId = req.body.assignmentId
         const newGrade = req.body.submissionGrade;
         const status = "graded";
-        const newWhatifGrade = null;
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
@@ -229,9 +196,8 @@ router.put('/update/grade/', auth, async (req, res) => {
             },
             {
                 $set: {
-                    'submissionGrade': newGrade,
-                    'submissionStatus': status,
-                    'submissionWhatifGrade': newWhatifGrade
+                    'grade': newGrade,
+                    'status': status,
                 }
             },
             { new: true }
@@ -257,7 +223,6 @@ router.put('/update/file/', upload.single('file'), auth, async (req, res) => {
         const newFileName = req.file.originalname;
         const newFileData = req.file.buffer;
         const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
-        const newWhatifGrade = null;
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
@@ -269,8 +234,7 @@ router.put('/update/file/', upload.single('file'), auth, async (req, res) => {
                     'filetype': newFileType,
                     'filename': newFileName,
                     'fileData': newFileData,
-                    'submissionDate': newDate,
-                    'submissionWhatifGrade': newWhatifGrade
+                    'date': newDate,
                 }
             },
             { new: true }
@@ -295,7 +259,7 @@ router.put('/update/', upload.single('file'), auth, async (req, res) => {
         const updatedSubmission = {
             userId: req.body.userId,
             assignmentId: req.body.assignmentId,
-            submissionDate: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
+            date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
             filetype: req.file.mimetype,
             filename: req.file.originalname,
             fileData: req.file.buffer
@@ -369,10 +333,12 @@ router.delete('/delete-one/', auth, async (req, res) => {
 });
 
 // Get an user its submission data for a specific assignment.
-router.post('/courses/:courseId/:assignmentId/:userId', auth, async (req, res) => {
+router.post('/get-user-submission', auth, async (req, res) => {
     try {
+        const { courseId, assignmentId, userId } = req.body;
+
         // Canvas API url
-        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`, {
             headers: {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
@@ -385,10 +351,11 @@ router.post('/courses/:courseId/:assignmentId/:userId', auth, async (req, res) =
 });
 
 // Get all submission data for a specific assignment (teacher).
-router.post('/courses/:courseId/assignments/:assignmentId/submissions', auth, async (req, res) => {
+router.post('/get-assignment-submissions', auth, async (req, res) => {
     try {
+        const { courseId, assignmentId } = req.body;
         // Canvas API url
-        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`, {
             headers: {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
