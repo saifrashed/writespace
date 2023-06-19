@@ -39,7 +39,6 @@ function useCourse(token='', courseId='') {
     const getEnrollment = async (courseId: string, token: string) => {
         try {
             const response = await axios.post(`${config.baseUrl}/course/enrollment`, {courseId}, { headers : { bearer: token }});
-            console.log(response.data);
             setRole(response.data.type);
             return response.data;
         } catch (error) {

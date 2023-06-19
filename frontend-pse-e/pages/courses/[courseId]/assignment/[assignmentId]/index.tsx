@@ -16,19 +16,19 @@ const Assignments = () => {
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment, getAssignment } = useAssignment()
+  const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
   const { submission, getSubmission } = useSubmission()
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
   const isTeacher = false;
 
-  useEffect(() => {
-    if (courseId && assignmentId && token) {
-      getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-      getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-    }
-  }, [router.query]);
+  // useEffect(() => {
+  //   if (courseId && assignmentId && token) {
+  //     getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+  //     getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+  //   }
+  // }, [router.query]);
 
   return (
     <>
