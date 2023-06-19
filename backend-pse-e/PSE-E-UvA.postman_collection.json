@@ -460,13 +460,13 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "10392~iykSpa3JIqLxyqtOOgkbTgpYC23zGLlmydOqbCojrGSO9q0EeZlVhGDg2fW1kAw4",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"userId\": 1,\n  \"badges\": {}\n}\n",
+							"raw": "{\n  \"badges\": {}\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
