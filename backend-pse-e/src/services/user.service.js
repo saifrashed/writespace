@@ -362,65 +362,22 @@ router.get("/get-user", auth, async (req, res) => {
     }
 });
 
-// Get user from canvas only
-router.get('/get-user-canvas', auth, async (req, res) => {
-    try {
-        // Canvas API url
-        const response = await axios.get(`${API_URL}/users/self`, {
-            headers: {
-                // Authorization using the access token
-                Authorization: `Bearer ${req.headers["bearer"]}`
-            }
-        });
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
-    }
-});
-
-// Route to get assignments for a course with a user access token
-router.get('/courses', auth, async (req, res) => {
-    try {
-        // Canvas API url
-        const response = await axios.get(`${API_URL}/courses`, {
-            headers: {
-                Authorization: `Bearer ${req.headers["bearer"]}`
-            }, params: {
-                // Configure how many items are returned maximum
-                per_page: 100
-            }
-        });
-        res.json(response.data);
-    } catch (error) {
-        console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in /courses.' });
-    }
-});
-
-// Get all courses that are relevant (such as not closed)
-router.get('/relevant-courses', auth, async (req, res) => {
-    try {
-        // Canvas API url
-        const response = await axios.get(`${API_URL}/courses`, {
-            headers: {
-                Authorization: `Bearer ${req.headers["bearer"]}`
-            }, params: {
-                // Configure how many items are returned maximum
-                per_page: 100,
-                // Include 'concluded' and 'term' for the courses
-                include: ['concluded', 'term']
-            }
-        });
-        // Filter out unrelevant courses. There is a property "concluded", if this
-        // is true the course is done and the course is not relevant anymore.
-        const relevantCourses = response.data.filter(course => !course.concluded);
-        res.json(relevantCourses);
-    } catch (error) {
-        console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in /relevant-courses.' });
-    }
-});
+// // Get user from canvas only
+// router.get('/get-user-canvas', auth, async (req, res) => {
+//     try {
+//         // Canvas API url
+//         const response = await axios.get(`${API_URL}/users/self`, {
+//             headers: {
+//                 // Authorization using the access token
+//                 Authorization: `Bearer ${req.headers["bearer"]}`
+//             }
+//         });
+//         res.json(response.data);
+//     } catch (error) {
+//         console.error('Error from Canvas API:', error);
+//         res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
+//     }
+// });
 
 const levelThresholds = [
     0,     // Level 1 threshold

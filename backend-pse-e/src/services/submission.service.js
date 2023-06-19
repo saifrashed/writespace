@@ -369,10 +369,12 @@ router.delete('/delete-one/', auth, async (req, res) => {
 });
 
 // Get an user its submission data for a specific assignment.
-router.post('/courses/:courseId/:assignmentId/:userId', auth, async (req, res) => {
+router.post('/get-user-submission', auth, async (req, res) => {
     try {
+        const { courseId, assignmentId, userId } = req.body;
+
         // Canvas API url
-        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions/${req.params.userId}`, {
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`, {
             headers: {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
@@ -385,10 +387,11 @@ router.post('/courses/:courseId/:assignmentId/:userId', auth, async (req, res) =
 });
 
 // Get all submission data for a specific assignment (teacher).
-router.post('/courses/:courseId/assignments/:assignmentId/submissions', auth, async (req, res) => {
+router.post('/get-assignment-submissions', auth, async (req, res) => {
     try {
+        const { courseId, assignmentId } = req.body;
         // Canvas API url
-        const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/assignments/${req.params.assignmentId}/submissions`, {
+        const response = await axios.get(`${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`, {
             headers: {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
