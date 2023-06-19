@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { quizList } from '../public/data/quizList';
-import axios from 'axios';
 import useQuiz from '@/lib/hooks/useQuiz';
 
-
 const Questions = (quizId) => {
-  const { saveQuiz } = useQuiz();
-  // saveQuiz(30, 400, 400);
+  const { saveQuiz, getQuiz, gotQuizzes, quizzes } = useQuiz();
+
+  // returned een array
+  getQuiz(50);
 
   let selectedQuiz = quizList[quizId['quizId']]
+  const [latestHighScore, setLatestHighScore] = useState(null)
   const [answers, setAnswers] = useState([])
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(-1)
@@ -54,7 +55,6 @@ const Questions = (quizId) => {
     // When the last question is filled in
     else {
       setShowResult(true);
-      // saveQuiz(30, quizId.quizId, result.correctAnswers);
     }
 
     setSelectedAnswer(false);
@@ -72,8 +72,17 @@ const Questions = (quizId) => {
     }
   }
   useEffect(() => {
-    if (showResult) {
+    if (showResult && gotQuizzes) {
       saveQuiz(50, quizId.quizId, result.correctAnswers);
+      console.log(quizzes, "DE QUIZZES")
+      const quizScoresObj = quizzes.reduce((acc, quiz) => {
+        acc[quiz.quizId] = quiz;
+        return acc;
+      }, {});
+      console.log(quizScoresObj, "SE OBJ");
+
+      setLatestHighScore(quizScoresObj[quizId.quizId].latestHighScore);
+      console.log(latestHighScore, "DE AATA HIGH");
     }
 
   }, [showResult]);
@@ -110,12 +119,13 @@ const Questions = (quizId) => {
       )}
 
       {/* If the Quiz is done and result is shown */}
-      {showResult && (
+      {showResult && gotQuizzes && (
         <div className="text-center">
           <h3 className="text-2xl font-bold">Result</h3>
           <p>Total Question: {questions.length}</p>
           <p>Correct Answers: {result.correctAnswers}</p>
           <p>Wrong Answers: {result.wrongAnswers}</p>
+          {/* <p>Latest Highscore: {latestHighScore} </p> */}
           <br />
 
           {answers.map((object, index) => (
