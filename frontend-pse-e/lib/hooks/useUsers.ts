@@ -9,19 +9,17 @@ function useUsers() {
     const [usersData, setUsersData] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<Boolean>(true);
 
-    const getUsers = async (courseId: Number, token: string) => {
+    const getAllUsers = async (token: string) => {
       try {
-        // const responseUser = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-          const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/users`, { token });
-          setUsersData(response.data);
-          setIsLoading(false);
+          const response = await axios.get(`${config.baseUrl}/user/get-all`, { headers : { bearer: token }});
+          return response.data;
       } catch (error) {
-        console.log(error);
-        onError("Something went wrong");
+          console.log(error)
+          onError("Something went wrong")
       }
-    };
+    }
 
-  return { users: usersData, isLoading, getUsers };
+  return { users: usersData, isLoading, getAllUsers };
 
  }
 

@@ -162,7 +162,6 @@ export interface Submission {
 }
 
 export interface Badge {
-    includes(badge: { id: number; title: string; description: string; exp: number; }): unknown;
     badgeId: Number,
     iconId: Number,
     experiencePoints: Number,
