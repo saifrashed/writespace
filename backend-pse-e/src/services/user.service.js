@@ -90,7 +90,7 @@ router.post('/save', auth, async (req, res) => {
 // Updates user picture
 router.put('/update/picture/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const pictureId = req.body.pictureId;
 
         const updatedUser = await userModel.findOneAndUpdate(
@@ -119,7 +119,7 @@ router.put('/update/picture/', auth, async (req, res) => {
 // Updates user XP
 router.put('/update/experience-points/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const XPToAdd = req.body.experiencePoints
 
         const userToUpdate = await userModel.findOne({ 'userId': userId });
@@ -151,7 +151,7 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badge/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const newBadge = req.body.badgeId;
         const courseId = req.body.courseId;
         const assignmentId = req.body.assignmentId;
@@ -181,7 +181,7 @@ router.put('/update/add-badge/', auth, async (req, res) => {
 // Delete a badge
 router.put('/update/delete-badge/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
         const badgeId = req.body.badgeId
 
@@ -225,9 +225,9 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
 // PUT request (updates something in the db)
 router.put('/update/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const updatedUser = {
-            userId: req.body.userId,
+            userId: res.locals.userId,
             pictureId: req.body.pictureId,
             experiencePoints: req.body.experiencePoints,
             badges: req.body.badges
