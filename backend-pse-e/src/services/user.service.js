@@ -293,7 +293,7 @@ router.get("/get-user", auth, async (req, res) => {
             return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
-        const level = getLevel(responseMongo.experiencePoints, levelThresholds);
+        const level = getLevel(responseMongo.experiencePoints);
 
         // Combine json objects ... merges the objects
         const combinedUser = {

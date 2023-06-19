@@ -93,7 +93,7 @@ router.put('/update', auth, (req, res) => {
 // });
 
 // Get one assignment from a course with a user access token
-router.get('/get-one', auth, async (req, res) => {
+router.post('/get-one', auth, async (req, res) => {
     try {
         const { courseId, assignmentId } = req.body;
 
