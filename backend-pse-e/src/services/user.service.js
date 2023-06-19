@@ -301,7 +301,7 @@ router.get("/get-user", auth, async (req, res) => {
         const combinedUser = {
             ...responseCanvas.data,
             ...responseMongo[0]._doc,
-            level
+            ...level
           };
 
         // Handle success case here
