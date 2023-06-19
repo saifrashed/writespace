@@ -12,7 +12,7 @@ function useCourses() {
 
   const getCourses = async (token: string) => {
     try {
-      const response = await axios.post(`${config.baseUrl}/canvas-api/courses`, { token: token });
+      const response = await axios.get(`${config.baseUrl}/course/get-all`, { headers: { bearer: token }});
       setCoursesData(response.data)
       setCourses(response.data)
     } catch (error) {

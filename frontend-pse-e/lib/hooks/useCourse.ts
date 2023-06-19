@@ -6,11 +6,11 @@ import { useNotification } from "./useNotification";
 
 function useCourse() {
     const [courseData, setCourseData] = useState<Course | any>();
-    const { onSuccess, onError } = useNotification()
+    const { onSuccess, onError } = useNotification();
 
     const getCourse = async (courseId: Number, token: string) => {
         try {
-            const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}`, { token: token });
+            const response = await axios.get(`${config.baseUrl}/course/${courseId}`, { headers : { bearer: token }});
             setCourseData(response.data)
         } catch (error) {
             console.log(error)

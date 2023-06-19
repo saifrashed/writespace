@@ -28,17 +28,28 @@ const auth = async (req, res, next) => {
         return res.status(401).send("A token is required for authentication");
     }
     try {
-        // Decrypt the token
-        const decryptedToken = decryptToken(token);
+        // // Decrypt the token
+        // const decryptedToken = decryptToken(token);
+
+        // // Check if the user exists in canvas (await to first do this before the request)
+        // const response = await axios.get(`${API_URL}/users/self`, {
+        //     headers: {
+        //         Authorization: `Bearer ${decryptedToken}`,
+        //     },
+        // });
+        // // Edit the request body with the new values if the user is valid.
+        // req.headers["bearer"] = decryptedToken;
+        // // Put the id of the user in the response
+        // res.locals.userId = response.data.id;
 
         // Check if the user exists in canvas (await to first do this before the request)
         const response = await axios.get(`${API_URL}/users/self`, {
             headers: {
-                Authorization: `Bearer ${decryptedToken}`,
+                Authorization: `Bearer ${token}`,
             },
         });
         // Edit the request body with the new values if the user is valid.
-        req.headers["bearer"] = decryptedToken;
+        req.headers["bearer"] = token;
         // Put the id of the user in the response
         res.locals.userId = response.data.id;
     } catch (err) {
