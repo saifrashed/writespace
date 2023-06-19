@@ -90,7 +90,6 @@ router.post('/save', auth, async (req, res) => {
 
         const pictureId = 0;
         const experiencePoints = 0;
-        const level = 1;
         const badges = req.body.badges;
 
         // Create a new instance of the submission model
@@ -98,7 +97,6 @@ router.post('/save', auth, async (req, res) => {
             userId: userId,
             pictureId: pictureId,
             experiencePoints: experiencePoints,
-            level: level,
             badges: badges
         });
 
@@ -157,15 +155,11 @@ router.put('/update/experience-points/', auth, async (req, res) => {
         const updateId = userToUpdate._id;
         let userXP = userToUpdate.experiencePoints;
         userXP = userXP + XPToAdd;
-        let level = userToUpdate.level;
-        while (userXP >= levelThresholds[level]) {
-            level = level + 1;
-        }
+
         const updatedUser = await userModel.findByIdAndUpdate(updateId,
             {
                 $set: {
                     'experiencePoints': userXP,
-                    'level': level
                 }
             },
             { new: true }
@@ -260,7 +254,6 @@ router.put('/update/', auth, async (req, res) => {
             userId: req.body.userId,
             pictureId: req.body.pictureId,
             experiencePoints: req.body.experiencePoints,
-            level: req.body.level,
             badges: req.body.badges
         };
 
