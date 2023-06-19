@@ -92,7 +92,8 @@ router.post('/save/', auth, async (req, res) => {
         await newScore.save();
         res.status(200).json({ message: 'Score saved' });
    } catch (error) {
-
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in /quiz-score//save/' });
    }
 });
 

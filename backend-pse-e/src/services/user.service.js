@@ -253,26 +253,26 @@ router.put('/update/', auth, async (req, res) => {
     }
 });
 
-// Delete user
-router.delete('/delete/:userId', auth, async (req, res) => {
-    try {
-        const userId = req.params.userId;
+// // Delete user
+// router.delete('/delete/:userId', auth, async (req, res) => {
+//     try {
+//         const userId = req.params.userId;
 
-        // Find the document by submissionId and remove it
-        const result = await userModel.deleteOne({ 'userId': userId });
+//         // Find the document by submissionId and remove it
+//         const result = await userModel.deleteOne({ 'userId': userId });
 
-        // Check if the document was found and deleted successfully
-        if (result.deletedCount === 0) {
-            return res.status(200).json({ message: 'Object not found' });
-        }
+//         // Check if the document was found and deleted successfully
+//         if (result.deletedCount === 0) {
+//             return res.status(200).json({ message: 'Object not found' });
+//         }
 
-        // Delete successful
-        res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting data from MongoDB:', error);
-        res.status(500).json({ error: 'Failed to delete data from the database' });
-    }
-});
+//         // Delete successful
+//         res.status(200).json({ message: 'User deleted successfully' });
+//     } catch (error) {
+//         console.error('Error deleting data from MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to delete data from the database' });
+//     }
+// });
 
 // Get user combined with canvas user object
 router.get("/get-user", auth, async (req, res) => {
