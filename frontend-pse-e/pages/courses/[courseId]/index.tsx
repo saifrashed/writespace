@@ -20,19 +20,12 @@ const CourseOverview = () => {
   const { setCourse } = useContext(Context);
   const { setAssignment } = useContext(Context);
 
-  const { assignments, isLoading, getAssignments } = useAssignments();
+  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), token);
   // const { deleteAssignment } = useAssignment()
 
   const { course: contextCourse } = useContext(Context); // When pressing a course
   const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
   const course = contextCourse || fetchedCourse;
-
-  // useEffect(() => {
-  //   if (courseId && token) {
-  //     // getAssignments(parseInt(courseId.toString()), token)
-  //     getCourse(parseInt(courseId.toString()), token)
-  //   }
-  // }, [router.query]);
 
   const calculateSubmittedPercentage = () => {
     if (assignments?.length > 0) {
