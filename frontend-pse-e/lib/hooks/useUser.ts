@@ -79,18 +79,8 @@ function useUser() {
     }
   }
 
-  const deleteUser = async (token: string) => {
-    try {
-        const response = await axios.delete(`${config.baseUrl}/user/delete`, { headers : { bearer: token }});
-        return response.data;
-    } catch (error) {
-        console.log(error)
-        onError("Something went wrong")
-    }
-  }
 
-
-  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadge, deleteUserBadge ,updateUser, deleteUser};
+  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadge, deleteUserBadge ,updateUser};
 }
 
 export default useUser;
