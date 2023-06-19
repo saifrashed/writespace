@@ -41,6 +41,24 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
+// Find users by userId
+router.get("/find-by-user-id/:userId", auth, async (req, res) => {
+    try {
+        // Find the object using an attribute of the object
+        const result = await userModel.find({ 'userId': req.params.userId });
+        // If the object is not fount give an error
+        if (result.length === 0) {
+            return res.status(200).json({ message: 'Object not found' });
+        }
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Save new user
 router.post('/save', auth, async (req, res) => {
     try {
@@ -311,32 +329,36 @@ router.delete('/delete/:userId', auth, async (req, res) => {
     }
 });
 
-// Find users by userId (combined with canvas user object)
-router.get("/find-by-user-id/:userId", auth, async (req, res) => {
+// Get user combined with canvas user object
+router.get("/get-user", auth, async (req, res) => {
     try {
-        // Find the object using an attribute of the object
-        const result = await userModel.find({ 'userId': req.params.userId });
-
         // Canvas API url
-        const response = await axios.get(`${API_URL}/users/self`, {
+        const responseCanvas = await axios.get(`${API_URL}/users/self`, {
             headers: {
                 // Authorization using the access token
-                Authorization: `Bearer ${req.headers["bearer"]}`
+                Authorization: `Bearer ${req.headers["bearer"]}`                
             }
         });
-        //res.json(response.data);
 
+        // Find the user with the id from canvas
+        const responseMongo = await userModel.find({ 'userId': responseCanvas.data.id });
+        
         // If the object is not fount give an error
-        if (result.length === 0) {
-            return res.status(200).json({ message: 'Object not found' });
+        if (responseMongo.length === 0) {
+            return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
+        // Combine json objects ... merges the objects
+        const combinedUser = {
+            ...responseCanvas.data,
+            ...responseMongo[0]._doc
+          };
+
         // Handle success case here
-        // TODO: combine two json objects together
-        res.status(200).json(result);
+        res.status(200).json(combinedUser);
     } catch (error) {
         console.error('Error from MongoDB:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        res.status(500).json({ error: 'Internal server error in /get-user' });
     }
 });
 

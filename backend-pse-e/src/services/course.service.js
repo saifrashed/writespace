@@ -48,7 +48,7 @@ router.get('/:courseId/user/role', auth, async (req, res) => {
 });
 
 // Get all user enrolled in a course without non official users (TestPerson).
-router.post('/courses/:courseId/users', auth, async (req, res) => {
+router.post('/:courseId/users', auth, async (req, res) => {
     try {
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/users`, {
@@ -64,7 +64,7 @@ router.post('/courses/:courseId/users', auth, async (req, res) => {
 });
 
 // Get all users enrolled in a course.
-router.post('/courses/:courseId/enrollments', auth, async (req, res) => {
+router.post('/:courseId/enrollments', auth, async (req, res) => {
     try {
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${req.params.courseId}/enrollments`, {
@@ -80,7 +80,7 @@ router.post('/courses/:courseId/enrollments', auth, async (req, res) => {
 });
 
 // Get one course with a user access token
-router.get('/courses/:courseId', auth, async (req, res) => {
+router.get('/:courseId', auth, async (req, res) => {
     try {
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${req.params.courseId}`, {
