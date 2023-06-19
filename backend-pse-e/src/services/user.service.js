@@ -55,7 +55,7 @@ router.get("/get-all", auth, async (req, res) => {
 });
 
 // Find users by userId
-router.get("/find-by-user-id/:userId", auth, async (req, res) => {
+router.get("/:userId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await userModel.findOne({ 'userId': req.params.userId });
@@ -79,8 +79,8 @@ router.get("/find-by-user-id/:userId", auth, async (req, res) => {
 // Save new user
 router.post('/save', auth, async (req, res) => {
     try {
-        // Variables for the model
-        const userId = req.body.userId;
+        // Use the userId from the authentication check (canvas userId)
+        const userId = res.locals.userId;
 
         const alreadyExists = await userModel.find({ 'userId': userId });
 
@@ -305,13 +305,13 @@ router.get("/get-user", auth, async (req, res) => {
         const responseCanvas = await axios.get(`${API_URL}/users/self`, {
             headers: {
                 // Authorization using the access token
-                Authorization: `Bearer ${req.headers["bearer"]}`                
+                Authorization: `Bearer ${req.headers["bearer"]}`
             }
         });
 
         // Find the user with the id from canvas
         const responseMongo = await userModel.find({ 'userId': responseCanvas.data.id });
-        
+
         // If the object is not fount give an error
         if (responseMongo.length === 0) {
             return res.status(200).json({ message: 'User not found in mongodb' });
