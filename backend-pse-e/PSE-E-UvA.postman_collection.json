@@ -356,6 +356,14 @@
 			"name": "User requests",
 			"item": [
 				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
 					"name": "Get all users",
 					"request": {
 						"method": "GET",
@@ -699,7 +707,7 @@
 					"response": []
 				},
 				{
-					"name": "Get one user information",
+					"name": "get canvas user",
 					"request": {
 						"method": "GET",
 						"header": [
@@ -710,6 +718,21 @@
 							}
 						],
 						"url": "localhost:5000/user/get-user-canvas"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user (canvas and mongo combined)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/user/get-user"
 					},
 					"response": []
 				}
@@ -1074,7 +1097,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\" : \"10a1d8a0e48a54db365f0c25af045d318cb0cae80bd523224f47344937fcf0f38b6d31056fbf5ed7eeb84bf00d8fe82215e29adfde929763d1184a70b31bc028\"\r\n}",
+							"raw": "{\r\n    \"code\" : \"f0e365b8fddaf38896078c2a44b8cf172297dd4551cf4a121ab1a5c25aa9348281bcd97f85ecc69e4aa14dc318a775e6b88968ae34149fc3e38aa56be778e400\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
