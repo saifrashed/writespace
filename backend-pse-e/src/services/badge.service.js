@@ -22,8 +22,10 @@ const badgeModel = require("../models/badge.model.js");
 // Define a route without the starting route defined in app.js
 // Post request (creates something in the db)
 
-// Get request (gets something from the db)
-// Get all badges
+/* This get request returns all badges
+Input: none
+Output: all badges in the database
+*/
 router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
@@ -36,7 +38,10 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-// Get badge by badgeId
+/* This get request returns one badge
+Input: badgeId
+Output: badge with the given badgeId
+*/
 router.get("/get-badge/:badgeId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -54,7 +59,10 @@ router.get("/get-badge/:badgeId", auth, async (req, res) => {
     }
 });
 
-// Save new badge
+/* This post request saves a new badge
+Input: badgeId, experiencePoints, name, category, description
+Output: saved badge
+*/
 router.post('/save', auth, async (req, res) => {
     try {
         // Variables for the model
@@ -91,7 +99,10 @@ router.post('/save', auth, async (req, res) => {
     }
 });
 
-// Update badge XP
+/* This put request updates the experience points of a badge
+Input: badgeId, experiencePoints
+Output: confirmation/error message
+*/
 router.put('/update/experience-points/', auth, async (req, res) => {
     try {
         const badgeId = req.body.badgeId;

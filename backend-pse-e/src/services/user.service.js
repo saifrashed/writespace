@@ -28,17 +28,15 @@ const userModel = require("../models/user.model.js");
 // Post request (creates something in the db)
 
 // Function to get the level of a user based on their experience points
-function getLevel(experiencePoints, levelThresholds) {
+function getLevel(experiencePoints) {
     let level = 1;
-    while (experiencePoints >= levelThresholds[level]) {
-      level++;
-      if (level >= levelThresholds.length) {
-        // Handle the case where the user exceeds the highest level threshold
-        break;
-      }
+    let levelThreshold = 0;
+    while (experiencePoints >= levelThreshold) {
+        level++;
+        levelThreshold += (level - 1) * 100;
     }
-    return level;
-  }
+    return level - 1;
+}
 
 // Get request (gets something from the db)
 // Get all users
@@ -295,7 +293,7 @@ router.get("/get-user", auth, async (req, res) => {
             return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
-        const level = getLevel(responseMongo.experiencePoints, levelThresholds);
+        const level = getLevel(responseMongo.experiencePoints);
 
         // Combine json objects ... merges the objects
         const combinedUser = {
@@ -328,40 +326,6 @@ router.get("/get-user", auth, async (req, res) => {
 //         res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
 //     }
 // });
-
-const levelThresholds = [
-    0,     // Level 1 threshold
-    100,   // Level 2 threshold
-    300,   // Level 3 threshold
-    600,   // Level 4 threshold
-    1000,  // Level 5 threshold
-    1500,  // Level 6 threshold
-    2100,  // Level 7 threshold
-    2800,  // Level 8 threshold
-    3600,  // Level 9 threshold
-    4500,  // Level 10 threshold
-    5500,  // Level 11 threshold
-    6600,  // Level 12 threshold
-    7800,  // Level 13 threshold
-    9100,  // Level 14 threshold
-    10500, // Level 15 threshold
-    12000, // Level 16 threshold
-    13600, // Level 17 threshold
-    15300, // Level 18 threshold
-    17100, // Level 19 threshold
-    19000, // Level 20 threshold
-    21000, // Level 21 threshold
-    23100, // Level 22 threshold
-    25300, // Level 23 threshold
-    27600, // Level 24 threshold
-    30000, // Level 25 threshold
-    32500, // Level 26 threshold
-    35100, // Level 27 threshold
-    37800, // Level 28 threshold
-    40600, // Level 29 threshold
-    43500  // Level 30 threshold
-];
-
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable
