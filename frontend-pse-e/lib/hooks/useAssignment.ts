@@ -17,6 +17,7 @@ function useAssignment() {
       onError("Something went wrong")
     }
   }
+
   const createAssignment = async (courseId: number, assignment: Assignment, token: string) => {
     try {
       const response = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/assignments`, { token, assignment })
@@ -27,6 +28,7 @@ function useAssignment() {
       onError("Something went wrong")
     }
   }
+
   const updateAssignment = async (courseId: number, assignmentId: number, assignment: Assignment, token: string) => {
     try {
       const response = await axios.put(`${config.baseUrl}/canvas-api/courses/${courseId}/assignments/${assignmentId}`, { token, assignment })
@@ -37,6 +39,7 @@ function useAssignment() {
       onError("Something went wrong")
     }
   }
+  
   const deleteAssignment = async (courseId: number, assignmentId: number, token: string) => {
     try {
       await axios.delete(`${config.baseUrl}/canvas-api/courses/${courseId}/assignments/${assignmentId}`,
