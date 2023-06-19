@@ -8,4 +8,4 @@ const quizScoreModel = new mongoose.Schema({
 });
 
 // Export the database model for MongoDB
-module.exports = mongoose.model("quiz", quizScoreModel);
+module.exports = mongoose.model("quiz-score", quizScoreModel);
