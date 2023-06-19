@@ -79,8 +79,8 @@ router.get("/find-by-user-id/:userId", auth, async (req, res) => {
 // Save new user
 router.post('/save', auth, async (req, res) => {
     try {
-        // Variables for the model
-        const userId = req.body.userId;
+        // Use the userId from the authentication check (canvas userId)
+        const userId = res.locals.userId;
 
         const alreadyExists = await userModel.find({ 'userId': userId });
 
