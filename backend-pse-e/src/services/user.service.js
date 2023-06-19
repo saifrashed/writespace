@@ -52,28 +52,6 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-// Find users by userId
-router.get("/find-by-user-id/:userId", auth, async (req, res) => {
-    try {
-        // Find the object using an attribute of the object
-        const result = await userModel.findOne({ 'userId': req.params.userId });
-        // If the object is not fount give an error
-        if (result.length === 0) {
-            return res.status(200).json({ message: 'Object not found' });
-        }
-
-        const level = getLevel(result.experiencePoints, levelThresholds);
-        plainResult = result.toObject();
-        plainResult.level = level;
-
-        // Handle success case here
-        res.status(200).json(plainResult);
-    } catch (error) {
-        console.error('Error from MongoDB:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 // Save new user
 router.post('/save', auth, async (req, res) => {
     try {
@@ -315,10 +293,13 @@ router.get("/get-user", auth, async (req, res) => {
             return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
+        const level = getLevel(responseMongo.experiencePoints, levelThresholds);
+
         // Combine json objects ... merges the objects
         const combinedUser = {
             ...responseCanvas.data,
-            ...responseMongo[0]._doc
+            ...responseMongo[0]._doc,
+            level
           };
 
         // Handle success case here
