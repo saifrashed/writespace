@@ -75,7 +75,7 @@ router.get("/find-by-quiz-id/:quizId", auth, async (req, res) => {
 router.post('/save/', auth, async (req, res) => {
    try {
         const quizId = req.body.quizId;
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const score = req.body.latestScore;
 
         const alreadySubmitted = await quizScoreModel.find({ 'quizId': quizId, 'userId': userId });
@@ -99,7 +99,7 @@ router.post('/save/', auth, async (req, res) => {
 // Update quiz score. Automatically updates high score if latest score is higher
 router.put('/update/grade/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const quizId = req.body.quizId;
         const newScore = req.body.latestScore;
 
@@ -171,7 +171,7 @@ router.delete('/delete-all-by-user/:userId', auth, async (req, res) => {
 // Delete quiz score for specific user and quiz
 router.delete('/delete-one/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const quizId = req.body.quizId;
 
         // Find the document by submissionId and remove it

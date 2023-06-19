@@ -103,7 +103,7 @@ router.get("/find-specific-submission/", auth, async (req, res) => {
 // Post request (creates something in the db)
 router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
 
         const alreadySubmitted = await submissionModel.find({ 'assignmentId': assignmentId, 'userId': userId });
@@ -146,7 +146,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
 // Voegt notes to the submission
 router.put('/update/fileNotes/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId
         const newNotes = req.body.notes;
         const newGrade = req.body.grade;
@@ -184,7 +184,7 @@ router.put('/update/fileNotes/', auth, async (req, res) => {
 // Updates the submission Grade
 router.put('/update/grade/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId
         const newGrade = req.body.submissionGrade;
         const status = "graded";
@@ -217,7 +217,7 @@ router.put('/update/grade/', auth, async (req, res) => {
 // Updates the submitted file, along with the new date of submission.
 router.put('/update/file/', upload.single('file'), auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId
         const newFileType = req.file.mimetype
         const newFileName = req.file.originalname;
@@ -254,10 +254,10 @@ router.put('/update/file/', upload.single('file'), auth, async (req, res) => {
 // PUT request (updates something in the db)
 router.put('/update/', upload.single('file'), auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId
         const updatedSubmission = {
-            userId: req.body.userId,
+            userId: res.locals.userId,
             assignmentId: req.body.assignmentId,
             date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
             filetype: req.file.mimetype,
@@ -310,7 +310,7 @@ router.delete('/delete-all/:assignmentId', auth, async (req, res) => {
 // DELETE request (deletes something from the db)
 router.delete('/delete-one/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
 
         // Find the document by submissionId and remove it
