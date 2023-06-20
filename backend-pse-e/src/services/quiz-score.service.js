@@ -91,7 +91,7 @@ router.post("/get-score/", auth, async (req, res) => {
 });
 
 // Save or update new quiz score
-router.post('/save/', async (req, res) => {
+router.post('/save/', auth, async (req, res) => {
     try {
         const quizId = req.body.quizId;
         const userId = res.locals.userId;
