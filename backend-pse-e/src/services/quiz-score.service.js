@@ -90,7 +90,7 @@ router.post("/get-score/", auth, async (req, res) => {
     }
 });
 
-// Save new quiz score
+// Save or update new quiz score
 router.post('/save/', async (req, res) => {
     try {
         const quizId = req.body.quizId;
@@ -123,32 +123,6 @@ router.post('/save/', async (req, res) => {
         res.status(500).json({ error: 'Failed to update data' });
     }
 });
-
-// Save new quiz score
-// router.post('/save/', auth, async (req, res) => {
-//    try {
-//         const quizId = req.body.quizId;
-//         const userId = res.locals.userId;
-//         const score = req.body.latestScore;
-
-//         const alreadySubmitted = await quizScoreModel.find({ 'quizId': quizId, 'userId': userId });
-//         if (alreadySubmitted.length !== 0) {
-//             return res.status(200).json({ error: 'update the existing quizScore using /update/' })
-//         }
-
-//         newScore = new quizScoreModel({
-//             quizId: quizId,
-//             userId: userId,
-//             latestScore: score,
-//             highScore: score
-//         });
-//         await newScore.save();
-//         res.status(200).json({ message: 'Score saved' });
-//    } catch (error) {
-//         console.error('Error updating data in MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to update data in /quiz-score//save/' });
-//    }
-// });
 
 // Delete quiz score by quizId
 router.delete('/delete/quiz/:quizId', auth, async (req, res) => {
