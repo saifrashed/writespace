@@ -49,10 +49,10 @@ const Grade: React.FC = () => {
     const handleBadgeClick = (index: number) => {
         // Create a new array based on the current badgeClicked state
         let newBadgeClicked = [...badgeClicked];
-    
+
         // Change the value at the given index to true
         newBadgeClicked[index] = !badgeClicked[index];
-    
+
         // Update the state with the new array
         setBadgeClicked(newBadgeClicked);
     };
@@ -325,7 +325,7 @@ const Grade: React.FC = () => {
                                 <div className="p-6 text-center">
                                     <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     <h3 className="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to submit this grade?</h3>
-                                    <button data-modal-hide="popup-modal" onClick={() => { setIsSubmitted(true); setShowModal(false); gradeSubmission(grade, notes, token, assignmentId) }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                    <button data-modal-hide="popup-modal" onClick={() => { setShowModal(false); }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Yes, I'm sure
                                     </button>
                                     <button data-modal-hide="popup-modal" onClick={() => { setShowModal(false) }} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
@@ -333,9 +333,9 @@ const Grade: React.FC = () => {
                             </div>
                         </div>
                     </div>
-    
-                    <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full " + (badgeModal ? " " : " hidden")}>
-                        <div className="relative w-full max-w-md max-h-2xl mx-auto">
+
+                    <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full" + (badgeModal ? " " : " hidden")}>
+                        <div className="relative w-full max-w-3xl max-h-2x1 mx-auto">
                             <div className="relative bg-white rounded-lg shadow ">
                                 <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
                                     <svg aria-hidden="true" className="w-2 h-5" fill="currentColor" onClick={() => { setBadgeModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
@@ -346,11 +346,14 @@ const Grade: React.FC = () => {
                                     <div className="grid gap-4 my-2.5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                                         {badges.map((badge, index) => {
                                             return (
-                                                <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}   onClick={() => { console.log("assigning badge: ", badge.title); handleBadgeClick(index);}}>
-                                                    <img className="w-10 h-10" src={`/badges/${badge.id.toString()}.png`} alt={badge.description} />
-                                                    {/* <p className="text-sm">{badge.title}</p> */}
-                                                </button>
-                                            )
+                                                    <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
+                                                    onClick={() => { console.log("assigning badge: ", badge.title); console.log(badges); handleBadgeClick(index);}}
+                                                    title={badge.description}
+                                                    key={badge.id}
+                                                    >
+                                                        <img className="w-10 h-10" src={`/badges/${badge.id.toString()}.png`} alt={badge.description} />
+                                                        <p className="text-sm">{badge.title}</p>
+                                                    </button>                                            )
                                         })}
                                     </div>
                                     <h3 className="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to assign these badges?</h3>
