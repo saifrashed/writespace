@@ -3,14 +3,23 @@
 // Simply editing the png is currently more time-efficient than changing code.
 import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
-import CloseButton from '@/components/closeButton';
+import useUser from '@/lib/hooks/useUser';
+import useAuthentication from '@/lib/hooks/useAuthentication';
+
+const extractIdFromUrl = (url)=>{
+  const match = url.match(/\/badges\/(\d+)\.png/);
+  return match ? match[1] : null;
+}
 
 const ScaledBadge = ({ resizeFactor, pictureUrl, title,
                        description, commentary, xp, unlocked}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const { token } = useAuthentication();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const popupRef = useRef(null);
+  const {updateUserPicture} = useUser(token)
+
 
   const handleMouseEnter = () => {setIsHovered(true);};
   const handleMouseLeave = () => {setIsHovered(false);};
@@ -36,6 +45,15 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     left: '-7.5pt',
   };
 
+  const badgeId = extractIdFromUrl(pictureUrl)
+  const handleChooseProfilePicture = async () => {
+    try {
+      await updateUserPicture(badgeId, token);
+      setShowPopup(false)
+    } catch (error) {
+      console.error('Error updating profile picture:', error);
+    }
+  };
 
   {/* Window for title and description */}
   const PopupWindow = () => {
@@ -50,7 +68,9 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
             <p style={{ textAlign: 'right' }}><b>XP:</b> {unlocked ? xp : '--'}</p>
           </div>
         </div>
-        <CloseButton onClick={togglePopup}>Close</CloseButton>
+        <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick={togglePopup}>Close</button>
+        {unlocked ? <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>: ''}
+        {/* <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {()=>{updateUserPicture(badgeId, token), setShowPopup(false)}}>Choose as profile picture</button> */}
       </>
     );
   };
@@ -67,6 +87,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
       window.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
 
   // To make pop-up responsive to window size.
   useEffect(() => {

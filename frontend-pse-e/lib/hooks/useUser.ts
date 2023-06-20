@@ -74,18 +74,7 @@ function useUser(token = '') {
     }
   }
 
-  const updateUser = async (pictureId: number, experiencePoints: number, badges: Badge[], token: string) => {
-    try {
-      const response = await axios.put(`${config.baseUrl}/user/update`, { pictureId, experiencePoints, badges }, { headers: { bearer: token } });
-      return response.data;
-    } catch (error) {
-      console.log(error)
-      onError("Something went wrong")
-    }
-  }
-
-
-  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadge, deleteUserBadge, updateUser };
+  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadge, deleteUserBadge };
 }
 
 export default useUser;

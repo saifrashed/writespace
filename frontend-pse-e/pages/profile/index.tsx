@@ -9,11 +9,12 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Profile = () => {
   const { token } = useAuthentication();
-  const { user } = useUser(token);
-
+  const { user, getUser} = useUser(token);
 
   useEffect(() => {
-    console.log(user)
+    if (user){
+      getUser(token);
+    }
   }, [user])
 
   return (
@@ -32,7 +33,7 @@ const Profile = () => {
           <div className="flex flex-col items-center justify-center mt-20">
             <Avatar
               sx={{ width: 150, height: 150, border: '3px solid #706f7d' }}
-              src="/badges/12.png"
+              src={`/badges/${user?.pictureId}.png`}
             />
             {/* <p>{user?.name}</p> */}
             <div className="mt-4 text-center font-bold text-xl">{user?.name}</div>
@@ -56,12 +57,10 @@ const Profile = () => {
               <div>
                 <div
                   className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                  // className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
                   style={{ height: "20px", width: `${user.experiencePoints / 50}%` }}
                 >
                   <span className="h-full flex items-center justify-center">{`${user.experiencePoints / 50} XP`}</span>
                 </div>
-
               </div>
             )}
           </div>
