@@ -4,13 +4,13 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
 // Configure multer storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+multer({ storage: storage });
 // ************************* This can be coppied for every new service *************************
 
 // ************************* Copy and change this with the model you added *************************
@@ -83,7 +83,7 @@ router.post('/save/', auth, async (req, res) => {
             return res.status(409).json({ error: 'update the existing quizScore using /update/' })
         }
 
-        newScore = new quizScoreModel({
+        const newScore = new quizScoreModel({
             quizId: quizId,
             userId: userId,
             latestScore: score,
@@ -110,13 +110,12 @@ router.put('/update/grade/', auth, async (req, res) => {
             return res.status(200).json({ message: 'Submission not found' });
         }
 
-        documentId = submissionToUpdate._id;
-
+        const documentId = submissionToUpdate._id;
         if (newScore > submissionToUpdate.highScore) {
-            updatedSubmission = await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore, 'highScore': newScore });
+            await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore, 'highScore': newScore });
         }
         else {
-            updatedSubmission = await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore });
+            await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore });
         }
 
 

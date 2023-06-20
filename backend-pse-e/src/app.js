@@ -15,7 +15,7 @@ const cors = require("cors");
 const bodyParser = require('body-parser');
 
 // Import ObjectId from MongoDB
-const { ObjectId } = require('mongodb');
+require('mongodb');
 
 const app = express();
 

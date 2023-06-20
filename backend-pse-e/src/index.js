@@ -3,7 +3,7 @@ const http = require('http');
 // Import app.js
 const app = require('./app');
 // Create the server using http
-const server = http.createServer(app);
+http.createServer(app);
 
 // Set the port for the server
 const { API_PORT } = process.env;

@@ -5,7 +5,7 @@ const router = express.Router();
 const axios = require('axios');
 
 // Authentication
-const { encryptToken, decryptToken, auth } = require('../middleware/auth');
+const { encryptToken, decryptToken} = require('../middleware/auth');
 
 // Login api URL
 const { LOGIN_API_URL } = process.env;

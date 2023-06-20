@@ -4,7 +4,7 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
@@ -15,7 +15,7 @@ const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+multer({ storage: storage });
 
 // Create assignment (missing deadline attribute)
 router.post('/create', auth, (req, res) => {
