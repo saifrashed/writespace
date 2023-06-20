@@ -6,6 +6,12 @@ const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const { auth } = require('../middleware/auth');
+
+// Require axios for communicating with the canvas api
+const axios = require('axios');
+// Canvas api URL
+const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -21,9 +27,20 @@ const userModel = require("../models/user.model.js");
 // Define a route without the starting route defined in app.js
 // Post request (creates something in the db)
 
+// Function to get the level of a user based on their experience points
+function getLevel(experiencePoints) {
+    let level = 1;
+    let levelThreshold = 0;
+    while (experiencePoints >= levelThreshold) {
+        level++;
+        levelThreshold += (level - 1) * 100;
+    }
+    return level - 1;
+}
+
 // Get request (gets something from the db)
 // Get all users
-router.get("/get-all", async (req, res) => {
+router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all users
         const users = await userModel.find();
@@ -35,44 +52,27 @@ router.get("/get-all", async (req, res) => {
     }
 });
 
-// Find users by userId
-router.get("/find-by-user-id/:userId", async (req, res) => {
-    try {
-        // Find the object using an attribute of the object
-        const result = await userModel.find({ 'userId': req.params.userId });
-        // If the object is not fount give an error
-        if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
-        }
-
-        // Handle success case here
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error from MongoDB:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 // Save new user
-router.post('/save', async (req, res) => {
+router.post('/save', auth, async (req, res) => {
     try {
-        // Variables for the model
-        const userId = req.body.userId;
+        // Use the userId from the authentication check (canvas userId)
+        const userId = res.locals.userId;
 
         const alreadyExists = await userModel.find({ 'userId': userId });
 
         if (alreadyExists.length !== 0) {
             return res.status(409).json({ error: 'You cant have two users with the same Id' })
         }
+
+        const pictureId = 0;
         const experiencePoints = 0;
-        const level = 1;
         const badges = req.body.badges;
 
         // Create a new instance of the submission model
         const newUser = new userModel({
             userId: userId,
+            pictureId: pictureId,
             experiencePoints: experiencePoints,
-            level: level,
             badges: badges
         });
 
@@ -87,11 +87,11 @@ router.post('/save', async (req, res) => {
     }
 });
 
-// Updates user XP
-router.put('/update/experience-points/', async (req, res) => {
+// Updates user picture
+router.put('/update/picture/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
-        const experiencePoints = req.body.experiencePoints
+        const pictureId = req.body.pictureId;
 
         const updatedUser = await userModel.findOneAndUpdate(
             {
@@ -99,14 +99,14 @@ router.put('/update/experience-points/', async (req, res) => {
             },
             {
                 $set: {
-                    'experiencePoints': experiencePoints
+                    'pictureId': pictureId
                 }
             },
             { new: true }
         );
 
         if (updatedUser === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         res.status(200).json({ message: 'User updated successfully' });
@@ -116,27 +116,30 @@ router.put('/update/experience-points/', async (req, res) => {
     }
 });
 
-// Updates user level
-router.put('/update/level/', async (req, res) => {
+// Updates user XP
+router.put('/update/experience-points/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
-        const newLevel = req.body.level;
+        const XPToAdd = req.body.experiencePoints
 
-        const updatedUser = await userModel.findOneAndUpdate(
-            {
-                'userId': userId
-            },
+        const userToUpdate = await userModel.findOne({ 'userId': userId });
+
+        if (userToUpdate === null) {
+            return res.status(200).json({ message: 'User not found' });
+        }
+
+        const updateId = userToUpdate._id;
+        let userXP = userToUpdate.experiencePoints;
+        userXP = userXP + XPToAdd;
+
+        const updatedUser = await userModel.findByIdAndUpdate(updateId,
             {
                 $set: {
-                    'level': newLevel
+                    'experiencePoints': userXP,
                 }
             },
             { new: true }
         );
-
-        if (updatedUser === null) {
-            return res.status(404).json({ error: 'User not found' });
-        }
 
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
@@ -146,7 +149,7 @@ router.put('/update/level/', async (req, res) => {
 });
 
 // Add badge to user. Handles adding of new badges and adding to existing badges
-router.put('/update/add-badge/', async (req, res) => {
+router.put('/update/add-badge/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const newBadge = req.body.badgeId;
@@ -158,20 +161,13 @@ router.put('/update/add-badge/', async (req, res) => {
         const userToUpdate = await userModel.findOne({ 'userId': userId });
 
         if (userToUpdate === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         const updateId = userToUpdate._id;
-        const badges = userToUpdate.badges;
+        let badges = userToUpdate.badges;
 
-        if (badges.has(String(newBadge))) {
-            badgeToUpdate = badges.get(String(newBadge))[0];
-            badgeToUpdate.amount = badgeToUpdate.amount + 1;
-            badgeToUpdate.badgelist.push({ courseId: courseId, assignmentId: assignmentId, graderId: graderId, comment: comment });
-            badges.set(String(newBadge), badgeToUpdate);
-        } else {
-            badges.set(String(newBadge), { amount: 1, badgelist: [{ courseId: courseId, assignmentId: assignmentId, graderId: graderId, comment: comment }] });
-        }
+        badges.push({ "badgeId": newBadge, "courseId": courseId, "assignmentId": assignmentId, "graderId": graderId, "comment": comment });
 
         updatedUser = await userModel.findByIdAndUpdate(updateId, { "badges": badges }, { new: true });
 
@@ -183,7 +179,7 @@ router.put('/update/add-badge/', async (req, res) => {
 });
 
 // Delete a badge
-router.put('/update/delete-badge/', async (req, res) => {
+router.put('/update/delete-badge/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const assignmentId = req.body.assignmentId;
@@ -192,32 +188,27 @@ router.put('/update/delete-badge/', async (req, res) => {
         const userToUpdate = await userModel.findOne({ 'userId': userId });
 
         if (userToUpdate === null) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(200).json({ message: 'User not found' });
         }
 
         const updateId = userToUpdate._id;
         const badges = userToUpdate.badges;
+        let badgePresent = false;
 
-        if (badges.has(String(badgeId))) {
-            badgeToDelete = badges.get(String(badgeId))[0];
-            if (badgeToDelete.amount > 1) {
-                badgeToDelete.amount = badgeToDelete.amount - 1;
-                for (var i = 0; i < badgeToDelete.badgelist.length; i++) {
-                    if (badgeToDelete.badgelist[i].assignmentId === assignmentId) {
-                        badgeToDelete.badgelist.pop(i);
-                        badges.set(String(badgeId), badgeToDelete);
-                        break;
-                    }
-                }
+        for (let i = 0; i < badges.length; i++) {
+            const b = badges[i];
+            if (
+              b.badgeId === badgeId &&
+              b.assignmentId === assignmentId
+            ) {
+              badges.splice(i, 1); // Remove the object at the found index
+              badgePresent = true;
+              break;
             }
-            else {
-                badges.delete(String(badgeId));
-            }
+          }
 
-        }
-
-        else {
-            return res.status(404).json({ error: 'Badge not found' });
+        if (!badgePresent) {
+            return res.status(200).json({ message: 'Badge not found' });
         }
 
         await userModel.findByIdAndUpdate(updateId, { "badges": badges });
@@ -232,13 +223,13 @@ router.put('/update/delete-badge/', async (req, res) => {
 
 // General update request
 // PUT request (updates something in the db)
-router.put('/update/', async (req, res) => {
+router.put('/update/', auth, async (req, res) => {
     try {
         const userId = req.body.userId;
         const updatedUser = {
             userId: req.body.userId,
+            pictureId: req.body.pictureId,
             experiencePoints: req.body.experiencePoints,
-            level: req.body.level,
             badges: req.body.badges
         };
 
@@ -252,7 +243,7 @@ router.put('/update/', async (req, res) => {
 
         // Check if the test was found and updated successfully
         if (result.nModified === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         res.status(200).json({ message: 'User updated successfully' });
@@ -262,27 +253,79 @@ router.put('/update/', async (req, res) => {
     }
 });
 
-// Delete user
-router.delete('/delete/:userId', async (req, res) => {
+// // Delete user
+// router.delete('/delete/:userId', auth, async (req, res) => {
+//     try {
+//         const userId = req.params.userId;
+
+//         // Find the document by submissionId and remove it
+//         const result = await userModel.deleteOne({ 'userId': userId });
+
+//         // Check if the document was found and deleted successfully
+//         if (result.deletedCount === 0) {
+//             return res.status(200).json({ message: 'Object not found' });
+//         }
+
+//         // Delete successful
+//         res.status(200).json({ message: 'User deleted successfully' });
+//     } catch (error) {
+//         console.error('Error deleting data from MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to delete data from the database' });
+//     }
+// });
+
+// Get user combined with canvas user object
+router.get("/get-user", auth, async (req, res) => {
     try {
-        const userId = req.params.userId;
+        // Canvas API url
+        const responseCanvas = await axios.get(`${API_URL}/users/self`, {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }
+        });
 
-        // Find the document by submissionId and remove it
-        const result = await userModel.deleteOne({ 'userId': userId });
+        // Find the user with the id from canvas
+        const responseMongo = await userModel.find({ 'userId': responseCanvas.data.id });
 
-        // Check if the document was found and deleted successfully
-        if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+        // If the object is not fount give an error
+        if (responseMongo.length === 0) {
+            return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
-        // Delete successful
-        res.status(200).json({ message: 'User deleted successfully' });
+        const level = getLevel(responseMongo.experiencePoints);
+
+        // Combine json objects ... merges the objects
+        const combinedUser = {
+            ...responseCanvas.data,
+            ...responseMongo[0]._doc,
+            level
+          };
+
+        // Handle success case here
+        res.status(200).json(combinedUser);
     } catch (error) {
-        console.error('Error deleting data from MongoDB:', error);
-        res.status(500).json({ error: 'Failed to delete data from the database' });
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error in /get-user' });
     }
 });
 
+// // Get user from canvas only
+// router.get('/get-user-canvas', auth, async (req, res) => {
+//     try {
+//         // Canvas API url
+//         const response = await axios.get(`${API_URL}/users/self`, {
+//             headers: {
+//                 // Authorization using the access token
+//                 Authorization: `Bearer ${req.headers["bearer"]}`
+//             }
+//         });
+//         res.json(response.data);
+//     } catch (error) {
+//         console.error('Error from Canvas API:', error);
+//         res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
+//     }
+// });
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable

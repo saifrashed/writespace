@@ -161,6 +161,15 @@ export interface Submission {
     redo_request: boolean;
 }
 
+export interface Badge {
+    badgeId: Number,
+    iconId: Number,
+    experiencePoints: Number,
+    name: String,
+    description: String,
+}
+
+
 export interface Enrollment {
     id: number;
     course_id: number;
@@ -240,6 +249,11 @@ export interface User {
     bio: string | null;
 }
 
+export interface UserDb {
+    userId: Number,
+    experiencePoints: Number,
+    level: Number,
+    badges: Object,
 export interface Note {
     id: number;
     content: string;

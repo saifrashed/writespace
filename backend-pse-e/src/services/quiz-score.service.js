@@ -6,6 +6,7 @@ const express = require('express');
 const router = express.Router();
 const { ObjectId } = require('mongodb');
 const multer = require('multer');
+const { auth } = require('../middleware/auth');
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -22,7 +23,7 @@ const quizScoreModel = require('../models/quiz-score.model.js');
 
 // Get request (gets something from the db)
 // Get all quiz scores
-router.get("/get-all", async (req, res) => {
+router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
         const quizScores = await quizScoreModel.find();
@@ -35,13 +36,13 @@ router.get("/get-all", async (req, res) => {
 });
 
 // Find all scores for a specific user
-router.get("/find-by-user-id/:userId", async (req, res) => {
+router.get("/find-by-user-id/:userId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'userId': req.params.userId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -53,13 +54,13 @@ router.get("/find-by-user-id/:userId", async (req, res) => {
 });
 
 // Find all scores for a specific quiz
-router.get("/find-by-quiz-id/:quizId", async (req, res) => {
+router.get("/find-by-quiz-id/:quizId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'quizId': req.params.quizId });
         // If the object is not fount give an error
         if (result.length === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Handle success case here
@@ -71,10 +72,10 @@ router.get("/find-by-quiz-id/:quizId", async (req, res) => {
 });
 
 // Save new quiz score
-router.post('/save/', async (req, res) => {
+router.post('/save/', auth, async (req, res) => {
    try {
         const quizId = req.body.quizId;
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const score = req.body.latestScore;
 
         const alreadySubmitted = await quizScoreModel.find({ 'quizId': quizId, 'userId': userId });
@@ -91,21 +92,22 @@ router.post('/save/', async (req, res) => {
         await newScore.save();
         res.status(200).json({ message: 'Score saved' });
    } catch (error) {
-
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in /quiz-score//save/' });
    }
 });
 
 // Update quiz score. Automatically updates high score if latest score is higher
-router.put('/update/grade/', async (req, res) => {
+router.put('/update/grade/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const quizId = req.body.quizId;
         const newScore = req.body.latestScore;
 
         const submissionToUpdate = await quizScoreModel.findOne({ 'userId': userId, 'quizId': quizId });
 
         if (submissionToUpdate === null) {
-            return res.status(404).json({ error: 'Submission not found' });
+            return res.status(200).json({ message: 'Submission not found' });
         }
 
         documentId = submissionToUpdate._id;
@@ -126,7 +128,7 @@ router.put('/update/grade/', async (req, res) => {
 });
 
 // Delete quiz score by quizId
-router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
+router.delete('/delete-all-by-quiz/:quizId', auth, async (req, res) => {
     try {
         const quizId = req.params.quizId;
 
@@ -135,7 +137,7 @@ router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
@@ -147,7 +149,7 @@ router.delete('/delete-all-by-quiz/:quizId', async (req, res) => {
 });
 
 // Delete quiz score by userId
-router.delete('/delete-all-by-user/:userId', async (req, res) => {
+router.delete('/delete-all-by-user/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
 
@@ -156,7 +158,7 @@ router.delete('/delete-all-by-user/:userId', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful
@@ -168,9 +170,9 @@ router.delete('/delete-all-by-user/:userId', async (req, res) => {
 });
 
 // Delete quiz score for specific user and quiz
-router.delete('/delete-one/', async (req, res) => {
+router.delete('/delete-one/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const quizId = req.body.quizId;
 
         // Find the document by submissionId and remove it
@@ -181,7 +183,7 @@ router.delete('/delete-one/', async (req, res) => {
 
         // Check if the document was found and deleted successfully
         if (result.deletedCount === 0) {
-            return res.status(404).json({ error: 'Object not found' });
+            return res.status(200).json({ message: 'Object not found' });
         }
 
         // Delete successful

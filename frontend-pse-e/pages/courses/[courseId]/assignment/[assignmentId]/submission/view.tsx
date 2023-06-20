@@ -6,7 +6,8 @@ import { useRouter } from 'next/router';
 import useSubmission from '@/lib/hooks/useSubmission';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from '@/lib/hooks/useAuthentication';
-
+import Lottie from "lottie-react"
+import * as searchingAnimationData from "@/public/animations/searching.json";
 
 import {
     highlightPlugin,
@@ -25,7 +26,7 @@ const View: React.FC = () => {
     const { courseId, assignmentId } = router.query;
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
-    const { getSubmissionDocument, getSubmission, submission, fileNotes, fileUrl } = useSubmission()
+    const { getSubmissionDocument, getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission()
     const { token } = useAuthentication()
     const { assignment, getAssignment } = useAssignment()
 
@@ -34,7 +35,8 @@ const View: React.FC = () => {
             getSubmissionDocument(assignmentId.toString(), token)
             getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
         }
-    }, [])
+    }, [assignmentId, courseId])
+
 
     let noteId = notes.length;
 
@@ -54,8 +56,8 @@ const View: React.FC = () => {
 
     const renderHighlights = (props: RenderHighlightsProps) => (
         <div>
-            {notes.map((note) => (
-                <React.Fragment key={note.id}>
+            {notes.map((note, index) => (
+                <React.Fragment key={index}>
                     {note.highlightAreas
                         .filter((area) => area.pageIndex === props.pageIndex)
                         .map((area, idx) => (
@@ -90,106 +92,127 @@ const View: React.FC = () => {
         <div
             style={{ height: "100vh" }}
         >
-            <div
-                style={{
-                    border: '1px solid rgba(0, 0, 0, 0.3)',
-                    display: 'flex',
-                    height: '100%',
-                    overflow: 'hidden',
-                }}
-            >
-                <div className='w-full'>
-                    <div className="bg-white flex justify-center items-center overflow-x-scroll w-full" style={{ height: "10vh" }}>
-                        <div>
-                            <Link href={`/courses/${courseId}/assignment/${assignmentId}`}>
-                                <button
+
+            {fileUrl && (
+                <div
+                    style={{
+                        border: '1px solid rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        height: '100%',
+                        overflow: 'hidden',
+                    }}
+                >
+                    <div className='w-full'>
+                        <div className="bg-white flex justify-center items-center overflow-x-scroll w-full" style={{ height: "10vh" }}>
+                            <div>
+                                <button onClick={() => { router.back() }}
                                     className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
                                     Go back
                                 </button>
-                            </Link>
+                            </div>
+
+                            <div>
+                                <button onClick={() => { setNotebar(true) }}
+                                    className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
+                                    Watch notes ({notes.length})
+                                </button>
+                            </div>
+
+
+                            <div>
+                                <button
+                                    className="px-4 py-2 inline-block bg-gray-100 text-gray-800 text-sm font-medium rounded-full cursor-default">
+                                    Grade: {grade ? grade : " Waiting to be graded"}
+                                </button>
+                            </div>
                         </div>
-
-                        <div>
-                            <button onClick={() => { setNotebar(true) }}
-                                className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
-                                Watch notes ({notes.length})
-                            </button>
-                        </div>
-
-
-                        <div>
-                            <button
-                                className="px-4 py-2 inline-block bg-gray-100 text-gray-800 text-sm font-medium rounded-full cursor-default">
-                                Grade: {submission?.grade ? Number(submission.grade).toFixed(1) : " Waiting to be graded"}
-                            </button>
+                        <div style={{ height: "90vh" }}>
+                            {fileUrl && (
+                                <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} onDocumentLoad={handleDocumentLoad} />
+                            )}
                         </div>
                     </div>
-                    <div style={{ height: "90vh" }}>
-                        {fileUrl && (
-                            <Viewer fileUrl={fileUrl} plugins={[highlightPluginInstance]} onDocumentLoad={handleDocumentLoad} />
-                        )}
-                    </div>
-                </div>
 
-                {/* Notes Bar */}
-                <div className={"relative z-10 "} role="dialog" aria-modal="true">
-                    <div
-                        className={"pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 transition ease-in-out delay-250 " + (!noteBar && "translate-x-full")}>
-                        <div className="pointer-events-auto relative w-screen max-w-md">
-                            <div
-                                className="flex h-full flex-col overflow-y-scroll hide-scrollbar bg-white  shadow-xl">
-                                <div className="flex flex-col px-4 py-5 sm:px-6 bg-gray-500">
-                                    <div className="flex justify-between">
-                                        <h2 className=" text-2xl text-white">
-                                            Notes
-                                        </h2>
-                                        <button type="button"
-                                            className="rounded-md text-white"
-                                            onClick={() => {
-                                                setNotebar(false)
-                                            }}>
-                                            <span className="sr-only">Close panel</span>
-                                            <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
-                                                fill="none" viewBox="0 0 24 24" strokeWidth="2"
-                                                stroke="currentColor" aria-hidden="true">
-                                                <path strokeLinecap="round" strokeLinejoin="round"
-                                                    d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
+                    {/* Notes Bar */}
+                    <div className={"relative z-10 "} role="dialog" aria-modal="true">
+                        <div
+                            className={"pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 transition ease-in-out delay-250 " + (!noteBar && "translate-x-full")}>
+                            <div className="pointer-events-auto relative w-screen max-w-md">
+                                <div
+                                    className="flex h-full flex-col overflow-y-scroll hide-scrollbar bg-white  shadow-xl">
+                                    <div className="flex flex-col px-4 py-5 sm:px-6 bg-gray-500">
+                                        <div className="flex justify-between">
+                                            <h2 className=" text-2xl text-white">
+                                                Notes
+                                            </h2>
+                                            <button type="button"
+                                                className="rounded-md text-white"
+                                                onClick={() => {
+                                                    setNotebar(false)
+                                                }}>
+                                                <span className="sr-only">Close panel</span>
+                                                <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg"
+                                                    fill="none" viewBox="0 0 24 24" strokeWidth="2"
+                                                    stroke="currentColor" aria-hidden="true">
+                                                    <path strokeLinecap="round" strokeLinejoin="round"
+                                                        d="M6 18L18 6M6 6l12 12" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <span className="text-white text-xl font-light">
+                                            Comments about your assignment.
+                                        </span>
                                     </div>
-                                    <span className="text-white text-xl font-light">
-                                        Comments about your assignment.
-                                    </span>
-                                </div>
-                                <div className="relative flex-1">
-                                    <div className="absolute inset-0 ">
-                                        <ul className="divide-y divide-gray-200">
-                                            {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
-                                            {notes.map((note) => {
-                                                return (
-                                                    <li className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
-                                                        <div className="px-4 py-4 sm:px-6">
-                                                            <div
-                                                                className="items-center justify-between">
-                                                                <p className="text-md text-gray-700 font-light">
-                                                                    "{note.quote}"
-                                                                </p>
-                                                                <p className="text-md text-gray-700  font-bold">
-                                                                    {note.content}
-                                                                </p>
+                                    <div className="relative flex-1">
+                                        <div className="absolute inset-0 ">
+                                            <ul className="divide-y divide-gray-200">
+                                                {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
+                                                {notes.map((note, index) => {
+                                                    return (
+                                                        <li className="block hover:bg-gray-50 cursor-pointer" key={index} onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
+                                                            <div className="px-4 py-4 sm:px-6">
+                                                                <div
+                                                                    className="items-center justify-between">
+                                                                    <p className="text-md text-gray-700 font-light">
+                                                                        "{note.quote}"
+                                                                    </p>
+                                                                    <p className="text-md text-gray-700  font-bold">
+                                                                        {note.content}
+                                                                    </p>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </li>
-                                                )
-                                            })}
-                                        </ul>
+                                                        </li>
+                                                    )
+                                                })}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
+
+            {!fileUrl && (
+                <>
+                    <NavBar />
+
+                    <div className="w-1/3 mx-auto mt-10 text-center">
+                        <Lottie
+                            loop={true}
+                            autoplay={true}
+                            animationData={searchingAnimationData}
+                        />
+                        <p className="text-3xl font-bold mb-5">This assignment has not been uploaded to Writespace.</p>
+                        <button onClick={() => { router.back() }}
+                            className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
+                            Go back
+                        </button>
+                    </div>
+                </>
+            )}
+
         </div>
     );
 };

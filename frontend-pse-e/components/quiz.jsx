@@ -95,7 +95,7 @@ const Quiz = () => {
                             <div>
                                 {showButton && (
                                     <button type="button" onClick={closeQuiz} className="absolute top-3 left-2.5 text-black bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
-                                        <i class="fa-solid fa-arrow-left w-5 h-5"></i>
+                                        <i className="fa-solid fa-arrow-left w-5 h-5"></i>
                                     </button>
                                 )}
 

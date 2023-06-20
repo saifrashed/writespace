@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const badgeSchema = new mongoose.Schema({
+    badgeId: Number,
     courseId: Number,
     assignmentId: Number,
     graderId: Number,
@@ -9,15 +10,9 @@ const badgeSchema = new mongoose.Schema({
 
 const userModel = new mongoose.Schema({
     userId: Number,
+    pictureId: Number,
     experiencePoints: Number,
-    level: Number,
-    badges: {
-      type: Map,
-      of: [{
-        amount: Number,
-        badgelist: [badgeSchema]
-      }]
-    }
+    badges: [badgeSchema],
   });
 
 // Export the database model for MongoDB
