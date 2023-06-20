@@ -1,81 +1,22 @@
 import Head from "next/head";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
-import UploadPopup from "@/components/uploadPopup";
-import useSubmission from "@/lib/hooks/useSubmission";
-import useEnrollments from "@/lib/hooks/useEnrollments";
-import useSubmissions from "@/lib/hooks/useSubmissions";
-import useUsers from "@/lib/hooks/useUsers";
-
 import { formatDate } from "@/lib/date";
 import { motion } from "framer-motion";
-import useCourse from "@/lib/hooks/useCourse";
-import { Enrollment } from "@/lib/types";
-import { Context } from "@/Context";
 
 const Assignments = () => {
     const router = useRouter();
     // Accessing query parameters from the router object
-    const { courseId, assignmentId } = router.query;
+    const { assignmentId } = router.query;
     const { token } = useAuthentication();
-    const { assignment: contextAssignment } = useContext(Context); // When pressing a course
-    const { assignment: fetchedAssignment, getAssignment } = useAssignment(); // When navigating to a course via url
-    const assignment = contextAssignment || fetchedAssignment;
-
-    const { submission, getSubmission } = useSubmission()
-    const { submissions, getSubmissions } = useSubmissions()
-    const { enrollments, getEnrollments } = useEnrollments()
-    const { users, getUsers } = useUsers()
-
-    const { course: contextCourse } = useContext(Context); // When pressing a course
-    const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url
-    const course = contextCourse || fetchedCourse;
-
-    const [isTeacher, setIsTeacher] = useState()
+    const { assignment, submissions, getAssignment, getSubmissions } = useAssignment(token, "", assignmentId?.toString()); // When navigating to a course via url
 
     useEffect(() => {
-        if (courseId && assignmentId && token) {
-            getCourse(parseInt(courseId.toString()), token)
-            getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-            getUsers(parseInt(courseId.toString()), token)
-        }
-    }, [router.query]);
-
-    // useEffect(() => {
-    //     if (course) {
-    //         setIsTeacher(course.enrollments?.some((enrollment: Enrollment) => enrollment?.type === "teacher"))
-    //     }
-    // }, [course]);
-
-
-    // useEffect(() => {
-    //     if (courseId && assignmentId && token) {
-    //         if (typeof isTeacher === 'boolean') {
-    //             if (isTeacher) {
-    //                 getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-    //                 getUsers(parseInt(courseId.toString()), token)
-    //             } else {
-    //                 getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-    //             }
-    //         }
-    //     }
-    // }, [isTeacher])
-
-
-    function getRandomGrade() {
-        // Generate a random number between 50 and 90 (inclusive)
-        var randomNumber = Math.floor(Math.random() * 41) + 50;
-
-        // Convert the random number to a decimal grade with 1-point increments
-        var grade = randomNumber / 10;
-
-        return grade;
-    }
+        console.log(submissions)
+    }, [submissions]);
 
     return (
         <>
@@ -87,7 +28,6 @@ const Assignments = () => {
             </Head>
 
             <NavBar />
-
 
             <div className="bg-gray-50 py-10 mt-16 min-h-screen">
                 <div className="text-center mb-6">
@@ -116,21 +56,17 @@ const Assignments = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map((user, index) => (
+                                {submissions && submissions.map((submission, index) => (
                                     <tr
                                         key={index}
                                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}>
-                                                {user.name}
-                                            </Link>
+                                            {submission.userId}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
-                                            Submitted
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            {getRandomGrade()}
                                         </td>
                                     </tr>
                                 ))}

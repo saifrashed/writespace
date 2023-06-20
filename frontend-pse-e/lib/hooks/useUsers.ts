@@ -4,10 +4,16 @@ import config from "../config";
 import { useNotification } from "./useNotification";
 import { User } from "../types";
 
-function useUsers() {
+function useUsers(token='') {
     const { onSuccess, onError } = useNotification()
     const [usersData, setUsersData] = useState<User[]>([]);
     const [isLoading, setIsLoading] = useState<Boolean>(true);
+
+    useEffect(() => {
+      if (token) {
+        getAllUsers(token)
+      }
+    }, []);
 
     const getAllUsers = async (token: string) => {
       try {
