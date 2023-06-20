@@ -7,7 +7,6 @@ import Link from 'next/link';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import UploadPopup from "@/components/uploadPopup";
-import useSubmission from "@/lib/hooks/useSubmission";
 import { formatDate } from "@/lib/date";
 import Quiz from "@/components/quiz"
 
@@ -16,19 +15,12 @@ const Assignments = () => {
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
-  const { submission, getSubmission } = useSubmission()
+  const { assignment, getAssignment, submission, getSubmission } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
-  const isTeacher = false;
 
-  // useEffect(() => {
-  //   if (courseId && assignmentId && token) {
-  //     getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-  //     getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-  //   }
-  // }, [router.query]);
+  console.log(submission);
 
   return (
     <>
@@ -46,19 +38,19 @@ const Assignments = () => {
           <h1 className="text-3xl font-bold px-5">{assignment?.name}</h1>
 
           <div className="md:flex items-center justify-between mb-6 px-5">
-            {!isTeacher && (
+
               <p className="mt-8 text-gray-600">
                 <span className="font-bold">Grade: </span> {submission?.grade ? <span> {Number(submission.grade).toFixed(1)} / {assignment?.points_possible} </span> : " Waiting to be graded"}
 
               </p>
-            )}
+
 
             <p className="mt-8 text-gray-600">
               <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
             </p>
           </div>
 
-          {!isTeacher && (
+
             <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
               <div className="col-span-4 p-4">
                 <div className="w-full p-4 bg-white rounded-lg border border-gray-200 ">
@@ -93,7 +85,7 @@ const Assignments = () => {
                 </div>
 
                 <p className="mt-8 text-gray-600">
-                  {submission?.submitted_at ? (
+                  {submission?.date ? (
                     <span className="flex items-center text-green-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -131,51 +123,9 @@ const Assignments = () => {
                     </span>
                   )}
 
-                  <span className="font-bold">Submission date: </span>{submission?.submitted_at ? formatDate(submission?.submitted_at) : "-"}</p>
+                  <span className="font-bold">Submission date: </span>{submission?.date ? formatDate(submission?.date.toString()) : "-"}</p>
               </div>
             </div>
-          )}
-          {isTeacher && (
-            <div className="w-full relative overflow-x-auto shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5">
-              <table className="w-full text-sm text-left">
-                <thead className="text-xs text-gray-700 uppercase bg-white-50 dark:bg-gray-700 dark:text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                      Name
-                    </th>
-                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                      Submission Status
-                    </th>
-                    <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                      Grade Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th scope="row" className="px-6 py-4 whitespace-nowrap">
-                      <Link
-                        href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}
-                      >
-                        Student name
-                      </Link>
-                    </th>
-                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
-                      submitted
-                    </td>
-                    <td scope="row" className="px-6 py-4 whitespace-nowrap">
-                      Graded
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row" className="px-6 py-4 whitespace-nowrap">
-                      Student name
-                    </th>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )}
 
           <Quiz />
           <UploadPopup showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} assignmentId={assignmentId} />

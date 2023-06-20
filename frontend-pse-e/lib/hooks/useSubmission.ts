@@ -4,7 +4,7 @@ import config from "../config";
 import { useNotification } from "./useNotification";
 import { Note, Submission } from "../types";
 
-function useSubmission() {
+function useSubmission(token='', courseId='', assignmentId='') {
   const { onError } = useNotification()
   const [submissionData, setSubmissionData] = useState<Submission>();
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -12,17 +12,11 @@ function useSubmission() {
   const [fileNotes, setFileNotes] = useState<Note[] | null>(null);
   const [grade, setGrade] = useState<number | null>(0);
 
-  const getSubmission = async (courseId: number, assignmentId: number, token: string) => {
-    try {
-      const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-      const submission = await axios.post(`${config.baseUrl}/canvas-api/courses/${courseId}/${assignmentId}/${user.data.id}`, { token });
-      setSubmissionData(submission.data);
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
+  useEffect(() => {
+    if (courseId && token && assignmentId) {
+
     }
-  };
+  }, []);
 
   const gradeSubmission = async (grade: number, notes: Note[], token: string, assignmentId: number) => {
     try {
@@ -49,8 +43,8 @@ function useSubmission() {
       const response = await axios.put(`${config.baseUrl}/submission/update/fileNotes/`, body);
 
 
-      console.log(response)
-      console.log(body)
+      // console.log(response)
+      // console.log(body)
 
       if (response.status === 200) {
         console.log("Grade submitted");
@@ -63,10 +57,9 @@ function useSubmission() {
 
   const submitSubmission = async (token: string, assignmentId: string, file: File) => {
     try {
-
       const user = await axios.post(`${config.baseUrl}/canvas-api/get-user`, { token });
-
       const formData = new FormData();
+
       formData.append("file", file, file.name);
       formData.append("userId", user.data.id);
       formData.append("assignmentId", assignmentId);
@@ -76,8 +69,6 @@ function useSubmission() {
       }
 
       const response = await axios.post(`${config.baseUrl}/submission/save`, formData, { headers: headers });
-
-      console.log(response)
 
       if (response.status === 200) {
         console.log("Submission submitted");
@@ -114,7 +105,7 @@ function useSubmission() {
     }
   };
 
-  return { submission: submissionData, isLoading, fileUrl, fileNotes, grade, getSubmission, getSubmissionDocument, submitSubmission, gradeSubmission };
+  return { submission: submissionData, isLoading, fileUrl, fileNotes, grade, getSubmissionDocument, submitSubmission, gradeSubmission };
 
 }
 
