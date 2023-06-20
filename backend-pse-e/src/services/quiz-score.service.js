@@ -73,7 +73,8 @@ router.get("/quiz/:quizId", auth, async (req, res) => {
 
 router.post("/get-score/", auth, async (req, res) => {
     try {
-        const { quizId, userId } = req.body;
+        const quizId = req.body.quizId;
+        const userId = res.locals.userId;
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'userId': userId, 'quizId': quizId });
         // If the object is not fount give an error
