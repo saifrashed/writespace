@@ -36,7 +36,7 @@ router.get("/get-all", auth, async (req, res) => {
 });
 
 // Find all scores for a specific user
-router.get("/find-by-user-id/:userId", auth, async (req, res) => {
+router.get("/user/:userId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'userId': req.params.userId });
@@ -54,10 +54,28 @@ router.get("/find-by-user-id/:userId", auth, async (req, res) => {
 });
 
 // Find all scores for a specific quiz
-router.get("/find-by-quiz-id/:quizId", auth, async (req, res) => {
+router.get("/quiz/:quizId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'quizId': req.params.quizId });
+        // If the object is not fount give an error
+        if (result.length === 0) {
+            return res.status(200).json({ message: 'Object not found' });
+        }
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.post("/get-score/", auth, async (req, res) => {
+    try {
+        const { quizId, userId } = req.body;
+        // Find the object using an attribute of the object
+        const result = await quizScoreModel.find({ 'userId': userId, 'quizId': quizId });
         // If the object is not fount give an error
         if (result.length === 0) {
             return res.status(200).json({ message: 'Object not found' });
@@ -80,7 +98,7 @@ router.post('/save/', auth, async (req, res) => {
 
         const alreadySubmitted = await quizScoreModel.find({ 'quizId': quizId, 'userId': userId });
         if (alreadySubmitted.length !== 0) {
-            return res.status(409).json({ error: 'update the existing quizScore using /update/' })
+            return res.status(200).json({ error: 'update the existing quizScore using /update/' })
         }
 
         newScore = new quizScoreModel({
@@ -106,7 +124,7 @@ router.put('/update/grade/', auth, async (req, res) => {
 
         const submissionToUpdate = await quizScoreModel.findOne({ 'userId': userId, 'quizId': quizId });
 
-        if (submissionToUpdate === null) {
+        if (!submissionToUpdate) {
             return res.status(200).json({ message: 'Submission not found' });
         }
 
@@ -128,7 +146,7 @@ router.put('/update/grade/', auth, async (req, res) => {
 });
 
 // Delete quiz score by quizId
-router.delete('/delete-all-by-quiz/:quizId', auth, async (req, res) => {
+router.delete('/delete/quiz/:quizId', auth, async (req, res) => {
     try {
         const quizId = req.params.quizId;
 
@@ -149,7 +167,7 @@ router.delete('/delete-all-by-quiz/:quizId', auth, async (req, res) => {
 });
 
 // Delete quiz score by userId
-router.delete('/delete-all-by-user/:userId', auth, async (req, res) => {
+router.delete('/delete/user/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
 

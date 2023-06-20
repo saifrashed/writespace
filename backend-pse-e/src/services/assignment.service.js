@@ -16,6 +16,7 @@ const { API_URL } = process.env;
 // Configure multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+const submissionModel = require("../models/submission.model.js");
 
 // Create assignment (missing deadline attribute)
 router.post('/create', auth, (req, res) => {
@@ -149,6 +150,20 @@ router.post('/written-assignments', auth, async (req, res) => {
     } catch (error) {
         console.error('Error from Canvas API:', error);
         res.status(500).json({ error: 'An error occurred in /written-assignments.' });
+    }
+});
+
+// Get all submissions for an assignment
+router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
+    try {
+        // Find the object using an attribute of the object
+        const result = await submissionModel.find({ 'assignmentId': req.params.assignmentId });
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
