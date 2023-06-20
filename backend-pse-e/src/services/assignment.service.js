@@ -167,6 +167,25 @@ router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
     }
 });
 
+// Get submission by a user for an assignment
+router.post("/get-submission/", auth, async (req, res) => {
+    try {
+        const { userId, assignmentId } = req.body;
+        // Find the object using an attribute of the object
+
+        const result = await submissionModel.find({
+            'assignmentId': assignmentId,
+            'userId': userId ? userId : res.locals.userId
+        });
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable
 module.exports = router;

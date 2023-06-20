@@ -53,26 +53,6 @@ router.get("/get-all", auth, async (req, res) => {
 //     }
 // });
 
-
-// Find submissions by id.
-router.post("/get-one/", auth, async (req, res) => {
-    try {
-        const { userId, assignmentId } = req.body;
-        // Find the object using an attribute of the object
-
-        const result = await submissionModel.find({
-            'assignmentId': assignmentId,
-            'userId': userId ? userId : res.locals.userId
-        });
-
-        // Handle success case here
-        res.status(200).json(result);
-    } catch (error) {
-        console.error('Error from MongoDB:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 // Post request (creates something in the db)
 router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
@@ -117,7 +97,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
 });
 
 // Voegt notes to the submission
-router.put('/update/file-notes/', auth, async (req, res) => {
+router.put('/file-notes/', auth, async (req, res) => {
     try {
         const { userId, assignmentId, notes, grade } = req.body;
 
@@ -153,7 +133,7 @@ router.put('/update/file-notes/', auth, async (req, res) => {
 
 
 // Updates the submission Grade
-router.put('/update/grade/', auth, async (req, res) => {
+router.put('/grade/', auth, async (req, res) => {
     try {
         const { userId, assignmentId, grade } = req.body;
         const status = "graded";
@@ -184,7 +164,7 @@ router.put('/update/grade/', auth, async (req, res) => {
 });
 
 // Updates the submitted file, along with the new date of submission.
-router.put('/update/file/', upload.single('file'), auth, async (req, res) => {
+router.put('/file/', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId
