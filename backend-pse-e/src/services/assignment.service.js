@@ -34,7 +34,6 @@ router.post('/create', auth, (req, res) => {
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
-            "assignment[peer_reviews]": assignment.peer_reviews,
             "assignment[published]": true, // immediately publish assignment
             "assignment[due_at]": assignment.due_at
         }
@@ -62,7 +61,6 @@ router.put('/update', auth, (req, res) => {
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
-            "assignment[peer_reviews]": assignment.peer_reviews,
             "assignment[published]": true, // immediately publish assignment
             "assignment[due_at]": assignment.due_at
         }
