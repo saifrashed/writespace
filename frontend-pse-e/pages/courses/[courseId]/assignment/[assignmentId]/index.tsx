@@ -19,6 +19,7 @@ const Assignments = () => {
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
+  const isTeacher = false;
 
   console.log(submission);
 
@@ -85,7 +86,7 @@ const Assignments = () => {
                 </div>
 
                 <p className="mt-8 text-gray-600">
-                  {submission?.date ? (
+                  {submission?.date && (
                     <span className="flex items-center text-green-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +104,9 @@ const Assignments = () => {
                       </svg>
                       <span className="ml-2">Submitted</span>
                     </span>
-                  ) : (
+                  )}
+
+                  {!submission?.date && (
                     <span className="flex items-center text-orange-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -123,7 +126,7 @@ const Assignments = () => {
                     </span>
                   )}
 
-                  <span className="font-bold">Submission date: </span>{submission?.date ? formatDate(submission?.date.toString()) : "-"}</p>
+                  <span className="font-bold">Submission date: </span>{submission?.date ? formatDate(submission?.date.toDateString()) : "-"}</p>
               </div>
             </div>
 

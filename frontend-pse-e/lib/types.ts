@@ -225,13 +225,21 @@ export interface User {
     last_login: string | null;
     time_zone: string | null;
     bio: string | null;
+    userId: number;
+    pictureId: number;
+    experiencePoints: number;
+    badges: BadgeModel[];
+    level: number;
 }
 
-export interface UserDb {
-    userId: Number,
-    experiencePoints: Number,
-    level: Number,
-    badges: Object,
+interface BadgeModel {
+    badgeId: number;
+    courseId: number;
+    assignmentId: number;
+    graderId: number;
+    comment: string;
+}
+
 export interface Note {
     id: number;
     content: string;
