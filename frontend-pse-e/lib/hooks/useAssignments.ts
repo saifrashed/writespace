@@ -11,9 +11,9 @@ function useAssignments(courseId='', token='') {
 
   useEffect(() => {
     if (courseId && token) {
-      getAssignments(courseId, token);
+      getAssignments(courseId?.toString(), token);
     }
-  }, []);
+  }, [courseId]);
 
   const getAssignments = async (courseId: String, token: string) => {
     try {
