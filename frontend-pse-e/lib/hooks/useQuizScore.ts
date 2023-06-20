@@ -1,23 +1,72 @@
 import axios, { AxiosError } from "axios"
 import config from "../config";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNotification } from "./useNotification";
 
-function useQuizScore(quizId: number) {
+function useQuizScore() {
     const { onSuccess, onError } = useNotification();
 
-
-    const getQuizzes = async () => {
+    const getAllQuizzesScores = async () => {
         try {
-          const response = await axios.get(`${config.baseUrl}/quiz-/get-all`);
+          const response = await axios.get(`${config.baseUrl}/quiz-score/get-all`);
           return response.data;
         } catch (error) {
           console.log(error);
           onError("Something went wrong");
         }
-      }
+    }
 
-    return {};
+    const getAllUserScores = async (userId: number) => {
+        try {
+          const response = await axios.get(`${config.baseUrl}/quiz-score/user/${userId}`);
+          return response.data;
+        } catch (error) {
+          console.log(error);
+          onError("Something went wrong");
+        }
+    }
+
+    const getAllQuizScores = async (quizId: number) => {
+        try {
+          const response = await axios.get(`${config.baseUrl}/quiz-score/quiz/${quizId}`);
+          return response.data;
+        } catch (error) {
+          console.log(error);
+          onError("Something went wrong");
+        }
+    }
+
+    const getOneScore = async (quizId: number, token: string) => {
+        try {
+          const response = await axios.post(`${config.baseUrl}/quiz-score/get-score`, {quizId} , { headers: { bearer: token } });
+          return response.data;
+        } catch (error) {
+          console.log(error);
+          onError("Something went wrong");
+        }
+    }
+
+    const saveQuizScore = async (quizId: number, token: string, latestScore: number) => {
+        try {
+          const response = await axios.post(`${config.baseUrl}/quiz-score/save`, {quizId, latestScore} , { headers: { bearer: token } });
+          return response.data;
+        } catch (error) {
+          console.log(error);
+          onError("Something went wrong");
+        }
+    }
+
+    const updateQuizScore = async (quizId: number, token: string, latestScore: number) => {
+        try {
+          const response = await axios.post(`${config.baseUrl}/quiz-score/update/grade`, {quizId, latestScore} , { headers: { bearer: token } });
+          return response.data;
+        } catch (error) {
+          console.log(error);
+          onError("Something went wrong");
+        }
+    }
+
+    return {getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, updateQuizScore };
 }
 
 export default useQuizScore;
