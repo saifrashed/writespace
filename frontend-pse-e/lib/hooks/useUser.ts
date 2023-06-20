@@ -4,9 +4,15 @@ import config from "../config";
 import { useNotification } from "./useNotification";
 import { Badge, User } from "../types";
 
-function useUser() {
+function useUser(token='') {
   const [user, setUser] = useState<User>();
   const { onSuccess, onError } = useNotification()
+
+  useEffect(() => {
+    if (token) {
+      getUser(token)
+    }
+  }, []);
 
   const getUser = async (token: string) => {
     try {
@@ -68,7 +74,6 @@ function useUser() {
     }
   }
 
-  // is dit nodig ??
   const updateUser = async (pictureId: number, experiencePoints: number, badges: Badge[],token: string) => {
     try {
         const response = await axios.put(`${config.baseUrl}/user/update`, {pictureId, experiencePoints, badges}, { headers : { bearer: token }});
