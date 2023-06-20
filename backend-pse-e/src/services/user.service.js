@@ -119,7 +119,7 @@ router.put('/update/picture/', auth, async (req, res) => {
 // Updates user XP
 router.put('/update/experience-points/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
         const XPToAdd = req.body.experiencePoints
 
         const userToUpdate = await userModel.findOne({ 'userId': userId });
@@ -151,7 +151,7 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badge/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
         const newBadge = req.body.badgeId;
         const courseId = req.body.courseId;
         const assignmentId = req.body.assignmentId;
@@ -181,7 +181,7 @@ router.put('/update/add-badge/', auth, async (req, res) => {
 // Delete a badge
 router.put('/update/delete-badge/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
         const assignmentId = req.body.assignmentId;
         const badgeId = req.body.badgeId
 
@@ -223,35 +223,35 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
 
 // General update request
 // PUT request (updates something in the db)
-router.put('/update/', auth, async (req, res) => {
-    try {
-        const userId = res.locals.userId;
-        const updatedUser = {
-            userId: res.locals.userId,
-            pictureId: req.body.pictureId,
-            experiencePoints: req.body.experiencePoints,
-            badges: req.body.badges
-        };
+// router.put('/update/', auth, async (req, res) => {
+//     try {
+//         const userId = res.locals.userId;
+//         const updatedUser = {
+//             userId: res.locals.userId,
+//             pictureId: req.body.pictureId,
+//             experiencePoints: req.body.experiencePoints,
+//             badges: req.body.badges
+//         };
 
-        // Find the existing test by testId and update it
-        const result = await userModel.updateOne(
-            {
-                'userId': userId
-            },
-            { $set: updatedUser }
-        );
+//         // Find the existing test by testId and update it
+//         const result = await userModel.updateOne(
+//             {
+//                 'userId': userId
+//             },
+//             { $set: updatedUser }
+//         );
 
-        // Check if the test was found and updated successfully
-        if (result.nModified === 0) {
-            return res.status(200).json({ message: 'Object not found' });
-        }
+//         // Check if the test was found and updated successfully
+//         if (result.nModified === 0) {
+//             return res.status(200).json({ message: 'Object not found' });
+//         }
 
-        res.status(200).json({ message: 'User updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
+//         res.status(200).json({ message: 'User updated successfully' });
+//     } catch (error) {
+//         console.error('Error updating data in MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to update data in the database' });
+//     }
+// });
 
 // // Delete user
 // router.delete('/delete/:userId', auth, async (req, res) => {
