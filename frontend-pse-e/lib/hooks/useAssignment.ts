@@ -15,6 +15,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
     }
   }, [courseId, assignmentId]);
 
+
   const getAssignment = async (courseId: string, assignmentId: string, token: string) => {
     try {
       const response = await axios.post(`${config.baseUrl}/assignment/get-one`, { courseId, assignmentId }, { headers: { bearer: token } })

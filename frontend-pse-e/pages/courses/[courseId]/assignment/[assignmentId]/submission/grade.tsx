@@ -30,14 +30,8 @@ const Grade: React.FC = () => {
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const { gradeSubmission, getSubmissionDocument, fileUrl, fileNotes } = useSubmission()
+    const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission()
     const { token } = useAuthentication()
-
-    useEffect(() => {
-        if (assignmentId) {
-            getSubmissionDocument(assignmentId.toString(), token)
-        }
-    }, [assignmentId])
 
 
     const handleDocumentLoad = () => {

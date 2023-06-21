@@ -16,14 +16,11 @@ const Assignments = () => {
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment, getAssignment, submission } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
-  const { getSubmission } = useSubmission(token, assignmentId?.toString(), '')
+  const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
+  const { getSubmission, saveSubmission, submission } = useSubmission(token, assignmentId?.toString(), '')
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
-  const isTeacher = false;
-
-  console.log(submission);
 
   return (
     <>

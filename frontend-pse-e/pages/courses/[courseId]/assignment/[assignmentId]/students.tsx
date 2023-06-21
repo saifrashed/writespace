@@ -7,18 +7,18 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import { formatDate } from "@/lib/date";
 import { motion } from "framer-motion";
 import useSubmission from "@/lib/hooks/useSubmission";
+import Link from "next/link";
+
 
 const Assignments = () => {
     const router = useRouter();
     // Accessing query parameters from the router object
-    const { assignmentId } = router.query;
+    const { assignmentId, courseId } = router.query;
     const { token } = useAuthentication();
-    const { assignment, getAssignment } = useAssignment(token, "", assignmentId?.toString()); // When navigating to a course via url
+    const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
     const { submission, submissions } = useSubmission(token, assignmentId?.toString())
 
-    useEffect(() => {
-        console.log(submissions)
-    }, [submissions]);
+
 
     return (
         <>
@@ -63,20 +63,24 @@ const Assignments = () => {
                                         key={index}
                                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                     >
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {submission.userId}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                        </td>
+                                        <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
+
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                                {submission.userId}
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
+                                            </td>
+                                            <td className="px-6 py-4 whitespace-nowrap">
+                                            </td>
+                                        </Link>
+
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 };

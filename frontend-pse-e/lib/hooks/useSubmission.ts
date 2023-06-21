@@ -14,11 +14,11 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
   const [fileNotes, setFileNotes] = useState<Note[] | null>(null);
   const [grade, setGrade] = useState<number | null>(0);
 
-  useEffect(() => {
-    if (userId && token && assignmentId) {
+  // useEffect(() => {
+  //   if (userId && token && assignmentId) {
 
-    }
-  }, []);
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (assignmentId && token) {
