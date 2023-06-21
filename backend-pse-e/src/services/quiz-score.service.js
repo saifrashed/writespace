@@ -73,7 +73,8 @@ router.get("/quiz/:quizId", auth, async (req, res) => {
 
 router.post("/get-score/", auth, async (req, res) => {
     try {
-        const { quizId, userId } = req.body;
+        const quizId = req.body.quizId;
+        const userId = res.locals.userId;
         // Find the object using an attribute of the object
         const result = await quizScoreModel.find({ 'userId': userId, 'quizId': quizId });
         // If the object is not fount give an error
@@ -89,59 +90,37 @@ router.post("/get-score/", auth, async (req, res) => {
     }
 });
 
-// Save new quiz score
+// Save or update new quiz score
 router.post('/save/', auth, async (req, res) => {
-   try {
-        const quizId = req.body.quizId;
-        const userId = res.locals.userId;
-        const score = req.body.latestScore;
-
-        const alreadySubmitted = await quizScoreModel.find({ 'quizId': quizId, 'userId': userId });
-        if (alreadySubmitted.length !== 0) {
-            return res.status(200).json({ error: 'update the existing quizScore using /update/' })
-        }
-
-        newScore = new quizScoreModel({
-            quizId: quizId,
-            userId: userId,
-            latestScore: score,
-            highScore: score
-        });
-        await newScore.save();
-        res.status(200).json({ message: 'Score saved' });
-   } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in /quiz-score//save/' });
-   }
-});
-
-// Update quiz score. Automatically updates high score if latest score is higher
-router.put('/update/grade/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
         const quizId = req.body.quizId;
+        const userId = res.locals.userId;
         const newScore = req.body.latestScore;
 
-        const submissionToUpdate = await quizScoreModel.findOne({ 'userId': userId, 'quizId': quizId });
+        let quizScore = await quizScoreModel.findOne({ 'quizId': quizId, 'userId': userId });
 
-        if (!submissionToUpdate) {
-            return res.status(200).json({ message: 'Submission not found' });
+        if (!quizScore) {
+            // Create a new quiz score if it doesn't exist
+            quizScore = new quizScoreModel({
+                quizId: quizId,
+                userId: userId,
+                latestScore: newScore,
+                highScore: newScore
+            });
+        } else {
+            // Update the existing quiz score if it exists
+            if (newScore > quizScore.highScore) {
+                quizScore.highScore = newScore;
+            }
+            quizScore.latestScore = newScore;
         }
 
-        documentId = submissionToUpdate._id;
+        await quizScore.save();
 
-        if (newScore > submissionToUpdate.highScore) {
-            updatedSubmission = await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore, 'highScore': newScore });
-        }
-        else {
-            updatedSubmission = await quizScoreModel.findByIdAndUpdate(documentId, { 'latestScore': newScore });
-        }
-
-
-        res.status(200).json({ message: 'Submission updated successfully' });
+        res.status(200).json({ message: 'Quiz score saved/updated' });
     } catch (error) {
         console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
+        res.status(500).json({ error: 'Failed to update data' });
     }
 });
 
