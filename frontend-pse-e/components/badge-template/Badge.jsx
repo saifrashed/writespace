@@ -47,12 +47,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
 
   const badgeId = extractIdFromUrl(pictureUrl)
   const handleChooseProfilePicture = async () => {
-    try {
-      await updateUserPicture(badgeId, token);
+      updateUserPicture(badgeId, token);
       setShowPopup(false)
-    } catch (error) {
-      console.error('Error updating profile picture:', error);
-    }
   };
 
   {/* Window for title and description */}

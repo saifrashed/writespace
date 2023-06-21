@@ -59,11 +59,12 @@ const Profile = () => {
                   className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
                   style={{ height: "20px", width: `${user.experiencePoints / 50}%` }}
                 >
-                  <span className="h-full flex items-center justify-center">{`${user.experiencePoints / 50} XP`}</span>
+                  {/* <span className="h-full flex items-center justify-center">{`${user.experiencePoints / 50} XP`}</span> */}
                 </div>
               </div>
             )}
           </div>
+          {user && (<div> {`${user.experiencePoints / 50} XP`}</div>)}
 
           {/* <div className="flex flex-wrap justify-center gap-22"> */}
           <p className="mt-20 mb-8 text-2xl font-bold flex justify-center sm:mt-10 sm:mb-4 md:text-2xl">Badges</p>
@@ -71,7 +72,7 @@ const Profile = () => {
 
             {user &&
               badges.map((badge) => {
-                // const isBadgeOwned = user.badges.hasOwnProperty(badge.id);
+                const isBadgeOwned = user.badges.hasOwnProperty(badge.id);
                 return (
                   <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-36" key={badge.id}>
                     <ScaledBadge
@@ -81,7 +82,7 @@ const Profile = () => {
                       description={badge.description}
                       commentary={'no comment'}
                       xp={String(badge.exp)}
-                      unlocked={true}
+                      unlocked={isBadgeOwned}
                     />
                   </div>
                 );
