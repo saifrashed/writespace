@@ -1248,10 +1248,6 @@ select {
   flex-direction: column;
 }
 
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
 .content-center {
   align-content: center;
 }
@@ -1282,10 +1278,6 @@ select {
 
 .gap-1 {
   gap: 0.25rem;
-}
-
-.gap-2 {
-  gap: 0.5rem;
 }
 
 .gap-4 {
@@ -1823,10 +1815,6 @@ select {
 
 .text-center {
   text-align: center;
-}
-
-.text-right {
-  text-align: right;
 }
 
 .text-2xl {

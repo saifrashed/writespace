@@ -7,9 +7,23 @@ import useUser from "@/lib/hooks/useUser";
 import { useEffect } from 'react';
 import useAuthentication from "@/lib/hooks/useAuthentication";
 
+
 const Profile = () => {
   const { token } = useAuthentication();
   const { user, getUser} = useUser(token);
+
+  function countBadgeOccurrences(targetBadgeId:number) {
+    let count = 0;
+    if (user) {
+      for (const badge of user?.badges) {
+        if (badge.badgeId === targetBadgeId) {
+          count++;
+        }
+      }
+    }
+
+    return count;
+  }
 
   useEffect(() => {
     if (user){
@@ -78,6 +92,8 @@ const Profile = () => {
             {user &&
               badges.map((badge) => {
                 const isBadgeOwned = user.badges.hasOwnProperty(badge.id);
+                const badgeCount = countBadgeOccurrences(badge.id)
+                console.log(badgeCount);
                 return (
                   <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-36" key={badge.id}>
                     <ScaledBadge
@@ -88,6 +104,7 @@ const Profile = () => {
                       commentary={'no comment'}
                       xp={String(badge.exp)}
                       unlocked={isBadgeOwned}
+                      count = {badgeCount}
                     />
                   </div>
                 );

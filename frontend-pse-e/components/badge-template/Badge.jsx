@@ -12,7 +12,7 @@ const extractIdFromUrl = (url)=>{
 }
 
 const ScaledBadge = ({ resizeFactor, pictureUrl, title,
-                       description, commentary, xp, unlocked}) => {
+                       description, commentary, xp, unlocked, count}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const { token } = useAuthentication();
@@ -116,7 +116,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
             <div className="w-20 h-20">
               <div style={{ display: 'flex' }}>
                 <div style={smallBadge}>
-                  <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
+                  <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} count={count}/>
                 </div>
               </div>
             </div>
