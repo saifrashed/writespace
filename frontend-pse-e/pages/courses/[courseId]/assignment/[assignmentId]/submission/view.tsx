@@ -26,14 +26,13 @@ const View: React.FC = () => {
     const { courseId, assignmentId } = router.query;
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
-    const { getSubmissionDocument, getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission()
+    const { getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission()
     const { token } = useAuthentication()
     const { assignment, getAssignment } = useAssignment()
 
     useEffect(() => {
         if (assignmentId && courseId) {
-            getSubmissionDocument(assignmentId.toString(), token)
-            getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+            getSubmission(assignmentId.toString(), '', token)
         }
     }, [assignmentId, courseId])
 

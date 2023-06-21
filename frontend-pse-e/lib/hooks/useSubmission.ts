@@ -4,20 +4,71 @@ import config from "../config";
 import { useNotification } from "./useNotification";
 import { Note, Submission } from "../types";
 
-function useSubmission(token = '', courseId = '', assignmentId = '') {
+function useSubmission(token = '', assignmentId = '', userId = '') {
   const { onError, onSuccess } = useNotification()
-  const [submissionData, setSubmissionData] = useState<Submission>();
+  const [submissions, setSubmissions] = useState<Submission[]>();
+  const [submission, setSubmission] = useState<Submission>();
+
   const [isLoading, setIsLoading] = useState<Boolean>(true);
   const [fileUrl, setFileUrl] = useState<string | null>(null);
   const [fileNotes, setFileNotes] = useState<Note[] | null>(null);
   const [grade, setGrade] = useState<number | null>(0);
 
   useEffect(() => {
-    if (courseId && token && assignmentId) {
+    if (userId && token && assignmentId) {
 
     }
   }, []);
 
+  useEffect(() => {
+    if (assignmentId && token) {
+      getSubmissions(assignmentId, token);
+      getSubmission(assignmentId, userId, token);
+    }
+  }, [assignmentId]);
+
+  const getSubmissions = async (assignmentId: string, token: string) => {
+    try {
+      const response = await axios.get(`${config.baseUrl}/submission/get-submissions/${assignmentId}`, { headers: { bearer: token } })
+      setSubmissions(response.data)
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
+    }
+  }
+
+  const getSubmission = async (assignmentId: string, userId: string = '', token: string) => {
+    try {
+
+      let response;
+
+      if (userId) {
+        response = await axios.post(`${config.baseUrl}/submission/get-submission`, { assignmentId, userId }, { headers: { bearer: token } });
+      } else {
+        response = await axios.post(`${config.baseUrl}/submission/get-submission`, { assignmentId }, { headers: { bearer: token } });
+      }
+
+
+      if (response.data[0]?.fileData.data) {
+        const binaryData = new Uint8Array(response.data[0].fileData.data);
+        const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
+        const fileUrl = URL.createObjectURL(fileBlob);
+        const fileNotes = response.data[0].fileNotes;
+
+
+        setFileUrl(fileUrl);
+        setFileNotes(fileNotes);
+        setGrade(response.data[0].submissionGrade)
+      }
+
+      console.log(response.data)
+
+      setSubmission(response.data);
+    } catch (error) {
+      console.log(error);
+      onError("Something went wrong");
+    }
+  };
 
   const saveSubmission = async (token: string, assignmentId: string, file: File) => {
     try {
@@ -31,7 +82,7 @@ function useSubmission(token = '', courseId = '', assignmentId = '') {
         'Content-Type': 'multipart/form-data'
       }
 
-      const response = await axios.post(`${config.baseUrl}/submission/save`, body, { headers: headers });
+      const response = await axios.post(`${config.baseUrl}/submission/save`, body, { headers: { bearer: token } });
 
       onSuccess("File submitted")
 
@@ -50,7 +101,7 @@ function useSubmission(token = '', courseId = '', assignmentId = '') {
         notes: notes
       }
 
-      const response = await axios.put(`${config.baseUrl}/submission/grade/`, body);
+      const response = await axios.put(`${config.baseUrl}/submission/grade/`, body, { headers: { bearer: token } });
 
       onSuccess("Grade submitted")
 
@@ -72,7 +123,7 @@ function useSubmission(token = '', courseId = '', assignmentId = '') {
 
 
 
-  return { submission: submissionData, isLoading, fileUrl, fileNotes, grade };
+  return { submission, submissions, isLoading, fileUrl, fileNotes, grade, getSubmissions, getSubmission, saveSubmission, gradeSubmission, updateSubmission };
 
 }
 

@@ -11,12 +11,8 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
   const [submission, setSubmission] = useState<Submission>();
 
   useEffect(() => {
-    if (assignmentId && token) {
-      getSubmissions(assignmentId, token);
-      getSubmission(assignmentId, token);
-      if (courseId) {
-        getAssignment(courseId, assignmentId, token);
-      }
+    if (assignmentId && token && courseId) {
+      getAssignment(courseId, assignmentId, token);
     }
   }, [courseId, assignmentId]);
 
@@ -52,27 +48,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
     }
   }
 
-  const getSubmissions = async (assignmentId: string, token: string) => {
-    try {
-      const response = await axios.get(`${config.baseUrl}/assignment/get-submissions/${assignmentId}`, { headers: { bearer: token } })
-      setSubmissions(response.data)
-    } catch (error) {
-      console.log(error)
-      onError("Something went wrong")
-    }
-  }
-
-  const getSubmission = async (assignmentId: string, token: string) => {
-    try {
-      const response = await axios.post(`${config.baseUrl}/assignment/get-submission`, { assignmentId }, { headers : { bearer: token }});
-      setSubmission(response.data);
-    } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
-    }
-  };
-
-  return { assignment, submission, submissions, getAssignment, createAssignment, updateAssignment, getSubmissions, getSubmission };
+  return { assignment, submission, submissions, getAssignment, createAssignment, updateAssignment };
 }
 
 export default useAssignment;

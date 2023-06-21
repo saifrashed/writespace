@@ -6,13 +6,15 @@ import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { formatDate } from "@/lib/date";
 import { motion } from "framer-motion";
+import useSubmission from "@/lib/hooks/useSubmission";
 
 const Assignments = () => {
     const router = useRouter();
     // Accessing query parameters from the router object
     const { assignmentId } = router.query;
     const { token } = useAuthentication();
-    const { assignment, submissions, getAssignment, getSubmissions } = useAssignment(token, "", assignmentId?.toString()); // When navigating to a course via url
+    const { assignment, getAssignment } = useAssignment(token, "", assignmentId?.toString()); // When navigating to a course via url
+    const { submission, submissions } = useSubmission(token, assignmentId?.toString())
 
     useEffect(() => {
         console.log(submissions)
