@@ -35,7 +35,7 @@ function getLevel(experiencePoints) {
         level++;
         levelThreshold += (level - 1) * 100;
     }
-    return level - 1;
+    return [level - 1, levelThreshold];
 }
 
 // Get request (gets something from the db)
@@ -293,13 +293,14 @@ router.get("/get-user", auth, async (req, res) => {
             return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
-        const level = getLevel(responseMongo.experiencePoints);
+        const [level, nextThreshold] = getLevel(responseMongo.experiencePoints);
 
         // Combine json objects ... merges the objects
         const combinedUser = {
             ...responseCanvas.data,
             ...responseMongo[0]._doc,
-            level
+            level,
+            nextThreshold
           };
 
         // Handle success case here
