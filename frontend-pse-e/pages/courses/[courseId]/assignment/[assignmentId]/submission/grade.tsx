@@ -33,6 +33,7 @@ const Grade: React.FC = () => {
     const [showModal, setShowModal] = React.useState<boolean>(false);
     const [badgeModal, setBadgeModal] = React.useState<boolean>(false);
     const [badgeClicked, setBadgeClicked] = React.useState<boolean[]>([]);
+    const [assignedBadges, setAssignedBadges] = React.useState<string[]>([]);
     const { gradeSubmission, getSubmissionDocument, fileUrl, fileNotes } = useSubmission()
     const { token } = useAuthentication()
 
@@ -46,7 +47,7 @@ const Grade: React.FC = () => {
         setBadgeClicked(new Array(badges.length).fill(false));
     }, [badges]);
 
-    const handleBadgeClick = (index: number) => {
+    const handleBadgeClick = (index: number, badge: object) => {
         // Create a new array based on the current badgeClicked state
         let newBadgeClicked = [...badgeClicked];
 
@@ -55,6 +56,17 @@ const Grade: React.FC = () => {
 
         // Update the state with the new array
         setBadgeClicked(newBadgeClicked);
+
+        let newAssignedBadges = [...assignedBadges];
+
+        if (newBadgeClicked[index]) {
+            newAssignedBadges.push(badge.id);
+        }
+        else {
+            newAssignedBadges = newAssignedBadges.filter((item) => item !== badge.id);
+        }
+
+        setAssignedBadges(newAssignedBadges);
     };
 
     const handleDocumentLoad = () => {
@@ -243,10 +255,24 @@ const Grade: React.FC = () => {
                                 </button>
                             </div>
                             <div>
-                                <button
-                                    className="px-4 py-2 inline-block bg-gray-100  hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full" onClick={() => { setBadgeModal(true) }}>
-                                    Assign badges
-                                </button>
+                            <button
+                                className="px-4 py-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full relative"
+                                onClick={() => {
+                                setBadgeModal(true);
+                                }}
+                            >
+                                {assignedBadges.length === 0 ? "Assign badges" : "See assigned badges"}
+                                {assignedBadges.length > 0 && (
+                                <span
+                                    className="absolute top-0 right-0 bg-gray-500 text-white rounded-full w-4 h-4 flex items-center justify-center top-0 right-0 -mt-1 -mr-1"
+                                    style={{
+                                    fontSize: '12px',
+                                    }}
+                                >
+                                    {assignedBadges.length}
+                                </span>
+                                )}
+                            </button>
                             </div>
                         </div>
                         <div style={{ height: "90vh" }}>
@@ -346,8 +372,8 @@ const Grade: React.FC = () => {
                                     <div className="grid gap-4 my-2.5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                                         {badges.map((badge, index) => {
                                             return (
-                                                    <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
-                                                    onClick={() => { console.log("assigning badge: ", badge.title); console.log(badges); handleBadgeClick(index);}}
+                                                    <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
+                                                    onClick={() => { console.log("assigning badge: ", badge.title); handleBadgeClick(index, badge);}}
                                                     title={badge.description}
                                                     key={badge.id}
                                                     >
@@ -356,7 +382,8 @@ const Grade: React.FC = () => {
                                                     </button>                                            )
                                         })}
                                     </div>
-                                    <h3 className="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to assign these badges?</h3>
+                                    <h3 className="mb-0 text-lg font-normal text-gray-500 ">Are you sure you want to assign these badges?</h3>
+                                    <p className="mb-5 text-sm font-normal text-gray-500 ">(badges wont be given until grade submission)</p>
                                     <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Yes, I'm sure
                                     </button>
