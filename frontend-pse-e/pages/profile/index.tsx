@@ -43,7 +43,6 @@ const Profile = () => {
               sx={{ width: 150, height: 150, border: '3px solid #706f7d' }}
               src={`/badges/${user?.pictureId}.png`}
             />
-            {/* <p>{user?.name}</p> */}
             <div className="mt-4 text-center font-bold text-xl">{user?.name}</div>
             {user && (
               <div>
@@ -67,15 +66,12 @@ const Profile = () => {
                   className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
                   style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%` }}
                 >
-                  {/* {user.level} */}
                   {/* <span className="h-full flex items-center justify-center">{`${user.experiencePoints / 50} XP`}</span> */}
                 </div>
               </div>
             )}
           </div>
-          {user && (<div> {`${user.experiencePoints / 50} XP`}</div>)}
-
-          {/* <div className="flex flex-wrap justify-center gap-22"> */}
+          {user && (<div> {`${user.experiencePoints / 50} / ${user.threshold} XP`}</div>)}
           <p className="mt-20 mb-8 text-2xl font-bold flex justify-center sm:mt-10 sm:mb-4 md:text-2xl">Badges</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
 
@@ -97,7 +93,6 @@ const Profile = () => {
                 );
               })}
           </div>
-
         </div>
       </div>
     </>
