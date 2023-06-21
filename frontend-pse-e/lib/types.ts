@@ -77,7 +77,7 @@ export interface Assignment {
     grader_comments_visible_to_graders: boolean;
     final_grader_id: number | null;
     grader_names_visible_to_final_grader: boolean;
-    allowed_attempts: number;
+    allowed_attempts: number | string;
     annotatable_attachment_id: number | null;
     hide_in_gradebook: boolean;
     lock_info: {
@@ -128,38 +128,25 @@ export interface Assignment {
 }
 
 export interface Submission {
-    assignment_id: number;
-    assignment: any | null;
-    course: any | null;
-    attempt: number;
-    body: string;
-    grade: string;
-    grade_matches_current_submission: boolean;
-    html_url: string;
-    preview_url: string;
-    score: number;
-    submission_comments: any | null;
-    submission_type: string;
-    submitted_at: string;
-    url: string | null;
-    user_id: number;
-    grader_id: number;
-    graded_at: string;
-    user: any | null;
-    late: boolean;
-    assignment_visible: boolean;
-    excused: boolean;
-    missing: boolean;
-    late_policy_status: string;
-    points_deducted: number;
-    seconds_late: number;
-    workflow_state: string;
-    extra_attempts: number;
-    anonymous_id: string;
-    posted_at: string | null;
-    read_status: string;
-    redo_request: boolean;
+    userId: number;
+    assignmentId: number;
+    date: string;
+    grade: number;
+    status: string;
+    filetype: string;
+    filename: string;
+    fileData: Buffer;
+    fileNotes: object[];
 }
+
+export interface Badge {
+    badgeId: Number,
+    iconId: Number,
+    experiencePoints: Number,
+    name: String,
+    description: String,
+}
+
 
 export interface Enrollment {
     id: number;
@@ -238,6 +225,19 @@ export interface User {
     last_login: string | null;
     time_zone: string | null;
     bio: string | null;
+    userId: number;
+    pictureId: number;
+    experiencePoints: number;
+    badges: BadgeModel[];
+    level: number;
+}
+
+interface BadgeModel {
+    badgeId: number;
+    courseId: number;
+    assignmentId: number;
+    graderId: number;
+    comment: string;
 }
 
 export interface Note {
@@ -245,4 +245,20 @@ export interface Note {
     content: string;
     highlightAreas: HighlightArea[];
     quote: string;
+}
+
+
+
+export interface TokenResponse {
+    access_token: string;
+    token_type: string;
+    user: {
+        id: number;
+        name: string;
+        global_id: string;
+        effective_locale: string;
+    };
+    canvas_region: string;
+    refresh_token: string;
+    expires_in: number;
 }
