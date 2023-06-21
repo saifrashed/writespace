@@ -17,6 +17,14 @@ const Profile = () => {
     }
   }, [user])
 
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+    }
+
+  }, [])
+
+
   return (
     <>
       <Head>
@@ -57,8 +65,9 @@ const Profile = () => {
               <div>
                 <div
                   className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                  style={{ height: "20px", width: `${250 / 300 * 100}%` }}
+                  style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%` }}
                 >
+                  {/* {user.level} */}
                   {/* <span className="h-full flex items-center justify-center">{`${user.experiencePoints / 50} XP`}</span> */}
                 </div>
               </div>
