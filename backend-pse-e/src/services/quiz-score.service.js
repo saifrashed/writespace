@@ -36,10 +36,11 @@ router.get("/get-all", auth, async (req, res) => {
 });
 
 // Find all scores for a specific user
-router.get("/user/:userId", auth, async (req, res) => {
+router.get("/user/", auth, async (req, res) => {
     try {
+        const userId = res.locals.userId;
         // Find the object using an attribute of the object
-        const result = await quizScoreModel.find({ 'userId': req.params.userId });
+        const result = await quizScoreModel.find({ 'userId': userId });
         // If the object is not fount give an error
         if (result.length === 0) {
             return res.status(200).json({ message: 'Object not found' });
