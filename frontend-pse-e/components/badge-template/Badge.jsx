@@ -24,6 +24,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   const handleMouseEnter = () => {setIsHovered(true);};
   const handleMouseLeave = () => {setIsHovered(false);};
 
+
   const togglePopup = () => {
     setShowPopup(!showPopup);
   };
@@ -145,7 +146,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
                 height: '300px', position: 'relative',
                 top: '-10px', left: '-10px', // Adjust positioning to taste
             }}>
-              <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
+              <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} count={count} />
             </div>
           </div>
           {/* Window for title and description */}
@@ -167,7 +168,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
           onMouseLeave={handleMouseLeave}
           onClick={togglePopup}
         >
-          <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
+          <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} count={count} />
         </div>
       </div>
       {/* Make pop-up responsive to window size. */}
