@@ -22,8 +22,10 @@ const badgeModel = require("../models/badge.model.js");
 // Define a route without the starting route defined in app.js
 // Post request (creates something in the db)
 
-// Get request (gets something from the db)
-// Get all badges
+/* This get request returns all badges
+Input: none
+Output: all badges in the database
+*/
 router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
@@ -36,7 +38,10 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-// Get badge by badgeId
+/* This get request returns one badge
+Input: badgeId
+Output: badge with the given badgeId
+*/
 router.get("/get-badge/:badgeId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -54,7 +59,10 @@ router.get("/get-badge/:badgeId", auth, async (req, res) => {
     }
 });
 
-// Save new badge
+/* This post request saves a new badge
+Input: badgeId, experiencePoints, name, category, description
+Output: saved badge
+*/
 router.post('/save', auth, async (req, res) => {
     try {
         // Variables for the model
@@ -66,17 +74,17 @@ router.post('/save', auth, async (req, res) => {
             return res.status(409).json({ error: 'You cant have two users with the same Id' })
         }
 
-        const iconId = req.body.iconId;
         const experiencePoints = req.body.experiencePoints;
         const name = req.body.name;
+        const category = req.body.category;
         const description = req.body.description;
 
         // Create a new instance of the badge model
         const newBadge = new badgeModel({
             badgeId: badgeId,
-            iconId: iconId,
             experiencePoints: experiencePoints,
             name: name,
+            category: category,
             description: description,
         });
 
@@ -91,7 +99,10 @@ router.post('/save', auth, async (req, res) => {
     }
 });
 
-// Update badge XP
+/* This put request updates the experience points of a badge
+Input: badgeId, experiencePoints
+Output: confirmation/error message
+*/
 router.put('/update/experience-points/', auth, async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
@@ -121,10 +132,11 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 });
 
 // Update badge name and description
-router.put('/update/name-description/', auth, async (req, res) => {
+router.put('/update/details/', auth, async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
         const name = req.body.name;
+        const category = req.body.category;
         const description = req.body.description;
 
         const updatedBadge = await badgeModel.findOneAndUpdate(
@@ -134,6 +146,7 @@ router.put('/update/name-description/', auth, async (req, res) => {
             {
                 $set: {
                     'name': name,
+                    'category': category,
                     'description': description
                 }
             },
@@ -151,34 +164,6 @@ router.put('/update/name-description/', auth, async (req, res) => {
     }
 });
 
-// Update badge icon
-router.put('/update/icon/', auth, async (req, res) => {
-    try {
-        const badgeId = req.body.badgeId;
-        const iconId = req.body.iconId
-
-        const updatedBadge = await badgeModel.findOneAndUpdate(
-            {
-                'badgeId': badgeId,
-            },
-            {
-                $set: {
-                    'iconId': iconId
-                }
-            },
-            { new: true }
-        );
-
-        if (updatedBadge === null) {
-            return res.status(200).json({ message: 'Badge not found' });
-        }
-
-        res.status(200).json({ message: 'Badge updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
 
 // Delete badge
 router.delete('/delete/:badgeId', auth, async (req, res) => {
