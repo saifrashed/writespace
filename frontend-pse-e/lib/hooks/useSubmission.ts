@@ -14,12 +14,6 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
   const [fileNotes, setFileNotes] = useState<Note[] | null>(null);
   const [grade, setGrade] = useState<number | null>(0);
 
-  // useEffect(() => {
-  //   if (userId && token && assignmentId) {
-
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (assignmentId && token) {
       getSubmissions(assignmentId, token);
@@ -66,7 +60,7 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
 
       console.log(response.data)
 
-      setSubmission(response.data);
+      setSubmission(response.data[0]);
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
@@ -97,7 +91,7 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     }
   }
 
-  const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: number, userId: number) => {
+  const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: string, userId: string) => {
     try {
       const body = {
         userId: userId,

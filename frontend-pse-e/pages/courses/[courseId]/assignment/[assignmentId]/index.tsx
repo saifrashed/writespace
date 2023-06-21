@@ -19,6 +19,11 @@ const Assignments = () => {
   const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
   const { getSubmission, saveSubmission, submission } = useSubmission(token, assignmentId?.toString(), '')
 
+  useEffect(() => {
+    console.log(submission)
+  }, [])
+
+
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
@@ -85,7 +90,7 @@ const Assignments = () => {
               </div>
 
               <p className="mt-8 text-gray-600">
-                {submission?.date && (
+                {submission && (
                   <span className="flex items-center text-green-500">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -105,7 +110,7 @@ const Assignments = () => {
                   </span>
                 )}
 
-                {!submission?.date && (
+                {!submission && (
                   <span className="flex items-center text-orange-500">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -125,7 +130,10 @@ const Assignments = () => {
                   </span>
                 )}
 
-                <span className="font-bold">Submission date: </span>{submission?.date ? formatDate(submission?.date.toDateString()) : "-"}</p>
+                <span className="font-bold">Submission date: {submission?.date ? formatDate(submission?.date) : "No due date"}</span>
+
+
+              </p>
             </div>
           </div>
 

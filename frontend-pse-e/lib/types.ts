@@ -130,7 +130,7 @@ export interface Assignment {
 export interface Submission {
     userId: number;
     assignmentId: number;
-    date: Date;
+    date: string;
     grade: number;
     status: string;
     filetype: string;
