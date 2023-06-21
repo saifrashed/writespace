@@ -7,8 +7,7 @@ import { Assignment, Submission } from "../types";
 function useAssignment(token = '', courseId = '', assignmentId = '') {
   const [assignment, setAssignment] = useState<Assignment>();
   const { onSuccess, onError } = useNotification();
-  const [submissions, setSubmissions] = useState<Submission[]>();
-  const [submission, setSubmission] = useState<Submission>();
+
 
   useEffect(() => {
     if (assignmentId && token && courseId) {
@@ -48,7 +47,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
     }
   }
 
-  return { assignment, submission, submissions, getAssignment, createAssignment, updateAssignment };
+  return { assignment, getAssignment, createAssignment, updateAssignment };
 }
 
 export default useAssignment;
