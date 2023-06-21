@@ -7,6 +7,7 @@ import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import useSubmission from '@/lib/hooks/useSubmission';
 import useAuthentication from '@/lib/hooks/useAuthentication';
+import badges from '@/data/badges';
 
 import {
     highlightPlugin,
@@ -31,8 +32,44 @@ const Grade: React.FC = () => {
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token, assignmentId?.toString(), user?.toString())
 
+    const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token, assignmentId?.toString(), user?.toString())
+    const [badgeModal, setBadgeModal] = React.useState<boolean>(false);
+    const [badgeClicked, setBadgeClicked] = React.useState<boolean[]>([]);
+    const [assignedBadges, setAssignedBadges] = React.useState<string[]>([]);
+    const { token } = useAuthentication()
+
+    useEffect(() => {
+        if (assignmentId) {
+            getSubmissionDocument(assignmentId.toString(), token)
+        }
+    }, [assignmentId])
+    
+    useEffect(() => {
+        setBadgeClicked(new Array(badges.length).fill(false));
+    }, [badges]);
+
+    const handleBadgeClick = (index: number, badge: object) => {
+        // Create a new array based on the current badgeClicked state
+        let newBadgeClicked = [...badgeClicked];
+
+        // Change the value at the given index to true
+        newBadgeClicked[index] = !badgeClicked[index];
+
+        // Update the state with the new array
+        setBadgeClicked(newBadgeClicked);
+
+        let newAssignedBadges = [...assignedBadges];
+
+        if (newBadgeClicked[index]) {
+            newAssignedBadges.push(badge.id);
+        }
+        else {
+            newAssignedBadges = newAssignedBadges.filter((item) => item !== badge.id);
+        }
+
+        setAssignedBadges(newAssignedBadges);
+    };
 
     const handleDocumentLoad = () => {
         if (fileNotes) {
@@ -220,10 +257,22 @@ const Grade: React.FC = () => {
                                 </button>
                             </div>
                             <div>
-                                <button
-                                    className="px-4 py-2 inline-block bg-gray-100  hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full" onClick={() => { setShowModal(true) }}>
-                                    Assign badges
-                                </button>
+                            <button
+                                className="px-4 py-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full relative"
+                                onClick={() => {
+                                setBadgeModal(true);
+                                }}
+                            >
+                                {assignedBadges.length === 0 ? "Assign badges" : "See assigned badges"}
+                                <span
+                                    className="absolute top-0 right-0 bg-gray-500 text-white rounded-full w-4 h-4 flex items-center justify-center top-0 right-0 -mt-1 -mr-1"
+                                    style={{
+                                    fontSize: '12px',
+                                    }}
+                                >
+                                    {assignedBadges.length}
+                                </span>
+                            </button>
                             </div>
                         </div>
                         <div style={{ height: "90vh" }}>
@@ -312,6 +361,39 @@ const Grade: React.FC = () => {
                                         Yes, I'm sure
                                     </button>
                                     <button data-modal-hide="popup-modal" onClick={() => { setShowModal(false) }} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full" + (badgeModal ? " " : " hidden")}>
+                        <div className="relative w-full max-w-3xl max-h-2x1 mx-auto">
+                            <div className="relative bg-white rounded-lg shadow ">
+                                <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
+                                    <svg aria-hidden="true" className="w-4 h-5" fill="currentColor" onClick={() => { setBadgeModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                    <span className="sr-only">Close modal</span>
+                                </button>
+                                <div className="p-6 text-center">
+                                    {/* make a grid layout to display all badges */}
+                                    <div className="grid gap-4 my-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                                        {badges.map((badge, index) => {
+                                            return (
+                                                    <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
+                                                    onClick={() => { console.log("assigning badge: ", badge.title); handleBadgeClick(index, badge);}}
+                                                    title={badge.description}
+                                                    key={badge.id}
+                                                    >
+                                                        <img className="w-10 h-10" src={`/badges/${badge.id.toString()}.png`} alt={badge.description} />
+                                                        <p className="text-sm">{badge.title}</p>
+                                                    </button>                                            )
+                                        })}
+                                    </div>
+                                    <h3 className="mb-0 text-lg font-normal text-gray-500 ">Are you sure you want to assign these badges?</h3>
+                                    <p className="mb-5 text-sm font-normal text-gray-500 ">(badges wont be given until grade submission)</p>
+                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                        Yes, I'm sure
+                                    </button>
+                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); setAssignedBadges([]); setBadgeClicked(new Array(badges.length).fill(false));}} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
                                 </div>
                             </div>
                         </div>
