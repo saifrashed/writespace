@@ -14,7 +14,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
       getAssignment(courseId, assignmentId, token)
       getSubmissions(assignmentId, token)
     }
-  }, []);
+  }, [courseId, assignmentId]);
 
   useEffect(() => {
     if (assignmentId && token) {
