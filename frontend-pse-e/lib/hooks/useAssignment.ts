@@ -6,21 +6,15 @@ import { Assignment, Submission } from "../types";
 
 function useAssignment(token = '', courseId = '', assignmentId = '') {
   const [assignment, setAssignment] = useState<Assignment>();
-  const { onSuccess, onError } = useNotification()
-  const [submissions, setSubmissions] = useState<Submission[]>();
+  const { onSuccess, onError } = useNotification();
+
 
   useEffect(() => {
-    if (courseId && assignmentId && token) {
-      getAssignment(courseId, assignmentId, token)
-      getSubmissions(assignmentId, token)
+    if (assignmentId && token && courseId) {
+      getAssignment(courseId, assignmentId, token);
     }
   }, [courseId, assignmentId]);
 
-  useEffect(() => {
-    if (assignmentId && token) {
-      getSubmissions(assignmentId, token)
-    }
-  }, []);
 
   const getAssignment = async (courseId: string, assignmentId: string, token: string) => {
     try {
@@ -54,17 +48,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
     }
   }
 
-  const getSubmissions = async (assignmentId: string, token: string) => {
-    try {
-      const response = await axios.get(`${config.baseUrl}/assignment/get-submissions/${assignmentId}`, { headers: { bearer: token } })
-      setSubmissions(response.data)
-    } catch (error) {
-      console.log(error)
-      onError("Something went wrong")
-    }
-  }
-
-  return { assignment, submissions, getAssignment, createAssignment, updateAssignment, getSubmissions };
+  return { assignment, getAssignment, createAssignment, updateAssignment };
 }
 
 export default useAssignment;
