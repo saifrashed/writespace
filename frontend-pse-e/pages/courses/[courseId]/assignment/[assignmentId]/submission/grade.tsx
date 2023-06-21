@@ -23,15 +23,15 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 const Grade: React.FC = () => {
     const router = useRouter();
-    const { courseId, assignmentId } = router.query;
+    const { courseId, assignmentId, user} = router.query;
+    const { token } = useAuthentication()
     const [message, setMessage] = React.useState('');
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [grade, setGrade] = React.useState<number>(0);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission()
-    const { token } = useAuthentication()
+    const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token,assignmentId?.toString(),user?.toString())
 
 
     const handleDocumentLoad = () => {
