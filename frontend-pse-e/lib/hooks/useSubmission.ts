@@ -41,18 +41,18 @@ function useSubmission(token = '', courseId = '', assignmentId = '') {
     }
   }
 
-  const addNotesToSubmission = async (courseId: string, assignmentId: string, token: string) => {
+  const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: number, userId: number) => {
     try {
+      const body = {
+        userId: userId,
+        assignmentId: assignmentId,
+        grade: grade,
+        notes: notes
+      }
 
-    } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
-    }
-  }
+      const response = await axios.put(`${config.baseUrl}/submission/grade/`, body);
 
-
-  const gradeSubmission = async (courseId: string, assignmentId: string, token: string) => {
-    try {
+      onSuccess("Grade submitted")
 
     } catch (error) {
       console.log(error);
