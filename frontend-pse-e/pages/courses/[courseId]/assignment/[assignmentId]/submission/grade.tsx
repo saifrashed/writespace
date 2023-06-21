@@ -7,6 +7,7 @@ import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import useSubmission from '@/lib/hooks/useSubmission';
 import useAuthentication from '@/lib/hooks/useAuthentication';
+import useUser from '@/lib/hooks/useUser';
 import badges from '@/data/badges';
 
 import {
@@ -34,17 +35,13 @@ const Grade: React.FC = () => {
     const [showModal, setShowModal] = React.useState<boolean>(false);
     const [badgeModal, setBadgeModal] = React.useState<boolean>(false);
     const [badgeClicked, setBadgeClicked] = React.useState<boolean[]>([]);
-    const [assignedBadges, setAssignedBadges] = React.useState<string[]>([]);
+    const [assignedBadges, setAssignedBadges] = React.useState<number[]>([]);
     const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token, assignmentId?.toString(), user?.toString())
+    const { addUserBadges } = useUser(token)
 
     const handleBadgeClick = (index: number, badge: object) => {
-        // Create a new array based on the current badgeClicked state
         let newBadgeClicked = [...badgeClicked];
-
-        // Change the value at the given index to true
         newBadgeClicked[index] = !badgeClicked[index];
-
-        // Update the state with the new array
         setBadgeClicked(newBadgeClicked);
 
         let newAssignedBadges = [...assignedBadges];
@@ -64,6 +61,18 @@ const Grade: React.FC = () => {
             setNotes(fileNotes);
         }
     };
+
+    useEffect(() => {
+        if (user) {
+            let newAssignedBadges: number[] = [];
+            let newBadgeClicked: boolean[] = [];
+            // user.badges.forEach((badge: any) => {
+            //     newAssignedBadges.push(badge.id);
+            //     badgeClicked[badge.id] = true;
+            // });
+            setAssignedBadges(newAssignedBadges);
+        }
+    }, [user]);
 
     let noteId = notes.length;
 
@@ -303,7 +312,7 @@ const Grade: React.FC = () => {
                                     <div className="relative  flex-1">
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
-                                                {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
+                                                {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
                                                 {notes.map((note, index) => {
                                                     return (
                                                         <li key={index} className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
@@ -342,8 +351,9 @@ const Grade: React.FC = () => {
                                     <button data-modal-hide="popup-modal" onClick={() => {
                                         setIsSubmitted(true);
                                         setShowModal(false);
-                                        if (assignmentId && user) {
+                                        if (assignmentId && user && courseId) {
                                             gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString())
+                                            addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
                                         }
                                     }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Yes, I'm sure
