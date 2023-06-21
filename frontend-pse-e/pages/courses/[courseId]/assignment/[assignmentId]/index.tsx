@@ -17,7 +17,7 @@ const Assignments = () => {
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
   const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
-  const { getSubmission, saveSubmission, submission } = useSubmission(token, assignmentId?.toString(), '')
+  const { submission } = useSubmission(token, assignmentId?.toString(), '')
 
   useEffect(() => {
     console.log(submission)
