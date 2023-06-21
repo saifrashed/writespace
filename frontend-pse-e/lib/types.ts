@@ -74,7 +74,7 @@ export interface Assignment {
     grader_comments_visible_to_graders: boolean;
     final_grader_id: number | null;
     grader_names_visible_to_final_grader: boolean;
-    allowed_attempts: number;
+    allowed_attempts: number | string;
     annotatable_attachment_id: number | null;
     hide_in_gradebook: boolean;
     lock_info: {
