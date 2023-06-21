@@ -65,7 +65,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
         // "C . x + 3 - 4  ) "+
         // "Student Name "
         // "June 2023 "+
-        // "3 Economic Implications "+
+        "3 Economic Implications "+
         "Climate change hass significant economic ramifications, aff-ecting industries such "+
         "as agriculture, tourism, and insurance. Changes in temperature and precipita- "+
         "tion patterns can disrupt crop yields and reduce agricultural productivity, lead- "+
@@ -204,7 +204,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                   <div className="text-center pt-6 pb-3">
                     <p>
                       Please wait while the API request is being processed. <br/>
-                      If the loading persists, please try selecting your language again.
+                      If the loading persists, please try selecting your language again. <br/>
+                      If the API call fails, you may have selected the wrong language.
                     </p>
                   </div>
                 )}
