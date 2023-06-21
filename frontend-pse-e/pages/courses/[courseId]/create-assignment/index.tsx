@@ -82,7 +82,7 @@ const CreateAssignment = () => {
             </Head>
 
             <NavBar />
-
+            {/* <iframe src="https://writespace.nl/" style={{border:0}} name="writespace"  height="400px" width="600px" allowFullScreen></iframe> */}
             <div className="flex flex-col md:flex-row pt-20">
                 <div className="bg-white lg:border lg:border-gray-200 rounded-lg lg:shadow lg:dark:bg-gray-800 lg:dark:border-gray-700 p-5 md:min-h-screen flex items-center content-center justify-center">
                     <motion.div
@@ -138,8 +138,8 @@ const CreateAssignment = () => {
                             value={assignment.grading_type || "points"}
                             id="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            onChange={handleInputChange}
                             name="grading_type"
+                            onChange={handleInputChange}
                         >
                             <option value="pass_fail">Pass/Fail</option>
                             <option value="percent">Percent</option>
