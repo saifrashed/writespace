@@ -262,7 +262,6 @@ const Grade: React.FC = () => {
                                 }}
                             >
                                 {assignedBadges.length === 0 ? "Assign badges" : "See assigned badges"}
-                                {assignedBadges.length > 0 && (
                                 <span
                                     className="absolute top-0 right-0 bg-gray-500 text-white rounded-full w-4 h-4 flex items-center justify-center top-0 right-0 -mt-1 -mr-1"
                                     style={{
@@ -271,7 +270,6 @@ const Grade: React.FC = () => {
                                 >
                                     {assignedBadges.length}
                                 </span>
-                                )}
                             </button>
                             </div>
                         </div>
@@ -364,12 +362,12 @@ const Grade: React.FC = () => {
                         <div className="relative w-full max-w-3xl max-h-2x1 mx-auto">
                             <div className="relative bg-white rounded-lg shadow ">
                                 <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
-                                    <svg aria-hidden="true" className="w-2 h-5" fill="currentColor" onClick={() => { setBadgeModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
+                                    <svg aria-hidden="true" className="w-4 h-5" fill="currentColor" onClick={() => { setBadgeModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
                                     <span className="sr-only">Close modal</span>
                                 </button>
                                 <div className="p-6 text-center">
                                     {/* make a grid layout to display all badges */}
-                                    <div className="grid gap-4 my-2.5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                                    <div className="grid gap-4 my-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                                         {badges.map((badge, index) => {
                                             return (
                                                     <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
@@ -387,7 +385,7 @@ const Grade: React.FC = () => {
                                     <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Yes, I'm sure
                                     </button>
-                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false) }} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
+                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); setAssignedBadges([]); setBadgeClicked(new Array(badges.length).fill(false));}} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
                                 </div>
                             </div>
                         </div>
