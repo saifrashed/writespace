@@ -91,38 +91,51 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
-
         const alreadySubmitted = await submissionModel.find({ 'assignmentId': assignmentId, 'userId': userId });
 
-        if (alreadySubmitted.length !== 0) {
-            return res.status(409).json({ error: 'You cant submit twice, update the existing assignment using /update/file.' })
+        // If file is not yet submitted
+        if (alreadySubmitted.length == 0) {
+
+            // Create a new instance of the submission model
+            const newSubmission = await new submissionModel({
+                userId: userId,
+                assignmentId: assignmentId,
+                date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
+                grade: null,
+                status: "ungraded",
+                filetype: req.file.mimetype,
+                filename: req.file.originalname,
+                fileData: req.file.buffer,
+                fileNotes: []
+            }).save();
+
+            // Send the savedTest object back in json form
+            res.status(200).json(newSubmission);
         }
 
-        const submissionDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }); // Off by two hours
-        const submissionGrade = null;
-        const submissionStatus = "ungraded";
-        const filetype = req.file.mimetype;
-        const filename = req.file.originalname;
-        const fileData = req.file.buffer;
 
-        // Create a new instance of the submission model
-        const newSubmission = new submissionModel({
-            userId: userId,
-            assignmentId: assignmentId,
-            date: submissionDate,
-            grade: submissionGrade,
-            status: submissionStatus,
-            filetype: filetype,
-            filename: filename,
-            fileData: fileData,
-            fileNotes: []
-        });
+        // If file is already submitted
+        if (alreadySubmitted.length !== 0) {
 
-        // Save the newTest instance to the database
-        const savedSubmission = await newSubmission.save();
+            const updatedSubmission = await submissionModel.findOneAndUpdate(
+                {
+                    'assignmentId': req.body.assignmentId,
+                    'userId': res.locals.userId
+                },
+                {
+                    $set: {
+                        'filetype': req.file.mimetype,
+                        'filename': req.file.originalname,
+                        'fileData': req.file.buffer,
+                        'date': new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
+                    }
+                },
+                { new: true }
+            );
 
-        // Send the savedTest object back in json form
-        res.status(200).json(savedSubmission);
+            res.status(200).json(updatedSubmission);
+        }
+
     } catch (error) {
         console.error('Error saving data to MongoDB:', error);
         res.status(500).json({ error: 'Failed to save data to the database' });
@@ -196,42 +209,42 @@ router.put('/grade/', auth, async (req, res) => {
 //     }
 // });
 
-// Updates the submitted file, along with the new date of submission.
-router.put('/file/', upload.single('file'), auth, async (req, res) => {
-    try {
-        const userId = res.locals.userId;
-        const assignmentId = req.body.assignmentId
-        const newFileType = req.file.mimetype
-        const newFileName = req.file.originalname;
-        const newFileData = req.file.buffer;
-        const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
+// // Updates the submitted file, along with the new date of submission.
+// router.put('/file/', upload.single('file'), auth, async (req, res) => {
+//     try {
+//         const userId = res.locals.userId;
+//         const assignmentId = req.body.assignmentId
+//         const newFileType = req.file.mimetype
+//         const newFileName = req.file.originalname;
+//         const newFileData = req.file.buffer;
+//         const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
 
-        const updatedSubmission = await submissionModel.findOneAndUpdate(
-            {
-                'assignmentId': assignmentId,
-                'userId': userId
-            },
-            {
-                $set: {
-                    'filetype': newFileType,
-                    'filename': newFileName,
-                    'fileData': newFileData,
-                    'date': newDate,
-                }
-            },
-            { new: true }
-        );
+//         const updatedSubmission = await submissionModel.findOneAndUpdate(
+//             {
+//                 'assignmentId': assignmentId,
+//                 'userId': userId
+//             },
+//             {
+//                 $set: {
+//                     'filetype': newFileType,
+//                     'filename': newFileName,
+//                     'fileData': newFileData,
+//                     'date': newDate,
+//                 }
+//             },
+//             { new: true }
+//         );
 
-        if (!updatedSubmission) {
-            return res.status(200).json({ message: 'Submission not found' });
-        }
+//         if (!updatedSubmission) {
+//             return res.status(200).json({ message: 'Submission not found' });
+//         }
 
-        res.status(200).json({ message: 'Submission updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
+//         res.status(200).json({ message: 'Submission updated successfully' });
+//     } catch (error) {
+//         console.error('Error updating data in MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to update data in the database' });
+//     }
+// });
 
 // PUT request (updates something in the db)
 // router.put('/update/', upload.single('file'), auth, async (req, res) => {
