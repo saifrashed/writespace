@@ -53,6 +53,39 @@ const submissionModel = require("../models/submission.model.js");
 //     }
 // });
 
+// Get all submissions for an assignment
+router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
+    try {
+        // Find the object using an attribute of the object
+        const result = await submissionModel.find({ 'assignmentId': req.params.assignmentId });
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Get submission by a user for an assignment
+router.post("/get-submission/", auth, async (req, res) => {
+    try {
+        const { userId, assignmentId } = req.body;
+        // Find the object using an attribute of the object
+
+        const result = await submissionModel.find({
+            'assignmentId': assignmentId,
+            'userId': userId ? userId : res.locals.userId
+        });
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Post request (creates something in the db)
 router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
