@@ -1,18 +1,21 @@
 import axios, { AxiosError } from "axios"
 import config from "../config";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNotification } from "./useNotification";
 
-function useQuiz(quizId: number) {
+function useQuiz(token: string) {
   const { onSuccess, onError } = useNotification()
-  const [gotQuizzes, setGotQuizzes] = useState(false);
   const [quizzes, setQuizzes] = useState([]);
 
+  useEffect(() => {
+    getQuizzes();
+  }, []);
 
   const getQuizzes = async () => {
     try {
-      const response = await axios.get(`${config.baseUrl}/quiz/get-all`);
-      return response.data;
+      const response = await axios.get(`${config.baseUrl}/quiz/get-all`, { headers: { bearer: token }});
+      console.log(response.data);
+      setQuizzes(response.data);
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
@@ -29,15 +32,15 @@ function useQuiz(quizId: number) {
     }
   }
 
-  const saveQuiz = async (quizId: number, topic: string, ) => {
-    try {
-      const response = await axios.get(`${config.baseUrl}/quiz/save`, {quizId, topic, experiencePoints, });
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
-    }
-  }
+  // const saveQuiz = async (quizId: number, topic: string, ) => {
+  //   try {
+  //     const response = await axios.get(`${config.baseUrl}/quiz/save`, {quizId, topic, experiencePoints, });
+  //     return response.data;
+  //   } catch (error) {
+  //     console.log(error);
+  //     onError("Something went wrong");
+  //   }
+  // }
 
 
 
@@ -59,22 +62,22 @@ function useQuiz(quizId: number) {
   //   }
   // };
 
-  const updateQuiz = async (userId: number, quizId: number, latestScore: number) => {
-    try {
-      const response = await axios.put(`${config.baseUrl}/quiz-score/update/grade`, {
-        userId: userId,
-        quizId: quizId,
-        latestScore: latestScore
-      });
+  // const updateQuiz = async (userId: number, quizId: number, latestScore: number) => {
+  //   try {
+  //     const response = await axios.put(`${config.baseUrl}/quiz-score/update/grade`, {
+  //       userId: userId,
+  //       quizId: quizId,
+  //       latestScore: latestScore
+  //     });
 
-      return response.data;
-    } catch (error) {
-      console.log(error)
-    }
-  };
+  //     return response.data;
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // };
 
 
-  return { saveQuiz, getQuiz, gotQuizzes, quizzes };
+  return { quizzes, getQuizzes, getQuiz };
 }
 
 export default useQuiz;
