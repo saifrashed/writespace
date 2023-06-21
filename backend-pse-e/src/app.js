@@ -33,20 +33,22 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const testService = require('./services/test.service.js');
 const submissionService = require('./services/submission.service.js');
 const userService = require('./services/user.service.js');
+const quizService = require('./services/quiz.service.js');
 const quizScoreService = require('./services/quiz-score.service.js');
 const assignmentService = require('./services/assignment.service.js');
 const badgeService = require('./services/badge.service.js');
+const authService = require('./services/auth.service.js');
+const courseService = require('./services/course.service.js');
 // Define new routes here with the start route
-app.use('/test', testService);
 app.use('/submission', submissionService);
 app.use('/user', userService);
+app.use('/quiz', quizService);
 app.use('/quiz-score', quizScoreService);
 app.use('/assignment', assignmentService);
 app.use('/badge', badgeService);
-const canvasService = require('./services/canvas-api.service.js');
-// Define new routes here with the start route
+app.use('/auth', authService);
+app.use('/course', courseService);
 app.use('/test', testService);
-app.use('/canvas-api', canvasService);
 
 // ************************* General requests *************************
 app.get('/', (req, res) => {
