@@ -28,17 +28,15 @@ const userModel = require("../models/user.model.js");
 // Post request (creates something in the db)
 
 // Function to get the level of a user based on their experience points
-function getLevel(experiencePoints, levelThresholds) {
+function getLevel(experiencePoints) {
     let level = 1;
-    while (experiencePoints >= levelThresholds[level]) {
-      level++;
-      if (level >= levelThresholds.length) {
-        // Handle the case where the user exceeds the highest level threshold
-        break;
-      }
+    let levelThreshold = 0;
+    while (experiencePoints >= levelThreshold) {
+        level++;
+        levelThreshold += (level - 1) * 100;
     }
-    return level;
-  }
+    return [level - 1, levelThreshold];
+}
 
 // Get request (gets something from the db)
 // Get all users
@@ -54,33 +52,11 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-// Find users by userId
-router.get("/find-by-user-id/:userId", auth, async (req, res) => {
-    try {
-        // Find the object using an attribute of the object
-        const result = await userModel.findOne({ 'userId': req.params.userId });
-        // If the object is not fount give an error
-        if (result.length === 0) {
-            return res.status(200).json({ message: 'Object not found' });
-        }
-
-        const level = getLevel(result.experiencePoints, levelThresholds);
-        plainResult = result.toObject();
-        plainResult.level = level;
-
-        // Handle success case here
-        res.status(200).json(plainResult);
-    } catch (error) {
-        console.error('Error from MongoDB:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
-
 // Save new user
 router.post('/save', auth, async (req, res) => {
     try {
-        // Variables for the model
-        const userId = req.body.userId;
+        // Use the userId from the authentication check (canvas userId)
+        const userId = res.locals.userId;
 
         const alreadyExists = await userModel.find({ 'userId': userId });
 
@@ -114,7 +90,7 @@ router.post('/save', auth, async (req, res) => {
 // Updates user picture
 router.put('/update/picture/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = res.locals.userId;
         const pictureId = req.body.pictureId;
 
         const updatedUser = await userModel.findOneAndUpdate(
@@ -143,7 +119,7 @@ router.put('/update/picture/', auth, async (req, res) => {
 // Updates user XP
 router.put('/update/experience-points/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
         const XPToAdd = req.body.experiencePoints
 
         const userToUpdate = await userModel.findOne({ 'userId': userId });
@@ -175,7 +151,7 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badge/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
         const newBadge = req.body.badgeId;
         const courseId = req.body.courseId;
         const assignmentId = req.body.assignmentId;
@@ -205,7 +181,7 @@ router.put('/update/add-badge/', auth, async (req, res) => {
 // Delete a badge
 router.put('/update/delete-badge/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
         const assignmentId = req.body.assignmentId;
         const badgeId = req.body.badgeId
 
@@ -247,56 +223,56 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
 
 // General update request
 // PUT request (updates something in the db)
-router.put('/update/', auth, async (req, res) => {
-    try {
-        const userId = req.body.userId;
-        const updatedUser = {
-            userId: req.body.userId,
-            pictureId: req.body.pictureId,
-            experiencePoints: req.body.experiencePoints,
-            badges: req.body.badges
-        };
+// router.put('/update/', auth, async (req, res) => {
+//     try {
+//         const userId = res.locals.userId;
+//         const updatedUser = {
+//             userId: res.locals.userId,
+//             pictureId: req.body.pictureId,
+//             experiencePoints: req.body.experiencePoints,
+//             badges: req.body.badges
+//         };
 
-        // Find the existing test by testId and update it
-        const result = await userModel.updateOne(
-            {
-                'userId': userId
-            },
-            { $set: updatedUser }
-        );
+//         // Find the existing test by testId and update it
+//         const result = await userModel.updateOne(
+//             {
+//                 'userId': userId
+//             },
+//             { $set: updatedUser }
+//         );
 
-        // Check if the test was found and updated successfully
-        if (result.nModified === 0) {
-            return res.status(200).json({ message: 'Object not found' });
-        }
+//         // Check if the test was found and updated successfully
+//         if (result.nModified === 0) {
+//             return res.status(200).json({ message: 'Object not found' });
+//         }
 
-        res.status(200).json({ message: 'User updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
+//         res.status(200).json({ message: 'User updated successfully' });
+//     } catch (error) {
+//         console.error('Error updating data in MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to update data in the database' });
+//     }
+// });
 
-// Delete user
-router.delete('/delete/:userId', auth, async (req, res) => {
-    try {
-        const userId = req.params.userId;
+// // Delete user
+// router.delete('/delete/:userId', auth, async (req, res) => {
+//     try {
+//         const userId = req.params.userId;
 
-        // Find the document by submissionId and remove it
-        const result = await userModel.deleteOne({ 'userId': userId });
+//         // Find the document by submissionId and remove it
+//         const result = await userModel.deleteOne({ 'userId': userId });
 
-        // Check if the document was found and deleted successfully
-        if (result.deletedCount === 0) {
-            return res.status(200).json({ message: 'Object not found' });
-        }
+//         // Check if the document was found and deleted successfully
+//         if (result.deletedCount === 0) {
+//             return res.status(200).json({ message: 'Object not found' });
+//         }
 
-        // Delete successful
-        res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-        console.error('Error deleting data from MongoDB:', error);
-        res.status(500).json({ error: 'Failed to delete data from the database' });
-    }
-});
+//         // Delete successful
+//         res.status(200).json({ message: 'User deleted successfully' });
+//     } catch (error) {
+//         console.error('Error deleting data from MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to delete data from the database' });
+//     }
+// });
 
 // Get user combined with canvas user object
 router.get("/get-user", auth, async (req, res) => {
@@ -305,22 +281,26 @@ router.get("/get-user", auth, async (req, res) => {
         const responseCanvas = await axios.get(`${API_URL}/users/self`, {
             headers: {
                 // Authorization using the access token
-                Authorization: `Bearer ${req.headers["bearer"]}`                
+                Authorization: `Bearer ${req.headers["bearer"]}`
             }
         });
 
         // Find the user with the id from canvas
         const responseMongo = await userModel.find({ 'userId': responseCanvas.data.id });
-        
+
         // If the object is not fount give an error
         if (responseMongo.length === 0) {
             return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
+        const [level, nextThreshold] = getLevel(responseMongo.experiencePoints);
+
         // Combine json objects ... merges the objects
         const combinedUser = {
             ...responseCanvas.data,
-            ...responseMongo[0]._doc
+            ...responseMongo[0]._doc,
+            level,
+            nextThreshold
           };
 
         // Handle success case here
@@ -347,40 +327,6 @@ router.get("/get-user", auth, async (req, res) => {
 //         res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
 //     }
 // });
-
-const levelThresholds = [
-    0,     // Level 1 threshold
-    100,   // Level 2 threshold
-    300,   // Level 3 threshold
-    600,   // Level 4 threshold
-    1000,  // Level 5 threshold
-    1500,  // Level 6 threshold
-    2100,  // Level 7 threshold
-    2800,  // Level 8 threshold
-    3600,  // Level 9 threshold
-    4500,  // Level 10 threshold
-    5500,  // Level 11 threshold
-    6600,  // Level 12 threshold
-    7800,  // Level 13 threshold
-    9100,  // Level 14 threshold
-    10500, // Level 15 threshold
-    12000, // Level 16 threshold
-    13600, // Level 17 threshold
-    15300, // Level 18 threshold
-    17100, // Level 19 threshold
-    19000, // Level 20 threshold
-    21000, // Level 21 threshold
-    23100, // Level 22 threshold
-    25300, // Level 23 threshold
-    27600, // Level 24 threshold
-    30000, // Level 25 threshold
-    32500, // Level 26 threshold
-    35100, // Level 27 threshold
-    37800, // Level 28 threshold
-    40600, // Level 29 threshold
-    43500  // Level 30 threshold
-];
-
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable

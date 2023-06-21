@@ -45,9 +45,6 @@ export interface Enrollment {
     limit_privileges_to_course_section: boolean;
 }
 
-
-
-
 export interface Assignment {
     id: number;
     description: string;
@@ -77,7 +74,7 @@ export interface Assignment {
     grader_comments_visible_to_graders: boolean;
     final_grader_id: number | null;
     grader_names_visible_to_final_grader: boolean;
-    allowed_attempts: number;
+    allowed_attempts: number | string;
     annotatable_attachment_id: number | null;
     hide_in_gradebook: boolean;
     lock_info: {
@@ -128,105 +125,23 @@ export interface Assignment {
 }
 
 export interface Submission {
-    assignment_id: number;
-    assignment: any | null;
-    course: any | null;
-    attempt: number;
-    body: string;
-    grade: string;
-    grade_matches_current_submission: boolean;
-    html_url: string;
-    preview_url: string;
-    score: number;
-    submission_comments: any | null;
-    submission_type: string;
-    submitted_at: string;
-    url: string | null;
-    user_id: number;
-    grader_id: number;
-    graded_at: string;
-    user: any | null;
-    late: boolean;
-    assignment_visible: boolean;
-    excused: boolean;
-    missing: boolean;
-    late_policy_status: string;
-    points_deducted: number;
-    seconds_late: number;
-    workflow_state: string;
-    extra_attempts: number;
-    anonymous_id: string;
-    posted_at: string | null;
-    read_status: string;
-    redo_request: boolean;
+    userId: number;
+    assignmentId: number;
+    date: Date;
+    grade: number;
+    status: string;
+    filetype: string;
+    filename: string;
+    fileData: Buffer;
+    fileNotes: object[];
 }
 
 export interface Badge {
-    includes(badge: { id: number; title: string; description: string; exp: number; }): unknown;
     badgeId: Number,
     iconId: Number,
     experiencePoints: Number,
     name: String,
     description: String,
-}
-
-
-export interface Enrollment {
-    id: number;
-    course_id: number;
-    sis_course_id: string | null;
-    course_integration_id: string | null;
-    course_section_id: number;
-    section_integration_id: string | null;
-    sis_account_id: string | null;
-    sis_section_id: string | null;
-    sis_user_id: string | null;
-    enrollment_state: string;
-    limit_privileges_to_course_section: boolean;
-    sis_import_id: number | null;
-    root_account_id: number;
-    type: string;
-    user_id: number;
-    associated_user_id: number | null;
-    role: string;
-    role_id: number;
-    created_at: string;
-    updated_at: string;
-    start_at: string;
-    end_at: string;
-    last_activity_at: string;
-    last_attended_at: string;
-    total_activity_time: number;
-    html_url: string;
-    grades: {
-        html_url: string;
-        current_score: number;
-        current_grade: string | null;
-        final_score: number;
-        final_grade: string | null;
-    };
-    user: {
-        id: number;
-        name: string;
-        sortable_name: string;
-        short_name: string;
-    };
-    override_grade: string;
-    override_score: number;
-    unposted_current_grade: string;
-    unposted_final_grade: string;
-    unposted_current_score: string;
-    unposted_final_score: string;
-    has_grading_periods: boolean | undefined;
-    totals_for_all_grading_periods_option: boolean | undefined;
-    current_grading_period_title: string | null | undefined;
-    current_grading_period_id: number | null | undefined;
-    current_period_override_grade: string;
-    current_period_override_score: number;
-    current_period_unposted_current_score: number | null | undefined;
-    current_period_unposted_final_score: number | null | undefined;
-    current_period_unposted_current_grade: string | null | undefined;
-    current_period_unposted_final_grade: string | null | undefined;
 }
 
 export interface User {
@@ -248,16 +163,17 @@ export interface User {
     last_login: string | null;
     time_zone: string | null;
     bio: string | null;
+    userId: number;
+    pictureId: number;
+    experiencePoints: number;
+    badges: BadgeModel[];
+    level: number;
 }
 
-export interface UserDb {
-    userId: Number,
-    experiencePoints: Number,
-    level: Number,
-    badges: Object,
-export interface Note {
-    id: number;
-    content: string;
-    highlightAreas: HighlightArea[];
-    quote: string;
+interface BadgeModel {
+    badgeId: number;
+    courseId: number;
+    assignmentId: number;
+    graderId: number;
+    comment: string;
 }

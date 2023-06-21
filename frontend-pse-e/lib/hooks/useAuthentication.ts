@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import { setCookie, removeCookie, getCookie } from "../cookie"
 import { useEffect, useState } from "react";
+import axios from "axios";
+import config from "../config";
 
 /**
  * Custom hook for user authentication.
@@ -14,6 +16,13 @@ function useAuthentication() {
 
   const login = async (token: string) => {
     try {
+
+      const response = await axios.get(`${config.baseUrl}/user/get-user`, { headers: { bearer: token } });
+
+      if (!response.data.userId) {
+        await axios.post(`${config.baseUrl}/user/save`, { badges: [] }, { headers: { bearer: token } });
+      }
+
       setCookie("pse-token", token)
       await router.push("/courses");
     } catch (error) {

@@ -16,19 +16,12 @@ const Assignments = () => {
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment, getAssignment } = useAssignment()
-  const { submission, getSubmission } = useSubmission()
+  const { assignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
+  const { submission } = useSubmission()
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
   const isTeacher = false;
-
-  useEffect(() => {
-    if (courseId && assignmentId && token) {
-      getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-      getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-    }
-  }, [router.query]);
 
   return (
     <>
@@ -93,7 +86,7 @@ const Assignments = () => {
                 </div>
 
                 <p className="mt-8 text-gray-600">
-                  {submission?.submitted_at ? (
+                  {submission?.date && (
                     <span className="flex items-center text-green-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -111,7 +104,9 @@ const Assignments = () => {
                       </svg>
                       <span className="ml-2">Submitted</span>
                     </span>
-                  ) : (
+                  )}
+
+                  {!submission?.date && (
                     <span className="flex items-center text-orange-500">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -131,7 +126,7 @@ const Assignments = () => {
                     </span>
                   )}
 
-                  <span className="font-bold">Submission date: </span>{submission?.submitted_at ? formatDate(submission?.submitted_at) : "-"}</p>
+                  <span className="font-bold">Submission date: </span>{submission?.date ? formatDate(submission?.date.toDateString()) : "-"}</p>
               </div>
             </div>
           )}
