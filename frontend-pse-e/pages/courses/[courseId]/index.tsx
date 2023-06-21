@@ -168,7 +168,7 @@ const CourseOverview = () => {
                           <div
                             className={`flex items-center ${assignment.has_submitted_submissions
                               ? ("text-emerald-400")
-                              : new Date() > new Date(assignment.due_at)
+                              : new Date() < new Date(assignment.due_at)
                                 ? ("text-orange-500")
                                 : ("text-red-500")
                               } font-bold`}
@@ -176,8 +176,8 @@ const CourseOverview = () => {
                             <div
                               className={`h-2.5 w-2.5 rounded-full ${assignment.has_submitted_submissions
                                 ? ("bg-emerald-400")
-                                : new Date() > new Date(assignment.due_at)
-                                  ? ("text-orange-500")
+                                : new Date() < new Date(assignment.due_at)
+                                  ? ("bg-orange-500")
                                   : ("bg-red-500")
                                 } mr-2`}
                             ></div>
