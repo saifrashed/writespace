@@ -8,7 +8,6 @@ const BottomBanner = ({unlocked, count}) => {
   if (unlocked) {
     text = `${count}X`
   }
-  console.log(text)
 
   const svgCode = `
   <?xml version="1.0" standalone="no"?>
