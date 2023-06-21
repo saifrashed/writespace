@@ -63,17 +63,15 @@ const Assignments = () => {
                                         key={index}
                                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                     >
-                                        <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
-
-                                            <td className="px-6 py-4 whitespace-nowrap">
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                            <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
                                                 {submission.userId}
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                            </td>
-                                        </Link>
-
+                                            </Link>
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
+                                        </td>
+                                        <td className="px-6 py-4 whitespace-nowrap">
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>

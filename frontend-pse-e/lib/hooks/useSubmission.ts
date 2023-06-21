@@ -30,6 +30,9 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
   const getSubmissions = async (assignmentId: string, token: string) => {
     try {
       const response = await axios.get(`${config.baseUrl}/submission/get-submissions/${assignmentId}`, { headers: { bearer: token } })
+
+      console.log(response.data)
+
       setSubmissions(response.data)
     } catch (error) {
       console.log(error)
