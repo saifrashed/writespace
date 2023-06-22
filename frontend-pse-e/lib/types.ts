@@ -141,11 +141,11 @@ export interface Submission {
 }
 
 export interface Badge {
-    badgeId: Number,
-    iconId: Number,
-    experiencePoints: Number,
-    name: String,
-    description: String,
+    badgeId: number,
+    iconId: number,
+    experiencePoints: number,
+    name: string,
+    description: string,
 }
 
 

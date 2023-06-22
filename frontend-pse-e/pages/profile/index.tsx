@@ -1,16 +1,17 @@
 import Head from "next/head";
 import NavBar from "@/components/NavBar";
 import Avatar from '@mui/material/Avatar';
-import badges from '../../data/badges';
 import ScaledBadge from '@/components/badge-template/Badge';
 import useUser from "@/lib/hooks/useUser";
 import { useEffect, useState } from 'react';
 import useAuthentication from "@/lib/hooks/useAuthentication";
+import useBadges from "@/lib/hooks/useBadges";
 
 const Profile = () => {
   const { token } = useAuthentication();
   const { user } = useUser(token);
   const [isLegendary, setIslegendary] = useState<boolean>()
+  const { badges } = useBadges(token)
 
   useEffect(() => {
     if (user) {
@@ -74,17 +75,22 @@ const Profile = () => {
 
             {user &&
               badges.map((badge) => {
-                // const isBadgeOwned = user.badges.hasOwnProperty(badge.id);
+                const isBadgeOwned = user.badges.find(obj => obj.badgeId === badge.badgeId);
+
+                console.log(badge.badgeId)
+                console.log(isBadgeOwned)
+                console.log(user)
+
                 return (
-                  <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-36" key={badge.id}>
+                  <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-36" key={badge.badgeId}>
                     <ScaledBadge
                       resizeFactor={0.5}
-                      pictureUrl={`/badges/${badge.id.toString()}.png`}
-                      title={badge.title}
+                      pictureUrl={`/badges/${badge.badgeId.toString()}.png`}
+                      title={badge.name}
                       description={badge.description}
                       commentary={'no comment'}
-                      xp={String(badge.exp)}
-                      unlocked={true}
+                      xp={String(badge.experiencePoints)}
+                      unlocked={isBadgeOwned}
                     />
                   </div>
                 );
