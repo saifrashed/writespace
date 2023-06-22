@@ -99,6 +99,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
             // Create a new instance of the submission model
             const newSubmission = await new submissionModel({
                 userId: userId,
+                userName: res.locals.user.name,
                 assignmentId: assignmentId,
                 date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
                 grade: null,
@@ -120,6 +121,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
             const updatedSubmission = await submissionModel.findOneAndUpdate(
                 {
                     'assignmentId': req.body.assignmentId,
+                    'userName': res.locals.user.name,
                     'userId': res.locals.userId
                 },
                 {
