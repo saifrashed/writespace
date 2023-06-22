@@ -4,14 +4,14 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
 // Configure multer storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
-// ************************* This can be coppied for every new service *************************
+multer({ storage: storage });
+// ************************* This can be coppied for every cnew service *************************
 
 // ************************* Copy and change this with the model you added *************************
 // Import models for this service (../ goes up one directory)
@@ -66,7 +66,7 @@ router.post('/save/', auth, async (req, res) => {
             return res.status(409).json({ error: 'A quiz with this Id already exists' })
         }
 
-        newQuiz = new quizModel({
+        const newQuiz = new quizModel({
             quizId: quizId,
             topic: topic,
             experiencePoints: experiencePoints,

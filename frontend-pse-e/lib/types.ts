@@ -136,6 +136,7 @@ export interface Submission {
     filetype: string;
     filename: string;
     fileData: Buffer;
+    userName: string;
     fileNotes: object[];
 }
 

@@ -41,17 +41,8 @@ const auth = async (req, res, next) => {
         req.headers["bearer"] = decryptedToken;
         // Put the id of the user in the response
         res.locals.userId = response.data.id;
-
-        // // Check if the user exists in canvas (await to first do this before the request)
-        // const response = await axios.get(`${API_URL}/users/self`, {
-        //     headers: {
-        //         Authorization: `Bearer ${token}`,
-        //     },
-        // });
-        // // Edit the request body with the new values if the user is valid.
-        // req.headers["bearer"] = token;
-        // // Put the id of the user in the response
-        // res.locals.userId = response.data.id;
+        // Save the user object in the locals
+        res.locals.user = response.data;
     } catch (err) {
         return res.status(401).send("Error: Authorization failed.");
     }
