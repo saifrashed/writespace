@@ -50,26 +50,19 @@ const Profile = () => {
 
         <div className="w-full relative shadow-md sm:p-2 md:p-4 lg:p-8 md:w-4/5 overflow-x-hidden">
 
-          <div className="flex flex-col mt-20 justify-center items-center">
-            {/* <ProgressBar bgcolor="orange" progress="30" height={35} /> */}
-          </div>
-
-          <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+          <div className="mt-20 w-full bg-gray-200 rounded-full dark:bg-gray-700">
             {user && (
               <div>
                 <div
-                  className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
-                  // className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
-                  style={{ height: "20px", width: `${user.experiencePoints / 50}%` }}
+                  className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-blue-100 text-center p-0.5 rounded-full"
+                  style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%` }}
                 >
-                  <span className="h-full flex items-center justify-center">{`${user.experiencePoints} XP`}</span>
+                  {user && (`${user.experiencePoints} / ${user.threshold} XP`)}
                 </div>
-
               </div>
             )}
           </div>
 
-          {/* <div className="flex flex-wrap justify-center gap-22"> */}
           <p className="mt-20 mb-8 text-2xl font-bold flex justify-center sm:mt-10 sm:mb-4 md:text-2xl">Badges</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
 

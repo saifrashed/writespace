@@ -1261,10 +1261,6 @@ select {
   flex-direction: column;
 }
 
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
 .content-center {
   align-content: center;
 }
@@ -1877,8 +1873,8 @@ select {
   line-height: 2.5rem;
 }
 
-.leading-none {
-  line-height: 1;
+.leading-4 {
+  line-height: 1rem;
 }
 
 .leading-relaxed {
