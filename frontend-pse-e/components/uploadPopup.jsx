@@ -9,9 +9,9 @@ import { useNotification } from "@/lib/hooks/useNotification";
 const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
     const [uploadedFile, setUploadedFile] = useState(null);
-    const [isConfirmed, setIsConfirmed] = useState(null)
+    const [isConfirmed, setIsConfirmed] = useState(false)
     const fileSizeLimit = 1 * 1048576;  // 1MB
-    const { submitSubmission } = useSubmission()
+    const { saveSubmission } = useSubmission()
     const { token } = useAuthentication()
     const { onError } = useNotification()
 
@@ -78,7 +78,7 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
             return;
         }
 
-        submitSubmission(token, assignmentId, uploadedFile.file)
+        saveSubmission(token, assignmentId, uploadedFile.file)
         setFileUploadSuccess(true);
     }
 
@@ -121,7 +121,7 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
                                     </div>
                                     {/* No plagiarism confirmation checkbox */}
                                     <div className="flex items-center my-4">
-                                        <input id="default-checkbox" type="checkbox" checked={isConfirmed}
+                                        <input id="default-checkbox" type="checkbox" value={isConfirmed} checked={isConfirmed}
                                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
                                             onChange={(event) => {
                                                 setIsConfirmed(event.target.checked);

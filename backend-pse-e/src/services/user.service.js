@@ -35,7 +35,8 @@ function getLevel(experiencePoints) {
         level++;
         levelThreshold += (level - 1) * 100;
     }
-    return level - 1;
+    return {level: level - 1,
+            threshold: levelThreshold};
 }
 
 // Get request (gets something from the db)
@@ -149,27 +150,40 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 });
 
 // Add badge to user. Handles adding of new badges and adding to existing badges
-router.put('/update/add-badge/', auth, async (req, res) => {
+router.put('/update/add-badges/', auth, async (req, res) => {
     try {
-        const userId = req.body.userId ? req.body.userId : res.locals.userId;
-        const newBadge = req.body.badgeId;
-        const courseId = req.body.courseId;
-        const assignmentId = req.body.assignmentId;
-        const graderId = req.body.graderId;
-        const comment = req.body.comment;
+        const userId = res.locals.userId;
+        const { badges, courseId, assignmentId, graderId, comment } = req.body;
 
-        const userToUpdate = await userModel.findOne({ 'userId': userId });
+        let preparedBadges = [];
 
-        if (userToUpdate === null) {
-            return res.status(200).json({ message: 'User not found' });
+        for (let i = 0; i < badges.length; i++) {
+            const badgeId = badges[i];
+            const badge = {
+                badgeId: badgeId,
+                courseId: courseId,
+                assignmentId: assignmentId,
+                graderId: graderId,
+                comment: comment
+            }
+            preparedBadges.push(badge);
         }
 
-        const updateId = userToUpdate._id;
-        let badges = userToUpdate.badges;
+        const updatedUser = await userModel.findOneAndUpdate(
+            {
+                'userId': userId,
+            },
+            {
+                $push: {
+                    'badges': preparedBadges
+                }
+            },
+            { new: true }
+        );
 
-        badges.push({ "badgeId": newBadge, "courseId": courseId, "assignmentId": assignmentId, "graderId": graderId, "comment": comment });
-
-        updatedUser = await userModel.findByIdAndUpdate(updateId, { "badges": badges }, { new: true });
+        if (!updatedUser) {
+            return res.status(200).json({ message: 'User not found' });
+        }
 
         res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
@@ -293,13 +307,14 @@ router.get("/get-user", auth, async (req, res) => {
             return res.status(200).json({ message: 'User not found in mongodb' });
         }
 
-        const level = getLevel(responseMongo.experiencePoints);
+        const level = getLevel(responseMongo[0].experiencePoints);
 
         // Combine json objects ... merges the objects
         const combinedUser = {
             ...responseCanvas.data,
             ...responseMongo[0]._doc,
-            level
+            level: level.level,
+            threshold: level.threshold
           };
 
         // Handle success case here

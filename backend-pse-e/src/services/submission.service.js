@@ -27,17 +27,17 @@ const submissionModel = require("../models/submission.model.js");
 // Define a route without the starting route defined in app.js
 
 // Get request (gets something from the db)
-router.get("/get-all", auth, async (req, res) => {
-    try {
-        // Find all tests
-        const submissions = await submissionModel.find();
-        // Return them in json form
-        res.status(200).json(submissions);
-    } catch (error) {
-        console.error('Error from MongoDB:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-});
+// router.get("/get-all", auth, async (req, res) => {
+//     try {
+//         // Find all tests
+//         const submissions = await submissionModel.find();
+//         // Return them in json form
+//         res.status(200).json(submissions);
+//     } catch (error) {
+//         console.error('Error from MongoDB:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// });
 
 // Find submissions by userId
 // router.get("/user/:userId", auth, async (req, res) => {
@@ -53,43 +53,89 @@ router.get("/get-all", auth, async (req, res) => {
 //     }
 // });
 
+// Get all submissions for an assignment
+router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
+    try {
+        // Find the object using an attribute of the object
+        const result = await submissionModel.find({ 'assignmentId': req.params.assignmentId });
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+// Get submission by a user for an assignment
+router.post("/get-submission/", auth, async (req, res) => {
+    try {
+        const { userId, assignmentId } = req.body;
+        // Find the object using an attribute of the object
+
+        const result = await submissionModel.find({
+            'assignmentId': assignmentId,
+            'userId': userId ? userId : res.locals.userId
+        });
+
+        // Handle success case here
+        res.status(200).json(result);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Post request (creates something in the db)
 router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
-
         const alreadySubmitted = await submissionModel.find({ 'assignmentId': assignmentId, 'userId': userId });
 
-        if (alreadySubmitted.length !== 0) {
-            return res.status(409).json({ error: 'You cant submit twice, update the existing assignment using /update/file.' })
+        // If file is not yet submitted
+        if (alreadySubmitted.length == 0) {
+
+            // Create a new instance of the submission model
+            const newSubmission = await new submissionModel({
+                userId: userId,
+                assignmentId: assignmentId,
+                date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
+                grade: null,
+                status: "ungraded",
+                filetype: req.file.mimetype,
+                filename: req.file.originalname,
+                fileData: req.file.buffer,
+                fileNotes: []
+            }).save();
+
+            // Send the savedTest object back in json form
+            res.status(200).json(newSubmission);
         }
 
-        const submissionDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }); // Off by two hours
-        const submissionGrade = null;
-        const submissionStatus = "ungraded";
-        const filetype = req.file.mimetype;
-        const filename = req.file.originalname;
-        const fileData = req.file.buffer;
 
-        // Create a new instance of the submission model
-        const newSubmission = new submissionModel({
-            userId: userId,
-            assignmentId: assignmentId,
-            date: submissionDate,
-            grade: submissionGrade,
-            status: submissionStatus,
-            filetype: filetype,
-            filename: filename,
-            fileData: fileData,
-            fileNotes: []
-        });
+        // If file is already submitted
+        if (alreadySubmitted.length !== 0) {
 
-        // Save the newTest instance to the database
-        const savedSubmission = await newSubmission.save();
+            const updatedSubmission = await submissionModel.findOneAndUpdate(
+                {
+                    'assignmentId': req.body.assignmentId,
+                    'userId': res.locals.userId
+                },
+                {
+                    $set: {
+                        'filetype': req.file.mimetype,
+                        'filename': req.file.originalname,
+                        'fileData': req.file.buffer,
+                        'date': new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
+                    }
+                },
+                { new: true }
+            );
 
-        // Send the savedTest object back in json form
-        res.status(200).json(savedSubmission);
+            res.status(200).json(updatedSubmission);
+        }
+
     } catch (error) {
         console.error('Error saving data to MongoDB:', error);
         res.status(500).json({ error: 'Failed to save data to the database' });
@@ -97,7 +143,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
 });
 
 // Voegt notes to the submission
-router.put('/file-notes/', auth, async (req, res) => {
+router.put('/grade/', auth, async (req, res) => {
     try {
         const { userId, assignmentId, notes, grade } = req.body;
 
@@ -132,73 +178,73 @@ router.put('/file-notes/', auth, async (req, res) => {
 });
 
 
-// Updates the submission Grade
-router.put('/grade/', auth, async (req, res) => {
-    try {
-        const { userId, assignmentId, grade } = req.body;
-        const status = "graded";
+// // Updates the submission Grade
+// router.put('/grade/', auth, async (req, res) => {
+//     try {
+//         const { userId, assignmentId, grade } = req.body;
+//         const status = "graded";
 
-        const updatedSubmission = await submissionModel.findOneAndUpdate(
-            {
-                'assignmentId': assignmentId,
-                'userId': userId
-            },
-            {
-                $set: {
-                    'grade': grade,
-                    'status': status,
-                }
-            },
-            { new: true }
-        );
+//         const updatedSubmission = await submissionModel.findOneAndUpdate(
+//             {
+//                 'assignmentId': assignmentId,
+//                 'userId': userId
+//             },
+//             {
+//                 $set: {
+//                     'grade': grade,
+//                     'status': status,
+//                 }
+//             },
+//             { new: true }
+//         );
 
-        if (!updatedSubmission) {
-            return res.status(200).json({ message: 'Submission not found' });
-        }
+//         if (!updatedSubmission) {
+//             return res.status(200).json({ message: 'Submission not found' });
+//         }
 
-        res.status(200).json({ message: 'Submission updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
+//         res.status(200).json({ message: 'Submission updated successfully' });
+//     } catch (error) {
+//         console.error('Error updating data in MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to update data in the database' });
+//     }
+// });
 
-// Updates the submitted file, along with the new date of submission.
-router.put('/file/', upload.single('file'), auth, async (req, res) => {
-    try {
-        const userId = res.locals.userId;
-        const assignmentId = req.body.assignmentId
-        const newFileType = req.file.mimetype
-        const newFileName = req.file.originalname;
-        const newFileData = req.file.buffer;
-        const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
+// // Updates the submitted file, along with the new date of submission.
+// router.put('/file/', upload.single('file'), auth, async (req, res) => {
+//     try {
+//         const userId = res.locals.userId;
+//         const assignmentId = req.body.assignmentId
+//         const newFileType = req.file.mimetype
+//         const newFileName = req.file.originalname;
+//         const newFileData = req.file.buffer;
+//         const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
 
-        const updatedSubmission = await submissionModel.findOneAndUpdate(
-            {
-                'assignmentId': assignmentId,
-                'userId': userId
-            },
-            {
-                $set: {
-                    'filetype': newFileType,
-                    'filename': newFileName,
-                    'fileData': newFileData,
-                    'date': newDate,
-                }
-            },
-            { new: true }
-        );
+//         const updatedSubmission = await submissionModel.findOneAndUpdate(
+//             {
+//                 'assignmentId': assignmentId,
+//                 'userId': userId
+//             },
+//             {
+//                 $set: {
+//                     'filetype': newFileType,
+//                     'filename': newFileName,
+//                     'fileData': newFileData,
+//                     'date': newDate,
+//                 }
+//             },
+//             { new: true }
+//         );
 
-        if (!updatedSubmission) {
-            return res.status(200).json({ message: 'Submission not found' });
-        }
+//         if (!updatedSubmission) {
+//             return res.status(200).json({ message: 'Submission not found' });
+//         }
 
-        res.status(200).json({ message: 'Submission updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
+//         res.status(200).json({ message: 'Submission updated successfully' });
+//     } catch (error) {
+//         console.error('Error updating data in MongoDB:', error);
+//         res.status(500).json({ error: 'Failed to update data in the database' });
+//     }
+// });
 
 // PUT request (updates something in the db)
 // router.put('/update/', upload.single('file'), auth, async (req, res) => {
