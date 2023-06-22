@@ -7,12 +7,8 @@ const axios = require('axios');
 // Authentication
 const { encryptToken, decryptToken} = require('../middleware/auth');
 
-// Login api URL
-const { LOGIN_API_URL } = process.env;
-// Developer key variables
-const { CANVAS_REDIRECT_URI } = process.env;
-const { CLIENT_ID } = process.env;
-const { CLIENT_SECRET } = process.env;
+// Login api URL & Developer key variables
+const { LOGIN_API_URL, CANVAS_REDIRECT_URI, CLIENT_ID, CLIENT_SECRET } = process.env;
 
 // Route for initiating the login redirect
 // Test this by going to this URL in your browser for example: localhost:5000/canvas-api/login

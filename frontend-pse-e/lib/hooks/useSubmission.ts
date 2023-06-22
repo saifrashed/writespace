@@ -55,7 +55,7 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
 
         setFileUrl(fileUrl);
         setFileNotes(fileNotes);
-        setGrade(response.data[0].submissionGrade)
+        setGrade(response.data[0].grade)
       }
 
       console.log(response.data)

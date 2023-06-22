@@ -33,10 +33,12 @@ function getLevel(experiencePoints) {
     let levelThreshold = 0;
     while (experiencePoints >= levelThreshold) {
         level++;
-        levelThreshold += (level - 1) * 100;
+        levelThreshold += (level - 1) * 15;
     }
-    return {level: level - 1,
-            threshold: levelThreshold};
+    return {
+        level: level - 1,
+        threshold: levelThreshold
+    };
 }
 
 // Get request (gets something from the db)
@@ -229,14 +231,14 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
         for (let i = 0; i < badges.length; i++) {
             const b = badges[i];
             if (
-              b.badgeId === badgeId &&
-              b.assignmentId === assignmentId
+                b.badgeId === badgeId &&
+                b.assignmentId === assignmentId
             ) {
-              badges.splice(i, 1); // Remove the object at the found index
-              badgePresent = true;
-              break;
+                badges.splice(i, 1); // Remove the object at the found index
+                badgePresent = true;
+                break;
             }
-          }
+        }
 
         if (!badgePresent) {
             return res.status(200).json({ message: 'Badge not found' });
@@ -332,7 +334,7 @@ router.get("/get-user", auth, async (req, res) => {
             ...responseMongo[0]._doc,
             level: level.level,
             threshold: level.threshold
-          };
+        };
 
         // Handle success case here
         res.status(200).json(combinedUser);
