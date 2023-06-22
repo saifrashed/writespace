@@ -91,7 +91,8 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
-        const alreadySubmitted = await submissionModel.find({ 'assignmentId': assignmentId, 'userId': userId });
+        const courseId = req.body.courseId;
+        const alreadySubmitted = await submissionModel.find({ 'courseId': courseId, 'assignmentId': assignmentId, 'userId': userId });
 
         // If file is not yet submitted
         if (alreadySubmitted.length == 0) {
@@ -101,6 +102,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
                 userId: userId,
                 userName: res.locals.user.name,
                 assignmentId: assignmentId,
+                courseId: courseId,
                 date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
                 grade: null,
                 status: "ungraded",
@@ -147,12 +149,13 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
 // Voegt notes to the submission
 router.put('/grade/', auth, async (req, res) => {
     try {
-        const { userId, assignmentId, notes, grade } = req.body;
+        const { userId, assignmentId, notes, grade, courseId } = req.body;
 
         const status = "graded"
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
+                'courseId': courseId,
                 'assignmentId': assignmentId,
                 'userId': userId
             },

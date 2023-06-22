@@ -4,6 +4,7 @@ const submissionModel = new mongoose.Schema({
     userId: Number,
     userName: String,
     assignmentId: Number,
+    courseId: Number,
     date: Date,
     grade: Number,
     status: String,
