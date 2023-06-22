@@ -4,16 +4,18 @@ import Avatar from '@mui/material/Avatar';
 import badges from '../../data/badges';
 import ScaledBadge from '@/components/badge-template/Badge';
 import useUser from "@/lib/hooks/useUser";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Profile = () => {
   const { token } = useAuthentication();
   const { user } = useUser(token);
-
+  const [isLegendary, setIslegendary] = useState<boolean>()
 
   useEffect(() => {
-    console.log(user)
+    if (user) {
+      setIslegendary(user && user.level >= 100)
+    }
   }, [user])
 
   return (
@@ -35,11 +37,11 @@ const Profile = () => {
               src="/badges/12.png"
             />
             {/* <p>{user?.name}</p> */}
-            <div className="mt-4 text-center font-bold text-xl">{user?.name}</div>
+            <div className={`mt-4 text-center font-bold text-3xl ${isLegendary && "gradient-text"}`}>{user?.name}</div>
             {user && (
-              <div>
-                <div className="mt-4 text-center font-bold"> Level {user.level}</div>
-                <div className="mt-4 text-center font-bold"> XP {user.experiencePoints}</div>
+              <div className="lg:flex lg:row lg:justify-between lg:w-full">
+                <div className={`mt-4 lg:me-1 text-center font-bold text-xl ${isLegendary && "gradient-text"}`}> XP {user.experiencePoints}</div>
+                <div className={`mt-4 lg:ms-1 text-center font-bold text-xl ${isLegendary && "gradient-text"}`}> Level {user.level}</div>
               </div>
             )}
           </div>
