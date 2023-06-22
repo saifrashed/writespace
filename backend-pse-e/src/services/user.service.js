@@ -33,7 +33,7 @@ function getLevel(experiencePoints) {
     let levelThreshold = 0;
     while (experiencePoints >= levelThreshold) {
         level++;
-        levelThreshold += (level - 1) * 100;
+        levelThreshold += (level - 1) * 15;
     }
     return {
         level: level - 1,

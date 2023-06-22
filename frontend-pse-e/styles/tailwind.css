@@ -2091,6 +2091,22 @@ select {
   /* Hide scrollbar track on Safari and Chrome */
 }
 
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+.gradient-text {
+  background: linear-gradient(45deg, gold, #b0f5ab, #E6ABF5, gold, #b0f5ab);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradient-animation 8s linear infinite;
+  background-size: 400% auto;
 .hover\:scale-110:hover {
   --tw-scale-x: 1.1;
   --tw-scale-y: 1.1;
@@ -2511,8 +2527,22 @@ select {
     order: 2;
   }
 
+  .lg\:me-1 {
+    -webkit-margin-end: 0.25rem;
+            margin-inline-end: 0.25rem;
+  }
+
+  .lg\:ms-1 {
+    -webkit-margin-start: 0.25rem;
+            margin-inline-start: 0.25rem;
+  }
+
   .lg\:block {
     display: block;
+  }
+
+  .lg\:flex {
+    display: flex;
   }
 
   .lg\:h-10 {
@@ -2543,6 +2573,10 @@ select {
     width: 58.333333%;
   }
 
+  .lg\:w-full {
+    width: 100%;
+  }
+
   .lg\:grid-cols-4 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
@@ -2553,6 +2587,10 @@ select {
 
   .lg\:items-stretch {
     align-items: stretch;
+  }
+
+  .lg\:justify-between {
+    justify-content: space-between;
   }
 
   .lg\:border {
