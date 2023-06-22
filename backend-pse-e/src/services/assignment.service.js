@@ -130,6 +130,23 @@ router.post('/get-all', auth, async (req, res) => {
             }
         });
 
+        // Retrieve all submissions of the user for this course
+        const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            },
+            params: {
+                // Only select the submissions for the current user 
+                // automatically selects submissions for the course with courseId only
+                "student_ids[]": [res.locals.userId],
+                per_page: 200
+            }
+        });
+        // Add the submitted attribute for only this user to the response.data
+        //response.data.has_submitted = 
+        // Use only the assignments of this course
+        // TODO: "has_submitted" update the above into the thing, do it with a loop over all assignments and add it
+
         if (response.data && Array.isArray(response.data)) {
             // Filter assignments that contain " - WriteSpace" in their name
             const filteredAssignments = response.data.filter(assignment => assignment.name && assignment.name.includes("(WriteSpace)"));
