@@ -32,6 +32,14 @@ const Profile = () => {
     }
   }, [user])
 
+  useEffect(() => {
+    if (user) {
+      console.log(user);
+    }
+
+  }, [])
+
+
   return (
     <>
       <Head>
@@ -50,11 +58,13 @@ const Profile = () => {
               sx={{ width: 150, height: 150, border: '3px solid #706f7d' }}
               src={user?.pictureId === 0 || user?.pictureId === undefined ? '' : `/badges/${user?.pictureId}.png`}
             />
-            <div className={`mt-4 text-center font-bold text-xl ${isLegendary && "gradient-text"}`}>{user?.name}</div>
-            <div>
-              <div className={`mt-4 text-center font-bold ${isLegendary && "gradient-text"}`}> Level {user?.level}</div>
-              <div className={`mt-4 text-center font-bold ${isLegendary && "gradient-text"}`}> XP {user?.experiencePoints}</div>
-            </div>
+            <div className={`mt-4 text-center font-bold text-3xl ${isLegendary && "gradient-text"}`}>{user?.name}</div>
+            {user && (
+              <div className="lg:flex lg:row lg:justify-between lg:w-full">
+                <div className={`mt-4 lg:me-1 text-center font-bold text-xl ${isLegendary && "gradient-text"}`}> XP {user.experiencePoints}</div>
+                <div className={`mt-4 lg:ms-1 text-center font-bold text-xl ${isLegendary && "gradient-text"}`}> Level {user.level}</div>
+              </div>
+            )}
           </div>
         </div>
 
