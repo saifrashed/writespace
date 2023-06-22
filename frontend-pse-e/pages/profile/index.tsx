@@ -54,10 +54,11 @@ const Profile = () => {
             {user && (
               <div>
                 <div
-                  className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-blue-100 text-center p-0.5 rounded-full"
+                  className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center p-0.5 rounded-full"
                   style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%` }}
                 >
-                  {user && (`${user.experiencePoints} / ${user.threshold} XP`)}
+
+                  <div className="absolute w-full">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div>
                 </div>
               </div>
             )}
