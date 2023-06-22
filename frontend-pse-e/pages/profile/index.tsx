@@ -4,30 +4,13 @@ import Avatar from '@mui/material/Avatar';
 import badges from '../../data/badges';
 import ScaledBadge from '@/components/badge-template/Badge';
 import useUser from "@/lib/hooks/useUser";
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useAuthentication from "@/lib/hooks/useAuthentication";
 
 
 const Profile = () => {
   const { token } = useAuthentication();
-  const { user, getUser, addUserBadges} = useUser(token);
-
-  // let a = 0;
-  // if(a == 0) {
-
-  //   a++;
-  // }
-
-  // useEffect(() => {
-  //   console.log(user);
-  //   if (user) {
-  //     console.log(user);
-  //     addUserBadges([4, 6], 78232, 1, 301010, "wow zo goed",token);
-  //     con
-  //   }
-
-  // }, [user])
-
+  const { user, getUser} = useUser(token);
 
   function countBadgeOccurrences(targetBadgeId:number) {
     let count = 0;
@@ -47,14 +30,6 @@ const Profile = () => {
       getUser(token);
     }
   }, [user])
-
-  // useEffect(() => {
-  //   if (user) {
-  //     console.log(user);
-  //   }
-
-  // }, [])
-
 
   return (
     <>
