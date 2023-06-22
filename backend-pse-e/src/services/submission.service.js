@@ -4,7 +4,7 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 

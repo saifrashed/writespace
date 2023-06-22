@@ -5,7 +5,7 @@
 const express = require('express');
 
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const { auth } = require('../middleware/auth');
 
 // ************************* This can be coppied for every new service *************************

@@ -4,7 +4,7 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
@@ -15,7 +15,7 @@ const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+multer({ storage: storage });
 // ************************* This can be coppied for every new service *************************
 
 // ************************* Copy and change this with the model you added *************************
@@ -150,7 +150,7 @@ router.put('/update/experience-points/', auth, async (req, res) => {
         let userXP = userToUpdate.experiencePoints;
         userXP = userXP + XPToAdd;
 
-        const updatedUser = await userModel.findByIdAndUpdate(updateId,
+        await userModel.findByIdAndUpdate(updateId,
             {
                 $set: {
                     'experiencePoints': userXP,
