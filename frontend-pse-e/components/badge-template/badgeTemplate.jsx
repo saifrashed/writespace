@@ -7,7 +7,7 @@ import BadgeBg from "@/components/badge-template/badgeBg"
 import TopBanner from "@/components/badge-template/topBanner"
 import BottomBanner from "@/components/badge-template/bottomBanner"
 
-const BadgeTemplate = ({ pictureUrl, unlocked }) => {
+const BadgeTemplate = ({ pictureUrl, unlocked, count}) => {
   const containerStyle = {
     position: 'relative',
     display: 'flex',
@@ -47,7 +47,7 @@ const BadgeTemplate = ({ pictureUrl, unlocked }) => {
         ) : null
       }
       <div style={componentStyle}>
-        <BottomBanner unlocked={unlocked}/>
+        <BottomBanner unlocked={unlocked} count={count}/>
       </div>
     </div>
   );

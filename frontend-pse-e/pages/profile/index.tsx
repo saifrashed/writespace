@@ -42,11 +42,11 @@ const Profile = () => {
     return count;
   }
 
-  // useEffect(() => {
-  //   if (user){
-  //     getUser(token);
-  //   }
-  // }, [user])
+  useEffect(() => {
+    if (user){
+      getUser(token);
+    }
+  }, [user])
 
   // useEffect(() => {
   //   if (user) {
