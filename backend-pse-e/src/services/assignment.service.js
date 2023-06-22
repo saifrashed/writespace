@@ -11,14 +11,14 @@ const { auth } = require('../middleware/auth');
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 // Canvas api URL
-const { API_URL } = process.env;
+const { API_URL, INTEGRATION_ID } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 const submissionModel = require("../models/submission.model.js");
 
-// Create assignment (missing deadline attribute)
+// Create assignment 
 router.post('/create', auth, (req, res) => {
     const { assignment, courseId } = req.body;
 
@@ -26,7 +26,7 @@ router.post('/create', auth, (req, res) => {
         headers: {
             Authorization: `Bearer ${req.headers["bearer"]}`
         }, params: {
-            "assignment[name]": assignment.name,
+            "assignment[name]": `${assignment.name?.trim() || "Unknown"} (WriteSpace)`,
             "assignment[description]": assignment.description,
             "assignment[points_possible]": assignment.points_possible,
             "assignment[grading_type]": assignment.grading_type,
@@ -34,7 +34,6 @@ router.post('/create', auth, (req, res) => {
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
-            "assignment[peer_reviews]": assignment.peer_reviews,
             "assignment[published]": true, // immediately publish assignment
             "assignment[due_at]": assignment.due_at
         }
@@ -46,7 +45,7 @@ router.post('/create', auth, (req, res) => {
     });
 });
 
-// Update assignment (missing deadline attribute)
+// Update assignment
 router.put('/update', auth, (req, res) => {
     const { assignment, courseId, assignmentId } = req.body;
 
@@ -54,7 +53,7 @@ router.put('/update', auth, (req, res) => {
         headers: {
             Authorization: `Bearer ${req.headers["bearer"]}`
         }, params: {
-            "assignment[name]": assignment.name,
+            "assignment[name]": `${assignment.name?.trim()} (WriteSpace)`,
             "assignment[description]": assignment.description,
             "assignment[points_possible]": assignment.points_possible,
             "assignment[grading_type]": assignment.grading_type,
@@ -62,7 +61,6 @@ router.put('/update', auth, (req, res) => {
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
-            "assignment[peer_reviews]": assignment.peer_reviews,
             "assignment[published]": true, // immediately publish assignment
             "assignment[due_at]": assignment.due_at
         }
@@ -93,6 +91,7 @@ router.put('/update', auth, (req, res) => {
 //     });
 // });
 
+
 // Get one assignment from a course with a user access token
 router.post('/get-one', auth, async (req, res) => {
     try {
@@ -104,6 +103,12 @@ router.post('/get-one', auth, async (req, res) => {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
         });
+
+        // Check if the assignment name contains " - WriteSpace"
+        if (response.data && response.data.name && response.data.name.includes("(WriteSpace)")) {
+            response.data.name = response.data.name.replace(" (WriteSpace)", "");
+        }
+
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
@@ -111,7 +116,7 @@ router.post('/get-one', auth, async (req, res) => {
     }
 });
 
-// Get all assignments of a course with a user access token
+
 router.post('/get-all', auth, async (req, res) => {
     try {
         const { courseId } = req.body;
@@ -119,17 +124,31 @@ router.post('/get-all', auth, async (req, res) => {
         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
             headers: {
                 Authorization: `Bearer ${req.headers["bearer"]}`
-            }, params: {
-                // Configure how many items are returned maximum
+            },
+            params: {
                 per_page: 100
             }
         });
+
+        if (response.data && Array.isArray(response.data)) {
+            // Filter assignments that contain " - WriteSpace" in their name
+            const filteredAssignments = response.data.filter(assignment => assignment.name && assignment.name.includes("(WriteSpace)"));
+
+            // Remove " - WriteSpace" suffix from assignment names
+            filteredAssignments.forEach(assignment => {
+                assignment.name = assignment.name.replace(" (WriteSpace)", "");
+            });
+
+            response.data = filteredAssignments;
+        }
+
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
         res.status(500).json({ error: 'An error occurred in /assignments.' });
     }
 });
+
 
 // Get all file upload (written) assignments
 router.post('/written-assignments', auth, async (req, res) => {
