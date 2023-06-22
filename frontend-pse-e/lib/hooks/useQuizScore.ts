@@ -28,7 +28,7 @@ function useQuizScore(token: string) {
 
     const getAllQuizScores = async (quizId: number) => {
         try {
-          const response = await axios.get(`${config.baseUrl}/quiz-score/quiz/${quizId}`);
+          const response = await axios.get(`${config.baseUrl}/quiz-score/quiz/${quizId}`, { headers: { bearer: token } });
           return response.data;
         } catch (error) {
           console.log(error);
@@ -46,7 +46,7 @@ function useQuizScore(token: string) {
         }
     }
 
-    const saveQuizScore = async (quizId: number, token: string, latestScore: number) => {
+    const saveQuizScore = async (quizId: string, token: string, latestScore: number) => {
         try {
           const response = await axios.post(`${config.baseUrl}/quiz-score/save`, {quizId, latestScore} , { headers: { bearer: token } });
           return response.data;

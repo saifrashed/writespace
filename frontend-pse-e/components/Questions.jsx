@@ -4,57 +4,27 @@ import useQuizScore from '@/lib/hooks/useQuizScore';
 import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Questions = ({quizId, questions}) => {
-  console.log(questions, "de wwueir");
   const { token } = useAuthentication();
-
-  // const [latestHighScore, setLatestHighScore] = useState(null)
   const [answers, setAnswers] = useState([])
-  const [question, setQuestion] = useState('');
-  const [choices, setChoices] = useState([]);
-  const [quiz, setQuiz] = useState({});
-  // const [questions, setQuestions] = useState([])
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(-1)
   const [selectedAnswer, setSelectedAnswer] = useState(false)
-  const [correctAnswer, setCorrectAnswer] = useState('');
   const [selAnswer, setSelAnswer] = useState('')
   const [showResult, setShowResult] = useState(false)
   const [result, setResult] = useState({
     correctAnswers: 0,
     wrongAnswers: 0,
   })
+  const [quizScores, setQuizScores] = useState([])
 
-
-
-
-
-
-  // const { quizzes, getQuiz, getQuizzes } = useQuiz();
-
-  // useEffect(() => {
-  // if (questions) {
-  //   const { question, choices, correctAnswer } = questions[activeQuestion];
-  //   setQuestion(question);
-  //   setChoices(choices);
-  //   setCorrectAnswer(correctAnswer);
-  //   setQuiz(questions);
-  //   console.log(question)
-  //   console.log(choices)
-  //   console.log(correctAnswer)
-  // }
-  // }, [questions]);
-
-
-  const { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, updateQuizScore } = useQuizScore();
-
-  // const { questions } = quizzes[quizId - 1].questions;
-  // const { question, choices, correctAnswer } = questions[activeQuestion]
+  const { question, choices, correctAnswer } = questions[activeQuestion];
+  const { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, updateQuizScore } = useQuizScore(token);
 
   const handleAnswers = () => {
     const answer = {
       question: question,
       answered: selAnswer,
-      correctAnswer: correctAnswer,
+      correctAnswer: choices[correctAnswer],
     };
 
     setAnswers(prevAnswers => [...prevAnswers, answer]);
@@ -91,7 +61,7 @@ const Questions = ({quizId, questions}) => {
   const onAnswerSelected = (answer, index) => {
     setSelAnswer(answer)
     setSelectedAnswerIndex(index)
-    if (answer === correctAnswer) {
+    if (answer === choices[correctAnswer]) {
       setSelectedAnswer(true)
     } else {
       setSelectedAnswer(false)
@@ -99,18 +69,19 @@ const Questions = ({quizId, questions}) => {
   }
 
   useEffect(() => {
-    if (showResult && quizzes) {
-      saveQuizScore(quizId, token, result.correctAnswers);
-      const quizScoresObj = quizzes.reduce((acc, quiz) => {
-        acc[quiz.quizId] = quiz;
-        return acc;
-      }, {});
-      console.log(quizScoresObj, "SE OBJ");
+    const quizScores = getOneScore(quizId, token);
+    setQuizScores(quizScores);
+  }, [])
 
-      // setLatestHighScore(quizScoresObj[quizId.quizId].latestHighScore);
-      // console.log(latestHighScore, "DE AATA HIGH");
+  useEffect(() => {
+    if (showResult) {
+      saveQuizScore(String(quizId), token, result.correctAnswers);
+      // // const quizScoresObj = quizzes.reduce((acc, quiz) => {
+      //   acc[quiz.quizId] = quiz;
+      //   return acc;
+      // }, {});
+      // console.log(quizScoresObj, "SE OBJ");
     }
-
   }, [showResult]);
 
   return (
@@ -145,7 +116,7 @@ const Questions = ({quizId, questions}) => {
       )}
 
       {/* If the Quiz is done and result is shown */}
-      {showResult && gotQuizzes && (
+      {showResult && (
         <div className="text-center">
           <h3 className="text-2xl font-bold">Result</h3>
           <p>Total Question: {questions.length}</p>
@@ -168,6 +139,9 @@ const Questions = ({quizId, questions}) => {
               <br />
             </div>
           ))}
+          { quizScores && (
+            console.log(quizScores)
+          )}
         </div>
       )}
     </>
