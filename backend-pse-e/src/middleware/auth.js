@@ -41,6 +41,8 @@ const auth = async (req, res, next) => {
         req.headers["bearer"] = decryptedToken;
         // Put the id of the user in the response
         res.locals.userId = response.data.id;
+        // Save the user object in the locals
+        res.locals.user = response.data;
     } catch (err) {
         return res.status(401).send("Error: Authorization failed.");
     }

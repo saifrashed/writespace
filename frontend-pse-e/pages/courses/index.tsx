@@ -4,20 +4,17 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import NavBar from "@/components/NavBar";
 import useCourses from "@/lib/hooks/useCourses"
-import { Course } from "@/lib/hooks/dummy"
+// import { Course } from "@/lib/hooks/dummy"
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { Context } from '@/Context';
+import { Course } from "@/lib/types";
 
 const Courses = () => {
   const { token } = useAuthentication();
   const { setCourse } = useContext(Context);
 
   const { courses: contextCourses } = useContext(Context);
-  const { courses: fetchedCourses, getCourses } = useCourses();
-
-  useEffect(() => {
-    getCourses(token)
-  }, [])
+  const { courses: fetchedCourses } = useCourses(token);
 
   const courses = contextCourses || fetchedCourses;
 

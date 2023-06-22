@@ -75,7 +75,8 @@ router.post('/save/', auth, async (req, res) => {
         await newQuiz.save();
         res.status(200).json({ message: 'Quiz saved' });
    } catch (error) {
-
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
    }
 });
 
