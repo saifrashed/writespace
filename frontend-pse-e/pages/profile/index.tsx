@@ -75,7 +75,12 @@ const Profile = () => {
 
             {user &&
               badges.map((badge) => {
-                // const isBadgeOwned = user.badges.hasOwnProperty(badge.id);
+                const isBadgeOwned = user.badges.find(obj => obj.badgeId === badge.badgeId);
+
+                console.log(badge.badgeId)
+                console.log(isBadgeOwned)
+                console.log(user)
+
                 return (
                   <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-36" key={badge.badgeId}>
                     <ScaledBadge
@@ -85,7 +90,7 @@ const Profile = () => {
                       description={badge.description}
                       commentary={'no comment'}
                       xp={String(badge.experiencePoints)}
-                      unlocked={true}
+                      unlocked={isBadgeOwned}
                     />
                   </div>
                 );
