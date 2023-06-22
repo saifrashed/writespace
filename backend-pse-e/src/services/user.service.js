@@ -53,6 +53,23 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
+router.post("/badges/assignment/", auth, async (req, res) => {
+    try {
+        const assignmentId = req.body.assignmentId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
+
+        const user = await userModel.findOne({ 'userId': userId });
+        badges = user.badges;
+
+        const assignmentBadges = badges.filter(badge => badge.assignmentId === assignmentId);
+
+        res.status(200).json(assignmentBadges);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Save new user
 router.post('/save', auth, async (req, res) => {
     try {
@@ -152,8 +169,8 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badges/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
-        const { badges, courseId, assignmentId, graderId, comment } = req.body;
+        const graderId = res.locals.userId;
+        const { badges, courseId, assignmentId, userId, comment } = req.body;
 
         let preparedBadges = [];
 
