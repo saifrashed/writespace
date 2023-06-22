@@ -30,8 +30,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Function to initialize services after database connection
 async function init() {
     try {
+        // Connect to the database
         await database.connect();
-        console.log("Database connected successfully");
 
         // ************************* Add new services here *************************
         // Import services here
@@ -72,7 +72,7 @@ async function init() {
           });
         });
     } catch(err) {
-      console.error("Failed to connect to the database", err);
+      console.error("Failed to start application", err);
       process.exit(1);
     }
 }
