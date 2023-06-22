@@ -11,6 +11,8 @@ import filterMathText from "@/lib/mathFilter";
 import useUser from "@/lib/hooks/useUser";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import {useRouter} from 'next/router';
+import ScaledBadge from '@/components/badge-template/Badge';
+
 
 const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
@@ -20,8 +22,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 " +
                       "text-lg font-medium rounded-full";
-  const router = useRouter()
-  const {courseId, assignmentId} = router.query;
 
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
@@ -33,11 +33,13 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const [dataMatches, setDataMatches] = useState(null);
   const [isAPILoading, setIsAPILoading] = useState(false);
   let [usedReplacements, setUsedReplacements] = useState([]);
+
+  const router = useRouter()
+  const {courseId, assignmentId} = router.query;
   const {token} = useAuthentication()
   const {addUserBadges} = useUser(token)
 
-  const handleAddBadge = () => {
-    // Give spelling bee badge.
+  const handleAddBadge = () => {  // Give spelling bee badge.
     addUserBadges([2], courseId, assignmentId, '', '', token);
   }
 
@@ -238,22 +240,35 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                   <h1 className="text-center text-lg font-semibold pt-4 pb-4">
                     No spelling mistakes detected.
                   </h1>
+
                   <p>
                     Well done! The text analysis API could not pick up on any obvious grammatical
                     errors or spelling mistakes. Your attention to detail and strong command of
                     spelling have resulted in a flawless piece of writing.
-                    <br/><br/>
-                    {/* Maybe show the spelling bee badge here */}
+
+                    {/* Spelling bee badge. */}
+                    <div className="flex justify-center pt-4">
+                      <div style={{
+                          height: '300px', position: 'relative',
+                          top: '-10px', left: '-130px', // Adjust positioning to taste
+                      }}>
+                        {/* Is hardcoded greener?*/}
+                        <ScaledBadge
+                          resizeFactor={0.8}
+                          pictureUrl={`/badges/2.png`}
+                          title={"Spelling Bee"}
+                          description={"Awarded for handing in an assignment with no spelling errors."}
+                          commentary={'no comment'}
+                          xp={String("200")}
+                          unlocked={true} />
+                      </div>
+                    </div>
+
                     We are thrilled to award you with a special badge to commemorate your
                     exceptional achievement. This badge signifies your mastery of spelling and
                     serves as a testament to your dedication to excellence in writing. You can
                     proudly display this badge on your profile page, to showcase your
                     accomplishment.
-                    <br/><br/>
-                    Your commitment to producing error-free work is commendable and sets you apart
-                    as a skilled writer. Keep up the fantastic work, and continue to polish your
-                    writing skills. We are excited to see the continued growth and success in your
-                    future endeavors.
                     <br/><br/>
 
                     Congratulations once again on your remarkable achievement and the
