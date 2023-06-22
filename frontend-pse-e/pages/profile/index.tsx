@@ -86,7 +86,7 @@ const Profile = () => {
               </div>
             )}
           </div>
-          {user && (<div> {`${user.experiencePoints / 50} / ${user.threshold} XP`}</div>)}
+          {user && (<div> {`${user.experiencePoints} / ${user.threshold} XP`}</div>)}
           <p className="mt-20 mb-8 text-2xl font-bold flex justify-center sm:mt-10 sm:mb-4 md:text-2xl">Badges</p>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
 
