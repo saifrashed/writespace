@@ -9,9 +9,10 @@ import useBadges from "@/lib/hooks/useBadges";
 
 const Profile = () => {
   const { token } = useAuthentication();
-  const { user} = useUser(token);
+  const { user, getUser, updateUserPicture} = useUser(token);
   const [isLegendary, setIslegendary] = useState<boolean>()
   const { badges } = useBadges(token)
+  const [isProfilePictureUpdated, setIsProfilePictureUpdated] = useState(false);
 
   function countBadgeOccurrences(targetBadgeId: number) {
     let count = 0;
@@ -29,9 +30,19 @@ const Profile = () => {
   useEffect(() => {
     if (user) {
       setIslegendary(user && user.level >= 100)
-      console.log("User", user)
     }
   }, [user])
+
+  useEffect(() => {
+    if (isProfilePictureUpdated) {
+      getUser(token); // Fetch updated user data
+      setIsProfilePictureUpdated(false); // Reset the state
+    }
+  }, [isProfilePictureUpdated, getUser, token]);
+
+  const handleChooseProfilePicture = async (badgeId: number) => {
+    await updateUserPicture(badgeId, token);
+  };
 
   return (
     <>
@@ -96,6 +107,8 @@ const Profile = () => {
                       xp={String(badge.experiencePoints)}
                       unlocked={isBadgeOwned}
                       count={badgeCount}
+                      onChooseProfilePicture={()=>handleChooseProfilePicture(badge.badgeId)}
+                      setIsProfilePictureUpdated={setIsProfilePictureUpdated}
                     />
                   </div>
                 );

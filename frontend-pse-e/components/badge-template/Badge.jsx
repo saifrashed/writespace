@@ -8,13 +8,10 @@ import useAuthentication from '@/lib/hooks/useAuthentication';
 
 
 const ScaledBadge = ({ resizeFactor, pictureUrl, title,
-                       description, commentary, xp, unlocked, count}) => {
+                       description, commentary, xp, unlocked, count, onChooseProfilePicture, setIsProfilePictureUpdated}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
-  const { token } = useAuthentication();
-  const {updateUserPicture} = useUser()
-
   const popupRef = useRef(null);
 
   const handleMouseEnter = () => {setIsHovered(true);};
@@ -46,10 +43,12 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     left: '-7.5pt',
   };
 
-  const badgeIdpic = extractIdFromUrl(pictureUrl)
+  const badgeId = extractIdFromUrl(pictureUrl)
+
   const handleChooseProfilePicture = async () => {
-      updateUserPicture(badgeIdpic, token);
-      setShowPopup(false)
+    await onChooseProfilePicture(badgeId);
+    setIsProfilePictureUpdated(true);
+    setShowPopup(false);
   };
 
 
@@ -68,7 +67,6 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
         </div>
         <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick={togglePopup}>Close</button>
         {unlocked ? <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>: ''}
-        {/* <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {()=>{updateUserPicture(badgeId, token), setShowPopup(false)}}>Choose as profile picture</button> */}
       </>
     );
   };
