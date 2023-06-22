@@ -251,7 +251,7 @@ const Grade: React.FC = () => {
                             </div>
                             <div>
                                 <button
-                                    className="px-4 py-2 inline-block bg-gray-100  hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full" onClick={() => { setShowModal(true) }}>
+                                    className="px-4 py-2 mr-2 inline-block bg-gray-100  hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full" onClick={() => { setShowModal(true) }}>
                                     Submit grade
                                 </button>
                             </div>

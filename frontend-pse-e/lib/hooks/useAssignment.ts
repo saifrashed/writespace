@@ -2,19 +2,17 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../config";
 import { useNotification } from "./useNotification";
-import { Assignment, Submission } from "../types";
+import { Assignment } from "../types";
 
 function useAssignment(token = '', courseId = '', assignmentId = '') {
   const [assignment, setAssignment] = useState<Assignment>();
   const { onSuccess, onError } = useNotification();
-
 
   useEffect(() => {
     if (assignmentId && token && courseId) {
       getAssignment(courseId, assignmentId, token);
     }
   }, [courseId, assignmentId]);
-
 
   const getAssignment = async (courseId: string, assignmentId: string, token: string) => {
     try {

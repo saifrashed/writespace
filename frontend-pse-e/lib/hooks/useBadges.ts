@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import axios, { AxiosError } from "axios"
+import axios from "axios"
 import config from "../config";
 import { Badge } from "../types";
 import { useNotification } from "./useNotification";
 
 function useBadges(token = '') {
   const [badges, setBadges] = useState<Badge[]>([]);
-  const { onSuccess, onError } = useNotification();
+  const { onError } = useNotification();
 
   useEffect(() => {
     if (token) {

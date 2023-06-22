@@ -6,7 +6,7 @@ import { Badge, User } from "../types";
 
 function useUser(token = '') {
   const [user, setUser] = useState<User>();
-  const { onSuccess, onError } = useNotification()
+  const { onError } = useNotification()
 
   useEffect(() => {
     if (token) {

@@ -1,14 +1,9 @@
 
 import Head from "next/head";
-import Image from "next/image";
 import 'tailwindcss/tailwind.css';
-
-
 import NavBar from "../components/NavBar"
-import Link from 'next/link';
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useAuthentication from "../lib/hooks/useAuthentication"
-import { useNotification } from "../lib/hooks/useNotification"
 import { useRouter } from 'next/router';
 import config from "@/lib/config";
 
@@ -78,7 +73,6 @@ const Home = () => {
                 <p className="mt-5 text-base text-black">Login with your institution</p>
               </div>
             </div>
-
             <div className="relative w-full overflow-hidden lg:order-1 h-96 md:min-h-screen lg:h-auto lg:w-5/12">
               <div className="absolute inset-0">
                 <img className="object-cover w-full h-full scale-150" src="/home.png" alt="" />

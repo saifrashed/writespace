@@ -25,8 +25,6 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     try {
       const response = await axios.get(`${config.baseUrl}/submission/get-submissions/${assignmentId}`, { headers: { bearer: token } })
 
-      console.log(response.data)
-
       setSubmissions(response.data)
     } catch (error) {
       console.log(error)
@@ -36,7 +34,6 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
 
   const getSubmission = async (assignmentId: string, userId: string = '', token: string) => {
     try {
-
       let response;
 
       if (userId) {
@@ -45,20 +42,16 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
         response = await axios.post(`${config.baseUrl}/submission/get-submission`, { assignmentId }, { headers: { bearer: token } });
       }
 
-
       if (response.data[0]?.fileData.data) {
         const binaryData = new Uint8Array(response.data[0].fileData.data);
         const fileBlob = new Blob([binaryData], { type: 'application/pdf' });
         const fileUrl = URL.createObjectURL(fileBlob);
         const fileNotes = response.data[0].fileNotes;
 
-
         setFileUrl(fileUrl);
         setFileNotes(fileNotes);
         setGrade(response.data[0].grade)
       }
-
-      console.log(response.data)
 
       setSubmission(response.data[0]);
     } catch (error) {

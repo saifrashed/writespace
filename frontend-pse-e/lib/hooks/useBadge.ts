@@ -4,6 +4,7 @@ import config from "../config";
 import { Badge } from "../types";
 import { useNotification } from "./useNotification";
 
+
 function useBadge(token = '', badgeId = '') {
   const [badge, setBadge] = useState<Badge>();
   const { onSuccess, onError } = useNotification();
