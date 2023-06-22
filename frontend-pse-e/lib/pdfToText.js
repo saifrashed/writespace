@@ -1,4 +1,9 @@
-import { getDocument } from "pdfjs-dist/legacy/build/pdf";
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf';
+import { pdfjs } from "react-pdf";
+
+// Specify the correct path to the worker script
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
 const convertPdfToText = async (fileUrl) => {
 

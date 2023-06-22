@@ -51,28 +51,26 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     return inputData.matches;
   }
 
+  useEffect(() => {
+    const fetchPdfText = async () => {
+      const pdfText = await convertPdfToText(fileUrl);
+      setExtractedText(pdfText);
+      console.log("extracted text:",extractedText);
+    };
+
+    fetchPdfText();
+  }, [fileUrl]);
+
   const selectLanguage = async (lang) => {
     setLanguage(lang);
     console.log("Using language " + lang);
     setIsAPILoading(true);  // To disable start button.
 
+
     try {
       const response = await languageTool(
         lang,
-        // "Neder-landse test-zin m wat conversie-foutjes."
-        // "This is an sentence. It has ap multiple error. Many actually. How long can text be before" +
-        // " it doesnt show up in the contxt text any more? Let's find out, shall we?"
-        // "C . x + 3 - 4  ) "+
-        // "Student Name "
-        // "June 2023 "+
-        "3 Economic Implications "+
-        "Climate change hass significant economic ramifications, aff-ecting industries such "+
-        "as agriculture, tourism, and insurance. Changes in temperature and precipita- "+
-        "tion patterns can disrupt crop yields and reduce agricultural productivity, lead- "+
-        "ing to food shortages and increasing prices. Extreme weather event, including "+
-        "hurricanes and droughts, result in infrastructure damages and costly recoverys "+
-        "efforts. Moreover, industries reliant on natural resources, such as fishing and "+
-        "forestry, face considerable challenges due to the changing climate. "
+        extractedText
       );
       setDataMatches(filterData(response));
       setIsAPILoading(false); // Enable start button after API call is done.
@@ -84,18 +82,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
       onError("API call failed");
     }
   };
-
-  useEffect(() => {
-    convertPdfToText(fileUrl)
-    .then((text) => {
-      setExtractedText(text);
-      console.log(extractedText);
-    })
-    .catch((error) => {
-      console.log(error);
-      onError("Something went wrong");
-    });
-  }, [introScreen, fileUrl]);
 
   const resetValues = () => {
     setIntroScreen(true);
