@@ -54,15 +54,15 @@ function useUser(token = '') {
     }
   }
 
-  const addUserBadge = async (badgeId: number, courseId: number, assignmentId: number, graderId: number, comment: string, token: string) => {
+  const addUserBadges = async (badgeIDs: number[], courseId: string, assignmentId: string, userId: string, comment: string, token: string) => {
     try {
-      const response = await axios.put(`${config.baseUrl}/user/update/add-badge`, { badgeId, courseId, assignmentId, graderId, comment }, { headers: { bearer: token } });
+      const response = await axios.put(`${config.baseUrl}/user/update/add-badges`, { badgeIDs, courseId, assignmentId, userId, comment }, { headers: { bearer: token } });
       return response.data;
     } catch (error) {
-      console.log(error)
-      onError("Something went wrong")
+      console.log(error);
+      onError("Something went wrong");
     }
-  }
+  };
 
   const deleteUserBadge = async (assignmentId: number, badgeId: number, token: string) => {
     try {
@@ -85,7 +85,7 @@ function useUser(token = '') {
   }
 
 
-  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadge, deleteUserBadge, updateUser };
+  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadges, deleteUserBadge, updateUser };
 }
 
 export default useUser;
