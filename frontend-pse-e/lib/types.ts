@@ -136,15 +136,16 @@ export interface Submission {
     filetype: string;
     filename: string;
     fileData: Buffer;
+    userName: string;
     fileNotes: object[];
 }
 
 export interface Badge {
-    badgeId: Number,
-    iconId: Number,
-    experiencePoints: Number,
-    name: String,
-    description: String,
+    badgeId: number,
+    iconId: number,
+    experiencePoints: number,
+    name: string,
+    description: string,
 }
 
 
