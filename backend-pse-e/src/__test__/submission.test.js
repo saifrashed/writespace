@@ -63,7 +63,6 @@ describe('Test the submission service', () => {
       test("It /find-by-assignment-id/:assignmentId should return all submissions for the assignmentId", async () => {
         const response = await request(app).get("/find-by-assignment-id/0");
         expect(response.statusCode).toBe(200);
-        console.log(response.body)
         expect(response.body[0].userId).toBe(123);
       });
 
@@ -102,7 +101,6 @@ describe('Test the submission service', () => {
         .send(details);
         expect(response.statusCode).toBe(200);
         const check = await Submission.findOne({userId: 123, assignmentId: 0});
-        console.log(check);
         expect(check.fileNotes[0].test).toBe("test");
       });
 
@@ -118,7 +116,6 @@ describe('Test the submission service', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe("Submission updated successfully");
         const check = await Submission.findOne({userId: 123, assignmentId: 0});
-        console.log(check);
         expect(check.grade).toBe(20);
       });
 

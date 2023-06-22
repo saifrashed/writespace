@@ -45,8 +45,6 @@ describe("Badge Service", () => {
     const res = await request(app)
     .get(`/get-badge/${badge.badgeId}`)
     .set("bearer", encryptedToken);
-    console.log(res.body);
-
     expect(res.statusCode).toEqual(200);
     expect(res.body[0]).toHaveProperty('badgeId');
     expect(res.body[0].badgeId).toBe(badge.badgeId);
@@ -90,7 +88,7 @@ test('should save a badge', async () => {
     expect(res.body.message).toEqual('Badge updated successfully');
   });
 
-  test('should delete a badge', async () => {
+  it('should delete a badge', async () => {
     const badge = new Badge({ badgeId: 5555, experiencePoints: 10, name: 'badge5', category: 'cat5', description: 'desc5' });
     await badge.save();
 
