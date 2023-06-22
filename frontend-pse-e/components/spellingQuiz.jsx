@@ -1,7 +1,6 @@
 // TO DO:
 // - Somehow filter out math and stuff.
 // - How to handle reaching the max number of API calls?
-// - Actually give spelling bee badge when no mistakes detected.
 
 import React, { useEffect, useState } from "react";
 import convertPdfToText from "@/lib/pdfToText";
@@ -9,6 +8,9 @@ import { useNotification } from "@/lib/hooks/useNotification";
 import languageTool from "@/lib/hooks/languageTool";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import filterMathText from "@/lib/mathFilter";
+import useUser from "@/lib/hooks/useUser";
+import useAuthentication from "@/lib/hooks/useAuthentication";
+import {useRouter} from 'next/router';
 
 const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
@@ -18,6 +20,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 " +
                       "text-lg font-medium rounded-full";
+  const router = useRouter()
+  const {courseId, assignmentId} = router.query;
 
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
@@ -29,6 +33,13 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const [dataMatches, setDataMatches] = useState(null);
   const [isAPILoading, setIsAPILoading] = useState(false);
   let [usedReplacements, setUsedReplacements] = useState([]);
+  const {token} = useAuthentication()
+  const {addUserBadges} = useUser(token)
+
+  const handleAddBadge = () => {
+    // Give spelling bee badge.
+    addUserBadges([2], courseId, assignmentId, '', '', token);
+  }
 
   // To filter out all the suggestions for acronyms.
   const isAcronym = (value) => {
@@ -48,6 +59,12 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
       match.replacements =
         match.replacements.filter((replacement) => !isAcronym(replacement.value))
     }
+
+    // Give spelling bee badge.
+    if (inputData.matches.length === 0) {
+      handleAddBadge();
+    }
+
     return inputData.matches;
   }
 
