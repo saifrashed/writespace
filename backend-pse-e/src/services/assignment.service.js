@@ -30,7 +30,7 @@ router.post('/create', auth, (req, res) => {
             "assignment[description]": assignment.description,
             "assignment[points_possible]": assignment.points_possible,
             "assignment[grading_type]": assignment.grading_type,
-            "assignment[submission_types]": ['online_upload'], // online upload assignment standard
+            "assignment[submission_types]": ['online_url'], // online url assignment standard
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,

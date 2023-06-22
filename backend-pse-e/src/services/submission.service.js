@@ -11,7 +11,7 @@ const { auth } = require('../middleware/auth');
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 // Canvas api URL
-const { API_URL } = process.env;
+const { API_URL, CANVAS_REDIRECT_URI } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -92,6 +92,22 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
         const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
         const courseId = req.body.courseId;
+
+        // Add the submission to the assignment on canvas
+        const responseCanvas = await axios.post(
+            `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`,
+            {},
+        {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                "submission[submission_type]": "online_url",
+                "submission[url]": CANVAS_REDIRECT_URI
+            }
+        });
+        console.log(responseCanvas);
+
         const alreadySubmitted = await submissionModel.find({ 'courseId': courseId, 'assignmentId': assignmentId, 'userId': userId });
 
         // If file is not yet submitted
@@ -174,14 +190,6 @@ router.put('/grade/', auth, async (req, res) => {
         if (!updatedSubmission) {
             return res.status(200).json({ error: 'Submission not found' });
         }
-
-        // // Update the submission status on canvas when a submission is posted
-        // const responseCanvas = await axios.get(`${API_URL}/users/self`, {
-        //     headers: {
-        //         // Authorization using the access token
-        //         Authorization: `Bearer ${req.headers["bearer"]}`
-        //     }
-        // });
 
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {
