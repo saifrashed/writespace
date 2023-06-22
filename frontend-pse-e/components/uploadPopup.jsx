@@ -5,6 +5,7 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import { useNotification } from "@/lib/hooks/useNotification";
+import useUser from "@/lib/hooks/useUser";
 
 const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
@@ -14,6 +15,7 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
     const { saveSubmission } = useSubmission()
     const { token } = useAuthentication()
     const { onError } = useNotification()
+    const { addUserBadges } = useUser(token)
 
     // Security measure: Remove shady characters from file name.
     const sanitizeString = (string) => {
