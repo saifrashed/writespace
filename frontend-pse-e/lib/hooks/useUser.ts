@@ -54,9 +54,9 @@ function useUser(token = '') {
     }
   }
 
-  const addUserBadges = async (badgeId: number, courseId: number, assignmentId: number, userId: number, comment: string, token: string) => {
+  const addUserBadges = async (badges: any, courseId: number, assignmentId: number, userId: number, comment: string, token: string) => {
     try {
-      const response = await axios.put(`${config.baseUrl}/user/update/add-badge`, { badgeId, courseId, assignmentId, userId, comment }, { headers: { bearer: token } });
+      const response = await axios.put(`${config.baseUrl}/user/update/add-badges`, { badges, courseId, assignmentId, userId, comment }, { headers: { bearer: token } });
       return response.data;
     } catch (error) {
       console.log(error)
