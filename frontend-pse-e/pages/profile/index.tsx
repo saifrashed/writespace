@@ -9,13 +9,27 @@ import useBadges from "@/lib/hooks/useBadges";
 
 const Profile = () => {
   const { token } = useAuthentication();
-  const { user } = useUser(token);
+  const { user} = useUser(token);
   const [isLegendary, setIslegendary] = useState<boolean>()
   const { badges } = useBadges(token)
+
+  function countBadgeOccurrences(targetBadgeId: number) {
+    let count = 0;
+    if (user) {
+      for (const badge of user?.badges) {
+        if (badge.badgeId === targetBadgeId) {
+          count++;
+        }
+      }
+    }
+
+    return count;
+  }
 
   useEffect(() => {
     if (user) {
       setIslegendary(user && user.level >= 100)
+      console.log("User", user)
     }
   }, [user])
 
@@ -35,9 +49,8 @@ const Profile = () => {
           <div className="flex flex-col items-center justify-center mt-20">
             <Avatar
               sx={{ width: 150, height: 150, border: '3px solid #706f7d' }}
-              src="/badges/12.png"
+              src={user?.pictureId === 0 || user?.pictureId === undefined ? '' : `/badges/${user?.pictureId}.png`}
             />
-            {/* <p>{user?.name}</p> */}
             <div className={`mt-4 text-center font-bold text-3xl ${isLegendary && "gradient-text"}`}>{user?.name}</div>
             {user && (
               <div className="lg:flex lg:row lg:justify-between lg:w-full">
@@ -55,7 +68,7 @@ const Profile = () => {
               <div>
                 <div
                   className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center p-0.5 rounded-full"
-                  style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%` }}
+                  style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%`}}
                 >
 
                   <div className="absolute w-full">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div>
@@ -69,6 +82,7 @@ const Profile = () => {
 
             {user &&
               badges.map((badge) => {
+                const badgeCount = countBadgeOccurrences(badge.badgeId)
                 const isBadgeOwned = user.badges.find(obj => obj.badgeId === badge.badgeId);
 
                 return (
@@ -81,6 +95,7 @@ const Profile = () => {
                       commentary={'no comment'}
                       xp={String(badge.experiencePoints)}
                       unlocked={isBadgeOwned}
+                      count={badgeCount}
                     />
                   </div>
                 );
