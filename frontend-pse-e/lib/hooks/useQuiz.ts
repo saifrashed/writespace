@@ -3,13 +3,15 @@ import config from "../config";
 import { useState, useEffect } from 'react';
 import { useNotification } from "./useNotification";
 
-function useQuiz(token: string) {
+function useQuiz(token='') {
   const { onSuccess, onError } = useNotification()
   const [quizzes, setQuizzes] = useState([]);
 
   useEffect(() => {
-    getQuizzes();
-  }, []);
+    if (token) {
+      getQuizzes();
+    }
+  }, [token]);
 
   const getQuizzes = async () => {
     try {

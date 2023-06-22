@@ -8,7 +8,7 @@ function useQuizScore(token: string) {
 
     const getAllQuizzesScores = async () => {
         try {
-          const response = await axios.get(`${config.baseUrl}/quiz-score/get-all`);
+          const response = await axios.get(`${config.baseUrl}/quiz-score/get-all`, { headers: { bearer: token } });
           return response.data;
         } catch (error) {
           console.log(error);

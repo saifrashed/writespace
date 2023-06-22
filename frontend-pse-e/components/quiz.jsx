@@ -5,26 +5,28 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Quiz = () => {
     const { token } = useAuthentication();
-    const { quizzes, getQuizzes, getQuiz } = useQuiz(token);
-    console.log(quizzes, "DE QUIZZES");
     const [isOpen, setIsOpen] = useState(false)
     const [selectedQuiz, setSelectedQuiz] = useState(null)
     const [showButton, setShowButton] = useState(false)
     const [quizMenu, setQuizMenu] = useState(false)
+    const [selectedQuizObject, setSelectedQuizObject] = useState({})
 
-    const QuizScores = ({ scores }) => {
-        // Create an object with quizId as keys
-        const quizScoresObj = scores.reduce((acc, score) => {
-          acc[score.quizId] = score;
-          return acc;
-        }, {});
-    }
+    const { quizzes, getQuizzes, getQuiz } = useQuiz(token);
+
+    // const QuizScores = ({ scores }) => {
+    //     // Create an object with quizId as keys
+    //     const quizScoresObj = scores.reduce((acc, score) => {
+    //       acc[score.quizId] = score;
+    //       return acc;
+    //     }, {});
+    // }
 
     const isQuizCompleted = (quizKey) => {
         // Hierin moeten de user quizzes.
         return quizzes.some((quiz) => quiz.quizId === Number(quizKey))
     }
 
+    // For opening popup
     const openPopup = () => {
         setIsOpen(true);
         setQuizMenu(true)
@@ -36,6 +38,7 @@ const Quiz = () => {
 
     const openQuiz = (quizId) => {
         setSelectedQuiz(quizId)
+        setSelectedQuizObject(quizzes.find((quiz) => quiz.quizId === quizId))
         setShowButton(true)
         setQuizMenu(false)
     }
@@ -73,7 +76,7 @@ const Quiz = () => {
                                     <div className={`text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer`}
                                         key={value['topic']}
                                         style={{ cursor: 'pointer' }}
-                                        onClick={() => openQuiz(key)}
+                                        onClick={() => openQuiz(parseInt(key + 1))}
                                     >
                                         {value['topic']}
                                         {isQuizCompleted(key) && (
@@ -92,8 +95,8 @@ const Quiz = () => {
                                     </button>
                                 )}
 
-                                {selectedQuiz && (
-                                    <Questions quizId={selectedQuiz} />
+                                {selectedQuiz && Object.keys(selectedQuizObject).length > 0 && (
+                                    <Questions quizId={selectedQuiz} questions={selectedQuizObject.questions} />
                                 )}
                             </div>
                         )}
