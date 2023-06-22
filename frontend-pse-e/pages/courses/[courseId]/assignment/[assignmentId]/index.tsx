@@ -138,7 +138,7 @@ const Assignments = () => {
           </div>
 
           <Quiz />
-          <UploadPopup showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} assignmentId={assignmentId} />
+          <UploadPopup showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} />
 
         </div>
       </div>
