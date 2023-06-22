@@ -11,7 +11,7 @@ const { auth } = require('../middleware/auth');
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 // Canvas api URL
-const { API_URL, INTEGRATION_ID } = process.env;
+const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -30,7 +30,7 @@ router.post('/create', auth, (req, res) => {
             "assignment[description]": assignment.description,
             "assignment[points_possible]": assignment.points_possible,
             "assignment[grading_type]": assignment.grading_type,
-            "assignment[submission_types]": ['online_upload'], // written assignment standard
+            "assignment[submission_types]": ['external_tool'], // external tool assignment standard
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
@@ -145,7 +145,7 @@ router.post('/get-all', auth, async (req, res) => {
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in /assignments.' });
+        res.status(500).json({ error: 'An error occurred in /assignment/get-all.' });
     }
 });
 

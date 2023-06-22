@@ -172,6 +172,14 @@ router.put('/grade/', auth, async (req, res) => {
             return res.status(200).json({ error: 'Submission not found' });
         }
 
+        // // Update the submission status on canvas when a submission is posted
+        // const responseCanvas = await axios.get(`${API_URL}/users/self`, {
+        //     headers: {
+        //         // Authorization using the access token
+        //         Authorization: `Bearer ${req.headers["bearer"]}`
+        //     }
+        // });
+
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {
         console.error('Error updating data in MongoDB:', error);
