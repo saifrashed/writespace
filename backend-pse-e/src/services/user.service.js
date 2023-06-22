@@ -35,8 +35,10 @@ function getLevel(experiencePoints) {
         level++;
         levelThreshold += (level - 1) * 100;
     }
-    return {level: level - 1,
-            threshold: levelThreshold};
+    return {
+        level: level - 1,
+        threshold: levelThreshold
+    };
 }
 
 // Get request (gets something from the db)
@@ -47,6 +49,23 @@ router.get("/get-all", auth, async (req, res) => {
         const users = await userModel.find();
         // Return them in json form
         res.status(200).json(users);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.post("/badges/assignment/", auth, async (req, res) => {
+    try {
+        const assignmentId = req.body.assignmentId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
+
+        const user = await userModel.findOne({ 'userId': userId });
+        badges = user.badges;
+
+        const assignmentBadges = badges.filter(badge => badge.assignmentId === assignmentId);
+
+        res.status(200).json(assignmentBadges);
     } catch (error) {
         console.error('Error from MongoDB:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -152,8 +171,8 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badges/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
-        const { badges, courseId, assignmentId, graderId, comment } = req.body;
+        const graderId = res.locals.userId;
+        const { badges, courseId, assignmentId, userId, comment } = req.body;
 
         let preparedBadges = [];
 
@@ -212,14 +231,14 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
         for (let i = 0; i < badges.length; i++) {
             const b = badges[i];
             if (
-              b.badgeId === badgeId &&
-              b.assignmentId === assignmentId
+                b.badgeId === badgeId &&
+                b.assignmentId === assignmentId
             ) {
-              badges.splice(i, 1); // Remove the object at the found index
-              badgePresent = true;
-              break;
+                badges.splice(i, 1); // Remove the object at the found index
+                badgePresent = true;
+                break;
             }
-          }
+        }
 
         if (!badgePresent) {
             return res.status(200).json({ message: 'Badge not found' });
@@ -315,7 +334,7 @@ router.get("/get-user", auth, async (req, res) => {
             ...responseMongo[0]._doc,
             level: level.level,
             threshold: level.threshold
-          };
+        };
 
         // Handle success case here
         res.status(200).json(combinedUser);
