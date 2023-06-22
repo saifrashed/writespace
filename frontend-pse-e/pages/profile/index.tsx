@@ -62,7 +62,7 @@ const Profile = () => {
                   // className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"
                   style={{ height: "20px", width: `${user.experiencePoints / 50}%` }}
                 >
-                  <span className="h-full flex items-center justify-center">{`${user.experiencePoints / 50} XP`}</span>
+                  <span className="h-full flex items-center justify-center">{`${user.experiencePoints} XP`}</span>
                 </div>
 
               </div>
