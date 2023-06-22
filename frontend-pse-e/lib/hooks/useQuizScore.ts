@@ -3,7 +3,7 @@ import config from "../config";
 import { useState, useEffect } from 'react';
 import { useNotification } from "./useNotification";
 
-function useQuizScore() {
+function useQuizScore(token: string) {
     const { onSuccess, onError } = useNotification();
 
     const getAllQuizzesScores = async () => {
@@ -18,7 +18,7 @@ function useQuizScore() {
 
     const getAllUserScores = async (userId: number) => {
         try {
-          const response = await axios.get(`${config.baseUrl}/quiz-score/user/${userId}`);
+          const response = await axios.get(`${config.baseUrl}/quiz-score/user/`, { headers: { bearer: token } });
           return response.data;
         } catch (error) {
           console.log(error);
