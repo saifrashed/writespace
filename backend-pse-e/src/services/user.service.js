@@ -4,7 +4,7 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
@@ -15,12 +15,13 @@ const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+multer({ storage: storage });
 // ************************* This can be coppied for every new service *************************
 
 // ************************* Copy and change this with the model you added *************************
 // Import models for this service (../ goes up one directory)
 const userModel = require("../models/user.model.js");
+const badgeModel = require("../models/badge.model.js");
 // ************************* Copy and change this with the model you added *************************
 
 // ************************* Requests for this service (examples below) *************************
@@ -35,8 +36,10 @@ function getLevel(experiencePoints) {
         level++;
         levelThreshold += (level - 1) * 15;
     }
-    return {level: level - 1,
-            threshold: levelThreshold};
+    return {
+        level: level - 1,
+        threshold: levelThreshold
+    };
 }
 
 // Get request (gets something from the db)
@@ -150,7 +153,7 @@ router.put('/update/experience-points/', auth, async (req, res) => {
         let userXP = userToUpdate.experiencePoints;
         userXP = userXP + XPToAdd;
 
-        const updatedUser = await userModel.findByIdAndUpdate(updateId,
+        await userModel.findByIdAndUpdate(updateId,
             {
                 $set: {
                     'experiencePoints': userXP,
@@ -179,9 +182,16 @@ router.put('/update/add-badges/', auth, async (req, res) => {
         const { badges, courseId, assignmentId, comment } = req.body;
 
         let preparedBadges = [];
+        // let totalPoints = 0;
 
         for (let i = 0; i < badges.length; i++) {
             const badgeId = badges[i];
+            // // Find the object using an attribute of the object
+            // const badgeFound = await badgeModel.find({ 'badgeId': badgeId });
+
+            // totalPoints = totalPoints + badgeFound.experiencePoints
+            // console.log(totalPoints)
+
             const badge = {
                 badgeId: badgeId,
                 courseId: courseId,
@@ -192,6 +202,8 @@ router.put('/update/add-badges/', auth, async (req, res) => {
             preparedBadges.push(badge);
         }
 
+
+
         const updatedUser = await userModel.findOneAndUpdate(
             {
                 'userId': userId,
@@ -199,7 +211,8 @@ router.put('/update/add-badges/', auth, async (req, res) => {
             {
                 $push: {
                     'badges': preparedBadges
-                }
+                },
+                $inc: { 'experiencePoints': 1000 }
             },
             { new: true }
         );
@@ -235,14 +248,14 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
         for (let i = 0; i < badges.length; i++) {
             const b = badges[i];
             if (
-              b.badgeId === badgeId &&
-              b.assignmentId === assignmentId
+                b.badgeId === badgeId &&
+                b.assignmentId === assignmentId
             ) {
-              badges.splice(i, 1); // Remove the object at the found index
-              badgePresent = true;
-              break;
+                badges.splice(i, 1); // Remove the object at the found index
+                badgePresent = true;
+                break;
             }
-          }
+        }
 
         if (!badgePresent) {
             return res.status(200).json({ message: 'Badge not found' });
@@ -338,7 +351,7 @@ router.get("/get-user", auth, async (req, res) => {
             ...responseMongo[0]._doc,
             level: level.level,
             threshold: level.threshold
-          };
+        };
 
         // Handle success case here
         res.status(200).json(combinedUser);

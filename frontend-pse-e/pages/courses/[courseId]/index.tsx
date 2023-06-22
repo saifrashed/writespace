@@ -21,11 +21,20 @@ const CourseOverview = () => {
   const { setAssignment } = useContext(Context);
 
   const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), token);
+
   // const { deleteAssignment } = useAssignment()
 
   const { course: contextCourse } = useContext(Context); // When pressing a course
   const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
   const course = contextCourse || fetchedCourse;
+
+  useEffect(() => {
+    if (!contextCourse && courseId && token) {
+      getCourse(courseId.toString(), token);
+      getEnrollment(courseId.toString(), token)
+      getAssignments(courseId.toString(), token);
+    }
+  }, [router.query]);
 
   const calculateSubmittedPercentage = () => {
     if (assignments?.length > 0) {
@@ -45,12 +54,12 @@ const CourseOverview = () => {
     setAssignment(assignment);
   };
 
-  const handleDeleteAssignment = async (assignmentId: number) => {
-    if (courseId && token) {
-      // deleteAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-      getAssignments(parseInt(courseId.toString()), token)
-    }
-  };
+  // const handleDeleteAssignment = async (assignmentId: number) => {
+  //   if (courseId && token) {
+  //     // deleteAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+  //     getAssignments(parseInt(courseId.toString()), token)
+  //   }
+  // };
 
   return (
     <>

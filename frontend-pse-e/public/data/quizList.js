@@ -1,6 +1,6 @@
 export const quizList = {
   0: {
-    topic: 'Schrijfproces',
+    topic: 'Writeproces',
     totalQuestions: 14,
     questions: [
       {
@@ -160,7 +160,7 @@ export const quizList = {
     ],
   },
   1: {
-    topic: 'Wetenschappelijke schrijfstijl',
+    topic: 'Scientific writing style',
     totalQuestions: 10,
     questions: [
       {
@@ -276,7 +276,7 @@ export const quizList = {
     ],
   },
   2: {
-    topic: 'Taalgebruik',
+    topic: 'Use of language',
     totalQuestions: 12,
     questions: [
       {
@@ -402,7 +402,7 @@ export const quizList = {
     ],
   },
   3: {
-    topic: 'Figuren en tabellen',
+    topic: 'Figures and tables',
     totalQuestions: 5,
     questions: [
       {
@@ -463,7 +463,7 @@ export const quizList = {
     ],
   },
   4: {
-    topic: 'Refereren',
+    topic: 'Citation',
     totalQuestions: 5,
     questions: [
       {

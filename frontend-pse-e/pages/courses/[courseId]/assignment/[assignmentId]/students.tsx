@@ -19,7 +19,6 @@ const Assignments = () => {
     const { submission, submissions } = useSubmission(token, assignmentId?.toString())
 
 
-
     return (
         <>
             <Head>
@@ -50,7 +49,7 @@ const Assignments = () => {
                                         Name
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                        Submission Status
+                                        Submission Date
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
                                         Grade Status
@@ -65,12 +64,14 @@ const Assignments = () => {
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
-                                                {submission.userId}
+                                                {submission.userName ? submission.userName : "Anonymous"}
                                             </Link>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
+                                        <td className="px-6 py-4 whitespace-nowrap font-bold">
+                                            {formatDate(submission.date)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
+                                            {submission.status}
                                         </td>
                                     </tr>
                                 ))}

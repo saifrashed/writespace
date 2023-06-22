@@ -3,11 +3,7 @@
 // The colors can be changed by editing the stop-color="#<hexcode>" attributes
 import React from "react";
 
-const BottomBanner = ({unlocked, count}) => {
-  let text = '';
-  if (unlocked) {
-    text = `${count}X`
-  }
+const BottomBanner = () => {
 
   const svgCode = `
   <?xml version="1.0" standalone="no"?>
@@ -38,11 +34,6 @@ const BottomBanner = ({unlocked, count}) => {
    86.8563 0.275298 23.7164 0.709696C7.91191 15.7614 0.00643095 26.5863 0 33.1844C33.7532 33.2136
    90.0085 33.2622 168.766 33.3302C160.882 25.3659 155.251 19.6771 151.873 16.2639Z"
    sodipodi:nodetypes="ccccccc"/>
-   <text x="50%" y="77%" font-size="20" text-anchor="middle" fill="white" style="
-    font-weight: 500;
-    color: white;">
-      ${text}
-    </text>
   </svg>
   `;
   return (
