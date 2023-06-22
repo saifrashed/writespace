@@ -136,16 +136,15 @@ export interface Submission {
     filetype: string;
     filename: string;
     fileData: Buffer;
-    userName: string;
     fileNotes: object[];
 }
 
 export interface Badge {
-    badgeId: number,
-    iconId: number,
-    experiencePoints: number,
-    name: string,
-    description: string,
+    badgeId: Number,
+    iconId: Number,
+    experiencePoints: Number,
+    name: String,
+    description: String,
 }
 
 
@@ -231,6 +230,7 @@ export interface User {
     experiencePoints: number;
     badges: BadgeModel[];
     level: number;
+    threshold: number;
 }
 
 interface BadgeModel {

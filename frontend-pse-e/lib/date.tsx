@@ -8,5 +8,5 @@ export const formatDate = (dateString: string) => {
         minute: 'numeric',
     };
 
-    return date.toLocaleString('nl-NL', options);
+    return date.toLocaleString('en-US', options);
 };

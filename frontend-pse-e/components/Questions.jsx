@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
+import { quizList } from '../public/data/quizList';
+import axios from 'axios';
 import useQuiz from '@/lib/hooks/useQuiz';
-import useQuizScore from '@/lib/hooks/useQuizScore';
-import useAuthentication from "@/lib/hooks/useAuthentication";
 
-const Questions = ({quizId, questions}) => {
-  const { token } = useAuthentication();
+
+const Questions = (quizId) => {
+  const { saveQuiz } = useQuiz();
+
+  let selectedQuiz = quizList[quizId['quizId']]
   const [answers, setAnswers] = useState([])
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(-1)
@@ -15,16 +18,15 @@ const Questions = ({quizId, questions}) => {
     correctAnswers: 0,
     wrongAnswers: 0,
   })
-  const [quizScores, setQuizScores] = useState([])
 
-  const { question, choices, correctAnswer } = questions[activeQuestion];
-  const { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, updateQuizScore } = useQuizScore(token);
+  const { questions } = selectedQuiz
+  const { question, choices, correctAnswer } = questions[activeQuestion]
 
   const handleAnswers = () => {
     const answer = {
       question: question,
       answered: selAnswer,
-      correctAnswer: choices[correctAnswer],
+      correctAnswer: correctAnswer,
     };
 
     setAnswers(prevAnswers => [...prevAnswers, answer]);
@@ -50,6 +52,7 @@ const Questions = ({quizId, questions}) => {
     }
     // When the last question is filled in
     else {
+
       setShowResult(true);
     }
 
@@ -61,33 +64,17 @@ const Questions = ({quizId, questions}) => {
   const onAnswerSelected = (answer, index) => {
     setSelAnswer(answer)
     setSelectedAnswerIndex(index)
-    if (answer === choices[correctAnswer]) {
+    if (answer === correctAnswer) {
       setSelectedAnswer(true)
     } else {
       setSelectedAnswer(false)
     }
   }
 
-  useEffect(() => {
-    const quizScores = getOneScore(quizId, token);
-    setQuizScores(quizScores);
-  }, [])
-
-  useEffect(() => {
-    if (showResult) {
-      saveQuizScore(String(quizId), token, result.correctAnswers);
-      // // const quizScoresObj = quizzes.reduce((acc, quiz) => {
-      //   acc[quiz.quizId] = quiz;
-      //   return acc;
-      // }, {});
-      // console.log(quizScoresObj, "SE OBJ");
-    }
-  }, [showResult]);
-
   return (
     <>
       {/* If the Quiz is in progress */}
-      {!showResult &&  (
+      {!showResult && (
         <div className='pt-6'>
           <span>{activeQuestion + 1}</span>
           <span>/{questions.length}</span>
@@ -122,7 +109,6 @@ const Questions = ({quizId, questions}) => {
           <p>Total Question: {questions.length}</p>
           <p>Correct Answers: {result.correctAnswers}</p>
           <p>Wrong Answers: {result.wrongAnswers}</p>
-          {/* <p>Latest Highscore: {latestHighScore} </p> */}
           <br />
 
           {answers.map((object, index) => (
@@ -139,9 +125,6 @@ const Questions = ({quizId, questions}) => {
               <br />
             </div>
           ))}
-          { quizScores && (
-            console.log(quizScores)
-          )}
         </div>
       )}
     </>
