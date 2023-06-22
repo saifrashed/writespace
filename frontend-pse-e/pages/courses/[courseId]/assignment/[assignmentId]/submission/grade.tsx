@@ -1,14 +1,14 @@
 import NavBar from '@/components/NavBar';
 import React, { useEffect } from 'react';
 import Link from 'next/link';
-import { Note } from '@/lib/types';
+import { Badge, Note } from '@/lib/types';
 import { useRouter } from 'next/router';
 import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import useSubmission from '@/lib/hooks/useSubmission';
 import useAuthentication from '@/lib/hooks/useAuthentication';
 import useUser from '@/lib/hooks/useUser';
-import badges from '@/data/badges';
+import useBadges from '@/lib/hooks/useBadges';
 
 import {
     highlightPlugin,
@@ -38,8 +38,9 @@ const Grade: React.FC = () => {
     const [assignedBadges, setAssignedBadges] = React.useState<number[]>([]);
     const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token, assignmentId?.toString(), user?.toString())
     const { addUserBadges } = useUser(token)
+    const { badges } = useBadges(token)
 
-    const handleBadgeClick = (index: number, badge: object) => {
+    const handleBadgeClick = (index: number, badge: Badge) => {
         let newBadgeClicked = [...badgeClicked];
         newBadgeClicked[index] = !badgeClicked[index];
         setBadgeClicked(newBadgeClicked);
@@ -47,10 +48,10 @@ const Grade: React.FC = () => {
         let newAssignedBadges = [...assignedBadges];
 
         if (newBadgeClicked[index]) {
-            newAssignedBadges.push(badge.id);
+            newAssignedBadges.push(badge.badgeId);
         }
         else {
-            newAssignedBadges = newAssignedBadges.filter((item) => item !== badge.id);
+            newAssignedBadges = newAssignedBadges.filter((item) => item !== badge.badgeId);
         }
 
         setAssignedBadges(newAssignedBadges);
@@ -376,12 +377,12 @@ const Grade: React.FC = () => {
                                         {badges.map((badge, index) => {
                                             return (
                                                 <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
-                                                    onClick={() => { console.log("assigning badge: ", badge.title); handleBadgeClick(index, badge); }}
+                                                    onClick={() => { console.log("assigning badge: ", badge.name); handleBadgeClick(index, badge); }}
                                                     title={badge.description}
-                                                    key={badge.id}
+                                                    key={badge.badgeId}
                                                 >
-                                                    <img className="w-10 h-10" src={`/badges/${badge.id.toString()}.png`} alt={badge.description} />
-                                                    <p className="text-sm">{badge.title}</p>
+                                                    <img className="w-10 h-10" src={`/badges/${badge.badgeId.toString()}.png`} alt={badge.description} />
+                                                    <p className="text-sm">{badge.name}</p>
                                                 </button>)
                                         })}
                                     </div>
