@@ -54,9 +54,9 @@ function useUser(token = '') {
     }
   }
 
-  const addUserBadge = async (badgeId: number, courseId: number, assignmentId: number, graderId: number, comment: string, token: string) => {
+  const addUserBadges = async (badgeId: number, courseId: number, assignmentId: number, userId: number, comment: string, token: string) => {
     try {
-      const response = await axios.put(`${config.baseUrl}/user/update/add-badge`, { badgeId, courseId, assignmentId, graderId, comment }, { headers: { bearer: token } });
+      const response = await axios.put(`${config.baseUrl}/user/update/add-badge`, { badgeId, courseId, assignmentId, userId, comment }, { headers: { bearer: token } });
       return response.data;
     } catch (error) {
       console.log(error)
@@ -85,7 +85,7 @@ function useUser(token = '') {
   }
 
 
-  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadge, deleteUserBadge, updateUser };
+  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadges, deleteUserBadge, updateUser };
 }
 
 export default useUser;
