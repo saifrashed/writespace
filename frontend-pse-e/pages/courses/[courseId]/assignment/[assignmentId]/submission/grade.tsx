@@ -257,14 +257,14 @@ const Grade: React.FC = () => {
                                 <button
                                     className="px-4 py-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full relative"
                                     onClick={() => {
-                                    setBadgeModal(true);
+                                        setBadgeModal(true);
                                     }}
                                 >
                                     {assignedBadges.length === 0 ? "Assign badges" : "See assigned badges"}
                                     <span
                                         className="absolute top-0 right-0 bg-gray-500 text-white rounded-full w-4 h-4 flex items-center justify-center top-0 right-0 -mt-1 -mr-1"
                                         style={{
-                                        fontSize: '12px',
+                                            fontSize: '12px',
                                         }}
                                     >
                                         {assignedBadges.length}
@@ -375,14 +375,14 @@ const Grade: React.FC = () => {
                                     <div className="grid gap-4 my-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                                         {badges.map((badge, index) => {
                                             return (
-                                                    <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
-                                                    onClick={() => { console.log("assigning badge: ", badge.title); handleBadgeClick(index, badge);}}
+                                                <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
+                                                    onClick={() => { console.log("assigning badge: ", badge.title); handleBadgeClick(index, badge); }}
                                                     title={badge.description}
                                                     key={badge.id}
-                                                    >
-                                                        <img className="w-10 h-10" src={`/badges/${badge.id.toString()}.png`} alt={badge.description} />
-                                                        <p className="text-sm">{badge.title}</p>
-                                                    </button>                                            )
+                                                >
+                                                    <img className="w-10 h-10" src={`/badges/${badge.id.toString()}.png`} alt={badge.description} />
+                                                    <p className="text-sm">{badge.title}</p>
+                                                </button>)
                                         })}
                                     </div>
                                     <h3 className="mb-0 text-lg font-normal text-gray-500 ">Are you sure you want to assign these badges?</h3>
@@ -390,7 +390,7 @@ const Grade: React.FC = () => {
                                     <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                         Yes, I'm sure
                                     </button>
-                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); setAssignedBadges([]); setBadgeClicked(new Array(badges.length).fill(false));}} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
+                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); setAssignedBadges([]); setBadgeClicked(new Array(badges.length).fill(false)); }} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
                                 </div>
                             </div>
                         </div>
