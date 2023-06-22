@@ -169,8 +169,8 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badges/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
-        const { badges, courseId, assignmentId, graderId, comment } = req.body;
+        const graderId = res.locals.userId;
+        const { badges, courseId, assignmentId, userId, comment } = req.body;
 
         let preparedBadges = [];
 
