@@ -78,13 +78,12 @@ describe('Test the user service', () => {
       });
     test('It should update the user badges on PUT /update/badges', async () => {
         const badge = {
-            badgeId: 1,
+            badges: [1,],
             courseId: 101,
             assignmentId: 201,
-            graderId: 301,
             comment: 'Great work!',
         };
-        const response = await request(app).put('/update/add-badge/').send(badge);
+        const response = await request(app).put('/update/add-badges/').send(badge);
         expect(response.statusCode).toBe(200);
         expect(response.body.message).toBe('User updated successfully'); 
       });
@@ -93,7 +92,6 @@ describe('Test the user service', () => {
             badgeId: 1,
             courseId: 101,
             assignmentId: 201,
-            graderId: 301,
             comment: 'Great work!',
         };
         const response = await request(app).put('/update/delete-badge/').send(badge);
