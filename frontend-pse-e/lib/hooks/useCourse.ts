@@ -20,7 +20,6 @@ function useCourse(token='', courseId='') {
         try {
             const response = await axios.get(`${config.baseUrl}/course/${courseId}`, { headers : { bearer: token }});
             setCourseData(response.data)
-            
         } catch (error) {
             console.log(error)
             onError("Something went wrong")

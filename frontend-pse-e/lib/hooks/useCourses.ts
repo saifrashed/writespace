@@ -12,7 +12,7 @@ function useCourses(token='') {
 
   useEffect(() => {
     if (token) {
-      getCourses(token);
+      getCourses(token)
     }
   }, [])
 

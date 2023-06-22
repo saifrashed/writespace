@@ -1,74 +1,33 @@
+import { useEffect, useState } from "react";
 import axios, { AxiosError } from "axios"
 import config from "../config";
-import { useState, useEffect } from 'react';
-import { useNotification } from "./useNotification";
 
-function useQuiz(token='') {
-  const { onSuccess, onError } = useNotification()
-  const [quizzes, setQuizzes] = useState([]);
-
-  useEffect(() => {
-    if (token) {
-      getQuizzes();
-    }
-  }, [token]);
-
-  const getQuizzes = async () => {
-    try {
-      const response = await axios.get(`${config.baseUrl}/quiz/get-all`, { headers: { bearer: token }});
-      console.log(response.data);
-      setQuizzes(response.data);
-    } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
-    }
-  }
-
-  const getQuiz = async (quizId: number) => {
-    try {
-      const response = await axios.get(`${config.baseUrl}/quiz/get-quiz/${quizId}`,);
-      return response.data;
-    } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
-    }
-  }
-
-  // const saveQuiz = async (quizId: number, topic: string, ) => {
-  //   try {
-  //     const response = await axios.get(`${config.baseUrl}/quiz/save`, {quizId, topic, experiencePoints, });
-  //     return response.data;
-  //   } catch (error) {
-  //     console.log(error);
-  //     onError("Something went wrong");
-  //   }
-  // }
-
-
+function useQuiz() {
 
   // const saveQuiz = async (userId: number, quizId: number, latestScore: number) => {
   //   try {
-  //     const response = await axios.post(`${config.baseUrl}/quiz-score/save`, {
+  //     const response = await axios.post(`${config.baseUrl}/quizScore/save`, {
   //       userId: userId,
-  //       quizId: quizId,
+  //       quizId: String(quizId),
   //       latestScore: latestScore
   //     });
+
   //     return response.data;
   //   } catch (error) {
   //     const axiosError = error as AxiosError;
 
   //     if (axiosError && axiosError?.response?.status == 409) {
-  //       updateQuiz(userId, quizId, latestScore)
+  //       updateQuiz(userId, String(quizId), latestScore)
   //     }
   //     console.log(error)
   //   }
   // };
 
-  // const updateQuiz = async (userId: number, quizId: number, latestScore: number) => {
+  // const updateQuiz = async (userId: number, quizId: string, latestScore: number) => {
   //   try {
-  //     const response = await axios.put(`${config.baseUrl}/quiz-score/update/grade`, {
+  //     const response = await axios.put(`${config.baseUrl}/quizScore/update/grade/`, {
   //       userId: userId,
-  //       quizId: quizId,
+  //       quizId: String(quizId),
   //       latestScore: latestScore
   //     });
 
@@ -79,7 +38,38 @@ function useQuiz(token='') {
   // };
 
 
-  return { quizzes, getQuizzes, getQuiz };
+  return {};
 }
 
 export default useQuiz;
+
+
+
+
+
+  // const saveQuiz = async (userId) => {
+
+  //   try {
+  //     console.log(result.correctAnswers)
+  //     const response = await axios.post('http://localhost:5000/quizScore/save', {
+  //       userId: userId,
+  //       quizId: String(quizId.quizId),
+  //       latestScore: result.correctAnswers
+  //     });
+  //     console.log(response.data); // Handle the response data
+  //   } catch (error) {
+  //     if (error.response.status == 409) {
+  //       try {
+  //         const response = await axios.put('http://localhost:5000/quizScore/update/grade/', {
+  //           userId: userId,
+  //           quizId: String(quizId.quizId),
+  //           latestScore: result.correctAnswers
+  //         });
+  //         console.log(response.data); // Handle the response data
+  //       } catch (error) {
+  //         console.log(error)
+  //       }
+  //     }
+  //     console.error(error); // Handle the error
+  //   }
+  // }
