@@ -10,9 +10,10 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Profile = () => {
   const { token } = useAuthentication();
-  const { user, getUser} = useUser(token);
+  const { user, getUser } = useUser(token);
+  const [isLegendary, setIslegendary] = useState<boolean>()
 
-  function countBadgeOccurrences(targetBadgeId:number) {
+  function countBadgeOccurrences(targetBadgeId: number) {
     let count = 0;
     if (user) {
       for (const badge of user?.badges) {
@@ -26,8 +27,8 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    if (user){
-      getUser(token);
+    if (user) {
+      setIslegendary(user && user.level >= 100)
     }
   }, [user])
 
@@ -47,15 +48,13 @@ const Profile = () => {
           <div className="flex flex-col items-center justify-center mt-20">
             <Avatar
               sx={{ width: 150, height: 150, border: '3px solid #706f7d' }}
-              src= { user?.pictureId === 0 || user?.pictureId === undefined ? '' : `/badges/${user?.pictureId}.png`}
+              src={user?.pictureId === 0 || user?.pictureId === undefined ? '' : `/badges/${user?.pictureId}.png`}
             />
-            <div className="mt-4 text-center font-bold text-xl">{user?.name}</div>
-            {user && (
-              <div>
-                <div className="mt-4 text-center font-bold"> Level {user.level}</div>
-                <div className="mt-4 text-center font-bold"> XP {user.experiencePoints}</div>
-              </div>
-            )}
+            <div className={`mt-4 text-center font-bold text-xl ${isLegendary && "gradient-text"}`}>{user?.name}</div>
+            <div>
+              <div className={`mt-4 text-center font-bold ${isLegendary && "gradient-text"}`}> Level {user?.level}</div>
+              <div className={`mt-4 text-center font-bold ${isLegendary && "gradient-text"}`}> XP {user?.experiencePoints}</div>
+            </div>
           </div>
         </div>
 
@@ -95,7 +94,7 @@ const Profile = () => {
                       commentary={'no comment'}
                       xp={String(badge.exp)}
                       unlocked={isBadgeOwned}
-                      count = {badgeCount}
+                      count={badgeCount}
                     />
                   </div>
                 );

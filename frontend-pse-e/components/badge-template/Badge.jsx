@@ -18,7 +18,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   const { token } = useAuthentication();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const popupRef = useRef(null);
-  const {updateUserPicture} = useUser(token)
+  const {updateUserPicture} = useUser()
 
 
   const handleMouseEnter = () => {setIsHovered(true);};
