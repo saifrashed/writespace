@@ -11,7 +11,7 @@ const { auth } = require('../middleware/auth');
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 // Canvas api URL
-const { API_URL, INTEGRATION_ID } = process.env;
+const { API_URL} = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
