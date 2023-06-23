@@ -2,17 +2,24 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import config from "../config";
 import { useNotification } from "./useNotification";
-import { Badge, User } from "../types";
+import { Badge, User, BadgeModel } from "../types";
 
-function useUser(token = '') {
+function useUser(token = '', assignmentId = '') {
   const [user, setUser] = useState<User>();
   const { onError } = useNotification()
+  const [assignmentBadges, setAssignmentBadges] = useState<BadgeModel[]>();
 
   useEffect(() => {
     if (token) {
       getUser(token)
     }
   }, []);
+
+  useEffect(() => {
+    if (assignmentId && token) {
+      userAssignmentBadges(assignmentId, token)
+    }
+  }, [assignmentId, token]);
 
   const getUser = async (token: string) => {
     try {
@@ -59,10 +66,21 @@ function useUser(token = '') {
       const response = await axios.put(`${config.baseUrl}/user/update/add-badges`, { badges, courseId, assignmentId, userId, comment }, { headers: { bearer: token } });
       return response.data;
     } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
+      console.log(error)
+      onError("Something went wrong")
     }
-  };
+  }
+
+  const userAssignmentBadges = async (assignmentId: string, token: string) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/user/badges/assignment/`, { assignmentId }, { headers: { bearer: token } });
+      
+      setAssignmentBadges(response.data);
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
+    }
+  }
 
   const deleteUserBadge = async (assignmentId: number, badgeId: number, token: string) => {
     try {
@@ -85,7 +103,7 @@ function useUser(token = '') {
   }
 
 
-  return { user, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadges, deleteUserBadge, updateUser };
+  return { user, assignmentBadges, getUser, saveUser, updateUserPicture, updateUserExperiencePoints, addUserBadges, deleteUserBadge, updateUser };
 }
 
 export default useUser;
