@@ -1,102 +1,141 @@
-const http = require("http");
-const mongoose = require('mongoose');
-const fs = require('fs');
 const path = require('path');
-// Import app.js
-const app = require("../app");
-// Create the server using http
-
-// Set the port for the server
+const filePath = path.join(__dirname, 'testFile.txt');
 const request = require('supertest');
+const express = require('express');
+const mongoose = require('mongoose');
+const { MongoMemoryServer } = require('mongodb-memory-server');
+const submissionService = require('../services/submission.service.js'); // change the path as needed
+const Submission = require('../models/submission.model');
+const fs = require('fs');
 
-describe('Server endpoints', () => {
-  let server;
-  let server2;
-  let assignmentId;
-  let userId;
 
-  beforeAll(async() => {
-    server = http.createServer(app);
-    const { API_PORT } = process.env;
-    const port = process.env.PORT || API_PORT;
-    server2 = app.listen(port, () => {
-      console.log(`Server is running on port: ${port}`);
-    });
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+// Mocks the auth middelware such that canvas api interaction is not needed
+// Sets user id to 2
+jest.mock('../middleware/auth', () => ({
+  auth: (req, res, next) => {
+  res.locals.userId = 123;
+  next();}
+}));
+
+
+const app = express();
+app.use(express.json());
+app.use('/', submissionService);
+
+let mongoServer;
+
+beforeAll(async () => {
+    mongoServer = new MongoMemoryServer();
+    await mongoServer.start();
+    const mongoUri = await mongoServer.getUri();
+    await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
   });
 
+afterAll(async () => {
+  await mongoose.disconnect();
+  await mongoServer.stop();
+});
 
-  afterAll((done) => {
-    server2.close(done);
-    mongoose.connection.close();
-    done();
-  });
-
-  //... previous tests
-
-  test('GET /submissions/getAll should return all submissions', async () => {
-    const response = await request(app).get('/submission/getAll');
-    expect(response.status).toBe(200);
-    expect(response.body).toBeDefined();
-    expect(Array.isArray(response.body)).toBe(true);
-    assignmentId = response.body[0].assignmentId;
-    userId = response.body[0].userId;
-  });
-
-
-  it('should respond with 200 and submissions by assignmentId for the /findByAssignmentId path', async () => {
-    const response = await request(server).get(`/submission/findByAssignmentId/${assignmentId}`);
-    expect(response.status).toBe(200);
-    expect(response.body).toBeInstanceOf(Array);
-  });
-
-
-  it("should respond with 404 object not found for the /findByAssignmentId path", async () => {
-    const response = await request(server).get(`/submission/findByAssignmentId/123456789012345678901234`);
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe("Object not found");
+describe('Test the submission service', () => {
+    test("it should save a submission on POST /save", async () => {
+      const response = await request(app)
+      .post("/save")
+      .field('userId', '123')
+      .field('assignmentId', '0')
+      .attach('file', fs.readFileSync(filePath), 'testFile.txt');
+      expect(response.statusCode).toBe(200);
     });
 
-it ('should respond with 200 and submissions by studentId for the /findByUserId path', async () => {
-    const response = await request(server).get(`/submission/findByUserId/${userId}`);
-    expect(response.status).toBe(200);
-    expect(response.body).toBeInstanceOf(Array);
+    test('It should get all submission on GET /get-all', async () => {
+        // const testSubmission = new Submission({
+        //   userId: 123,
+        //   assignmentId: 0,
+        //   grade: 10,
+        // });
+        // await testSubmission.save();
+    
+        const response = await request(app).get('/get-all');
+        expect(response.statusCode).toBe(200);
+        expect(response.body.length).toBe(1);
+        expect(response.body[0].userId).toBe(123);
+      });
+
+      test("It /find-by-assignment-id/:assignmentId should return all submissions for the assignmentId", async () => {
+        const response = await request(app).get("/find-by-assignment-id/0");
+        expect(response.statusCode).toBe(200);
+        expect(response.body[0].userId).toBe(123);
+      });
+
+      test("it should not find any submissions for an assignmentId that does not exist", async () => {
+        const response = await request(app).get("/find-by-assignment-id/1");
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Object not found");
+      });
+      
+      test("/find-by-user-id/:userId should return all submissions for the userId", async () => {
+        const response = await request(app).get("/find-by-user-id/123");
+        expect(response.statusCode).toBe(200);
+        expect(response.body[0].userId).toBe(123);
+      });
+
+      test("it should not find any submissions for a userId that does not exist", async () => {
+        const response = await request(app).get("/find-by-user-id/1");
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Object not found");
+      });
+
+      test("it should find specific submision /find-specific-submission/ ", async () => {
+        const response = await request(app).get("/find-specific-submission?userId=123&assignmentId=0");
+        expect(response.statusCode).toBe(200);
+      });
+            
+      test("It should add notes /update/fileNotes", async () => {
+        const details = {
+          notes: [{test: "test"}],
+          grade: 10,
+          userId: 123,
+          assignmentId: 0,
+        };
+        const response = await request(app)
+        .put("/update/fileNotes/")
+        .send(details);
+        expect(response.statusCode).toBe(200);
+        const check = await Submission.findOne({userId: 123, assignmentId: 0});
+        expect(check.fileNotes[0].test).toBe("test");
+      });
+
+      test("It should update grade /update/grade", async () => {
+        const details = {
+          submissionGrade: 20,
+          userId: 123,
+          assignmentId: 0,
+        };
+        const response = await request(app)
+        .put("/update/grade/")
+        .send(details);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Submission updated successfully");
+        const check = await Submission.findOne({userId: 123, assignmentId: 0});
+        expect(check.grade).toBe(20);
+      });
+
+      test("It should update a submission /update/file", async () => {
+        const response = await request(app)
+        .put("/update/file")
+        .field('userId', '123')
+        .field('assignmentId', '0')
+        .attach('file', fs.readFileSync(filePath), 'testFile.txt');
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Submission updated successfully");
+      });
+
+      test("It should delete a submission /delete-one", async () => {
+        const response = await request(app)
+        .delete("/delete-one")
+        .send({userId: 123, assignmentId: 0});
+        expect(response.statusCode).toBe(200);
+        expect(response.body.message).toBe("Submission deleted successfully");
+        const check = await Submission.findOne({userId: 123, assignmentId: 0});
+        expect(check).toBe(null);
+      });
     });
-
-it('should return the specified submission if it exists', async () => {
-        const response = await request(server).get(`/submission/findSpecificSubmission?userId=${userId}&assignmentId=${assignmentId}`);
-        expect(response.status).toBe(200);
-});
-
-it('should return an error if the specified submission does not exist', async () => {
-    const FuserId = 'nonexistentUser'; // Use ID that doesn't exist
-    const FassignmentId = 'nonexistentAssignment'; // Use ID that doesn't exist
-
-    const response = await request(server).get(`/submission/findSpecificSubmission?userId=${FuserId}&assignmentId=${FassignmentId}`);
-    expect(response.status).toBe(404);
-    expect(response.body.error).toBe('Object not found');
-});
-
-it('should save the file if it is the first submission', async () => {
-    const response = await request(server)
-        .post('/submission/save')
-        .field('userId', userId)
-        .field('assignmentId', assignmentId)
-        .attach('file', fs.readFileSync(path.join(__dirname, './testFile.txt')), 'testFile.txt');
-
-    expect(response.status).toBe(200);
-    // Add more assertions here to check the content of the response body
-});
-
-it('should return an error if the user has already submitted', async () => {
-    const response = await request(app)
-        .post('/submission/save')
-        .field('userId', userId)
-        .field('assignmentId', assignmentId)
-        .attach('file', fs.readFileSync(path.join(__dirname, './testFile.txt')), 'testFile.txt');
-
-    expect(response.status).toBe(409);
-    expect(response.body.error).toBe('You cant submit twice, update the existing assignment using /update/file.');
-});
-
-});
