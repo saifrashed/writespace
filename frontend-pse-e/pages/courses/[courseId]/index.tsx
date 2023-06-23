@@ -106,12 +106,8 @@ const CourseOverview = () => {
                 <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   Due At
                 </th>
-                {role === 'teacher' ? (
+                {role === 'teacher' && (
                   <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                  </th>
-                ) : (
-                  <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                    Submission Status
                   </th>
                 )}
               </tr>
@@ -129,7 +125,7 @@ const CourseOverview = () => {
                     <motion.td layoutId={assignment?.due_at?.toString()} className="px-6 py-4 whitespace-nowrap">
                       {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
                     </motion.td>
-                    {role === 'teacher' ? (
+                    {role === 'teacher' && (
                       <td className="flex items-center justify-end px-3 py-2 space-x-3">
                         <Link
                           href={`/courses/${courseId}/assignment/${assignment.id}/edit-assignment`}
@@ -166,32 +162,7 @@ const CourseOverview = () => {
                           </div>
                         </div> */}
                       </td>
-                    )
-                      : (
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div
-                            className={`flex items-center ${assignment.has_submitted_submissions
-                              ? ("text-emerald-400")
-                              : new Date() < new Date(assignment.due_at)
-                                ? ("text-orange-500")
-                                : ("text-red-500")
-                              } font-bold`}
-                          >
-                            <div
-                              className={`h-2.5 w-2.5 rounded-full ${assignment.has_submitted_submissions
-                                ? ("bg-emerald-400")
-                                : new Date() < new Date(assignment.due_at)
-                                  ? ("bg-orange-500")
-                                  : ("bg-red-500")
-                                } mr-2`}
-                            ></div>
-                            {assignment.has_submitted_submissions
-                              ? "Submitted"
-                              : "Not Submitted"}
-                          </div>
-                        </td>
-                      )
-                    }
+                    )}
                   </tr>
                 )
               ))}
