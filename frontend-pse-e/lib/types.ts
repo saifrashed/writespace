@@ -231,6 +231,7 @@ export interface User {
     experiencePoints: number;
     badges: BadgeModel[];
     level: number;
+    threshold: number;
 }
 
 interface BadgeModel {

@@ -4,7 +4,7 @@ import config from "../config";
 import { Assignment } from "../types";
 import { useNotification } from "./useNotification";
 
-function useAssignments(courseId='', token='') {
+function useAssignments(courseId = '', token = '') {
   const { onSuccess, onError } = useNotification()
   const [assignmentsData, setAssignmentsData] = useState<Assignment[]>([]);
   const [isLoading, setIsLoading] = useState<Boolean>(true);
@@ -17,8 +17,7 @@ function useAssignments(courseId='', token='') {
 
   const getAssignments = async (courseId: String, token: string) => {
     try {
-      const response = await axios.post(`${config.baseUrl}/assignment/get-all`, { token, courseId }, { headers: { bearer: token }});
-      // const response = await axios.post(`${config.baseUrl}/written-assignments`, { token, courseId });
+      const response = await axios.post(`${config.baseUrl}/assignment/get-all`, { token, courseId }, { headers: { bearer: token } });
       setAssignmentsData(response.data)
       setIsLoading(false)
     } catch (error) {

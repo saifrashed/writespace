@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install packages backend
-        run: cd ./backend-pse-e && npm ci
+        run: cd ./backend-pse-e && npm install
 
       - name: Run Eslint
         run: cd ./backend-pse-e && npm run lint:ci

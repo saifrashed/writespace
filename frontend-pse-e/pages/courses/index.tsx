@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import NavBar from "@/components/NavBar";
 import useCourses from "@/lib/hooks/useCourses"
-// import { Course } from "@/lib/hooks/dummy"
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { Context } from '@/Context';
 import { Course } from "@/lib/types";
@@ -18,20 +17,12 @@ const Courses = () => {
 
   const courses = contextCourses || fetchedCourses;
 
-  const isLoading = courses.length === 0
-
   const cardColors = [
     "bg-red-500",
     "bg-pink-500",
     "bg-purple-500",
-    // "bg-indigo-500",
-    // "bg-blue-500",
-    // "bg-lightBlue-500",
     "bg-cyan-500",
-    // "bg-teal-500",
     "bg-green-500",
-    // "bg-lime-500",
-    // "bg-yellow-500",
     "bg-amber-500",
     "bg-orange-500",
     "bg-red-600",
@@ -64,8 +55,8 @@ const Courses = () => {
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Select a Course</h2>
             <p className="max-w-lg mx-auto mt-4 text-base leading-relaxed text-gray-600">A course selection that we pulled from your Canvas account.</p>
           </div>
-          <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4 ${isLoading && "animate-pulse"}`}>
-            {isLoading ? (
+          <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4 ${courses.length === 0 && "animate-pulse"}`}>
+            {courses.length === 0 ? (
               <>
                 <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
                 <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
