@@ -106,7 +106,6 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
                 "submission[url]": CANVAS_REDIRECT_URI
             }
         });
-        console.log(responseCanvas);
 
         const alreadySubmitted = await submissionModel.find({ 'courseId': courseId, 'assignmentId': assignmentId, 'userId': userId });
 
