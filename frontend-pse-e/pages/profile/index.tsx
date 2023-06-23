@@ -9,7 +9,7 @@ import useBadges from "@/lib/hooks/useBadges";
 
 const Profile = () => {
   const { token } = useAuthentication();
-  const { user, getUser, updateUserPicture} = useUser(token);
+  const { user, getUser, updateUserPicture } = useUser(token);
   const [isLegendary, setIslegendary] = useState<boolean>()
   const { badges } = useBadges(token)
   const [isProfilePictureUpdated, setIsProfilePictureUpdated] = useState(false);
@@ -79,7 +79,7 @@ const Profile = () => {
               <div>
                 <div
                   className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center p-0.5 rounded-full"
-                  style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%`}}
+                  style={{ height: "20px", width: `${user.experiencePoints / user.threshold * 100}%` }}
                 >
 
                   <div className="absolute w-full">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div>
@@ -107,7 +107,7 @@ const Profile = () => {
                       xp={String(badge.experiencePoints)}
                       unlocked={isBadgeOwned}
                       count={badgeCount}
-                      onChooseProfilePicture={()=>handleChooseProfilePicture(badge.badgeId)}
+                      onChooseProfilePicture={() => handleChooseProfilePicture(badge.badgeId)}
                       setIsProfilePictureUpdated={setIsProfilePictureUpdated}
                     />
                   </div>
