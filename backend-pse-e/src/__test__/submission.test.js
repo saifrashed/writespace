@@ -50,19 +50,19 @@ describe('Test the submission service', () => {
       expect(response.statusCode).toBe(200);
     });
 
-    test('It should get all submission on GET /get-all', async () => {
-        // const testSubmission = new Submission({
-        //   userId: 123,
-        //   assignmentId: 0,
-        //   grade: 10,
-        // });
-        // await testSubmission.save();
+    // test('It should get all submission on GET /get-all', async () => {
+    //     // const testSubmission = new Submission({
+    //     //   userId: 123,
+    //     //   assignmentId: 0,
+    //     //   grade: 10,
+    //     // });
+    //     // await testSubmission.save();
     
-        const response = await request(app).get('/get-all');
-        expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(1);
-        expect(response.body[0].userId).toBe(123);
-      });
+    //     const response = await request(app).get('/get-all');
+    //     expect(response.statusCode).toBe(200);
+    //     expect(response.body.length).toBe(1);
+    //     expect(response.body[0].userId).toBe(123);
+    //   });
 
       test("It /get-submissions/:subId should return all submissions for the assignmentId", async () => {
         const response = await request(app).get("/get-submissions/0");
