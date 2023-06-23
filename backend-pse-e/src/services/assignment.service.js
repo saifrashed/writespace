@@ -130,23 +130,7 @@ router.post('/get-all', auth, async (req, res) => {
             }
         });
 
-        // Retrieve all submissions of the user for this course
-        const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
-            headers: {
-                Authorization: `Bearer ${req.headers["bearer"]}`
-            },
-            params: {
-                // Only select the submissions for the current user 
-                // automatically selects submissions for the course with courseId only
-                "student_ids[]": [res.locals.userId],
-                per_page: 200
-            }
-        });
-        // Add the submitted attribute for only this user to the response.data
-        //response.data.has_submitted = 
-        // Use only the assignments of this course
-        // TODO: "has_submitted" update the above into the thing, do it with a loop over all assignments and add it
-
+        // Only select (WriteSpace) assignments, exclude the rest
         if (response.data && Array.isArray(response.data)) {
             // Filter assignments that contain " - WriteSpace" in their name
             const filteredAssignments = response.data.filter(assignment => assignment.name && assignment.name.includes("(WriteSpace)"));
@@ -159,6 +143,34 @@ router.post('/get-all', auth, async (req, res) => {
             response.data = filteredAssignments;
         }
 
+        // Retrieve all submissions of the user for this course
+        const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            },
+            params: {
+                // Only select the submissions for the current user 
+                // automatically selects submissions for the course with courseId only
+                "student_ids[]": [res.locals.userId],
+                per_page: 200
+            }
+        });
+        // Map the submission objects to only the assignment ids that are submitted
+        const submittedAssignmentIds = userSubmissionsRes.data
+            .filter(submission => submission.workflow_state === 'submitted')
+            .map(submission => submission.assignment_id);
+
+        // Add the "has_submitted" attribute and set it to true or false
+        response.data.forEach(assignment => {
+            // If the user has submitted something for the assignment, set it to true
+            if (submittedAssignmentIds.includes(assignment.id)) {
+                assignment.has_submitted = true;
+            } else {
+                assignment.has_submitted = false;
+            }
+        });
+        
+        // Send back the edited response data with "has_submitted" attribute
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
