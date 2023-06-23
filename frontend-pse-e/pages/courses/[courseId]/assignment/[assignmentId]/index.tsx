@@ -10,6 +10,7 @@ import UploadPopup from "@/components/uploadPopup";
 import { formatDate } from "@/lib/date";
 import Quiz from "@/components/quiz"
 import useSubmission from "@/lib/hooks/useSubmission";
+import useUser from '@/lib/hooks/useUser';
 
 const Assignments = () => {
   const router = useRouter();
@@ -18,6 +19,7 @@ const Assignments = () => {
   const { token } = useAuthentication();
   const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
   const { submission } = useSubmission(token, assignmentId?.toString(), '')
+  const { assignmentBadges } = useUser(token, assignmentId?.toString())
 
   useEffect(() => {
     console.log(submission)
@@ -88,6 +90,23 @@ const Assignments = () => {
                   </Link>
                 </div>
               </div>
+
+              {assignmentBadges && assignmentBadges?.length > 0 && 
+                <div className="w-full p-2 bg-white rounded-lg border border-gray-200 my-4">
+                  <div className="text-center my-3">
+                    <p className="text-sm">You have received some badges🎉</p>
+                  </div>
+                  <div className="flex flex-col items-center justify-between">
+                      {assignmentBadges?.map((badge) => {
+                        return (
+                          <div className="flex my-3">
+                                <img className="w-10 h-10" src={`/badges/${badge.badgeId.toString()}.png`} />
+                          </div>
+                        )})
+                      }
+                  </div>
+                </div>
+              }
 
               <p className="mt-8 text-gray-600">
                 {submission && (

@@ -234,7 +234,7 @@ export interface User {
     threshold: number;
 }
 
-interface BadgeModel {
+export interface BadgeModel {
     badgeId: number;
     courseId: number;
     assignmentId: number;
