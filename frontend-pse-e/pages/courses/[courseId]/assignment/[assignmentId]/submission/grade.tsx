@@ -11,6 +11,7 @@ import useUser from '@/lib/hooks/useUser';
 import useBadges from '@/lib/hooks/useBadges';
 import useAssignment from '@/lib/hooks/useAssignment';
 import { useNotification } from '@/lib/hooks/useNotification';
+import { Reply } from '@/lib/types';
 
 import {
     highlightPlugin,
@@ -85,6 +86,23 @@ const Grade: React.FC = () => {
         setAssignedBadges(newAssignedBadges);
     };
 
+    const addReply = (noteId: number, reply: string) => {
+        const note = notes.find((note) => note.id === noteId);
+        if (note && user) {
+            const reply_object: Reply = {
+                noteId: noteId,
+                message: reply,
+                userId: Number(user),
+                user_name: "",
+            };
+            const newNote = { ...note };
+            newNote.replies = newNote.replies.concat(reply_object);
+            setNotes(notes.map((note) => (note.id === noteId ? newNote : note)));
+            // Change to instantly update reply and not wait for submission == Stupid
+            onWarning("Change reply to instantly update reply and not wait for submission == Stupid")
+        }
+    };
+
     const handleDocumentLoad = () => {
         if (fileNotes) {
             setNotes(fileNotes);
@@ -137,6 +155,8 @@ const Grade: React.FC = () => {
                     content: message,
                     highlightAreas: props.highlightAreas,
                     quote: props.selectedText,
+                    replies: [],
+                    author: "",
                 };
                 setNotes(notes.concat([note]));
                 props.cancel();
@@ -353,24 +373,42 @@ const Grade: React.FC = () => {
                                             <ul className="divide-y divide-gray-200">
                                                 {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
                                                 {notes.map((note, index) => {
+                                                    const hasReplies = note.replies.length && note.replies.length > 0;
                                                     return (
                                                         <li key={index} className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
                                                             <div className="px-4 py-4 sm:px-6">
-                                                                <div
-                                                                    className="items-center justify-between">
+                                                                <div className="items-center justify-between">
                                                                     <p className="text-md text-gray-700 font-light">
-                                                                        {note.quote}
+                                                                        "{note.quote}"
                                                                     </p>
-                                                                    <p className="text-md text-gray-700  font-bold">
+                                                                    <p className="text-md text-gray-700 font-bold">
                                                                         {note.content}
                                                                     </p>
-                                                                    <p className="text-md text-gray-700  italic">
-                                                                        - {note.author}
+                                                                    <p className="text-md text-gray-700 italic">
+                                                                        - {note.author ? note.author : "You"}
                                                                     </p>
+                                                                    {hasReplies && (
+                                                                        <ul>
+                                                                            {note.replies.map((reply, replyIndex) => (
+                                                                                <li key={replyIndex} className="bg-gray-500 m-4">
+                                                                                    <p>{replyIndex}</p>
+                                                                                    <p>{reply.message}</p>
+                                                                                    {reply.userId == Number(user) ? (
+                                                                                        <p>You</p>
+                                                                                    ) : (
+                                                                                        <p>{reply.user_name}</p>
+                                                                                    )}
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    )}
+                                                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(e) => addReply(note.id, "Teacher")}>
+                                                                        Add Reply
+                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </li>
-                                                    )
+                                                    );
                                                 })}
                                             </ul>
                                         </div>
@@ -561,23 +599,23 @@ const Grade: React.FC = () => {
 
             {/* If Teacher submitted the grade */}
             {isSubmitted && (
-                <>
-                    <NavBar />
+                    <>
+                        <NavBar />
 
-                    <div className="w-1/3 mx-auto mt-10 text-center">
-                        <Lottie
-                            loop={false}
-                            autoplay={true}
-                            animationData={submittedAnimationData}
-                        />
-                        <p className="text-3xl font-bold mb-5">Grade has been submitted!</p>
-                        <button onClick={() => { router.back() }}
-                            className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
-                            Go back
-                        </button>
-                    </div>
-                </>
-            )}
+                        <div className="w-1/3 mx-auto mt-10 text-center">
+                            <Lottie
+                                loop={false}
+                                autoplay={true}
+                                animationData={submittedAnimationData}
+                            />
+                            <p className="text-3xl font-bold mb-5">Grade has been submitted!</p>
+                            <button onClick={() => { router.back() }}
+                                className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
+                                Go back
+                            </button>
+                        </div>
+                    </>
+                )}
         </div>
     );
 };
