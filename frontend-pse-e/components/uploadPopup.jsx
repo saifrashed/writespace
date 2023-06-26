@@ -89,7 +89,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
 
         addUserBadges([13], courseId, assignmentId, "", "", token)
         onSuccess("Congratulations you have received a badge! View your profile to see it.")
-        saveSubmission(token, assignmentId, uploadedFile.file)
+        saveSubmission(token, assignmentId, courseId, uploadedFile.file)
         setFileUploadSuccess(true);
     }
 

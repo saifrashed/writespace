@@ -63,12 +63,14 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
   };
 
   // Saves a submission file for an assignment
-  const saveSubmission = async (token: string, assignmentId: string, file: File) => {
+  const saveSubmission = async (token: string, assignmentId: string, courseId: string, file: File) => {
     try {
       const body = new FormData();
 
       body.append("file", file, file.name);
       body.append("assignmentId", assignmentId);
+      body.append("courseId", courseId);
+
 
       const headers = {
         'Content-Type': 'multipart/form-data'
