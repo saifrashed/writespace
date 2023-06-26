@@ -91,6 +91,7 @@ export interface Assignment {
     name: string;
     submission_types: string[];
     has_submitted_submissions: boolean;
+    has_submitted: boolean;
     due_date_required: boolean;
     max_name_length: number;
     in_closed_grading_period: boolean;
