@@ -166,6 +166,10 @@ router.put('/grade/', auth, async (req, res) => {
     try {
         const { userId, assignmentId, notes, grade, courseId } = req.body;
 
+        for (let i = 0; i < notes.length; i++) {
+            notes[i].author = res.locals.user.name;
+        }
+
         const status = "graded"
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(

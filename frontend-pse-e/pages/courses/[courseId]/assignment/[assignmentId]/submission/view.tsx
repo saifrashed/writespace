@@ -175,6 +175,9 @@ const View: React.FC = () => {
                                                                     <p className="text-md text-gray-700  font-bold">
                                                                         {note.content}
                                                                     </p>
+                                                                    <p className="text-md text-gray-700  italic">
+                                                                        - {note.author}
+                                                                    </p>
                                                                 </div>
                                                             </div>
                                                         </li>
