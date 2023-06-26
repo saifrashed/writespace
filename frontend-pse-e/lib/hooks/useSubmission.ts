@@ -4,6 +4,7 @@ import config from "../config";
 import { useNotification } from "./useNotification";
 import { Note, Submission } from "../types";
 
+// Custom React hook for managing submission data
 function useSubmission(token = '', assignmentId = '', userId = '') {
   const { onError, onSuccess } = useNotification()
   const [submissions, setSubmissions] = useState<Submission[]>();
@@ -21,10 +22,10 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     }
   }, [assignmentId]);
 
+  // Retrieves all submissions for a specific assignment
   const getSubmissions = async (assignmentId: string, token: string) => {
     try {
       const response = await axios.get(`${config.baseUrl}/submission/get-submissions/${assignmentId}`, { headers: { bearer: token } })
-
       setSubmissions(response.data)
     } catch (error) {
       console.log(error)
@@ -32,6 +33,7 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     }
   }
 
+  // Retrieves a specific submission for an assignment and user
   const getSubmission = async (assignmentId: string, userId: string = '', token: string) => {
     try {
       let response;
@@ -60,9 +62,9 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     }
   };
 
+  // Saves a submission file for an assignment
   const saveSubmission = async (token: string, assignmentId: string, file: File) => {
     try {
-
       const body = new FormData();
 
       body.append("file", file, file.name);
@@ -77,13 +79,13 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
       console.log(response)
 
       onSuccess("File submitted")
-
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
     }
   }
 
+  // Grades a submission for an assignment and user
   const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: string, userId: string) => {
     try {
       const body = {
@@ -96,7 +98,6 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
       const response = await axios.put(`${config.baseUrl}/submission/grade/`, body, { headers: { bearer: token } });
 
       onSuccess("Grade submitted")
-
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
@@ -104,7 +105,6 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
   }
 
   return { submission, submissions, isLoading, fileUrl, fileNotes, grade, getSubmissions, getSubmission, saveSubmission, gradeSubmission };
-
 }
 
 export default useSubmission;
