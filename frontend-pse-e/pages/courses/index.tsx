@@ -8,6 +8,14 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import { Context } from '@/Context';
 import { Course } from "@/lib/types";
 
+
+
+/**
+ * The courses page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered courses page.
+ */
 const Courses = () => {
   const { token } = useAuthentication();
   const { setCourse } = useContext(Context);

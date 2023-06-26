@@ -9,6 +9,13 @@ import { Assignment, Enrollment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
 import useAssignment from "@/lib/hooks/useAssignment";
 
+
+/**
+ * The create assignment page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered assignment page.
+ */
 const CreateAssignment = () => {
     const [assignment, setAssignment] = useState<Partial<Assignment>>({
         name: "",

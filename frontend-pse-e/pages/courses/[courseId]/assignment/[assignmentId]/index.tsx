@@ -12,7 +12,14 @@ import Quiz from "@/components/quiz"
 import useSubmission from "@/lib/hooks/useSubmission";
 import useUser from '@/lib/hooks/useUser';
 
-const Assignments = () => {
+
+/**
+ * The assignment page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered courses page.
+ */
+const Assignment = () => {
   const router = useRouter();
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
@@ -91,19 +98,20 @@ const Assignments = () => {
                 </div>
               </div>
 
-              {assignmentBadges && assignmentBadges?.length > 0 && 
+              {assignmentBadges && assignmentBadges?.length > 0 &&
                 <div className="w-full p-2 bg-white rounded-lg border border-gray-200 my-4">
                   <div className="text-center my-3">
                     <p className="text-sm">You have received some badges🎉</p>
                   </div>
                   <div className="flex flex-col items-center justify-between">
-                      {assignmentBadges?.map((badge) => {
-                        return (
-                          <div className="flex my-3">
-                                <img className="w-10 h-10" src={`/badges/${badge.badgeId.toString()}.png`} />
-                          </div>
-                        )})
-                      }
+                    {assignmentBadges?.map((badge) => {
+                      return (
+                        <div className="flex my-3">
+                          <img className="w-10 h-10" src={`/badges/${badge.badgeId.toString()}.png`} />
+                        </div>
+                      )
+                    })
+                    }
                   </div>
                 </div>
               }
@@ -165,4 +173,4 @@ const Assignments = () => {
   );
 };
 
-export default Assignments;
+export default Assignment;
