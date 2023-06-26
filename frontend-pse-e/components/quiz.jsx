@@ -20,6 +20,7 @@ const Quiz = () => {
         getAllUserScores(token);
     }, [quizMenu]);
 
+
     const isQuizCompleted = (quizKey) => {
         // Hierin moeten de user quizzes.
         return userScores.some((quiz) => quiz.quizId === Number(quizKey))

@@ -32,7 +32,8 @@ const Questions = ({quizId, questions, userScores}) => {
   };
 
   const getHighScore = () => {
-    const userScore = userScores.some((quiz) => quiz.quizId === Number(quizId))
+    const userScore = userScores.find((quiz) => quiz.quizId === Number(quizId))
+
     if (userScore.highScore === undefined) {
       console.log("no highscore yet")
       return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
