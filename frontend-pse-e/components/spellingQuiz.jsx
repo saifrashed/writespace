@@ -19,16 +19,16 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
   const [outroScreen, setOutroScreen] = useState(false);
+  const [rejectScreen, setRejectScreen] = useState(false);
   const [language, setLanguage] = useState("");
   const { onSuccess, onError } = useNotification();
   const [currentMistakeIndex, setCurrentMistakeIndex] = useState(-1);
   const [maxSuggestions, setMaxSuggestions] = useState(6);
-  const [dataMatches, setDataMatches] = useState(null);
+  const [dataMatches, setDataMatches] = useState({});
   const [isAPILoading, setIsAPILoading] = useState(false);
   let [usedReplacements, setUsedReplacements] = useState([]);
   const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
   const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
-
 
   const router = useRouter()
   const { courseId, assignmentId } = router.query;
@@ -36,7 +36,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const { user, addUserBadges } = useUser(token)
   const beeBadgeId = 2;
   const spellBadgeId = 14;
-
 
   // Check if the user has received the badge already for this assignment.
   const checkBadgePresent = (badgeId) => {
@@ -62,11 +61,28 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     }
   }
 
+  // Function to generate Lorem Ipsum text
+const generateLoremIpsum = (length) => {
+  // Bacon Ipsum text
+  const baconIpsum = "Bacon ipsum dolor amet ball tip ham pig, pork chop short ribs pastrami jowl capicola porchetta kielbasa. Leberkas filet mignon pastrami alcatra, pork belly salami ham hock meatball. Tenderloin meatloaf doner alcatra, beef ribs ribeye andouille shankle biltong. Salami ham pork loin cow t-bone prosciutto beef alcatra rump. Jowl cupim pancetta corned beef.";
+
+  // Repeat the text to achieve the desired length
+  const repeatedBaconIpsum = baconIpsum.repeat(Math.ceil(length / baconIpsum.length)).substr(0, length);
+
+  return repeatedBaconIpsum;
+}
+
   // Extract text from pdf.
   useEffect(() => {
     const fetchPdfText = async () => {
       const pdfText = await convertPdfToText(fileUrl);
       const filteredText = filterText(pdfText);
+
+      if (filteredText.length >= 30000) {
+        setIntroScreen(false);
+        setRejectScreen(true);
+      }
+
       setExtractedText(filteredText);
     };
 
@@ -83,6 +99,9 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
         lang,
         extractedText
       );
+
+      // TO DO: CHECK IF SELECTED LANGUAGE WAS DETECTED LANGUAGE.
+
       setDataMatches(filterData(response, user?.name));
       setIsAPILoading(false); // Enable start button after API call is done.
 
@@ -90,7 +109,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
       setUsedReplacements(Array(response.matches.length).fill(undefined));
     } catch (error) {
       console.log(error);
-      onError("API call failed");
+      onError("LanguageTool API call failed");
     }
   };
 
@@ -157,6 +176,32 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
               </svg>
               <span className="sr-only">Close modal</span>
             </button>
+
+            {rejectScreen && (
+              <div>
+                <h1 className="text-center text-lg font-semibold pt-4 pb-4">
+                  No spelling check possible.
+                </h1>
+                <p>
+                  Unfortunately large files cannot be processed at this time
+                  as we are limited by the usage of a free API service with
+                  some limitations.
+                  <br/>
+                  We encourage you to refer to other spell checkers to
+                  complement your proofreading process and to take the time
+                  to review your work and correct any mistakes manually,
+                  paying attention to spelling, grammar, and overall
+                  coherence. Remember, proofreading is an essential part of
+                  the writing process and contributes to the refinement of
+                  your ideas.
+                </p>
+                <div className="flex justify-end">
+                  <button className={buttonClass} onClick={handleCloseModal}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
 
             {introScreen && (
               <>
