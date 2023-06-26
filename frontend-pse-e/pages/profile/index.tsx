@@ -7,6 +7,13 @@ import { useEffect, useState } from 'react';
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import useBadges from "@/lib/hooks/useBadges";
 
+
+/**
+ * The profile page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered profile page.
+ */
 const Profile = () => {
   const { token } = useAuthentication();
   const { user, getUser, updateUserPicture } = useUser(token);
@@ -35,8 +42,10 @@ const Profile = () => {
 
   useEffect(() => {
     if (isProfilePictureUpdated) {
-      getUser(token); // Fetch updated user data
-      setIsProfilePictureUpdated(false); // Reset the state
+      // Fetch updated user data
+      getUser(token);
+      // Reset the state
+      setIsProfilePictureUpdated(false);
     }
   }, [isProfilePictureUpdated, getUser, token]);
 

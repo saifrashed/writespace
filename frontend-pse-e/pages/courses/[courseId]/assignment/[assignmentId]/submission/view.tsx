@@ -22,6 +22,13 @@ import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-vie
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
+
+/**
+ * The view submission page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered view submission page.
+ */
 const View: React.FC = () => {
     const router = useRouter();
     const { assignmentId } = router.query;

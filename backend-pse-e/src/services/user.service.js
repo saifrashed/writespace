@@ -62,9 +62,9 @@ router.post("/badges/assignment/", auth, async (req, res) => {
         const userId = req.body.userId ? req.body.userId : res.locals.userId;
 
         const user = await userModel.findOne({ 'userId': userId });
-        badges = user.badges;
+        const badges = user.badges;
 
-        const assignmentBadges = badges.filter(badge => badge.assignmentId === assignmentId);
+        const assignmentBadges = badges.filter(badge => badge.assignmentId == assignmentId);
 
         res.status(200).json(assignmentBadges);
     } catch (error) {

@@ -9,6 +9,13 @@ import { Assignment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
 import useAssignment from "@/lib/hooks/useAssignment";
 
+
+/**
+ * The edit assignment page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered edit assignment page.
+ */
 const EditAssignment = () => {
     const router = useRouter();
     const { courseId, assignmentId } = router.query;

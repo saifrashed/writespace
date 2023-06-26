@@ -11,15 +11,8 @@ const Quiz = () => {
     const [quizMenu, setQuizMenu] = useState(false)
     const [selectedQuizObject, setSelectedQuizObject] = useState({})
 
-    const { quizzes, getQuizzes, getQuiz } = useQuiz(token);
+    const { quizzes } = useQuiz(token);
 
-    // const QuizScores = ({ scores }) => {
-    //     // Create an object with quizId as keys
-    //     const quizScoresObj = scores.reduce((acc, score) => {
-    //       acc[score.quizId] = score;
-    //       return acc;
-    //     }, {});
-    // }
 
     const isQuizCompleted = (quizKey) => {
         // Hierin moeten de user quizzes.
@@ -76,11 +69,11 @@ const Quiz = () => {
                                     <div className={`text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer`}
                                         key={value['topic']}
                                         style={{ cursor: 'pointer' }}
-                                        onClick={() => openQuiz(parseInt(key + 1))}
+                                        onClick={() => openQuiz(parseInt(value.quizId))}
                                     >
                                         {value['topic']}
                                         {isQuizCompleted(key) && (
-                                        <span style={{ color: 'green' , marginLeft: '10px' }}>✔</span>
+                                            <span style={{ color: 'green', marginLeft: '10px' }}>✔</span>
                                         )}
                                     </div>
                                 ))}
