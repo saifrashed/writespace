@@ -5,7 +5,7 @@ import React from "react";
 
 const BottomBanner = ({unlocked, count}) => {
   let text = '';
-  if (unlocked) {
+  if (unlocked && count) {
     text = `${count}X`
   }
 
