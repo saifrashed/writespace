@@ -60,7 +60,7 @@ const Home = () => {
                   Writing.<br />
                   Fun, Intuitive.
                 </h1>
-                <p className="mt-8 text-xl text-black">We help you to make your remote work life easier. Build a distruction free working experience.</p>
+                <p className="mt-8 text-xl text-black">We help you to make your remote work life easier. Build a distraction free working experience.</p>
                 <div className=" sm:bg-white sm:border-2 sm:border-transparent sm:rounded-full ">
                   <div className="flex flex-col items-center lg:flex-row">
                     <a

@@ -21,10 +21,6 @@ const Assignments = () => {
   const { submission } = useSubmission(token, assignmentId?.toString(), '')
   const { assignmentBadges } = useUser(token, assignmentId?.toString())
 
-  useEffect(() => {
-    console.log(submission)
-  }, [])
-
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
@@ -91,22 +87,31 @@ const Assignments = () => {
                 </div>
               </div>
 
-              {assignmentBadges && assignmentBadges?.length > 0 && 
+              {/* Display badges */}
+              {assignmentBadges && assignmentBadges.length > 0 && (
                 <div className="w-full p-2 bg-white rounded-lg border border-gray-200 my-4">
                   <div className="text-center my-3">
-                    <p className="text-sm">You have received some badges🎉</p>
+                    <p className="text-sm">Received {assignmentBadges.length} badges for this assignment🎉</p>
                   </div>
+                  <hr className="border-gray-200" />
                   <div className="flex flex-col items-center justify-between">
-                      {assignmentBadges?.map((badge) => {
-                        return (
-                          <div className="flex my-3">
-                                <img className="w-10 h-10" src={`/badges/${badge.badgeId.toString()}.png`} />
+                    <div className="relative mt-2" style={{ marginTop: '1.5rem', overflowX: 'auto' }}>
+                      <div className="flex my-3">
+                        {assignmentBadges.map((badge) => (
+                          <div key={badge.badgeId} className="flex-shrink-0 hover:animate-bounce">
+                            <img className="w-12 h-12" src={`/badges/${badge.badgeId.toString()}.png`} alt={`Badge ${badge.badgeId}`} />
                           </div>
-                        )})
-                      }
+                        ))}
+                      </div>
+                    </div>
+                    <div className="flex pl-4">
+                      <div className="mr-8 text-gray-400 text-xl"></div>
+                      <div className="ml-14 text-gray-400 text-xl">&rarr;</div>
+                    </div>
                   </div>
                 </div>
-              }
+              )}
+
 
               <p className="mt-8 text-gray-600">
                 {submission && (
@@ -148,11 +153,13 @@ const Assignments = () => {
                     <span className="ml-2">Not Submitted</span>
                   </span>
                 )}
+                 </p>
 
-                <span className="font-bold">Submission date: {submission?.date ? formatDate(submission?.date) : "No due date"}</span>
+                  <span className="font-bold mt-8 text-gray-600">Submission date:</span>
+                    <div className="flex flex-col text-gray-600">
+                  <span className="">{submission?.date ? formatDate(submission?.date) : "No due date"}</span>
+                </div>
 
-
-              </p>
             </div>
           </div>
 
