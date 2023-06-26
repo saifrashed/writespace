@@ -190,21 +190,7 @@ router.put('/grade/', auth, async (req, res) => {
             return res.status(200).json({ error: 'Submission not found' });
         }
 
-        
-        // TODO: ask Saif, does he have a max points available, or do I have to make a separate request???
-        // TODO: also ask Devran or someone else to make a submission and then a course where I am teacher publish this!
-
-        // Get the assignment with the assignment id for the maxpoints
-        const assignmentCanvasRes = await axios.get(
-            `${API_URL}/courses/${courseId}/assignments/${assignmentId}`,
-        {
-            headers: {
-                // Authorization using the access token
-                Authorization: `Bearer ${req.headers["bearer"]}`
-            }
-        });
-
-        // Add the submission to the assignment on canvas
+        // Add the grade to the submission on canvas
         const responseCanvas = await axios.put(
             `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`,
             {},
@@ -213,8 +199,8 @@ router.put('/grade/', auth, async (req, res) => {
                 // Authorization using the access token
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }, params: {
-                // Calculate the grade with the max points
-                "submission[posted_grade]": ((grade / 10) * assignmentCanvasRes.data.points_possible)
+                // Grade is already the points in the FE
+                "submission[posted_grade]": grade
             }
         });
 
