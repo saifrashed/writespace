@@ -28,11 +28,6 @@ const Assignment = () => {
   const { submission } = useSubmission(token, assignmentId?.toString(), '')
   const { assignmentBadges } = useUser(token, assignmentId?.toString())
 
-  useEffect(() => {
-    console.log(submission)
-  }, [])
-
-
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 

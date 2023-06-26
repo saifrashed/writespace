@@ -179,10 +179,8 @@ router.put('/grade/', auth, async (req, res) => {
                 'userId': userId
             },
             {
-                $push: {
-                    fileNotes: { $each: notes }
-                },
                 $set: {
+                    fileNotes: notes,
                     grade: grade,
                     status: status
                 }
@@ -193,6 +191,20 @@ router.put('/grade/', auth, async (req, res) => {
         if (!updatedSubmission) {
             return res.status(200).json({ error: 'Submission not found' });
         }
+
+        // Add the grade to the submission on canvas
+        const responseCanvas = await axios.put(
+            `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`,
+            {},
+        {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Grade is already the points in the FE
+                "submission[posted_grade]": grade
+            }
+        });
 
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {
