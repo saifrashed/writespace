@@ -6,12 +6,14 @@ import config from "../config";
 import { TokenResponse } from "../types";
 import { useNotification } from "./useNotification";
 
-
+// Custom React hook for handling authentication related functionality
 function useAuthentication() {
   const router = useRouter();
   const { onSuccess } = useNotification()
   const [token, setToken] = useState<any>(getCookie("pse-token"))
 
+
+  // Log in user with the provided code
   const login = async (code: string) => {
     try {
       const response: AxiosResponse<TokenResponse> = await axios.post<TokenResponse>(`${config.baseUrl}/auth/get-user-token`, { code: code });
@@ -30,6 +32,7 @@ function useAuthentication() {
     }
   };
 
+  // Log out the user
   const logout = async () => {
     try {
       removeCookie("pse-token");
