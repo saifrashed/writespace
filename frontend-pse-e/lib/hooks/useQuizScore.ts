@@ -48,4 +48,20 @@ function useQuizScore(token: string) {
       console.log(error);
       onError("Something went wrong");
     }
+  }
 
+  const saveQuizScore = async (quizId: string, token: string, latestScore: number) => {
+    try {
+      const response = await axios.post(`${config.baseUrl}/quiz-score/save`, { quizId, latestScore }, { headers: { bearer: token } });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      onError("Something went wrong");
+    }
+  }
+
+
+  return { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore};
+}
+
+export default useQuizScore;
