@@ -51,7 +51,23 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
     }
   }
 
-  return { assignment, getAssignment, createAssignment, updateAssignment };
+  const deleteAssignment = async (courseId: string, assignmentId: string, token: string) => {
+    try {
+      const response = await axios.delete(`${config.baseUrl}/assignment/delete/${courseId}/${assignmentId}`,
+        {
+          headers: {
+            bearer: token,
+          },
+        }
+      ); 
+      onSuccess(`Succesfully deleted "${response.data.name}"`)
+    } catch (error) {
+      console.log(error)
+      onError("Something went wrong")
+    }
+  }
+
+  return { assignment, getAssignment, createAssignment, updateAssignment, deleteAssignment };
 }
 
 export default useAssignment;
