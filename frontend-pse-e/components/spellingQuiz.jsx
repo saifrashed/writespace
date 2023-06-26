@@ -1,80 +1,67 @@
-// TO DO:
-// - Somehow filter out math and stuff.
-// - How to handle reaching the max number of API calls?
-
 import React, { useEffect, useState } from "react";
 import convertPdfToText from "@/lib/pdfToText";
 import { useNotification } from "@/lib/hooks/useNotification";
 import languageTool from "@/lib/hooks/languageTool";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import filterMathText from "@/lib/mathFilter";
 import useUser from "@/lib/hooks/useUser";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import {useRouter} from 'next/router';
 import ScaledBadge from '@/components/badge-template/Badge';
-
+import { filterData, filterText } from '@/lib/filterUtils';
 
 const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
-  if (!showPopup) {
-    return null;
-  }
+  if (!showPopup) { return null; }
 
-  const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 " +
-                      "text-lg font-medium rounded-full";
+  const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
+                      "text-gray-800 text-lg font-medium rounded-full";
 
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
   const [outroScreen, setOutroScreen] = useState(false);
   const [language, setLanguage] = useState("");
-  const { onError } = useNotification();
+  const {onSuccess, onError } = useNotification();
   const [currentMistakeIndex, setCurrentMistakeIndex] = useState(-1);
   const [maxSuggestions, setMaxSuggestions] = useState(6);
   const [dataMatches, setDataMatches] = useState(null);
   const [isAPILoading, setIsAPILoading] = useState(false);
   let [usedReplacements, setUsedReplacements] = useState([]);
+  const [isBadgePresent, setIsBadgePresent] = useState(false);
 
   const router = useRouter()
   const {courseId, assignmentId} = router.query;
   const {token} = useAuthentication()
-  const {addUserBadges} = useUser(token)
+  const {user, addUserBadges} = useUser(token)
+  const beeBadgeId = 2;
+  const spellBadgeId = 14;
 
-  const handleAddBadge = () => {  // Give spelling bee badge.
-    addUserBadges([2], courseId, assignmentId, '', '', token);
+
+  // Check if the user has received the badge already for this assignment.
+  const checkBadgePresent = (badgeId) => {
+    const presence = user?.badges.some(
+      badge => (
+        badge.badgeId === badgeId &&
+        badge.courseId === parseInt(courseId) &&
+        badge.assignmentId === parseInt(assignmentId)
+      )
+    );
+    setIsBadgePresent(presence);
+    return presence;
   }
 
-  // To filter out all the suggestions for acronyms.
-  const isAcronym = (value) => {
-    const capitalLettersCount =
-      value.split('').filter((char) => char === char.toUpperCase()).length;
-    return capitalLettersCount >= 2;
-  };
-
-  const filterData = (inputData) => {
-
-    // Filter out mistakes most likely caused by pdf to text conversion errors.
-    inputData.matches =
-      inputData.matches.filter((match) => !match.ignoreForIncompleteSentence);
-
-    // Filter out acronyms as suggestions for a match.
-    for (const match of inputData.matches) {
-      match.replacements =
-        match.replacements.filter((replacement) => !isAcronym(replacement.value))
+  const handleAddBadge = (badgeNumber) => {  // Give spelling bee badge.
+    if (!checkBadgePresent(badgeNumber)) {
+      onSuccess("Congratulations you have received a badge! View your profile to see it.");
+      addUserBadges([badgeNumber], courseId, assignmentId, '', '', token);
     }
-
-    // Give spelling bee badge.
-    if (inputData.matches.length === 0) {
-      handleAddBadge();
-    }
-
-    return inputData.matches;
   }
 
+  // Extract text from pdf.
   useEffect(() => {
     const fetchPdfText = async () => {
       const pdfText = await convertPdfToText(fileUrl);
-      setExtractedText(pdfText);
-      console.log("extracted text:",extractedText);
+      const filteredText = filterText(pdfText);
+      setExtractedText(filteredText);
     };
 
     fetchPdfText();
@@ -85,13 +72,12 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     console.log("Using language " + lang);
     setIsAPILoading(true);  // To disable start button.
 
-
     try {
       const response = await languageTool(
         lang,
         extractedText
       );
-      setDataMatches(filterData(response));
+      setDataMatches(filterData(response, user?.name));
       setIsAPILoading(false); // Enable start button after API call is done.
 
       // Initialize/resize the array with replacements chosen by user.
@@ -127,9 +113,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   // The number of suggested replacements for our current mistake.
   const numOfSuggestions = (dataMatches) =>
-    dataMatches[currentMistakeIndex].replacements
-    .filter((replacement) => !isAcronym(replacement.value))  // Don't take acronyms into account.
-    .length || 0;
+    dataMatches[currentMistakeIndex].replacements.length || 0;
 
   // Update replacement at current mistake.
   const replace = (replaceVal) => {
@@ -176,10 +160,11 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                   </h1>
                   <p>
                     Improve your writing skills with this quiz designed to correct spelling errors
-                    in your assignments. Our text analysis API suggests revisions on your work, but
-                    remember that language is subjective, and the API may not always be accurate.
-                    There might also be some inaccuracies caused by extracting the text from your
-                    assignment.
+                    in your assignments. Our text analysis API suggests revisions on your work,
+                    but remember that language is subjective, and the API may not always be
+                    accurate. There might also be some inaccuracies caused by extracting the text
+                    from your assignment. Especially mathematical formulas can cause inaccuracies
+                    in this.
                     <br/><br/>
                     Engage actively with the quiz, use its suggestions to see if they fit,
                     and discuss any disagreements with your peers. Collaboration and critical
@@ -240,40 +225,49 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                   <h1 className="text-center text-lg font-semibold pt-4 pb-4">
                     No spelling mistakes detected.
                   </h1>
-
                   <p>
                     Well done! The text analysis API could not pick up on any obvious grammatical
                     errors or spelling mistakes. Your attention to detail and strong command of
                     spelling have resulted in a flawless piece of writing.
-
-                    {/* Spelling bee badge. */}
-                    <div className="flex justify-center pt-4">
-                      <div style={{
-                          height: '300px', position: 'relative',
-                          top: '-10px', left: '-130px', // Adjust positioning to taste
-                      }}>
-                        {/* Is hardcoded greener?*/}
-                        <ScaledBadge
-                          resizeFactor={0.8}
-                          pictureUrl={`/badges/2.png`}
-                          title={"Spelling Bee"}
-                          description={"Awarded for handing in an assignment with no spelling errors."}
-                          commentary={'no comment'}
-                          xp={String("200")}
-                          unlocked={true} />
-                      </div>
-                    </div>
-
-                    We are thrilled to award you with a special badge to commemorate your
-                    exceptional achievement. This badge signifies your mastery of spelling and
-                    serves as a testament to your dedication to excellence in writing. You can
-                    proudly display this badge on your profile page, to showcase your
-                    accomplishment.
-                    <br/><br/>
-
-                    Congratulations once again on your remarkable achievement and the
-                    well-deserved badge!
                   </p>
+                  <div className="flex justify-center pt-4">
+                    <div style={{
+                      height: '300px', position: 'relative',
+                      top: '-10px', left: '-130px',
+                    }}>
+                      <ScaledBadge
+                        resizeFactor={0.8}
+                        pictureUrl={`/badges/${beeBadgeId}.png`}
+                        title={"Spelling Bee"}
+                        description={"Awarded for handing in and revising an" +
+                          " assignment with no apparent spelling errors."}
+                        commentary={'no comment'}
+                        xp={String("200")}
+                        unlocked={true}
+                        onChooseProfilePicture={ () => {} }
+                      />
+                    </div>
+                  </div>
+                  {(!isBadgePresent) && (
+                    <p>
+                      We are thrilled to award you with a special badge to commemorate your
+                      exceptional achievement. This badge signifies your mastery of spelling and
+                      serves as a testament to your dedication to excellence in writing. You can
+                      proudly display this badge on your profile page, to showcase your
+                      accomplishment.
+                      <br/><br/>
+                      Congratulations once again on your remarkable achievement and the
+                      well-deserved badge!
+                    </p>
+                  )}
+                  {(isBadgePresent) && (
+                    <p>
+                      Even though you have already been awarded a badge for this
+                      assignment, we encourage you to maintain your high standards and continue
+                      submitting impeccable work. Your consistent attention to detail and mastery
+                      of spelling play a vital role in showcasing your writing prowess.
+                    </p>
+                  )}
                   <div className="flex justify-end">
                     <button className={buttonClass} onClick={handleCloseModal}>
                       Close
@@ -301,6 +295,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     <p>Found in:</p>
                     <p className="text-center pt-4 pb-4">
                       <span>
+                        {/* Sentence before the mistake. */}
                         {dataMatches[currentMistakeIndex].context.text.substring(
                           0, dataMatches[currentMistakeIndex].context.offset)}
 
@@ -322,6 +317,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                           </strong>
                         )}
 
+                        {/* Rest of sentence. */}
                         {dataMatches[currentMistakeIndex].context.text.substring(
                           dataMatches[currentMistakeIndex].context.offset +
                           dataMatches[currentMistakeIndex].context.length
@@ -332,18 +328,18 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
                     {/* Suggestions */}
                     {dataMatches[currentMistakeIndex].replacements
-                      .filter((replacement) => !isAcronym(replacement.value))
-                      .slice(0, maxSuggestions)
-                      .length > 0 && (
+                      .slice(0, maxSuggestions).length > 0 && (
                         <>
                           <br/><p><b>Did you mean:</b></p>
                           <div className="flex-container flex-wrap space-x-2 justify-start">
                             {dataMatches[currentMistakeIndex].replacements
-                              .filter((replacement) => !isAcronym(replacement.value))
                               .slice(0, maxSuggestions)
                               .map((replacement, index) => (
                                 <button
-                                  className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white transition-all font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded-lg items-center mx-2"
+                                  className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white
+                                             transition-all font-bold py-2 px-4 border-b-4
+                                             border-fuchsia-500 hover:border-fuchsia-500
+                                             rounded-lg items-center mx-2"
                                   key={index} onClick={() => replace(replacement.value)}
                                 >
                                   {replacement.value}
@@ -361,7 +357,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         <button
                           className={buttonClass}
                           onClick={() => {setMaxSuggestions(maxSuggestions + 15);}}>
-                          Show more suggestions ({numOfSuggestions(dataMatches) - maxSuggestions} left)
+                          Show more suggestions
+                          ({numOfSuggestions(dataMatches) - maxSuggestions} left)
                         </button>
                         <button
                           className={buttonClass}
@@ -386,10 +383,16 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                   </button>
                   <button className={buttonClass}  // 'Next' button.
                     onClick={ () => {
-                      if (currentMistakeIndex === dataMatches.length - 1 ||
-                          dataMatches.length === 0) {
+
+                      if (currentMistakeIndex === dataMatches.length - 1) {
                         setOutroScreen(true);
+                        handleAddBadge(spellBadgeId);
                       }
+                      else if (dataMatches.length === 0) {
+                        setOutroScreen(true);
+                        handleAddBadge(beeBadgeId);
+                      }
+
                       setCurrentMistakeIndex((prevIndex) => prevIndex + 1);
                       setMaxSuggestions(6);
                     }}
@@ -412,7 +415,27 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     improving your spelling and grammar skills. Through careful analysis and
                     consideration of the suggested revisions, you have actively engaged in the
                     process of enhancing your writing abilities.
-                    <br/><br/>
+
+                    <div className="flex justify-center pt-4">
+                      <div style={{
+                        height: '300px', position: 'relative',
+                        top: '-10px', left: '-130px',
+                      }}>
+                        <ScaledBadge
+                          resizeFactor={0.8}
+                          pictureUrl={`/badges/${spellBadgeId}.png`}
+                          title={"Spellmaster"}
+                          description={"Awarded to students who show exemplary initiative and " +
+                                       "interest in their own improvement by completing the " +
+                                       "spelling revision quiz."}
+                          commentary={'no comment'}
+                          xp={String("200")}
+                          unlocked={true}
+                          onChooseProfilePicture={ () => {} }
+                        />
+                      </div>
+                    </div>
+
                     We hope that this quiz has provided you with valuable insights into common
                     spelling errors and equipped you with the knowledge to make more accurate and
                     confident choices in your writing.
@@ -421,8 +444,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     practice and perseverance. Take the lessons you've learned here and apply them
                     to your future writing endeavors.
                     <br/><br/>
-                    We applaud your commitment to self-improvement and congratulate you on your
-                    achievement. Keep up the great work!
+                    With this award we applaud your commitment to self-improvement and congratulate
+                    you on your achievement. Keep up the great work!
                   </p>
                 </div>
 

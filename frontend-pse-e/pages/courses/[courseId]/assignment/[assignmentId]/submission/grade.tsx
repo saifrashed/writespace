@@ -291,7 +291,7 @@ const Grade: React.FC = () => {
                                     <div className="flex flex-col px-4 py-5 sm:px-6 bg-gray-500">
                                         <div className="flex justify-between">
                                             <h2 className=" text-2xl text-white">
-                                                Notes
+                                                Comments
                                             </h2>
                                             <button type="button"
                                                 className="rounded-md text-white"

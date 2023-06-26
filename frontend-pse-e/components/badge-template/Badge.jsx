@@ -65,7 +65,10 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
           </div>
         </div>
         <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick={togglePopup}>Close</button>
-        {unlocked ? <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>: ''}
+
+        {unlocked && onChooseProfilePicture && onChooseProfilePicture() && (
+        <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>
+        )}
       </>
     );
   };

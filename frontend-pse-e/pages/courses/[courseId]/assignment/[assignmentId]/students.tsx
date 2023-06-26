@@ -35,9 +35,16 @@ const Assignments = () => {
                     <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
 
                     <motion.div layoutId={assignment?.due_at?.toString()}>
-                        <p className="mt-8 text-gray-600">
+                        <p className="mt-8 mb-8 text-gray-600">
                             <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
                     </motion.div>
+
+                    <Link href={`/courses/${courseId}/assignment/${assignmentId}`}
+                        className="text-white bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-2.5 text-center"
+                    >
+                        <i className="fa-solid fa-eye me-2"></i>
+                        Student view
+                    </Link>
                 </div>
 
                 <div className="max-w-5xl mx-auto">
