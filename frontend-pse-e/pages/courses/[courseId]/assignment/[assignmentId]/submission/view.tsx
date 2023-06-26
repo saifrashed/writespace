@@ -21,24 +21,20 @@ import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-vie
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
+
+/**
+ * The view submission page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered view submission page.
+ */
 const View: React.FC = () => {
     const router = useRouter();
-    const { courseId, assignmentId } = router.query;
+    const { assignmentId } = router.query;
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
-    const { getSubmissionDocument, getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission()
     const { token } = useAuthentication()
-    const { assignment, getAssignment } = useAssignment()
-
-    useEffect(() => {
-        if (assignmentId && courseId) {
-            getSubmissionDocument(assignmentId.toString(), token)
-            getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-        }
-    }, [assignmentId, courseId])
-
-
-    let noteId = notes.length;
+    const { getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission(token, assignmentId?.toString())
 
     const noteEles: Map<number, HTMLElement> = new Map();
 

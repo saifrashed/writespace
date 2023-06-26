@@ -2,11 +2,12 @@ const mongoose = require("mongoose");
 
 const submissionModel = new mongoose.Schema({
     userId: Number,
+    userName: String,
     assignmentId: Number,
-    submissionDate: Date,
-    submissionGrade: Number,
-    submissionWhatifGrade: Number,
-    submissionStatus: String,
+    courseId: Number,
+    date: Date,
+    grade: Number,
+    status: String,
     filetype: String,
     filename: String,
     fileData: Buffer, // Field to store file data

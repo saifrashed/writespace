@@ -5,15 +5,24 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import { useNotification } from "@/lib/hooks/useNotification";
+import useUser from "@/lib/hooks/useUser";
+import { useRouter } from "next/router";
 
-const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
+
+const UploadPopup = ({ showPopup, togglePopup }) => {
+    const router = useRouter();
+
+    const { courseId, assignmentId } = router.query;
+
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
     const [uploadedFile, setUploadedFile] = useState(null);
-    const [isConfirmed, setIsConfirmed] = useState(null)
+    const [isConfirmed, setIsConfirmed] = useState(false)
     const fileSizeLimit = 1 * 1048576;  // 1MB
-    const { submitSubmission } = useSubmission()
+    const { saveSubmission } = useSubmission()
     const { token } = useAuthentication()
     const { onError } = useNotification()
+    const { addUserBadges } = useUser(token)
+    const { onSuccess } = useNotification()
 
     // Security measure: Remove shady characters from file name.
     const sanitizeString = (string) => {
@@ -78,7 +87,9 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
             return;
         }
 
-        submitSubmission(token, assignmentId, uploadedFile.file)
+        addUserBadges([13], courseId, assignmentId, "", "", token)
+        onSuccess("Congratulations you have received a badge! View your profile to see it.")
+        saveSubmission(token, assignmentId, courseId, uploadedFile.file)
         setFileUploadSuccess(true);
     }
 
@@ -121,7 +132,7 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
                                     </div>
                                     {/* No plagiarism confirmation checkbox */}
                                     <div className="flex items-center my-4">
-                                        <input id="default-checkbox" type="checkbox" checked={isConfirmed}
+                                        <input id="default-checkbox" type="checkbox" value={isConfirmed} checked={isConfirmed}
                                             className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
                                             onChange={(event) => {
                                                 setIsConfirmed(event.target.checked);

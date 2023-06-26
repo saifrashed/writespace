@@ -1,17 +1,22 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import useCourse from "@/lib/hooks/useCourse";
-import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { motion } from "framer-motion";
 import { ChangeEvent, useContext, useEffect, useState } from 'react';
 import { Context } from '@/Context';
-import { Assignment, Enrollment } from "@/lib/types";
+import { Assignment } from "@/lib/types";
 import NavBar from "@/components/NavBar";
 import useAssignment from "@/lib/hooks/useAssignment";
 
-const EditAssignment = () => {
 
+/**
+ * The edit assignment page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered edit assignment page.
+ */
+const EditAssignment = () => {
     const router = useRouter();
     const { courseId, assignmentId } = router.query;
     const { token } = useAuthentication();
@@ -23,93 +28,69 @@ const EditAssignment = () => {
 
     const { assignment: contextAssignment } = useContext(Context);
     const { assignment: fetchedAssignment, getAssignment } = useAssignment();
-    const assignment = contextAssignment || fetchedAssignment;
+    const assignmentData = contextAssignment || fetchedAssignment;
 
-    const [assignmentName, setAssignmentName] = useState<string>(assignment?.name || "");
-    const [description, setDescription] = useState<string>(assignment?.description || "");
-    const [points, setPoints] = useState<number>(assignment?.points_possible || 0);
-    const [attempts, setAttempts] = useState<number>(assignment?.allowed_attempts || -1);
-    const [gradingType, setGradingType] = useState<string>(assignment?.grading_type || "");
-    const [isGroupAssignment, setIsGroupAssignment] = useState<boolean>(false);
-    const [isCounted, setIsCounted] = useState<boolean>(assignment?.omit_from_final_grade || false);
-    const [requirePeerReviews, setRequirePeerReviews] = useState<boolean>(assignment?.peer_reviews || false);
-    const [isAnonymousGrading, setIsAnonymousGrading] = useState<boolean>(assignment?.anonymous_grading || false);
-
-    const formatDueDateNormal = (isoDate: string): string => {
-        const date = new Date(isoDate);
-        const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const year = String(date.getFullYear());
-
-        return `${day}-${month}-${year}`;
-    };
-    const [dueAt, setDueAt] = useState<string>(formatDueDateNormal(assignment?.due_at) || '');
+    const [assignment, setAssignment] = useState<Assignment>({
+        name: "",
+        description: "",
+        points_possible: 0,
+        grading_type: "points",
+        omit_from_final_grade: false,
+        anonymous_grading: false,
+        allowed_attempts: "Unlimited",
+        due_at: "",
+        ...assignmentData,
+    });
 
     useEffect(() => {
         if (courseId && assignmentId && token) {
-            getCourse(parseInt(courseId.toString()), token);
-            getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token);
+            getCourse(courseId.toString(), token);
+            getAssignment(courseId.toString(), assignmentId.toString(), token);
         }
     }, [router.query]);
 
     useEffect(() => {
-        if (assignment) {
-            setAssignmentName(assignment.name);
-            setDescription(assignment.description);
-            setPoints(assignment.points_possible);
-            setAttempts(assignment.allowed_attempts);
-            setGradingType(assignment.grading_type);
-            setIsCounted(assignment.omit_from_final_grade);
-            setRequirePeerReviews(assignment.peer_reviews);
-            setIsAnonymousGrading(assignment.anonymous_grading);
-            setDueAt(new Date(assignment.due_at).toISOString().slice(0, -1));
+        if (assignmentData) {
+            setAssignment({
+                ...assignmentData,
+                allowed_attempts: assignmentData.allowed_attempts === -1 ? "Unlimited" : assignmentData.allowed_attempts,
+                due_at: assignmentData.due_at && new Date(assignmentData.due_at)?.toISOString().slice(0, -1),
+            })
         }
-    }, [assignment]);
+    }, [assignmentData]);
 
     const handleUpdateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const assignment: Assignment | any = {
-            name: assignmentName,
-            description: description,
-            points_possible: points,
-            grading_type: gradingType,
-            omit_from_final_grade: isCounted,
-            peer_reviews: requirePeerReviews,
-            anonymous_grading: isAnonymousGrading,
-            allowed_attempts: attempts,
-            due_at: (dueAt ? new Date(dueAt)?.toISOString().slice(0, -1) : null)
-        };
+        const newAssignment: Assignment = {
+            ...assignment,
+            due_at: assignment.due_at && new Date(assignment.due_at)?.toISOString(),
+            allowed_attempts: assignment.allowed_attempts === "Unlimited" ? -1 : assignment.allowed_attempts,
+        }
 
         if (courseId && assignmentId) {
-            await updateAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), assignment, token)
+            await updateAssignment(courseId.toString(), assignmentId.toString(), newAssignment, token)
             router.back()
         }
     };
 
-    const handlePointsChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (value === "" || parseInt(value) < 0) {
-            setPoints(0);
-        } else {
-            setPoints(parseInt(value));
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const { name, value, type, checked } = e.target;
+
+        let inputValue: any = type === "checkbox" ? checked : value;
+
+        if (name === "allowed_attempts") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 1 ? "Unlimited" : parseInt(inputValue);
         }
-    };
-
-    const handleAttemptsChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        if (value === "" || parseInt(value) < 0) {
-            setAttempts(-1);
-        } else {
-            setAttempts(parseInt(value));
+        if (name === "points_possible") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 0 ? 0 : parseInt(inputValue);
         }
-    };
 
-    const handleDueAtChange = (e: ChangeEvent<HTMLInputElement>) => {
-        let inputValue = e.target.value;
-        setDueAt(inputValue);
+        setAssignment((prevAssignment) => ({
+            ...prevAssignment,
+            [name]: inputValue
+        }));
     };
-
 
     return (
         <>
@@ -153,22 +134,24 @@ const EditAssignment = () => {
                                 type="text"
                                 id="assignment-name"
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                placeholder={assignmentName}
+                                placeholder={assignment?.name}
                                 required
-                                value={assignmentName}
-                                onChange={(e) => setAssignmentName(e.target.value)}
+                                name="name"
+                                value={assignment?.name}
+                                onChange={handleInputChange}
                             />
                         </div>
-                        <label htmlFor="message" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label htmlFor="assignment-description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             Description
                         </label>
                         <textarea
-                            id="message"
+                            id="assignment-description"
                             rows={4}
                             className="block mb-6 p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder={description}
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
+                            placeholder={assignment?.description}
+                            name="description"
+                            value={assignment?.description}
+                            onChange={handleInputChange}
                         ></textarea>
                         <label htmlFor="assignment_type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assignment Type</label>
                         <select disabled id="assignment_type" className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -178,10 +161,12 @@ const EditAssignment = () => {
                             Grading Type
                         </label>
                         <select
-                            value={gradingType || "points"}
+                            value={assignment?.grading_type || "points"}
                             id="grading_type"
+                            name="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            onChange={(e) => setGradingType(e.target.value)}>
+                            onChange={handleInputChange}
+                        >
                             <option value="pass_fail">Pass/Fail</option>
                             <option value="percent">Percent</option>
                             <option value="points">Points</option>
@@ -197,10 +182,11 @@ const EditAssignment = () => {
                                 type="number"
                                 id="assignment-points"
                                 className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
-                                placeholder={points?.toString()}
+                                placeholder="0"
                                 required
-                                value={points}
-                                onChange={handlePointsChange}
+                                name="points_possible"
+                                value={assignment?.points_possible}
+                                onChange={handleInputChange}
                             />
                         </div>
                         <div className="mb-6">
@@ -210,8 +196,9 @@ const EditAssignment = () => {
                                 id="assignment-attempts"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Unlimited"
-                                value={attempts}
-                                onChange={handleAttemptsChange}
+                                name="allowed_attempts"
+                                value={assignment?.allowed_attempts}
+                                onChange={handleInputChange}
                             />
                         </div>
                         <label htmlFor="assignment-deadline" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Deadline</label>
@@ -220,12 +207,14 @@ const EditAssignment = () => {
                                 <svg aria-hidden="true" className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd"></path></svg>
                             </div>
                             <input
-                                id="assignment-deadline"
                                 type="datetime-local"
+                                id="assignment-deadline"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder={dueAt}
-                                value={dueAt}
-                                onChange={handleDueAtChange} />
+                                placeholder="dd-mm-yyyy"
+                                name="due_at"
+                                value={assignment?.due_at}
+                                onChange={handleInputChange}
+                            />
                         </div>
                         <div className="flex items-start mb-6">
                             <div className="flex items-center h-5">
@@ -234,30 +223,16 @@ const EditAssignment = () => {
                                     type="checkbox"
                                     value=""
                                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                                    checked={isCounted}
-                                    onChange={(e) => setIsCounted(e.target.checked)}
+                                    name="omit_from_final_grade"
+                                    checked={assignment?.omit_from_final_grade}
+                                    onChange={handleInputChange}
                                 />
                             </div>
                             <label htmlFor="assignment-points-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                                 Do not count this assignment towards the final grade
                             </label>
                         </div>
-                        <div className="flex items-start mb-6">
-                            <div className="flex items-center h-5">
-                                <input
-                                    disabled={!isGroupAssignment}
-                                    id="assignment-peer-checkbox"
-                                    type="checkbox"
-                                    value=""
-                                    className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                                    checked={requirePeerReviews}
-                                    onChange={(e) => setRequirePeerReviews(e.target.checked)}
-                                />
-                            </div>
-                            <label htmlFor="assignment-peer-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                                Require peer reviews
-                            </label>
-                        </div>
+
                         <div className="flex items-start mb-6">
                             <div className="flex items-center h-5">
                                 <input
@@ -265,8 +240,9 @@ const EditAssignment = () => {
                                     type="checkbox"
                                     value=""
                                     className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-                                    checked={isAnonymousGrading}
-                                    onChange={(e) => setIsAnonymousGrading(e.target.checked)}
+                                    name="anonymous_grading"
+                                    checked={assignment?.anonymous_grading}
+                                    onChange={handleInputChange}
                                 />
                             </div>
                             <label htmlFor="assignment-anonymous-checkbox" className="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300">

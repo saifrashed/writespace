@@ -1,81 +1,28 @@
 import Head from "next/head";
-import Image from "next/image";
 import NavBar from "@/components/NavBar";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
-import UploadPopup from "@/components/uploadPopup";
-import useSubmission from "@/lib/hooks/useSubmission";
-import useEnrollments from "@/lib/hooks/useEnrollments";
-import useSubmissions from "@/lib/hooks/useSubmissions";
-import useUsers from "@/lib/hooks/useUsers";
-
 import { formatDate } from "@/lib/date";
 import { motion } from "framer-motion";
-import useCourse from "@/lib/hooks/useCourse";
-import { Enrollment } from "@/lib/types";
-import { Context } from "@/Context";
+import useSubmission from "@/lib/hooks/useSubmission";
+import Link from "next/link";
 
-const Assignments = () => {
+/**
+ * The students page component for teachers.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered courses page.
+ */
+const Students = () => {
     const router = useRouter();
     // Accessing query parameters from the router object
-    const { courseId, assignmentId } = router.query;
+    const { assignmentId, courseId } = router.query;
     const { token } = useAuthentication();
-    const { assignment: contextAssignment } = useContext(Context); // When pressing a course
-    const { assignment: fetchedAssignment, getAssignment } = useAssignment(); // When navigating to a course via url
-    const assignment = contextAssignment || fetchedAssignment;
+    const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
+    const { submission, submissions } = useSubmission(token, assignmentId?.toString())
 
-    const { submission, getSubmission } = useSubmission()
-    const { submissions, getSubmissions } = useSubmissions()
-    const { enrollments, getEnrollments } = useEnrollments()
-    const { users, getUsers } = useUsers()
-
-    const { course: contextCourse } = useContext(Context); // When pressing a course
-    const { course: fetchedCourse, getCourse } = useCourse(); // When navigating to a course via url
-    const course = contextCourse || fetchedCourse;
-
-    const [isTeacher, setIsTeacher] = useState()
-
-    useEffect(() => {
-        if (courseId && assignmentId && token) {
-            getCourse(parseInt(courseId.toString()), token)
-            getAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-            getUsers(parseInt(courseId.toString()), token)
-        }
-    }, [router.query]);
-
-    // useEffect(() => {
-    //     if (course) {
-    //         setIsTeacher(course.enrollments?.some((enrollment: Enrollment) => enrollment?.type === "teacher"))
-    //     }
-    // }, [course]);
-
-
-    // useEffect(() => {
-    //     if (courseId && assignmentId && token) {
-    //         if (typeof isTeacher === 'boolean') {
-    //             if (isTeacher) {
-    //                 getSubmissions(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-    //                 getUsers(parseInt(courseId.toString()), token)
-    //             } else {
-    //                 getSubmission(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-    //             }
-    //         }
-    //     }
-    // }, [isTeacher])
-
-
-    function getRandomGrade() {
-        // Generate a random number between 50 and 90 (inclusive)
-        var randomNumber = Math.floor(Math.random() * 41) + 50;
-
-        // Convert the random number to a decimal grade with 1-point increments
-        var grade = randomNumber / 10;
-
-        return grade;
-    }
 
     return (
         <>
@@ -88,15 +35,21 @@ const Assignments = () => {
 
             <NavBar />
 
-
             <div className="bg-gray-50 py-10 mt-16 min-h-screen">
                 <div className="text-center mb-6">
                     <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
 
                     <motion.div layoutId={assignment?.due_at?.toString()}>
-                        <p className="mt-8 text-gray-600">
+                        <p className="mt-8 mb-8 text-gray-600">
                             <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
                     </motion.div>
+
+                    <Link href={`/courses/${courseId}/assignment/${assignmentId}`}
+                        className="text-white bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-2.5 text-center"
+                    >
+                        <i className="fa-solid fa-eye me-2"></i>
+                        Student view
+                    </Link>
                 </div>
 
                 <div className="max-w-5xl mx-auto">
@@ -108,7 +61,7 @@ const Assignments = () => {
                                         Name
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                        Submission Status
+                                        Submission Date
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
                                         Grade Status
@@ -116,21 +69,21 @@ const Assignments = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map((user, index) => (
+                                {submissions && submissions.map((submission, index) => (
                                     <tr
                                         key={index}
                                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission/grade`}>
-                                                {user.name}
+                                            <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
+                                                {submission.userName ? submission.userName : "Anonymous"}
                                             </Link>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
-                                            Submitted
+                                        <td className="px-6 py-4 whitespace-nowrap font-bold">
+                                            {formatDate(submission.date)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            {getRandomGrade()}
+                                            {submission.status}
                                         </td>
                                     </tr>
                                 ))}
@@ -138,9 +91,9 @@ const Assignments = () => {
                         </table>
                     </div>
                 </div>
-            </div>
+            </div >
         </>
     );
 };
 
-export default Assignments;
+export default Students;

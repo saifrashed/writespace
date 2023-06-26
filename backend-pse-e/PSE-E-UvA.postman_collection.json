@@ -137,6 +137,9 @@
 				},
 				{
 					"name": "Get one assignment from a course with courseId and assignmentId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [
@@ -146,7 +149,88 @@
 								"type": "text"
 							}
 						],
-						"url": "localhost:5000/assignment/courses/56157/6058"
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 56157,\r\n    \"assignmentId\" : 6058\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/assignment/get-one"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all written assignments for a course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/assignment/written-assignments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all assignments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1810Pjo5ZHQtz8/6kBijKh4TMQZwRcPOLzAuw8K3OoBBtXZRtqTkZ2mLwOtP6sUPtG19sLHn4Qyxx8ARsg+6ukcaAf0BYQOAYQo8Avgh/V9EQ5TEnS8Kpuv",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 78230,\r\n    \"isTeacher\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/assignment/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+lDnQIF0Zex5RLlKN61ymQMeBWAB6Jm31G9X5NBYHazppdRF/oKD5ZQvF9jGlyqGOvqHQiepTPQAxnQKn2DlD6njUtQlk9lcv2zDUZeDjLQsbiCt8y2s5g",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 78230,\r\n    \"assignment\": {\r\n        \"name\": \"Submission test\",\r\n        \"description\": \"test\",\r\n        \"points_possible\": 10,\r\n        \"grading_type\": \"points\",\r\n        \"omit_from_final_grade\": true,\r\n        \"anonymous_grading\": false,\r\n        \"allowed_attempts\": -1,\r\n        \"due_at\": \"2023-05-18T14:12:00.000Z\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/assignment/create"
 					},
 					"response": []
 				}
@@ -207,7 +291,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
 								"type": "text"
 							}
 						],
@@ -242,7 +326,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX186V1fjP/Qd1cmqDhPBLzfQj4DYeZZ429461BOGs0Hyu8kGz73xCWBm0QqMCGKAfHzCgmcRneHWgHqCOzKj+b+G23DekVchdeQRnjM+3bsxOnaQynKMILEw",
 								"type": "text"
 							}
 						],
@@ -250,19 +334,19 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "userId",
-									"value": "4",
+									"key": "courseId",
+									"value": "78230",
 									"type": "text"
 								},
 								{
 									"key": "assignmentId",
-									"value": "15",
+									"value": "6204",
 									"type": "text"
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/cpoet/Downloads/Maintainability_table.jpg"
 								}
 							]
 						},
@@ -277,20 +361,20 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX18AJi5IKYLTnIdfTTNm1dYbBTzcRZTkiaDpeVFNfWRMLbf9Ouqj+UcQxZAnSyF4BM+01N+GJZesnwlOven3OK5UHuZvbKkWqmsu7QBbc6rW6nNtsWoTbDec",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15,\r\n    \"newGrade\": 90\r\n}",
+							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15,\r\n    \"grade\": 9,\r\n    \"courseId\": 78230\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:5000/submission/update/grade/"
+						"url": "localhost:5000/submission/grade/"
 					},
 					"response": []
 				},
@@ -349,6 +433,38 @@
 						"url": "http://localhost:5000/submission/delete-one/"
 					},
 					"response": []
+				},
+				{
+					"name": "Get a submission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 36122,\r\n    \"assignmentId\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/submission/get-submission/"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			]
 		},
@@ -356,13 +472,28 @@
 			"name": "User requests",
 			"item": [
 				{
+					"name": "Get user (canvas and mongo combined)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/user/get-user"
+					},
+					"response": []
+				},
+				{
 					"name": "Get all users",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX186PZfDFrPgCXaGDCtL61UB+lI4XWgUDKbjjAxpJMV2WsNDXPw8qkv3SlUCYgJ/CoEZZ02TBfcmGAIVLNlvgin0u5FHKYrvLFSiJchUKPJDv/zwffOtVa09",
 								"type": "text"
 							}
 						],
@@ -409,13 +540,13 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "10392~iykSpa3JIqLxyqtOOgkbTgpYC23zGLlmydOqbCojrGSO9q0EeZlVhGDg2fW1kAw4",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"userId\": 1,\n  \"badges\": {}\n}\n",
+							"raw": "{\n  \"badges\": {}\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -547,21 +678,6 @@
 					"response": []
 				},
 				{
-					"name": "Get courses with access token from FE",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
-								"type": "text"
-							}
-						],
-						"url": "localhost:5000/user/courses"
-					},
-					"response": []
-				},
-				{
 					"name": "General user update",
 					"request": {
 						"method": "PUT",
@@ -618,94 +734,13 @@
 					"response": []
 				},
 				{
-					"name": "Get all assignments of a course with access token",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
+					"name": "get canvas user",
 					"request": {
 						"method": "GET",
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:5000/user/assignments"
-					},
-					"response": []
-				},
-				{
-					"name": "Get one course with courseId",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
-								"type": "text"
-							}
-						],
-						"url": "localhost:5000/user/courses/56157"
-					},
-					"response": []
-				},
-				{
-					"name": "Get only relevant courses",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
-								"type": "text"
-							}
-						],
-						"url": "localhost:5000/user/relevant-courses"
-					},
-					"response": []
-				},
-				{
-					"name": "Get all written assignments for a course",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:5000/user/written-assignments"
-					},
-					"response": []
-				},
-				{
-					"name": "Get one user information",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
 								"type": "text"
 							}
 						],
@@ -1074,7 +1109,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\" : \"10a1d8a0e48a54db365f0c25af045d318cb0cae80bd523224f47344937fcf0f38b6d31056fbf5ed7eeb84bf00d8fe82215e29adfde929763d1184a70b31bc028\"\r\n}",
+							"raw": "{\r\n    \"code\" : \"d20f4c7887c5c4a52083a577e2dc7c46606008581f584e7f3719b903da30a87c7223eff0db45db21774c0f2bee89cdd831373aa6d6c223c44d0659cb4c2eb19a\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1092,10 +1127,14 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+EAAehLZGDSLX8ukSF5MvMBfi1sLNmKNwVEWRPX5K7vGYzL+TZgKL+ZL8qr4ym+q6Z/SEmnT/3LSO0dhmKQn81JoVAHWGekpoO21MnMJ8TwZkRTA2KvXqi",
+								"value": "U2FsdGVkX19QQ9g67S7cBrj9HK58M0Qw/5gllJll+brf9yPOdcaKS6P1ag5v5lp/btH9piI80gnDGSPMMd0SFuSqAL+M5vWeHOuWOx4BwSyjAsn7mNNYKNdPgcKc8yfb",
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": "localhost:5000/auth/get-user-token/refresh"
 					},
 					"response": []
@@ -1116,7 +1155,16 @@
 								"type": "text"
 							}
 						],
-						"url": "localhost:5000/course/56157/users/students"
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/course/students"
 					},
 					"response": []
 				},
@@ -1131,7 +1179,79 @@
 								"type": "text"
 							}
 						],
-						"url": "localhost:5000/course/56159/user/role"
+						"url": "localhost:5000/course/enrollment"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all assignments of a course with access token",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/course/assignments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get one course with courseId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/course/56157"
+					},
+					"response": []
+				},
+				{
+					"name": "Get courses with access token from FE",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX18AJi5IKYLTnIdfTTNm1dYbBTzcRZTkiaDpeVFNfWRMLbf9Ouqj+UcQxZAnSyF4BM+01N+GJZesnwlOven3OK5UHuZvbKkWqmsu7QBbc6rW6nNtsWoTbDec",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/course/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "Get only relevant courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/course/relevant-courses"
 					},
 					"response": []
 				}

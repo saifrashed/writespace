@@ -1,13 +1,25 @@
-import { useState } from 'react';
-import { quizList } from '../public/data/quizList';
+import { useState, useEffect } from 'react';
 import Questions from "./Questions"
+import useQuiz from '@/lib/hooks/useQuiz';
+import useAuthentication from "@/lib/hooks/useAuthentication";
 
 const Quiz = () => {
+    const { token } = useAuthentication();
     const [isOpen, setIsOpen] = useState(false)
     const [selectedQuiz, setSelectedQuiz] = useState(null)
     const [showButton, setShowButton] = useState(false)
     const [quizMenu, setQuizMenu] = useState(false)
+    const [selectedQuizObject, setSelectedQuizObject] = useState({})
 
+    const { quizzes } = useQuiz(token);
+
+
+    const isQuizCompleted = (quizKey) => {
+        // Hierin moeten de user quizzes.
+        return quizzes.some((quiz) => quiz.quizId === Number(quizKey))
+    }
+
+    // For opening popup
     const openPopup = () => {
         setIsOpen(true);
         setQuizMenu(true)
@@ -19,6 +31,7 @@ const Quiz = () => {
 
     const openQuiz = (quizId) => {
         setSelectedQuiz(quizId)
+        setSelectedQuizObject(quizzes.find((quiz) => quiz.quizId === quizId))
         setShowButton(true)
         setQuizMenu(false)
     }
@@ -52,13 +65,16 @@ const Quiz = () => {
                             <div>
                                 <h1 className="text-center text-lg font-semibold">Quiz selection</h1>
                                 <p>Choose a tutorial in which you want to improve.</p>
-                                {Object.entries(quizList).map(([key, value]) => (
-                                    <div className="text-base bg-white border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer"
+                                {Object.entries(quizzes).map(([key, value]) => (
+                                    <div className={`text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer`}
                                         key={value['topic']}
                                         style={{ cursor: 'pointer' }}
-                                        onClick={() => openQuiz(key)}
+                                        onClick={() => openQuiz(parseInt(value.quizId))}
                                     >
                                         {value['topic']}
+                                        {isQuizCompleted(key) && (
+                                            <span style={{ color: 'green', marginLeft: '10px' }}>✔</span>
+                                        )}
                                     </div>
                                 ))}
                             </div>
@@ -72,8 +88,8 @@ const Quiz = () => {
                                     </button>
                                 )}
 
-                                {selectedQuiz && (
-                                    <Questions quizId={selectedQuiz} />
+                                {selectedQuiz && Object.keys(selectedQuizObject).length > 0 && (
+                                    <Questions quizId={selectedQuiz} questions={selectedQuizObject.questions} />
                                 )}
                             </div>
                         )}
@@ -84,4 +100,4 @@ const Quiz = () => {
     )
 }
 
-export default Quiz
+export default Quiz;
