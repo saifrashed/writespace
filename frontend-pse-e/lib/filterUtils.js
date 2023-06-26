@@ -22,8 +22,6 @@ const falseSplit = (matchText, match) => {
 
 export const filterData = (inputData, username) => {
 
-  console.log("username:", username);
-
   const hasGreekSymbol = /[\u0370-\u03FF]/;
   const isCommonMathWord = /^(d+(x|y))|ln$/;  // ln, dx, ddx, dy, ddy etc.
   const isCourseCode = /^[A-Z0-9]{9}Y$/;

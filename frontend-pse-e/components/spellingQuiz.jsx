@@ -15,12 +15,14 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
     "text-gray-800 text-lg font-medium rounded-full";
+  const selectedButtonClass = "px-4 py-2 mr-2 inline-block bg-green-100 hover:bg-green-200 " +
+    "text-gray-800 text-lg font-medium rounded-full";
 
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
   const [outroScreen, setOutroScreen] = useState(false);
   const [rejectScreen, setRejectScreen] = useState(false);
-  const [language, setLanguage] = useState("");
+  const [language, setLanguage] = useState("");  // Selected language.?
   const { onSuccess, onError } = useNotification();
   const [currentMistakeIndex, setCurrentMistakeIndex] = useState(-1);
   const [maxSuggestions, setMaxSuggestions] = useState(6);
@@ -29,6 +31,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   let [usedReplacements, setUsedReplacements] = useState([]);
   const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
   const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
+  const [detectedLanguage, setDetectedLanguage] = useState('');
+  const [clickedOther, setClickedOther] = useState(false);
 
   const router = useRouter()
   const { courseId, assignmentId } = router.query;
@@ -61,17 +65,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     }
   }
 
-  // Function to generate Lorem Ipsum text
-const generateLoremIpsum = (length) => {
-  // Bacon Ipsum text
-  const baconIpsum = "Bacon ipsum dolor amet ball tip ham pig, pork chop short ribs pastrami jowl capicola porchetta kielbasa. Leberkas filet mignon pastrami alcatra, pork belly salami ham hock meatball. Tenderloin meatloaf doner alcatra, beef ribs ribeye andouille shankle biltong. Salami ham pork loin cow t-bone prosciutto beef alcatra rump. Jowl cupim pancetta corned beef.";
-
-  // Repeat the text to achieve the desired length
-  const repeatedBaconIpsum = baconIpsum.repeat(Math.ceil(length / baconIpsum.length)).substr(0, length);
-
-  return repeatedBaconIpsum;
-}
-
   // Extract text from pdf.
   useEffect(() => {
     const fetchPdfText = async () => {
@@ -91,17 +84,12 @@ const generateLoremIpsum = (length) => {
 
   const selectLanguage = async (lang) => {
     setLanguage(lang);
-    console.log("Using language " + lang);
     setIsAPILoading(true);  // To disable start button.
 
     try {
-      const response = await languageTool(
-        lang,
-        extractedText
-      );
+      const response = await languageTool(lang, extractedText);
 
-      // TO DO: CHECK IF SELECTED LANGUAGE WAS DETECTED LANGUAGE.
-
+      setDetectedLanguage(response.language.detectedLanguage);
       setDataMatches(filterData(response, user?.name));
       setIsAPILoading(false); // Enable start button after API call is done.
 
@@ -118,6 +106,7 @@ const generateLoremIpsum = (length) => {
     setOutroScreen(false);
     setCurrentMistakeIndex(-1);
     setMaxSuggestions(6);
+    setClickedOther(false);
   }
 
   const handleCloseModal = () => {
@@ -228,18 +217,52 @@ const generateLoremIpsum = (length) => {
                 </div>
 
                 {/* Language selection. */}
-                {/* More could be added. 76 languages supported by API. */}
-                <div className="flex justify-center space-x-5 mt-4 pb-4">
-                  <button onClick={() => selectLanguage('en-US')} className={buttonClass}>
+                <div className="flex justify-center space-x-5 mt-4">
+                  <button className={(language === 'en-US') ? selectedButtonClass : buttonClass}
+                    onClick={() => {
+                      selectLanguage('en-US');
+                      setClickedOther(false);
+                    }}
+                  >
                     English (US) <span className="fi fi-us"></span>
                   </button>
-                  <button onClick={() => selectLanguage('en-GB')} className={buttonClass}>
+                  <button className={(language === 'en-UK') ? selectedButtonClass : buttonClass}
+                    onClick={() => {
+                      selectLanguage('en-GB');
+                      setClickedOther(false);
+                    }}
+                  >
                     English (UK) <span className="fi fi-gb"></span>
                   </button>
-                  <button onClick={() => selectLanguage('nl-NL')} className={buttonClass}>
+                  <button className={language.includes('nl') ? selectedButtonClass : buttonClass}
+                    onClick={() => {
+                      selectLanguage('nl-NL');
+                      setClickedOther(false);
+                    }}
+                  >
                     Dutch (NL) <span className="fi fi-nl"></span>
                   </button>
+
+                  <button className={ buttonClass }
+                    onClick={() => {
+                      selectLanguage('en');
+                      setClickedOther(true);
+                    }}
+                  >
+                    Other
+                  </button>
+
                 </div>
+                {language && !clickedOther && (
+                  <div className="flex justify-center">
+                    <p>Selected language: {language}</p>
+                  </div>
+                )}
+                {clickedOther && (
+                  <div className="flex justify-center">
+                    <p>Select detected language</p>
+                  </div>
+                ) }
 
                 {isAPILoading && (
                   <div className="text-center pt-6 pb-3">
@@ -254,15 +277,28 @@ const generateLoremIpsum = (length) => {
                 {/* Show begin button only when language is selected. */}
                 {language && !isAPILoading && (
                   <div className="flex justify-between pt-6">
-                    <p>Selected language: {language}</p>
-                    <button className={buttonClass}
-                      onClick={() => {
-                        setIntroScreen(false);
-                        setCurrentMistakeIndex(0);
+                    {language !== detectedLanguage.code && (
+                      <button onClick={() => {
+                        selectLanguage(detectedLanguage.code);
+                        setClickedOther(false);
                       }}
-                    >
-                      Begin
-                    </button>
+                        className={buttonClass}
+                      >
+                        Use detected language: {detectedLanguage.name}
+                      </button>
+                    )}
+                    {language === detectedLanguage.code && (<div className="flex1"/ >)}
+
+                    {!clickedOther && (
+                      <button className={buttonClass}
+                        onClick={() => {
+                          setIntroScreen(false);
+                          setCurrentMistakeIndex(0);
+                        }}
+                      >
+                        Begin
+                      </button>
+                    )}
                   </div>
                 )}
               </>
@@ -295,7 +331,7 @@ const generateLoremIpsum = (length) => {
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={() => { }}
+                        onChooseProfilePicture={null}
                       />
                     </div>
                   </div>
@@ -483,7 +519,7 @@ const generateLoremIpsum = (length) => {
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={() => { }}
+                        onChooseProfilePicture={null}
                       />
                     </div>
                   </div>
