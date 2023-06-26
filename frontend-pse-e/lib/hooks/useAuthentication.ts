@@ -16,13 +16,15 @@ function useAuthentication() {
   // Log in user with the provided code
   const login = async (code: string) => {
     try {
+      console.log(code)
       const response: AxiosResponse<TokenResponse> = await axios.post<TokenResponse>(`${config.baseUrl}/auth/get-user-token`, { code: code });
+      console.log(response)
       const user = await axios.get(`${config.baseUrl}/user/get-user`, { headers: { bearer: response.data.access_token } });
 
       if (!user.data.userId) {
         await axios.post(`${config.baseUrl}/user/save`, { badges: [] }, { headers: { bearer: response.data.access_token } });
       }
-
+      console.log(response.data.access_token);
       setCookie("pse-token", response.data.access_token)
       setToken(response.data.access_token)
       onSuccess("Authentication successful")
