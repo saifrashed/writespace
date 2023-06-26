@@ -185,6 +185,54 @@
 						"url": "localhost:5000/assignment/written-assignments"
 					},
 					"response": []
+				},
+				{
+					"name": "Get all assignments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1810Pjo5ZHQtz8/6kBijKh4TMQZwRcPOLzAuw8K3OoBBtXZRtqTkZ2mLwOtP6sUPtG19sLHn4Qyxx8ARsg+6ukcaAf0BYQOAYQo8Avgh/V9EQ5TEnS8Kpuv",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 78230,\r\n    \"isTeacher\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/assignment/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+lDnQIF0Zex5RLlKN61ymQMeBWAB6Jm31G9X5NBYHazppdRF/oKD5ZQvF9jGlyqGOvqHQiepTPQAxnQKn2DlD6njUtQlk9lcv2zDUZeDjLQsbiCt8y2s5g",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 78230,\r\n    \"assignment\": {\r\n        \"name\": \"Submission test\",\r\n        \"description\": \"test\",\r\n        \"points_possible\": 10,\r\n        \"grading_type\": \"points\",\r\n        \"omit_from_final_grade\": true,\r\n        \"anonymous_grading\": false,\r\n        \"allowed_attempts\": -1,\r\n        \"due_at\": \"2023-05-18T14:12:00.000Z\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/assignment/create"
+					},
+					"response": []
 				}
 			]
 		},
@@ -278,7 +326,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"value": "U2FsdGVkX186V1fjP/Qd1cmqDhPBLzfQj4DYeZZ429461BOGs0Hyu8kGz73xCWBm0QqMCGKAfHzCgmcRneHWgHqCOzKj+b+G23DekVchdeQRnjM+3bsxOnaQynKMILEw",
 								"type": "text"
 							}
 						],
@@ -286,13 +334,13 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "userId",
-									"value": "4",
+									"key": "courseId",
+									"value": "78230",
 									"type": "text"
 								},
 								{
 									"key": "assignmentId",
-									"value": "15",
+									"value": "6204",
 									"type": "text"
 								},
 								{
@@ -313,20 +361,20 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX18AJi5IKYLTnIdfTTNm1dYbBTzcRZTkiaDpeVFNfWRMLbf9Ouqj+UcQxZAnSyF4BM+01N+GJZesnwlOven3OK5UHuZvbKkWqmsu7QBbc6rW6nNtsWoTbDec",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15,\r\n    \"newGrade\": 90\r\n}",
+							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15,\r\n    \"grade\": 9,\r\n    \"courseId\": 78230\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:5000/submission/update/grade/"
+						"url": "localhost:5000/submission/grade/"
 					},
 					"response": []
 				},
@@ -387,7 +435,7 @@
 					"response": []
 				},
 				{
-					"name": "New Request",
+					"name": "Get a submission",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -407,6 +455,14 @@
 							}
 						},
 						"url": "http://localhost:5000/submission/get-submission/"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
@@ -1176,7 +1232,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX18AJi5IKYLTnIdfTTNm1dYbBTzcRZTkiaDpeVFNfWRMLbf9Ouqj+UcQxZAnSyF4BM+01N+GJZesnwlOven3OK5UHuZvbKkWqmsu7QBbc6rW6nNtsWoTbDec",
 								"type": "text"
 							}
 						],

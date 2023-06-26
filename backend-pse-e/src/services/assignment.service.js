@@ -119,7 +119,7 @@ router.post('/get-one', auth, async (req, res) => {
 
 router.post('/get-all', auth, async (req, res) => {
     try {
-        const { courseId } = req.body;
+        const { courseId, isTeacher } = req.body;
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
             headers: {
@@ -143,32 +143,34 @@ router.post('/get-all', auth, async (req, res) => {
             response.data = filteredAssignments;
         }
 
-        // Retrieve all submissions of the user for this course
-        const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
-            headers: {
-                Authorization: `Bearer ${req.headers["bearer"]}`
-            },
-            params: {
-                // Only select the submissions for the current user 
-                // automatically selects submissions for the course with courseId only
-                "student_ids[]": [res.locals.userId],
-                per_page: 200
-            }
-        });
-        // Map the submission objects to only the assignment ids that are submitted
-        const submittedAssignmentIds = userSubmissionsRes.data
-            .filter(submission => submission.workflow_state === 'submitted')
-            .map(submission => submission.assignment_id);
-
-        // Add the "has_submitted" attribute and set it to true or false
-        response.data.forEach(assignment => {
-            // If the user has submitted something for the assignment, set it to true
-            if (submittedAssignmentIds.includes(assignment.id)) {
-                assignment.has_submitted = true;
-            } else {
-                assignment.has_submitted = false;
-            }
-        });
+        // Retrieve all submissions of the user for this course if it is NOT a teacher
+        if (isTeacher) {
+            const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
+                headers: {
+                    Authorization: `Bearer ${req.headers["bearer"]}`
+                },
+                params: {
+                    // Only select the submissions for the current user 
+                    // automatically selects submissions for the course with courseId only
+                    "student_ids[]": [res.locals.userId],
+                    per_page: 200
+                }
+            });
+            // Map the submission objects to only the assignment ids that are submitted
+            const submittedAssignmentIds = userSubmissionsRes.data
+                .filter(submission => submission.workflow_state === 'submitted')
+                .map(submission => submission.assignment_id);
+    
+            // Add the "has_submitted" attribute and set it to true or false
+            response.data.forEach(assignment => {
+                // If the user has submitted something for the assignment, set it to true
+                if (submittedAssignmentIds.includes(assignment.id)) {
+                    assignment.has_submitted = true;
+                } else {
+                    assignment.has_submitted = false;
+                }
+            });
+        }
         
         // Send back the edited response data with "has_submitted" attribute
         res.json(response.data);
