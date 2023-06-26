@@ -19,7 +19,6 @@ function useQuiz(token = '') {
   const getQuizzes = async () => {
     try {
       const response = await axios.get(`${config.baseUrl}/quiz/get-all`, { headers: { bearer: token } });
-      console.log(response.data);
       setQuizzes(response.data);
     } catch (error) {
       console.log(error);

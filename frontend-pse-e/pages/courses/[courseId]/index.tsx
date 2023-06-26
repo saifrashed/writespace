@@ -12,22 +12,22 @@ import NavBar from "@/components/NavBar";
 import { formatDate } from "@/lib/date";
 
 
+
 /**
-
-The courses page component.
-@component
-@returns {JSX.Element} The rendered courses page.
-*/
-
+ * The course page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered course page.
+ */
 const CourseOverview = () => {
   const router = useRouter();
   const { courseId } = router.query;
   const { token } = useAuthentication();
   const { setCourse } = useContext(Context);
   const { setAssignment } = useContext(Context);
-  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), token);
   const { course: contextCourse } = useContext(Context); // When pressing a course
   const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
+  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), role, token);
 
   const course = contextCourse || fetchedCourse;
 
@@ -35,10 +35,10 @@ const CourseOverview = () => {
     if (!contextCourse && courseId && token) {
       getCourse(courseId.toString(), token);
       getEnrollment(courseId.toString(), token)
-      getAssignments(courseId.toString(), token);
+      getAssignments(courseId.toString(), ((role === 'teacher' || role === 'designer')), token);
     }
-  }, [router.query]);
-
+  }, [router.query]);  
+ 
   const calculateSubmittedPercentage = () => {
     if (assignments?.length > 0) {
       const submittedCount = assignments.filter((assignment) => assignment.has_submitted_submissions).length;
@@ -88,7 +88,7 @@ const CourseOverview = () => {
               className="mb-2 text-sm text-center text-white opacity-60">
               {course?.course_code || "Course Code"}
             </span>
-            {role === 'teacher' ? (
+            {(role === 'teacher' || role === 'designer') ? (
               <Link href={`/courses/${course?.id}/create-assignment`} key={course?.id} onClick={() => handleSetCourse(course, course?.course_color)}>
                 <button type="button" className="text-white bg-blue-500 hover:bg-blue-600 focus:outline-none font-medium rounded-2xl text-sm px-2.5 py-2.5 text-center inline-flex items-center">
                   <svg className="h-5 w-5 me-1" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -114,7 +114,7 @@ const CourseOverview = () => {
                 <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   Due At
                 </th>
-                {role === 'teacher' && (
+                {(role === 'teacher' || role === 'designer') && (
                   <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   </th>
                 )}
@@ -126,14 +126,14 @@ const CourseOverview = () => {
                   <tr key={assignment?.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <motion.th layoutId={assignment?.name} scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                       <Link
-                        href={`/courses/${courseId}/assignment/${assignment.id}${(role === 'teacher' ? "/students" : "")}`}
+                        href={`/courses/${courseId}/assignment/${assignment.id}${((role === 'teacher' || role === 'designer') ? "/students" : "")}`}
                         onClick={() => handleSetAssignment(assignment)}
                       >{assignment.name}</Link>
                     </motion.th>
                     <motion.td layoutId={assignment?.due_at?.toString()} className="px-6 py-4 whitespace-nowrap">
                       {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
-                    </motion.td>
-                    {role === 'teacher' && (
+                    </motion.td> 
+                    {(role === 'teacher' || role === 'designer') && (
                       <td className="flex items-center justify-end px-3 py-2 space-x-3">
                         <Link
                           href={`/courses/${courseId}/assignment/${assignment.id}/edit-assignment`}
