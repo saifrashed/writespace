@@ -26,7 +26,9 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const [dataMatches, setDataMatches] = useState(null);
   const [isAPILoading, setIsAPILoading] = useState(false);
   let [usedReplacements, setUsedReplacements] = useState([]);
-  const [isBadgePresent, setIsBadgePresent] = useState(false);
+  const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
+  const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
+
 
   const router = useRouter()
   const {courseId, assignmentId} = router.query;
@@ -45,7 +47,11 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
         badge.assignmentId === parseInt(assignmentId)
       )
     );
-    setIsBadgePresent(presence);
+    if (badgeId === beeBadgeId) {
+      setIsBeeBadgePresent(presence);
+    } else {
+      setIsSpellBadgePresent(presence);
+    }
     return presence;
   }
 
@@ -248,7 +254,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       />
                     </div>
                   </div>
-                  {(!isBadgePresent) && (
+                  {(!isBeeBadgePresent) && (
                     <p>
                       We are thrilled to award you with a special badge to commemorate your
                       exceptional achievement. This badge signifies your mastery of spelling and
@@ -260,7 +266,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       well-deserved badge!
                     </p>
                   )}
-                  {(isBadgePresent) && (
+                  {(isBeeBadgePresent) && (
                     <p>
                       Even though you have already been awarded a badge for this
                       assignment, we encourage you to maintain your high standards and continue
@@ -415,37 +421,50 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     improving your spelling and grammar skills. Through careful analysis and
                     consideration of the suggested revisions, you have actively engaged in the
                     process of enhancing your writing abilities.
+                  </p>
 
-                    <div className="flex justify-center pt-4">
-                      <div style={{
-                        height: '300px', position: 'relative',
-                        top: '-10px', left: '-130px',
-                      }}>
-                        <ScaledBadge
-                          resizeFactor={0.8}
-                          pictureUrl={`/badges/${spellBadgeId}.png`}
-                          title={"Spellmaster"}
-                          description={"Awarded to students who show exemplary initiative and " +
-                                       "interest in their own improvement by completing the " +
-                                       "spelling revision quiz."}
-                          commentary={'no comment'}
-                          xp={String("200")}
-                          unlocked={true}
-                          onChooseProfilePicture={ () => {} }
-                        />
-                      </div>
+                  <div className="flex justify-center pt-4">
+                    <div style={{
+                      height: '300px', position: 'relative',
+                      top: '-10px', left: '-130px',
+                    }}>
+                      <ScaledBadge
+                        resizeFactor={0.8}
+                        pictureUrl={`/badges/${spellBadgeId}.png`}
+                        title={"Spellmaster"}
+                        description={"Awarded to students who show exemplary initiative and " +
+                                      "interest in their own improvement by completing the " +
+                                      "spelling revision quiz."}
+                        commentary={'no comment'}
+                        xp={String("200")}
+                        unlocked={true}
+                        onChooseProfilePicture={ () => {} }
+                      />
                     </div>
-
+                  </div>
+                  {(!isSpellBadgePresent) && (
+                    <p>
+                      We are thrilled to award you with a special badge that signifies your
+                      dedication to improving your writing. You can proudly display this badge on
+                      your profile page, to showcase your commitment to self-improvement.
+                    </p>
+                  )}
+                  {(isSpellBadgePresent) && (
+                    <p>
+                      Even though you have already been awarded this badge for this assignment, we
+                      encourage you to maintain your high standards and continue revising your
+                      work, as it plays a vital role in enhancing your writing abilities.
+                    </p>
+                  )}
+                  <p>
+                    <br/>
                     We hope that this quiz has provided you with valuable insights into common
                     spelling errors and equipped you with the knowledge to make more accurate and
                     confident choices in your writing.
                     <br/><br/>
                     Remember, learning is a continuous journey, and refining your skills takes
                     practice and perseverance. Take the lessons you've learned here and apply them
-                    to your future writing endeavors.
-                    <br/><br/>
-                    With this award we applaud your commitment to self-improvement and congratulate
-                    you on your achievement. Keep up the great work!
+                    to your future writing endeavors. Keep up the great work!
                   </p>
                 </div>
 
