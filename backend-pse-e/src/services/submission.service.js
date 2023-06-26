@@ -179,10 +179,8 @@ router.put('/grade/', auth, async (req, res) => {
                 'userId': userId
             },
             {
-                $push: {
-                    fileNotes: { $each: notes }
-                },
                 $set: {
+                    fileNotes: notes,
                     grade: grade,
                     status: status
                 }
