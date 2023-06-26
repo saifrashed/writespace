@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import useQuiz from '@/lib/hooks/useQuiz';
 import useQuizScore from '@/lib/hooks/useQuizScore';
 import useAuthentication from "@/lib/hooks/useAuthentication";
+import PopConfetti from './popConfetti';
 
 const Questions = ({quizId, questions, userScores}) => {
   const { token } = useAuthentication();
@@ -20,8 +21,6 @@ const Questions = ({quizId, questions, userScores}) => {
   const { question, choices, correctAnswer } = questions[activeQuestion];
   const {getOneScore, saveQuizScore} = useQuizScore(token);
 
-
-
   const handleAnswers = () => {
     const answer = {
       question: question,
@@ -35,10 +34,12 @@ const Questions = ({quizId, questions, userScores}) => {
   const getHighScore = () => {
     const userScore = userScores.some((quiz) => quiz.quizId === Number(quizId))
     if (userScore.highScore === undefined) {
-      return <p>{'New highscore: ' + String(result.correctAnswers)}</p>
+      console.log("no highscore yet")
+      return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
     }
     else if (result.correctAnswers > userScore.highScore) {
-      return <p>{'New highscore: ' + String(result.correctAnswers)}</p>
+      console.log("new highscore")
+      return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
     }
     return <p>{'Highscore: ' + String(userScore.highScore)}</p>
   }
@@ -109,7 +110,7 @@ const Questions = ({quizId, questions, userScores}) => {
             {choices.map((answer, index) => (
               <div
                 key={answer}
-                className={(selectedAnswerIndex === index ? 'text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer transition-all bg-pink-200' : 'text-base transition-all border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer')}
+                className={(selectedAnswerIndex === index ? 'text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer transition-all bg-blue-200' : 'text-base transition-all border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer')}
                 style={{ cursor: 'pointer' }}
                 onClick={() => onAnswerSelected(answer, index)}
               >
