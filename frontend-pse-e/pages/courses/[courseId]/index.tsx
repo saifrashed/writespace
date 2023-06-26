@@ -5,27 +5,30 @@ import useCourse from "@/lib/hooks/useCourse";
 import Link from "next/link";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { motion } from "framer-motion";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import { Context } from '@/Context';
-import { Assignment, Course, Enrollment } from "@/lib/types";
+import { Assignment, Course } from "@/lib/types";
 import NavBar from "@/components/NavBar";
 import { formatDate } from "@/lib/date";
-import useAssignment from "@/lib/hooks/useAssignment";
 
+
+
+/**
+ * The course page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered course page.
+ */
 const CourseOverview = () => {
   const router = useRouter();
-
   const { courseId } = router.query;
   const { token } = useAuthentication();
   const { setCourse } = useContext(Context);
   const { setAssignment } = useContext(Context);
-
   const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), token);
-
-  // const { deleteAssignment } = useAssignment()
-
   const { course: contextCourse } = useContext(Context); // When pressing a course
   const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
+
   const course = contextCourse || fetchedCourse;
 
   useEffect(() => {
@@ -54,12 +57,12 @@ const CourseOverview = () => {
     setAssignment(assignment);
   };
 
-  const handleDeleteAssignment = async (assignmentId: number) => {
-    if (courseId && token) {
-      // deleteAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
-      getAssignments(parseInt(courseId.toString()), token)
-    }
-  };
+  // const handleDeleteAssignment = async (assignmentId: number) => {
+  //   if (courseId && token) {
+  //     // deleteAssignment(parseInt(courseId.toString()), parseInt(assignmentId.toString()), token)
+  //     getAssignments(parseInt(courseId.toString()), token)
+  //   }
+  // };
 
   return (
     <>

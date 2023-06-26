@@ -9,15 +9,19 @@ import { motion } from "framer-motion";
 import useSubmission from "@/lib/hooks/useSubmission";
 import Link from "next/link";
 
-
-const Assignments = () => {
+/**
+ * The students page component for teachers.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered courses page.
+ */
+const Students = () => {
     const router = useRouter();
     // Accessing query parameters from the router object
     const { assignmentId, courseId } = router.query;
     const { token } = useAuthentication();
     const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
     const { submission, submissions } = useSubmission(token, assignmentId?.toString())
-
 
 
     return (
@@ -36,9 +40,16 @@ const Assignments = () => {
                     <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
 
                     <motion.div layoutId={assignment?.due_at?.toString()}>
-                        <p className="mt-8 text-gray-600">
+                        <p className="mt-8 mb-8 text-gray-600">
                             <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
                     </motion.div>
+
+                    <Link href={`/courses/${courseId}/assignment/${assignmentId}`}
+                        className="text-white bg-yellow-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-2.5 text-center"
+                    >
+                        <i className="fa-solid fa-eye me-2"></i>
+                        Student view
+                    </Link>
                 </div>
 
                 <div className="max-w-5xl mx-auto">
@@ -50,7 +61,7 @@ const Assignments = () => {
                                         Name
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                        Submission Status
+                                        Submission Date
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
                                         Grade Status
@@ -65,12 +76,14 @@ const Assignments = () => {
                                     >
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
-                                                {submission.userId}
+                                                {submission.userName ? submission.userName : "Anonymous"}
                                             </Link>
                                         </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
+                                        <td className="px-6 py-4 whitespace-nowrap font-bold">
+                                            {formatDate(submission.date)}
                                         </td>
                                         <td className="px-6 py-4 whitespace-nowrap">
+                                            {submission.status}
                                         </td>
                                     </tr>
                                 ))}
@@ -83,4 +96,4 @@ const Assignments = () => {
     );
 };
 
-export default Assignments;
+export default Students;

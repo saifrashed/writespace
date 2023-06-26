@@ -5,8 +5,15 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import { useNotification } from "@/lib/hooks/useNotification";
+import useUser from "@/lib/hooks/useUser";
+import { useRouter } from "next/router";
 
-const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
+
+const UploadPopup = ({ showPopup, togglePopup }) => {
+    const router = useRouter();
+
+    const { courseId, assignmentId } = router.query;
+
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
     const [uploadedFile, setUploadedFile] = useState(null);
     const [isConfirmed, setIsConfirmed] = useState(false)
@@ -14,6 +21,8 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
     const { saveSubmission } = useSubmission()
     const { token } = useAuthentication()
     const { onError } = useNotification()
+    const { addUserBadges } = useUser(token)
+    const { onSuccess } = useNotification()
 
     // Security measure: Remove shady characters from file name.
     const sanitizeString = (string) => {
@@ -78,7 +87,9 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
             return;
         }
 
-        saveSubmission(token, assignmentId, uploadedFile.file)
+        addUserBadges([13], courseId, assignmentId, "", "", token)
+        onSuccess("Congratulations you have received a badge! View your profile to see it.")
+        saveSubmission(token, assignmentId, courseId, uploadedFile.file)
         setFileUploadSuccess(true);
     }
 

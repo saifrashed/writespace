@@ -21,6 +21,7 @@ multer({ storage: storage });
 // ************************* Copy and change this with the model you added *************************
 // Import models for this service (../ goes up one directory)
 const userModel = require("../models/user.model.js");
+const badgeModel = require("../models/badge.model.js");
 // ************************* Copy and change this with the model you added *************************
 
 // ************************* Requests for this service (examples below) *************************
@@ -63,7 +64,7 @@ router.post("/badges/assignment/", auth, async (req, res) => {
         const user = await userModel.findOne({ 'userId': userId });
         const badges = user.badges;
 
-        const assignmentBadges = badges.filter(badge => badge.assignmentId === assignmentId);
+        const assignmentBadges = badges.filter(badge => badge.assignmentId == assignmentId);
 
         res.status(200).json(assignmentBadges);
     } catch (error) {
@@ -181,9 +182,16 @@ router.put('/update/add-badges/', auth, async (req, res) => {
         const { badges, courseId, assignmentId, comment } = req.body;
 
         let preparedBadges = [];
+        // let totalPoints = 0;
 
         for (let i = 0; i < badges.length; i++) {
             const badgeId = badges[i];
+            // // Find the object using an attribute of the object
+            // const badgeFound = await badgeModel.find({ 'badgeId': badgeId });
+
+            // totalPoints = totalPoints + badgeFound.experiencePoints
+            // console.log(totalPoints)
+
             const badge = {
                 badgeId: badgeId,
                 courseId: courseId,
@@ -194,6 +202,8 @@ router.put('/update/add-badges/', auth, async (req, res) => {
             preparedBadges.push(badge);
         }
 
+
+
         const updatedUser = await userModel.findOneAndUpdate(
             {
                 'userId': userId,
@@ -201,7 +211,8 @@ router.put('/update/add-badges/', auth, async (req, res) => {
             {
                 $push: {
                     'badges': preparedBadges
-                }
+                },
+                $inc: { 'experiencePoints': 1000 }
             },
             { new: true }
         );
