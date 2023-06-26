@@ -25,9 +25,9 @@ const CourseOverview = () => {
   const { token } = useAuthentication();
   const { setCourse } = useContext(Context);
   const { setAssignment } = useContext(Context);
-  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), token);
   const { course: contextCourse } = useContext(Context); // When pressing a course
   const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
+  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), role, token);
 
   const course = contextCourse || fetchedCourse;
 
@@ -35,7 +35,7 @@ const CourseOverview = () => {
     if (!contextCourse && courseId && token) {
       getCourse(courseId.toString(), token);
       getEnrollment(courseId.toString(), token)
-      getAssignments(courseId.toString(), token);
+      getAssignments(courseId.toString(), (role === 'teacher'), token);
     }
   }, [router.query]);
 

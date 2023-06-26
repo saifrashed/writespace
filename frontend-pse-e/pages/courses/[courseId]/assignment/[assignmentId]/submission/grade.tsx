@@ -9,6 +9,8 @@ import useSubmission from '@/lib/hooks/useSubmission';
 import useAuthentication from '@/lib/hooks/useAuthentication';
 import useUser from '@/lib/hooks/useUser';
 import useBadges from '@/lib/hooks/useBadges';
+import useAssignment from '@/lib/hooks/useAssignment';
+import { useNotification } from '@/lib/hooks/useNotification';
 
 import {
     highlightPlugin,
@@ -34,6 +36,7 @@ const Grade: React.FC = () => {
     const router = useRouter();
     const { courseId, assignmentId, user } = router.query;
     const { token } = useAuthentication()
+    const { onWarning } = useNotification();
     const [message, setMessage] = React.useState('');
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [grade, setGrade] = React.useState<number>(0);
@@ -44,6 +47,8 @@ const Grade: React.FC = () => {
     const [badgeClicked, setBadgeClicked] = React.useState<boolean[]>([]);
     const [assignedBadges, setAssignedBadges] = React.useState<number[]>([]);
     const { updateUserExperiencePoints } = useUser(token)
+    const { assignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
+
     const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token, assignmentId?.toString(), user?.toString())
     const { addUserBadges } = useUser(token)
     const { badges } = useBadges(token)
@@ -246,7 +251,7 @@ const Grade: React.FC = () => {
                             <div className='inline-block'>
                                 <div className="flex items-center gap-1">
                                     <button
-                                        onClick={() => { setGrade(grade - 1) }}
+                                        onClick={() => { grade != 0 ? setGrade(grade - 1) : onWarning("Minimum points reached") }}
 
                                         type="button"
                                         className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
@@ -257,13 +262,22 @@ const Grade: React.FC = () => {
                                     <input
                                         type="number"
                                         value={grade}
-                                        max={10}
+                                        max={assignment?.points_possible}
                                         readOnly
                                         className="h-10 w-16 rounded border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
                                     />
 
+                                    /
+
+                                    <input
+                                        type="number"
+                                        value={assignment?.points_possible}
+                                        readOnly
+                                        className="h-10 w-16 rounded border-gray-200  text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+
                                     <button
-                                        onClick={() => { setGrade(grade + 1) }}
+                                        onClick={() => { assignment?.points_possible && (grade < assignment?.points_possible ? setGrade(grade + 1) : onWarning("Maximum points reached")) }}
                                         type="button"
                                         className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
                                     >
