@@ -247,6 +247,7 @@ export interface Note {
     content: string;
     highlightAreas: HighlightArea[];
     quote: string;
+    author: string;
 }
 
 
