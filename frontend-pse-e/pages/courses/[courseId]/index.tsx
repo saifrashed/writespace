@@ -35,7 +35,7 @@ const CourseOverview = () => {
     if (!contextCourse && courseId && token) {
       getCourse(courseId.toString(), token);
       getEnrollment(courseId.toString(), token)
-      getAssignments(courseId.toString(), (role === "teacher"), token);
+      getAssignments(courseId.toString(), token);
     }
   }, [router.query]);
 

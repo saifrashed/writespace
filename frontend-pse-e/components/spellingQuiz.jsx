@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import convertPdfToText from "@/lib/pdfToText";
 import { useNotification } from "@/lib/hooks/useNotification";
-import languageTool from "@/lib/hooks/languageTool";
+import languageTool from "@/lib/languageTool";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import useUser from "@/lib/hooks/useUser";
 import useAuthentication from "@/lib/hooks/useAuthentication";
-import {useRouter} from 'next/router';
+import { useRouter } from 'next/router';
 import ScaledBadge from '@/components/badge-template/Badge';
 import { filterData, filterText } from '@/lib/filterUtils';
 
@@ -14,13 +14,13 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   if (!showPopup) { return null; }
 
   const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
-                      "text-gray-800 text-lg font-medium rounded-full";
+    "text-gray-800 text-lg font-medium rounded-full";
 
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
   const [outroScreen, setOutroScreen] = useState(false);
   const [language, setLanguage] = useState("");
-  const {onSuccess, onError } = useNotification();
+  const { onSuccess, onError } = useNotification();
   const [currentMistakeIndex, setCurrentMistakeIndex] = useState(-1);
   const [maxSuggestions, setMaxSuggestions] = useState(6);
   const [dataMatches, setDataMatches] = useState(null);
@@ -31,9 +31,9 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
 
   const router = useRouter()
-  const {courseId, assignmentId} = router.query;
-  const {token} = useAuthentication()
-  const {user, addUserBadges} = useUser(token)
+  const { courseId, assignmentId } = router.query;
+  const { token } = useAuthentication()
+  const { user, addUserBadges } = useUser(token)
   const beeBadgeId = 2;
   const spellBadgeId = 14;
 
@@ -146,7 +146,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex
                       items-center">
               <svg aria-hidden="true" className="w-5 h-5" fill="currentColor"
-                   viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                 <path
                   fillRule="evenodd"
                   d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414
@@ -171,13 +171,13 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     accurate. There might also be some inaccuracies caused by extracting the text
                     from your assignment. Especially mathematical formulas can cause inaccuracies
                     in this.
-                    <br/><br/>
+                    <br /><br />
                     Engage actively with the quiz, use its suggestions to see if they fit,
                     and discuss any disagreements with your peers. Collaboration and critical
                     thinking are key to refining your writing abilities.
-                    <br/><br/>
+                    <br /><br />
                     Let's enhance your spelling skills together!
-                    <br/><br/>
+                    <br /><br />
                     <b>To start, select the language in which you've written your assignment:</b>
                   </p>
                 </div>
@@ -199,8 +199,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 {isAPILoading && (
                   <div className="text-center pt-6 pb-3">
                     <p>
-                      Please wait while the API request is being processed. <br/>
-                      If the loading persists, please try selecting your language again. <br/>
+                      Please wait while the API request is being processed. <br />
+                      If the loading persists, please try selecting your language again. <br />
                       If the API call fails, you may have selected the wrong language.
                     </p>
                   </div>
@@ -226,7 +226,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
             {/* No spelling mistakes detected. */}
             {!introScreen && dataMatches.length === 0 && (
               <div>
-                <BackButton/>
+                <BackButton />
                 <div className="pt-4">
                   <h1 className="text-center text-lg font-semibold pt-4 pb-4">
                     No spelling mistakes detected.
@@ -250,7 +250,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={ () => {} }
+                        onChooseProfilePicture={() => { }}
                       />
                     </div>
                   </div>
@@ -261,7 +261,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       serves as a testament to your dedication to excellence in writing. You can
                       proudly display this badge on your profile page, to showcase your
                       accomplishment.
-                      <br/><br/>
+                      <br /><br />
                       Congratulations once again on your remarkable achievement and the
                       well-deserved badge!
                     </p>
@@ -284,134 +284,134 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
             )}
 
             {!introScreen && !outroScreen && dataMatches.length > 0 &&
-             currentMistakeIndex < dataMatches.length && (
-              <div>
-                <BackButton/>
-                <div className="pt-4">
-                  <div>
-                    {/* Progress. */}
-                    <span>{currentMistakeIndex + 1}/{dataMatches.length}</span>
+              currentMistakeIndex < dataMatches.length && (
+                <div>
+                  <BackButton />
+                  <div className="pt-4">
+                    <div>
+                      {/* Progress. */}
+                      <span>{currentMistakeIndex + 1}/{dataMatches.length}</span>
 
-                    {/* Title for the current mistake. */}
-                    <h1 className="text-center text-lg font-semibold">
-                      {dataMatches[currentMistakeIndex].shortMessage || "Possible mistake found"}
-                    </h1>
+                      {/* Title for the current mistake. */}
+                      <h1 className="text-center text-lg font-semibold">
+                        {dataMatches[currentMistakeIndex].shortMessage || "Possible mistake found"}
+                      </h1>
 
-                    {/* The sentence containing the mistake */}
-                    <p>Found in:</p>
-                    <p className="text-center pt-4 pb-4">
-                      <span>
-                        {/* Sentence before the mistake. */}
-                        {dataMatches[currentMistakeIndex].context.text.substring(
-                          0, dataMatches[currentMistakeIndex].context.offset)}
-
-                        {/* Highlight the incorrect word. */}
-                        {usedReplacements[currentMistakeIndex] === undefined && (
-                          <strong className="font-bold bg-orange-300 rounded-md px-2 py-1">
+                      {/* The sentence containing the mistake */}
+                      <p>Found in:</p>
+                      <p className="text-center pt-4 pb-4">
+                        <span>
+                          {/* Sentence before the mistake. */}
                           {dataMatches[currentMistakeIndex].context.text.substring(
-                            dataMatches[currentMistakeIndex].context.offset,
+                            0, dataMatches[currentMistakeIndex].context.offset)}
+
+                          {/* Highlight the incorrect word. */}
+                          {usedReplacements[currentMistakeIndex] === undefined && (
+                            <strong className="font-bold bg-orange-300 rounded-md px-2 py-1">
+                              {dataMatches[currentMistakeIndex].context.text.substring(
+                                dataMatches[currentMistakeIndex].context.offset,
+                                dataMatches[currentMistakeIndex].context.offset +
+                                dataMatches[currentMistakeIndex].context.length
+                              )}
+                            </strong>
+                          )}
+
+                          {/* Replace with suggestion if one is selected. */}
+                          {(usedReplacements[currentMistakeIndex]) && (
+                            <strong className="font-bold bg-green-300 rounded-md px-2 py-1">
+                              {usedReplacements[currentMistakeIndex]}
+                            </strong>
+                          )}
+
+                          {/* Rest of sentence. */}
+                          {dataMatches[currentMistakeIndex].context.text.substring(
                             dataMatches[currentMistakeIndex].context.offset +
                             dataMatches[currentMistakeIndex].context.length
                           )}
-                          </strong>
-                        )}
+                        </span>
+                      </p>
+                      <p><b>Clarification:</b> {dataMatches[currentMistakeIndex].message}</p>
 
-                        {/* Replace with suggestion if one is selected. */}
-                        {(usedReplacements[currentMistakeIndex]) && (
-                          <strong className="font-bold bg-green-300 rounded-md px-2 py-1">
-                            {usedReplacements[currentMistakeIndex]}
-                          </strong>
-                        )}
-
-                        {/* Rest of sentence. */}
-                        {dataMatches[currentMistakeIndex].context.text.substring(
-                          dataMatches[currentMistakeIndex].context.offset +
-                          dataMatches[currentMistakeIndex].context.length
-                        )}
-                      </span>
-                    </p>
-                    <p><b>Clarification:</b> {dataMatches[currentMistakeIndex].message}</p>
-
-                    {/* Suggestions */}
-                    {dataMatches[currentMistakeIndex].replacements
-                      .slice(0, maxSuggestions).length > 0 && (
-                        <>
-                          <br/><p><b>Did you mean:</b></p>
-                          <div className="flex-container flex-wrap space-x-2 justify-start">
-                            {dataMatches[currentMistakeIndex].replacements
-                              .slice(0, maxSuggestions)
-                              .map((replacement, index) => (
-                                <button
-                                  className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white
+                      {/* Suggestions */}
+                      {dataMatches[currentMistakeIndex].replacements
+                        .slice(0, maxSuggestions).length > 0 && (
+                          <>
+                            <br /><p><b>Did you mean:</b></p>
+                            <div className="flex-container flex-wrap space-x-2 justify-start">
+                              {dataMatches[currentMistakeIndex].replacements
+                                .slice(0, maxSuggestions)
+                                .map((replacement, index) => (
+                                  <button
+                                    className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white
                                              transition-all font-bold py-2 px-4 border-b-4
                                              border-fuchsia-500 hover:border-fuchsia-500
                                              rounded-lg items-center mx-2"
-                                  key={index} onClick={() => replace(replacement.value)}
-                                >
-                                  {replacement.value}
-                                </button>
-                              ))
-                            }
-                          </div>
-                        </>
-                      )
-                    }
+                                    key={index} onClick={() => replace(replacement.value)}
+                                  >
+                                    {replacement.value}
+                                  </button>
+                                ))
+                              }
+                            </div>
+                          </>
+                        )
+                      }
 
-                    {/* Show more suggestions. */}
-                    {maxSuggestions < numOfSuggestions(dataMatches) &&
-                      <div className="flex justify-center gap-10 pt-4">
-                        <button
-                          className={buttonClass}
-                          onClick={() => {setMaxSuggestions(maxSuggestions + 15);}}>
-                          Show more suggestions
-                          ({numOfSuggestions(dataMatches) - maxSuggestions} left)
-                        </button>
-                        <button
-                          className={buttonClass}
-                          onClick={() => {setMaxSuggestions(numOfSuggestions(dataMatches));}}>
-                          Show all
-                        </button>
-                      </div>
-                    }
+                      {/* Show more suggestions. */}
+                      {maxSuggestions < numOfSuggestions(dataMatches) &&
+                        <div className="flex justify-center gap-10 pt-4">
+                          <button
+                            className={buttonClass}
+                            onClick={() => { setMaxSuggestions(maxSuggestions + 15); }}>
+                            Show more suggestions
+                            ({numOfSuggestions(dataMatches) - maxSuggestions} left)
+                          </button>
+                          <button
+                            className={buttonClass}
+                            onClick={() => { setMaxSuggestions(numOfSuggestions(dataMatches)); }}>
+                            Show all
+                          </button>
+                        </div>
+                      }
+                    </div>
+                  </div>
+
+                  {/* Next and previous buttons. */}
+                  <div className="flex justify-between pt-6">
+                    <button className={buttonClass}  // 'Previous' Button.
+                      onClick={() => {
+                        if (currentMistakeIndex === 0) { resetValues(); }  // Back to intro screen.
+                        else { setCurrentMistakeIndex((prevIndex) => prevIndex - 1) }
+                        setMaxSuggestions(6);
+                      }}
+                    >
+                      Previous
+                    </button>
+                    <button className={buttonClass}  // 'Next' button.
+                      onClick={() => {
+
+                        if (currentMistakeIndex === dataMatches.length - 1) {
+                          setOutroScreen(true);
+                          handleAddBadge(spellBadgeId);
+                        }
+                        else if (dataMatches.length === 0) {
+                          setOutroScreen(true);
+                          handleAddBadge(beeBadgeId);
+                        }
+
+                        setCurrentMistakeIndex((prevIndex) => prevIndex + 1);
+                        setMaxSuggestions(6);
+                      }}
+                    >
+                      Next
+                    </button>
                   </div>
                 </div>
-
-                {/* Next and previous buttons. */}
-                <div className="flex justify-between pt-6">
-                  <button className={buttonClass}  // 'Previous' Button.
-                    onClick={() =>{
-                      if (currentMistakeIndex === 0) { resetValues(); }  // Back to intro screen.
-                      else {setCurrentMistakeIndex((prevIndex) => prevIndex - 1)}
-                      setMaxSuggestions(6);
-                    }}
-                  >
-                    Previous
-                  </button>
-                  <button className={buttonClass}  // 'Next' button.
-                    onClick={ () => {
-
-                      if (currentMistakeIndex === dataMatches.length - 1) {
-                        setOutroScreen(true);
-                        handleAddBadge(spellBadgeId);
-                      }
-                      else if (dataMatches.length === 0) {
-                        setOutroScreen(true);
-                        handleAddBadge(beeBadgeId);
-                      }
-
-                      setCurrentMistakeIndex((prevIndex) => prevIndex + 1);
-                      setMaxSuggestions(6);
-                    }}
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
-            )}
+              )}
 
             {outroScreen && (
               <div>
-                <BackButton/>
+                <BackButton />
                 <div>
                   <h1 className="text-center text-lg font-semibold pt-4 pb-4">
                     Congratulations on completing the Spelling Revision Quiz!
@@ -433,12 +433,12 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         pictureUrl={`/badges/${spellBadgeId}.png`}
                         title={"Spellmaster"}
                         description={"Awarded to students who show exemplary initiative and " +
-                                      "interest in their own improvement by completing the " +
-                                      "spelling revision quiz."}
+                          "interest in their own improvement by completing the " +
+                          "spelling revision quiz."}
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={ () => {} }
+                        onChooseProfilePicture={() => { }}
                       />
                     </div>
                   </div>
@@ -457,11 +457,11 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     </p>
                   )}
                   <p>
-                    <br/>
+                    <br />
                     We hope that this quiz has provided you with valuable insights into common
                     spelling errors and equipped you with the knowledge to make more accurate and
                     confident choices in your writing.
-                    <br/><br/>
+                    <br /><br />
                     Remember, learning is a continuous journey, and refining your skills takes
                     practice and perseverance. Take the lessons you've learned here and apply them
                     to your future writing endeavors. Keep up the great work!
@@ -471,7 +471,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 {/* Previous and close button. */}
                 <div className="flex justify-between pt-6">
                   <button className={buttonClass}
-                    onClick={ () => {
+                    onClick={() => {
                       setOutroScreen(false);
                       setCurrentMistakeIndex((prevIndex) => prevIndex - 1);
                       setMaxSuggestions(6);
@@ -483,7 +483,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     Close
                   </button>
                 </div>
-            </div>
+              </div>
             )}
           </div>
         </div>
