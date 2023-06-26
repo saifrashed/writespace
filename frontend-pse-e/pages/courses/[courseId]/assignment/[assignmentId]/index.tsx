@@ -20,8 +20,6 @@ const Assignments = () => {
   const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
   const { submission } = useSubmission(token, assignmentId?.toString(), '')
   const { assignmentBadges } = useUser(token, assignmentId?.toString())
-
-
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
@@ -33,40 +31,72 @@ const Assignments = () => {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <NavBar />
 
+      {/* Display the headers: Assignment name, grade and deadline. */}
       <div className="bg-gray-50 min-h-screen py-10 mt-14">
         <div className="max-w-5xl mx-auto px-6">
-          <h1 className="text-3xl font-bold px-5">{assignment?.name}</h1>
+          {assignment?.name ? ( <h1 className="text-3xl font-bold px-5">{assignment.name}</h1> ) :
+          (  <div className="flex items-center justify-center h-8">
+          <div className="h-2 w-2 bg-purple-400 rounded-full animate-bounce mr-1"></div>
+          <div className="h-2 w-2 bg-purple-400 rounded-full animate-bounce mr-1"></div>
+          <div className="h-2 w-2 bg-purple-400 rounded-full animate-bounce mr-1"></div>
+        </div> )}
 
+        {/* Grade and deadline container. */}
+        {/* Grade. */}
           <div className="md:flex items-center justify-between mb-6 px-5">
-
             <p className="mt-8 text-gray-600">
-              <span className="font-bold">Grade: </span> {submission?.grade ? <span> {Number(submission.grade).toFixed(1)} / {assignment?.points_possible} </span> : " Waiting to be graded"}
-
+              <span className="mt-8 text-gray-600 font-bold">Grade: </span>
+              {/* TODO: check on if assignment is loaded and display grade */}
+              {submission?.grade ? (
+                <span>{Number(submission.grade).toFixed(1)} / {assignment?.points_possible}</span>
+              ) : (
+                <span className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-purple-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
+              )}
             </p>
 
-
+             {/* Deadline. */}
             <p className="mt-8 text-gray-600">
-              <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
+              <span className="font-bold">Deadline: </span>
+              {assignment?.due_at ? (
+                <span>{formatDate(assignment?.due_at)}</span>
+              ) : (
+                <span className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-purple-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status" />
+              )}
             </p>
+
           </div>
 
-
+          {/* Container that consists of description and badges containers. */}
           <div className="grid grid-cols-1 gap-0 md:grid-cols-5 ">
+
+            {/* Left container (description). */}
             <div className="col-span-4 p-4">
-              <div className="w-full p-4 bg-white rounded-lg border border-gray-200 ">
+            {assignment ? (
+              <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                 <div className="flex space-x-4">
-                  <div key={assignment?.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment?.description ? assignment?.description : "No description available" }}>
-                  </div>
+                  {assignment.description ? (
+                  <div key={assignment.id} className="text-lg text-gray-800" dangerouslySetInnerHTML={{ __html: assignment.description ? assignment.description : "No description available" }}/>
+                  ) :
+                  <div key={assignment.id} className="text-lg text-gray-400" dangerouslySetInnerHTML={{ __html: assignment.description ? assignment.description : "No description available" }}/>
+                  }
                 </div>
               </div>
+              ) : (
+                <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
+                  <div className="flex space-x-4">
+                    <div className="h-8 w-8 animate-spin animate-pulse rounded-full border-4 border-solid border-transparent border-r-purple-500 align-[-0.125em] text-purple-500 motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status"></div>
+                    <span className="text-lg text-gray-500">Loading...</span>
+                  </div>
+                </div>
+              )}
             </div>
+
+            {/* Right container. */}
             <div className="col-span-1 p-4 ">
               <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                 <div className="flex flex-col">
-
                   <button onClick={() => { setShowPopup(!showPopup) }} className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded-lg flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -87,78 +117,75 @@ const Assignments = () => {
                 </div>
               </div>
 
-              {/* Display badges */}
-              {assignmentBadges && assignmentBadges.length > 0 && (
-                <div className="w-full p-2 bg-white rounded-lg border border-gray-200 my-4">
-                  <div className="text-center my-3">
-                    <p className="text-sm">Received {assignmentBadges.length} badges for this assignment🎉</p>
-                  </div>
-                  <hr className="border-gray-200" />
-                  <div className="flex flex-col items-center justify-between">
-                    <div className="relative mt-2" style={{ marginTop: '1.5rem', overflowX: 'auto' }}>
-                      <div className="flex my-3">
-                        {assignmentBadges.map((badge) => (
-                          <div key={badge.badgeId} className="flex-shrink-0 hover:animate-bounce">
-                            <img className="w-12 h-12" src={`/badges/${badge.badgeId.toString()}.png`} alt={`Badge ${badge.badgeId}`} />
-                          </div>
-                        ))}
+              {/* Display badges. */}
+              {assignmentBadges ? (
+                assignmentBadges.length > 0 ? (
+                  <div className="w-full p-2 bg-white rounded-lg border border-gray-200 my-4">
+                    {/* Display when user has badges. */}
+                    <div className="text-center my-3">
+                      <p className="text-sm">Received {assignmentBadges.length} badges for this assignment🎉</p>
+                    </div>
+                    <hr className="border-gray-200" />
+                    <div className="flex flex-col items-center justify-between">
+                      <div className="relative mt-2" style={{ marginTop: '1.5rem', overflowX: 'auto' }}>
+                        <div className="flex my-3">
+                          {assignmentBadges.map((badge) => (
+                            <div key={badge.badgeId} className="flex-shrink-0 hover:animate-bounce">
+                              <img className="w-12 h-12" src={`/badges/${badge.badgeId.toString()}.png`} alt={`Badge ${badge.badgeId}`} />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex pl-4">
+                        <div className="mr-8 text-gray-400 text-xl"></div>
+                        <div className="ml-14 text-gray-400 text-xl">&rarr;</div>
                       </div>
                     </div>
-                    <div className="flex pl-4">
-                      <div className="mr-8 text-gray-400 text-xl"></div>
-                      <div className="ml-14 text-gray-400 text-xl">&rarr;</div>
-                    </div>
                   </div>
+                ) : (
+                  <div className="w-full p-2 bg-white rounded-lg border border-gray-200 my-4">
+                    {/* Display when the user has zero badges.*/}
+                    <p className="text-center text-gray-400">No badges received for this assignment yet.</p>
+                  </div>
+                )
+              ) : (
+                <div className="flex items-center justify-center w-full h-48">
+                  {/* Load spinner while loading.*/}
+                  <div className="h-8 w-8 animate-spin animate-pulse rounded-full border-4 border-solid border-transparent border-r-purple-500 align-[-0.125em] text-purple-500 motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status"></div>
                 </div>
               )}
 
 
-              <p className="mt-8 text-gray-600">
-                {submission && (
-                  <span className="flex items-center text-green-500">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12"
-                      />
-                    </svg>
-                    <span className="ml-2">Submitted</span>
-                  </span>
-                )}
+              {assignment === undefined ? (
+                <div className="flex items-center text-gray-500">
+                  <div className="h-6 w-6 animate-pulse bg-gray-300 rounded-full mr-2"></div>
+                  <span>Loading...</span>
+                </div>
+              ) : submission ? (
+                <span className="flex items-center text-green-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 019 9v.375M10.125 2.25A3.375 3.375 0 0113.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 013.375 3.375M9 15l2.25 2.25L15 12" />
+                  </svg>
+                  <span className="ml-2">Submitted</span>
+                </span>
+              ) : (
+                <span className="flex items-center text-orange-500">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <span className="ml-2">Not Submitted</span>
+                </span>
+              )}
 
-                {!submission && (
-                  <span className="flex items-center text-orange-500">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span className="ml-2">Not Submitted</span>
-                  </span>
-                )}
-                 </p>
 
+                {submission?.date && (
+                  <div>
                   <span className="font-bold mt-8 text-gray-600">Submission date:</span>
                     <div className="flex flex-col text-gray-600">
-                  <span className="">{submission?.date ? formatDate(submission?.date) : "No due date"}</span>
-                </div>
+                  <span className="">{submission?.date ? formatDate(submission?.date) : ""}</span>
+                  </div>
+                  </div>
+                  )}
 
             </div>
           </div>
