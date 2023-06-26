@@ -119,7 +119,7 @@ router.post('/get-one', auth, async (req, res) => {
 
 router.post('/get-all', auth, async (req, res) => {
     try {
-        const { courseId, isTeacher } = req.body;
+        const { courseId } = req.body;
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
             headers: {
@@ -130,10 +130,13 @@ router.post('/get-all', auth, async (req, res) => {
             }
         });
 
-        // Only select (WriteSpace) assignments, exclude the rest
+        // Only select (WriteSpace) assignments with assignment type "online_url", exclude the rest
         if (response.data && Array.isArray(response.data)) {
-            // Filter assignments that contain " - WriteSpace" in their name
-            const filteredAssignments = response.data.filter(assignment => assignment.name && assignment.name.includes("(WriteSpace)"));
+            // Filter assignments that contain " - WriteSpace" in their name and have "online_url" submission
+            const filteredAssignments = response.data.filter(assignment =>
+                assignment.name && assignment.name.includes("(WriteSpace)")
+                && assignment.submission_types.includes("online_url")
+            );
 
             // Remove " - WriteSpace" suffix from assignment names
             filteredAssignments.forEach(assignment => {
@@ -143,8 +146,19 @@ router.post('/get-all', auth, async (req, res) => {
             response.data = filteredAssignments;
         }
 
-        // Retrieve all submissions of the user for this course if it is NOT a teacher
-        if (isTeacher) {
+        // Get the enrollments of the user in this course
+        let userEnrollmentsRes = await axios.get(`${API_URL}/courses/${courseId}/enrollments`, {
+            headers: {
+              Authorization: `Bearer ${req.headers["bearer"]}`,
+            },
+            params: {
+              user_id: res.locals.userId,
+            },
+        });
+        // Map the response to only having the type of the enrollment
+        userEnrollmentsRes = userEnrollmentsRes.data.map(enrollment => enrollment.type)
+        // Retrieve all submissions of the user for this course if it is NOT a teacher or designer
+        if (!userEnrollmentsRes.includes("TeacherEnrollment" || "DesignerEnrollment")) {
             const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
                 headers: {
                     Authorization: `Bearer ${req.headers["bearer"]}`
