@@ -61,7 +61,7 @@ router.post("/badges/assignment/", auth, async (req, res) => {
         const userId = req.body.userId ? req.body.userId : res.locals.userId;
 
         const user = await userModel.findOne({ 'userId': userId });
-        badges = user.badges;
+        const badges = user.badges;
 
         const assignmentBadges = badges.filter(badge => badge.assignmentId === assignmentId);
 
@@ -171,8 +171,14 @@ router.put('/update/experience-points/', auth, async (req, res) => {
 // Add badge to user. Handles adding of new badges and adding to existing badges
 router.put('/update/add-badges/', auth, async (req, res) => {
     try {
-        const graderId = res.locals.userId;
-        const { badges, courseId, assignmentId, userId, comment } = req.body;
+        // If badge is added by a teacher, there is a userId in the request body.
+        // The userId is then gotten from the body and the graderId is the
+        // local userId of the teacher. If the badge is awarded automatically,
+        // there is no userId in the request body. The userId is gotten from the
+        // local userId and the graderId is null.
+        const graderId = req.body.userId ? res.locals.userId : null
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
+        const { badges, courseId, assignmentId, comment } = req.body;
 
         let preparedBadges = [];
 
