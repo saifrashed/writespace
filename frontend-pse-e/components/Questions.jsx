@@ -18,13 +18,13 @@ const Questions = ({quizId, questions}) => {
   const [quizScores, setQuizScores] = useState([])
 
   const { question, choices, correctAnswer } = questions[activeQuestion];
-  const { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, updateQuizScore } = useQuizScore(token);
+  const { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, userScores} = useQuizScore(token);
 
   const handleAnswers = () => {
     const answer = {
       question: question,
       answered: selAnswer,
-      correctAnswer: choices[correctAnswer],
+      correctAnswer: correctAnswer,
     };
 
     setAnswers(prevAnswers => [...prevAnswers, answer]);
@@ -61,7 +61,7 @@ const Questions = ({quizId, questions}) => {
   const onAnswerSelected = (answer, index) => {
     setSelAnswer(answer)
     setSelectedAnswerIndex(index)
-    if (answer === choices[correctAnswer]) {
+    if (answer === correctAnswer) {
       setSelectedAnswer(true)
     } else {
       setSelectedAnswer(false)

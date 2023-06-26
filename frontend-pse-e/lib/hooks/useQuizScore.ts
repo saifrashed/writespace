@@ -1,10 +1,12 @@
 import axios from "axios";
+import { useState } from 'react';
 import config from "../config";
 import { useNotification } from "./useNotification";
 
 // Custom React hook for managing quiz scores
 function useQuizScore(token: string) {
   const { onError } = useNotification();
+  const [userScores, setUserScores] = useState({});
 
   // Retrieves all quiz scores
   const getAllQuizzesScores = async () => {
@@ -21,7 +23,8 @@ function useQuizScore(token: string) {
   const getAllUserScores = async (token: string) => {
     try {
       const response = await axios.get(`${config.baseUrl}/quiz-score/user/`, { headers: { bearer: token } });
-      return response.data;
+      setUserScores(response.data);
+      // return response.data;
     } catch (error) {
       console.log(error);
       onError("Something went wrong");
@@ -61,7 +64,7 @@ function useQuizScore(token: string) {
     }
   }
 
-  return { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore};
+  return { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, userScores };
 }
 
 export default useQuizScore;

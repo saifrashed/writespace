@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Questions from "./Questions"
 import useQuiz from '@/lib/hooks/useQuiz';
+import useQuizScore from '@/lib/hooks/useQuizScore';
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import useQuizScore from '@/lib/hooks/useQuizScore';
 
@@ -14,10 +15,16 @@ const Quiz = () => {
 
     const { quizzes } = useQuiz(token);
 
+    const { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, userScores } = useQuizScore(token);
+
+    useEffect(() => {
+        getAllUserScores(token);
+        console.log(userScores, "NO PROMISES")
+    }, []);
 
     const isQuizCompleted = (quizKey) => {
         // Hierin moeten de user quizzes.
-        return quizzes.some((quiz) => quiz.quizId === Number(quizKey))
+        return userScores.some((quiz) => quiz.quizId === Number(quizKey))
     }
 
     // For opening popup
@@ -42,6 +49,8 @@ const Quiz = () => {
         setShowButton(false)
         setQuizMenu(true)
     }
+
+
 
     return (
         <div className="relative">
@@ -68,12 +77,12 @@ const Quiz = () => {
                                 <p>Choose a tutorial in which you want to improve.</p>
                                 {Object.entries(quizzes).map(([key, value]) => (
                                     <div className={`text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer`}
-                                        key={value['topic']}
+                                        key={value['quizId']}
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => openQuiz(parseInt(value.quizId))}
                                     >
                                         {value['topic']}
-                                        {isQuizCompleted(key) && (
+                                        {isQuizCompleted(value['quizId']) && (
                                             <span style={{ color: 'green', marginLeft: '10px' }}>✔</span>
                                         )}
                                     </div>
