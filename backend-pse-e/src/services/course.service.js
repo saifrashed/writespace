@@ -85,7 +85,7 @@ router.post('/enrollment', auth, async (req, res) => {
             }
         });
         // Return enrollments information
-        res.json(response.data.enrollments[0]);
+        res.json(response.data.enrollments);
     } catch (error) {
         console.error('Error from Canvas API:', error);
         res.status(500).json({ error: 'An error occurred in /courses/:courseId/user/role.' });
