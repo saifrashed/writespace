@@ -8,7 +8,7 @@ import { useNotification } from "./useNotification";
 function useCourse(token = '', courseId = '') {
     const [courseData, setCourseData] = useState<Course>();
     const { onError } = useNotification();
-    const [role, setRole] = useState<String>('');
+    const [role, setRole] = useState<string>('');
 
     useEffect(() => {
         // Fetch course and enrollment data when courseId and token change
