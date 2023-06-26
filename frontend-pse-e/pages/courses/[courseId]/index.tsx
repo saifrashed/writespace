@@ -11,6 +11,14 @@ import { Assignment, Course } from "@/lib/types";
 import NavBar from "@/components/NavBar";
 import { formatDate } from "@/lib/date";
 
+
+
+/**
+ * The course page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered course page.
+ */
 const CourseOverview = () => {
   const router = useRouter();
   const { courseId } = router.query;

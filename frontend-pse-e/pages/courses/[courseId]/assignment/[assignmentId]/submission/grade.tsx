@@ -23,6 +23,13 @@ import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-vie
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
+
+/**
+ * The grade page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered grade page.
+ */
 const Grade: React.FC = () => {
     const router = useRouter();
     const { courseId, assignmentId, user } = router.query;
@@ -342,6 +349,9 @@ const Grade: React.FC = () => {
                                                                     </p>
                                                                     <p className="text-md text-gray-700  font-bold">
                                                                         {note.content}
+                                                                    </p>
+                                                                    <p className="text-md text-gray-700  italic">
+                                                                        - {note.author}
                                                                     </p>
                                                                 </div>
                                                             </div>
