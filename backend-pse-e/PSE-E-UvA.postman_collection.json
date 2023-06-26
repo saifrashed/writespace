@@ -137,21 +137,18 @@
 				},
 				{
 					"name": "Get one assignment from a course with courseId and assignmentId",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX1+ql6/7Zqq3T+L7Gfm6YQbmo8VxIi8TYXDcqzchwsEcSzXhhqB8dMTIAPLStfWrVD/mtLg3NVBlXb51VL+Ud7XqLBaDnhS2bFRDJICNVtEsc733Z4q1HNW9",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"courseId\" : 56157,\r\n    \"assignmentId\" : 6058\r\n}",
+							"raw": "{\r\n    \"courseId\" : 78230,\r\n    \"assignmentId\" : 6193\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -193,13 +190,13 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1810Pjo5ZHQtz8/6kBijKh4TMQZwRcPOLzAuw8K3OoBBtXZRtqTkZ2mLwOtP6sUPtG19sLHn4Qyxx8ARsg+6ukcaAf0BYQOAYQo8Avgh/V9EQ5TEnS8Kpuv",
+								"value": "U2FsdGVkX1+W7fG01VZz7yD4DewGKuZ5hIct32XBLYdNpL80FU/8C40CJYkoIBO5CBLfecyLeg8BbHyYO4cZFB3bJEVXFr/a/j1e9o7vDz2hoiD5vKvjh9NFagxz27a7",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"courseId\": 78230,\r\n    \"isTeacher\": false\r\n}",
+							"raw": "{\r\n    \"courseId\": 78219\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -246,7 +243,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX18TKVf4mIAAq4W+VD4UIaRVqHA1d2gDz7FIuZj7B4u2Pjn64N4VmG98Rw87EFacl5adHoWdW8yhL1w6d+gUsk1CWWZ/NImv+mr9ahe2BuYcZ6617bxB1nOa",
 								"type": "text"
 							}
 						],
@@ -361,13 +358,13 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX18AJi5IKYLTnIdfTTNm1dYbBTzcRZTkiaDpeVFNfWRMLbf9Ouqj+UcQxZAnSyF4BM+01N+GJZesnwlOven3OK5UHuZvbKkWqmsu7QBbc6rW6nNtsWoTbDec",
+								"value": "U2FsdGVkX18TKVf4mIAAq4W+VD4UIaRVqHA1d2gDz7FIuZj7B4u2Pjn64N4VmG98Rw87EFacl5adHoWdW8yhL1w6d+gUsk1CWWZ/NImv+mr9ahe2BuYcZ6617bxB1nOa",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15,\r\n    \"grade\": 9,\r\n    \"courseId\": 78230\r\n}",
+							"raw": "{\r\n    \"userId\": 36081,\r\n    \"assignmentId\": 6198,\r\n    \"grade\": 10,\r\n    \"courseId\": 78230,\r\n    \"notes\": [\r\n        {\r\n    \"id\":1,\r\n    \"content\": \"dasa\",\r\n    \"highlightAreas\": [{\r\n        \"height\":1.0521885521885521,\r\n        \"left\":55.57822765607979,\r\n        \"pageIndex\": 4,\r\n        \"top\":54.54545454545455,\r\n        \"width\":3.818919196367783\r\n    }],\r\n    \"quote\": \"ompass\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -455,14 +452,6 @@
 							}
 						},
 						"url": "http://localhost:5000/submission/get-submission/"
-					},
-					"response": []
-				},
-				{
-					"name": "New Request",
-					"request": {
-						"method": "GET",
-						"header": []
 					},
 					"response": []
 				}
@@ -1109,7 +1098,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\" : \"d20f4c7887c5c4a52083a577e2dc7c46606008581f584e7f3719b903da30a87c7223eff0db45db21774c0f2bee89cdd831373aa6d6c223c44d0659cb4c2eb19a\"\r\n}",
+							"raw": "{\r\n    \"code\" : \"de10800dbda87dd9cd3df016124fedad6c32ab8a8b4b4edbf2b54b9c7a84f94fbf6bee6b00113932c11dab17aad170f74b2bf1338297e19466bccf65dbf08a36\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1217,11 +1206,11 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX1+ql6/7Zqq3T+L7Gfm6YQbmo8VxIi8TYXDcqzchwsEcSzXhhqB8dMTIAPLStfWrVD/mtLg3NVBlXb51VL+Ud7XqLBaDnhS2bFRDJICNVtEsc733Z4q1HNW9",
 								"type": "text"
 							}
 						],
-						"url": "localhost:5000/course/56157"
+						"url": "localhost:5000/course/78217"
 					},
 					"response": []
 				},
@@ -1232,7 +1221,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX18AJi5IKYLTnIdfTTNm1dYbBTzcRZTkiaDpeVFNfWRMLbf9Ouqj+UcQxZAnSyF4BM+01N+GJZesnwlOven3OK5UHuZvbKkWqmsu7QBbc6rW6nNtsWoTbDec",
+								"value": "U2FsdGVkX1+W7fG01VZz7yD4DewGKuZ5hIct32XBLYdNpL80FU/8C40CJYkoIBO5CBLfecyLeg8BbHyYO4cZFB3bJEVXFr/a/j1e9o7vDz2hoiD5vKvjh9NFagxz27a7",
 								"type": "text"
 							}
 						],
