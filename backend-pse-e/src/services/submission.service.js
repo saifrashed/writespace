@@ -9,9 +9,9 @@ const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
 // Require axios for communicating with the canvas api
-// const axios = require('axios');
-// // Canvas api URL
-// const { API_URL } = process.env;
+const axios = require('axios');
+// Canvas api URL
+const { API_URL, CANVAS_REDIRECT_URI } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -91,7 +91,23 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
-        const alreadySubmitted = await submissionModel.find({ 'assignmentId': assignmentId, 'userId': userId });
+        const courseId = req.body.courseId;
+
+        // Add the submission to the assignment on canvas
+        const responseCanvas = await axios.post(
+            `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`,
+            {},
+        {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                "submission[submission_type]": "online_url",
+                "submission[url]": CANVAS_REDIRECT_URI
+            }
+        });
+
+        const alreadySubmitted = await submissionModel.find({ 'courseId': courseId, 'assignmentId': assignmentId, 'userId': userId });
 
         // If file is not yet submitted
         if (alreadySubmitted.length == 0) {
@@ -101,6 +117,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
                 userId: userId,
                 userName: res.locals.user.name,
                 assignmentId: assignmentId,
+                courseId: courseId,
                 date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
                 grade: null,
                 status: "ungraded",
@@ -147,12 +164,13 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
 // Voegt notes to the submission
 router.put('/grade/', auth, async (req, res) => {
     try {
-        const { userId, assignmentId, notes, grade } = req.body;
+        const { userId, assignmentId, notes, grade, courseId } = req.body;
 
         const status = "graded"
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
+                'courseId': courseId,
                 'assignmentId': assignmentId,
                 'userId': userId
             },

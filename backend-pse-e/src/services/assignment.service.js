@@ -30,7 +30,7 @@ router.post('/create', auth, (req, res) => {
             "assignment[description]": assignment.description,
             "assignment[points_possible]": assignment.points_possible,
             "assignment[grading_type]": assignment.grading_type,
-            "assignment[submission_types]": ['online_upload'], // written assignment standard
+            "assignment[submission_types]": ['online_url'], // online url assignment standard
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
@@ -57,7 +57,7 @@ router.put('/update', auth, (req, res) => {
             "assignment[description]": assignment.description,
             "assignment[points_possible]": assignment.points_possible,
             "assignment[grading_type]": assignment.grading_type,
-            "assignment[submission_types]": ['online_upload'], // written assignment standard
+            "assignment[submission_types]": ['online_url'], // online url assignment standard
             "assignment[allowed_attempts]": assignment.allowed_attempts,
             "assignment[anonymous_grading]": assignment.anonymous_grading,
             "assignment[omit_from_final_grade]": assignment.omit_from_final_grade,
@@ -130,6 +130,7 @@ router.post('/get-all', auth, async (req, res) => {
             }
         });
 
+        // Only select (WriteSpace) assignments, exclude the rest
         if (response.data && Array.isArray(response.data)) {
             // Filter assignments that contain " - WriteSpace" in their name
             const filteredAssignments = response.data.filter(assignment => assignment.name && assignment.name.includes("(WriteSpace)"));
@@ -142,10 +143,38 @@ router.post('/get-all', auth, async (req, res) => {
             response.data = filteredAssignments;
         }
 
+        // Retrieve all submissions of the user for this course
+        const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
+            headers: {
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            },
+            params: {
+                // Only select the submissions for the current user 
+                // automatically selects submissions for the course with courseId only
+                "student_ids[]": [res.locals.userId],
+                per_page: 200
+            }
+        });
+        // Map the submission objects to only the assignment ids that are submitted
+        const submittedAssignmentIds = userSubmissionsRes.data
+            .filter(submission => submission.workflow_state === 'submitted')
+            .map(submission => submission.assignment_id);
+
+        // Add the "has_submitted" attribute and set it to true or false
+        response.data.forEach(assignment => {
+            // If the user has submitted something for the assignment, set it to true
+            if (submittedAssignmentIds.includes(assignment.id)) {
+                assignment.has_submitted = true;
+            } else {
+                assignment.has_submitted = false;
+            }
+        });
+        
+        // Send back the edited response data with "has_submitted" attribute
         res.json(response.data);
     } catch (error) {
         console.error('Error from Canvas API:', error);
-        res.status(500).json({ error: 'An error occurred in /assignments.' });
+        res.status(500).json({ error: 'An error occurred in /assignment/get-all.' });
     }
 });
 
