@@ -1,4 +1,4 @@
-describe('template spec', () => {
+describe('Login service', () => {
   beforeEach(() => {
     cy.visit('http://localhost:3000');
   });
@@ -19,6 +19,9 @@ describe('template spec', () => {
   cy.origin('https://uvadlo-dev.test.instructure.com', () => {
     cy.get('input[name="commit"]').click();
   });
+  cy.url().should('include', 'courses');
 
   });
 })
+
+export {};
