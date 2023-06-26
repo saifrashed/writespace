@@ -3,7 +3,6 @@ import Questions from "./Questions"
 import useQuiz from '@/lib/hooks/useQuiz';
 import useQuizScore from '@/lib/hooks/useQuizScore';
 import useAuthentication from "@/lib/hooks/useAuthentication";
-import useQuizScore from '@/lib/hooks/useQuizScore';
 
 const Quiz = () => {
     const { token } = useAuthentication();
@@ -19,8 +18,7 @@ const Quiz = () => {
 
     useEffect(() => {
         getAllUserScores(token);
-        console.log(userScores, "NO PROMISES")
-    }, []);
+    }, [quizMenu]);
 
     const isQuizCompleted = (quizKey) => {
         // Hierin moeten de user quizzes.
@@ -49,8 +47,6 @@ const Quiz = () => {
         setShowButton(false)
         setQuizMenu(true)
     }
-
-
 
     return (
         <div className="relative">
@@ -99,7 +95,7 @@ const Quiz = () => {
                                 )}
 
                                 {selectedQuiz && Object.keys(selectedQuizObject).length > 0 && (
-                                    <Questions quizId={selectedQuiz} questions={selectedQuizObject.questions} />
+                                    <Questions quizId={selectedQuiz} questions={selectedQuizObject.questions} userScores={userScores} />
                                 )}
                             </div>
                         )}
