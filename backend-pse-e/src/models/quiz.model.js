@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const questionSchema = new mongoose.Schema({
     question: String,
     type: String,
-    correctAnswer: Number,
+    correctAnswer: String,
     choices: [String]
 });
 
