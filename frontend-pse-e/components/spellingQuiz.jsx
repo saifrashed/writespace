@@ -250,7 +250,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={() => { }}
+                        onChooseProfilePicture={null}
                       />
                     </div>
                   </div>
@@ -438,7 +438,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={() => { }}
+                        onChooseProfilePicture={null}
                       />
                     </div>
                   </div>
