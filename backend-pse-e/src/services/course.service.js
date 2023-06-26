@@ -84,8 +84,9 @@ router.post('/enrollment', auth, async (req, res) => {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
         });
-        // Return enrollments information
-        res.json(response.data.enrollments[0]);
+        const enrollments = response.data.enrollments
+        const enrollment = enrollments.some(enrollment => enrollment.type === "teacher" || enrollment.type === "designer");
+        res.json(enrollment);
     } catch (error) {
         console.error('Error from Canvas API:', error);
         res.status(500).json({ error: 'An error occurred in /courses/:courseId/user/role.' });
