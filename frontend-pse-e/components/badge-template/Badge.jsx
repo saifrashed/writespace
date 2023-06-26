@@ -45,8 +45,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   const badgeId = extractIdFromUrl(pictureUrl)
 
   const handleChooseProfilePicture = async () => {
-    await onChooseProfilePicture(badgeId);
     setIsProfilePictureUpdated(true);
+    await onChooseProfilePicture(badgeId);
     setShowPopup(false);
   };
 
