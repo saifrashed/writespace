@@ -64,14 +64,14 @@ const Profile = () => {
       <NavBar />
 
       <div className="flex h-screen">
-        <div className="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-8 md:w-1/5 md:h-[100vh] flex items-start content-center justify-center overflow-y-auto">
+        <div className="mt-20 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 p-8 md:w-1/5 md:h-[100vh] flex items-start content-center justify-center overflow-y-auto">
 
           <div className="flex flex-col items-center justify-center mt-20">
             <Avatar
-              sx={{ width: 150, height: 150, border: '3px solid #706f7d' }}
+              sx={{ width: 250, height: 250, border: '2px solid #706f7d', padding: '30px', boxShadow:'0px 0px 30px 2px gray'}}
               src={user?.pictureId === 0 || user?.pictureId === undefined ? '' : `/badges/${user?.pictureId}.png`}
             />
-            <div className={`mt-4 text-center font-bold text-3xl ${isLegendary && "gradient-text"}`}>{user?.name}</div>
+            <div className={`mt-8 text-center font-bold text-4xl ${isLegendary && "gradient-text"}`}>{user?.name}</div>
             {user && (
               <div className="lg:flex lg:row lg:justify-between lg:w-full">
                 <div className={`mt-4 lg:me-1 text-center font-bold text-xl ${isLegendary && "gradient-text"}`}> XP {user.experiencePoints}</div>
