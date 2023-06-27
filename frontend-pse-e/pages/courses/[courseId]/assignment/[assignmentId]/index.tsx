@@ -290,8 +290,7 @@ const Assignment = () => {
           <UploadPopup
             showPopup={showPopup}
             togglePopup={() => {
-              setShowPopup(!showPopup);
-            }}
+              setShowPopup(!showPopup)}} deadline={assignment?.due_at}
           />
         </div>
       </div>

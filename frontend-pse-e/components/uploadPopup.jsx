@@ -7,9 +7,10 @@ import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import { useNotification } from "@/lib/hooks/useNotification";
 import useUser from "@/lib/hooks/useUser";
 import { useRouter } from "next/router";
+import { formatDate } from "@/lib/date";
 
 
-const UploadPopup = ({ showPopup, togglePopup }) => {
+const UploadPopup = ({ showPopup, togglePopup, deadline }) => {
     const router = useRouter();
 
     const { courseId, assignmentId } = router.query;
@@ -81,25 +82,34 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
       }
 
     const handleSubmit = () => {
-        if (!isConfirmed) {
-            onError("Please confirm that the work submitted is your own.")
-            return;
+        const currentTime = new Date();
+        const currentDate = currentTime.toISOString();
+
+        if (deadline === undefined || currentDate < deadline){
+
+            if (!isConfirmed) {
+                onError("Please confirm that the work submitted is your own.")
+                return;
+            }
+
+            if (!uploadedFile) {
+                onError("Please upload a file.")
+                return;
+            }
+
+
+            // console.log("USERBADGES", user.badges)
+            if (!isBadgePresent(13)) {
+                addUserBadges([13], courseId, assignmentId, "", "", token)
+                onSuccess("Congratulations you have received a badge! View your profile to see it.")
+            }
+
+            saveSubmission(token, assignmentId, courseId, uploadedFile.file)
+            setFileUploadSuccess(true);
         }
 
-        if (!uploadedFile) {
-            onError("Please upload a file.")
-            return;
-        }
-
-
-        // console.log("USERBADGES", user.badges)
-        if (!isBadgePresent(13)) {
-            addUserBadges([13], courseId, assignmentId, "", "", token)
-            onSuccess("Congratulations you have received a badge! View your profile to see it.")
-        }
-
-        saveSubmission(token, assignmentId, courseId, uploadedFile.file)
-        setFileUploadSuccess(true);
+        else {
+            onError("The deadline has passed. Submission is not possible.")}
     }
 
     const handleCloseModal = () => {
@@ -134,7 +144,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
                                         <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50">
                                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">PDF (MAX. 800x400px)</p>
                                             </div>
                                             <input id="dropzone-file" type="file" onChange={(event) => { handleInputChange(event); }} className="hidden" />
                                         </label>
