@@ -3,3 +3,38 @@
 @tailwind components;
 
 @tailwind utilities;
+
+
+/* Custom CSS */
+.hide-scrollbar::-webkit-scrollbar {
+    width: 0;
+    /* Hide scrollbar on Safari and Chrome */
+}
+
+.hide-scrollbar {
+    scrollbar-width: none;
+    /* Hide scrollbar on Firefox */
+}
+
+.hide-scrollbar::-webkit-scrollbar-track {
+    background-color: transparent;
+    /* Hide scrollbar track on Safari and Chrome */
+}
+
+@keyframes gradient-animation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+.gradient-text {
+    background: linear-gradient(45deg, gold, #b0f5ab, #E6ABF5, gold, #b0f5ab);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradient-animation 8s linear infinite;
+    background-size: 400% auto;
+}

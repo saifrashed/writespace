@@ -1,3 +1,5 @@
+import { HighlightArea, } from '@react-pdf-viewer/highlight';
+
 export interface Course {
     id: number;
     name: string;
@@ -75,7 +77,7 @@ export interface Assignment {
     grader_comments_visible_to_graders: boolean;
     final_grader_id: number | null;
     grader_names_visible_to_final_grader: boolean;
-    allowed_attempts: number;
+    allowed_attempts: number | string;
     annotatable_attachment_id: number | null;
     hide_in_gradebook: boolean;
     lock_info: {
@@ -123,4 +125,142 @@ export interface Assignment {
     anonymize_students: boolean;
     require_lockdown_browser: boolean;
     restrict_quantitative_data: boolean;
+}
+
+export interface Submission {
+    userId: number;
+    assignmentId: number;
+    date: string;
+    grade: number;
+    status: string;
+    filetype: string;
+    filename: string;
+    fileData: Buffer;
+    userName: string;
+    fileNotes: object[];
+}
+
+export interface Badge {
+    badgeId: number,
+    iconId: number,
+    experiencePoints: number,
+    name: string,
+    description: string,
+}
+
+
+export interface Enrollment {
+    id: number;
+    course_id: number;
+    sis_course_id: string | null;
+    course_integration_id: string | null;
+    course_section_id: number;
+    section_integration_id: string | null;
+    sis_account_id: string | null;
+    sis_section_id: string | null;
+    sis_user_id: string | null;
+    enrollment_state: string;
+    limit_privileges_to_course_section: boolean;
+    sis_import_id: number | null;
+    root_account_id: number;
+    type: string;
+    user_id: number;
+    associated_user_id: number | null;
+    role: string;
+    role_id: number;
+    created_at: string;
+    updated_at: string;
+    start_at: string;
+    end_at: string;
+    last_activity_at: string;
+    last_attended_at: string;
+    total_activity_time: number;
+    html_url: string;
+    grades: {
+        html_url: string;
+        current_score: number;
+        current_grade: string | null;
+        final_score: number;
+        final_grade: string | null;
+    };
+    user: {
+        id: number;
+        name: string;
+        sortable_name: string;
+        short_name: string;
+    };
+    override_grade: string;
+    override_score: number;
+    unposted_current_grade: string;
+    unposted_final_grade: string;
+    unposted_current_score: string;
+    unposted_final_score: string;
+    has_grading_periods: boolean | undefined;
+    totals_for_all_grading_periods_option: boolean | undefined;
+    current_grading_period_title: string | null | undefined;
+    current_grading_period_id: number | null | undefined;
+    current_period_override_grade: string;
+    current_period_override_score: number;
+    current_period_unposted_current_score: number | null | undefined;
+    current_period_unposted_final_score: number | null | undefined;
+    current_period_unposted_current_grade: string | null | undefined;
+    current_period_unposted_final_grade: string | null | undefined;
+}
+
+export interface User {
+    id: number;
+    name: string;
+    sortable_name: string;
+    last_name: string;
+    first_name: string;
+    short_name: string;
+    sis_user_id: string | null;
+    sis_import_id: number | null;
+    integration_id: string | null;
+    login_id: string;
+    avatar_url: string | null;
+    avatar_state: string | null;
+    enrollments: Enrollment[] | null;
+    email: string | null;
+    locale: string | null;
+    last_login: string | null;
+    time_zone: string | null;
+    bio: string | null;
+    userId: number;
+    pictureId: number;
+    experiencePoints: number;
+    badges: BadgeModel[];
+    level: number;
+    threshold: number;
+}
+
+interface BadgeModel {
+    badgeId: number;
+    courseId: number;
+    assignmentId: number;
+    graderId: number;
+    comment: string;
+}
+
+export interface Note {
+    id: number;
+    content: string;
+    highlightAreas: HighlightArea[];
+    quote: string;
+}
+
+
+
+export interface TokenResponse {
+    access_token: string;
+    token_type: string;
+    user: {
+        id: number;
+        name: string;
+        global_id: string;
+        effective_locale: string;
+    };
+    canvas_region: string;
+    refresh_token: string;
+    expires_in: number;
 }

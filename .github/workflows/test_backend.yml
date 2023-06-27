@@ -1,0 +1,30 @@
+name: backendCI
+
+on:
+  push:
+    branches:
+      - backend
+      - ci_lighthouse
+  pull_request:
+    branches:
+      - backend
+      - main
+
+jobs:
+  backend_CI:
+    name: Lint/test backend code base
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+
+      - name: Install packages backend
+        run: cd ./backend-pse-e && npm install
+
+      - name: Run Eslint
+        run: cd ./backend-pse-e && npm run lint:ci
+
+      - name: Run Tests
+        run: cd ./backend-pse-e && npm run test:ci

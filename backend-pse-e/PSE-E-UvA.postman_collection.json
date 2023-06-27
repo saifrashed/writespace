@@ -1,10 +1,10 @@
 {
 	"info": {
-		"_postman_id": "729a0c71-c9ef-46a4-a22a-e70c4c6f0ff5",
+		"_postman_id": "87e61370-80d9-4c71-a28a-19c2c83de3e7",
 		"name": "PSE-E-UvA",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "14877361",
-		"_collection_link": "https://new-world-86-pad-team-7.postman.co/workspace/Team-Workspace~d3f42447-f8b4-4df1-893c-c1469601f20c/collection/14877361-729a0c71-c9ef-46a4-a22a-e70c4c6f0ff5?action=share&creator=14877361&source=collection_link"
+		"_collection_link": "https://new-world-86-pad-team-7.postman.co/workspace/Team-Workspace~d3f42447-f8b4-4df1-893c-c1469601f20c/collection/14877361-87e61370-80d9-4c71-a28a-19c2c83de3e7?action=share&creator=14877361&source=collection_link"
 	},
 	"item": [
 		{
@@ -14,7 +14,13 @@
 					"name": "Getall",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
 						"url": "localhost:5000/test/getAll"
 					},
 					"response": []
@@ -23,7 +29,13 @@
 					"name": "Test post request",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"username\" : \"testingDBDemo\",\r\n    \"testId\" : 10\r\n}",
@@ -41,7 +53,13 @@
 					"name": "Test put request",
 					"request": {
 						"method": "PUT",
-						"header": [],
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\r\n    \"username\" : \"test\",\r\n    \"testId\" : 10242342\r\n}",
@@ -56,128 +74,1128 @@
 					"response": []
 				},
 				{
-					"name": "Get one by testId",
+					"name": "Delete one test model by id",
 					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "localhost:5000/test/findByTestId/10242342"
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/test/delete/10242342"
 					},
 					"response": []
 				},
 				{
-					"name": "Delete one test model by id",
+					"name": "Get one by testId (with header token)",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": "localhost:5000/test/delete/10242342"
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/test/findByTestId/10242342"
 					},
 					"response": []
 				}
 			]
 		},
 		{
-			"name": "Canvas-api",
+			"name": "assignment requests",
 			"item": [
 				{
-					"name": "Get one user information",
+					"name": "Get assignment rubric",
 					"request": {
-						"method": "POST",
-						"header": [],
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/assignment/courses/56157/rubrics/482"
+					},
+					"response": []
+				},
+				{
+					"name": "Get one assignment from a course with courseId and assignmentId",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\" : \"10392~CSIp8ZtA0Xmg4T6pSGGY6340ttor33EgRpSIhOvScwUqRpyQFxPWD4pbk16ZxZ3x\"\r\n}",
+							"raw": "{\r\n    \"courseId\" : 56157,\r\n    \"assignmentId\" : 6058\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:5000/canvas-api/get-user"
+						"url": "localhost:5000/assignment/get-one"
 					},
 					"response": []
 				},
 				{
-					"name": "Get courses with access token from FE",
+					"name": "Get all written assignments for a course",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\" : \"10392~CSIp8ZtA0Xmg4T6pSGGY6340ttor33EgRpSIhOvScwUqRpyQFxPWD4pbk16ZxZ3x\"\r\n}",
+							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:5000/canvas-api/courses"
+						"url": "localhost:5000/assignment/written-assignments"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Submission requests",
+			"item": [
+				{
+					"name": "Get all submissions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5000/submission/get-all"
 					},
 					"response": []
 				},
 				{
-					"name": "Get all assignments with access token",
+					"name": "Find all submissions from assignment",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/submission/find-by-assignment-id/15"
+					},
+					"response": []
+				},
+				{
+					"name": "Find all submissions from user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/submission/find-by-user-id/4"
+					},
+					"response": []
+				},
+				{
+					"name": "find specific submission",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/submission/find-specific-submission?userId=4&assignmentId=15",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"submission",
+								"find-specific-submission"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "4"
+								},
+								{
+									"key": "assignmentId",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "save new submission",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
 						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"courseId\" : \"36016\",\r\n    \"accessToken\" : \"10392~8TSof5ec5h6NeCo1S3ggPZoSQ6T7ftBCeA3nYpk4g0nl8lh0fH8MjTN8FOfwl7H1\"\r\n}"
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "assignmentId",
+									"value": "15",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/cpoet/Downloads/Maintainability_table.jpg"
+								}
+							]
 						},
-						"url": "localhost:5000/canvas-api/assignmentsWithToken"
+						"url": "http://localhost:5000/submission/save"
 					},
 					"response": []
 				},
 				{
-					"name": "Get all assignments with access token",
+					"name": "Change submission grade",
 					"request": {
-						"method": "POST",
-						"header": [],
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"courseId\" : 36016,\r\n    \"token\" : \"10392~CSIp8ZtA0Xmg4T6pSGGY6340ttor33EgRpSIhOvScwUqRpyQFxPWD4pbk16ZxZ3x\"\r\n}",
+							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15,\r\n    \"newGrade\": 90\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:5000/canvas-api/assignments"
+						"url": "localhost:5000/submission/update/grade/"
+					},
+					"response": []
+				},
+				{
+					"name": "Update submission file",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "userId",
+									"value": "4",
+									"type": "text"
+								},
+								{
+									"key": "assignmentId",
+									"value": "15",
+									"type": "text"
+								},
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": "localhost:5000/submission/update/file/"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete all assignment submissions",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "localhost:5000/submission/delete-all/15"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete one submission",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/submission/delete-one/"
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 36122,\r\n    \"assignmentId\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/submission/get-submission/"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User requests",
+			"item": [
+				{
+					"name": "Get user (canvas and mongo combined)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/user/get-user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX186PZfDFrPgCXaGDCtL61UB+lI4XWgUDKbjjAxpJMV2WsNDXPw8qkv3SlUCYgJ/CoEZZ02TBfcmGAIVLNlvgin0u5FHKYrvLFSiJchUKPJDv/zwffOtVa09",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/user/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "find user by userId",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/user/find-by-user-id/:userId",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"find-by-user-id",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create new user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "10392~iykSpa3JIqLxyqtOOgkbTgpYC23zGLlmydOqbCojrGSO9q0EeZlVhGDg2fW1kAw4",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"badges\": {}\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/user/save"
+					},
+					"response": []
+				},
+				{
+					"name": "Update user level",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"level\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/user/update/level/"
+					},
+					"response": []
+				},
+				{
+					"name": "update user experience points",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"experiencePoints\": 100\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/user/update/experience-points/"
+					},
+					"response": []
+				},
+				{
+					"name": "Update user picture",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 2,\r\n    \"pictureId\": 5\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/user/update/picture/"
+					},
+					"response": []
+				},
+				{
+					"name": "Add badge to user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"badgeId\": 2,\r\n    \"courseId\": 3,\r\n    \"assignmentId\": 10,\r\n    \"graderId\": 30,\r\n    \"comment\": \"Good job!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/user/update/add-badge"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove badge from user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"badgeId\": 2,\r\n    \"assignmentId\": 10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/user/update/delete-badge"
+					},
+					"response": []
+				},
+				{
+					"name": "General user update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 1,\r\n    \"pictureId\": 3,\r\n    \"experiencePoints\": 300,\r\n    \"level\": 99,\r\n    \"badges\": {\r\n    \"1\": {\r\n      \"amount\": 2,\r\n      \"badgelist\": [\r\n        {\r\n          \"courseId\": 1,\r\n          \"assignmentId\": 10,\r\n          \"graderId\": 100,\r\n          \"comment\": \"Great job!\"\r\n        },\r\n        {\r\n          \"courseId\": 1,\r\n          \"assignmentId\": 11,\r\n          \"graderId\": 101,\r\n          \"comment\": \"Well done!\"\r\n        }\r\n      ]\r\n    }\r\n  }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/user/update/"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:5000/user/delete/:userId",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"user",
+								"delete",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get canvas user",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/user/get-user-canvas"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Quiz score requests",
+			"item": [
+				{
+					"name": "Get all Quiz scores",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5000/quiz-score/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Quiz scores by user",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/quiz-score/find-by-user-id/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Quiz scores by quiz",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/quiz-score/find-by-quiz-id/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Create new quiz score",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quizId\": 3,\n    \"userId\": 1,\n    \"latestScore\": 30\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/quiz-score/save"
+					},
+					"response": []
+				},
+				{
+					"name": "Update quiz grade",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"quizId\": 3,\n    \"userId\": 1,\n    \"latestScore\": 30\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/quiz-score/update/grade"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete scores for quiz",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/quiz-score/delete-all-by-quiz/3"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete scores for user",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/quiz-score/delete-all-by-user/3"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete specific quiz score",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 3,\n    \"quizId\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/quiz-score/delete-one"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Badge requests",
+			"item": [
+				{
+					"name": "Get all Badges",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5000/badge/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "Get specific badge",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"url": "http://localhost:5000/badge/get-badge/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Save badge",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"badgeId\": 1,\n    \"iconId\": 1,\n    \"experiencePoints\": 10,\n    \"name\": \"Taalkundige\",\n    \"description\": \"Geen taalfouten in de opdracht\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/badge/save"
+					},
+					"response": []
+				},
+				{
+					"name": "Update badge XP",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"badgeId\": 2,\n    \"experiencePoints\": 18\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/badge/update/experience-points"
+					},
+					"response": []
+				},
+				{
+					"name": "Update badge name and description",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"badgeId\": 2,\n    \"name\": \"Scholar\",\n    \"description\": \"Meer dan 10 bronnen behandeld\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/badge/update/name-description"
+					},
+					"response": []
+				},
+				{
+					"name": "Update badge icon",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"badgeId\": 2,\n    \"iconId\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/badge/update/icon"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete badge by id",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"badgeId\": 3,\n    \"iconId\": 1,\n    \"experiencePoints\": 10,\n    \"name\": \"Taalkundige\",\n    \"description\": \"Geen taalfouten in de opdracht\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/badge/delete/3"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication requests",
+			"item": [
+				{
+					"name": "Get user access token with code from FE",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"code\" : \"d20f4c7887c5c4a52083a577e2dc7c46606008581f584e7f3719b903da30a87c7223eff0db45db21774c0f2bee89cdd831373aa6d6c223c44d0659cb4c2eb19a\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/auth/get-user-token"
+					},
+					"response": []
+				},
+				{
+					"name": "Get user access token with refresh token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19QQ9g67S7cBrj9HK58M0Qw/5gllJll+brf9yPOdcaKS6P1ag5v5lp/btH9piI80gnDGSPMMd0SFuSqAL+M5vWeHOuWOx4BwSyjAsn7mNNYKNdPgcKc8yfb",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": "localhost:5000/auth/get-user-token/refresh"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Courses requests",
+			"item": [
+				{
+					"name": "Get all students of a course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX192x+kbQb+xoQNYurHhLq+XnOgvshnu0Lle5CLj1Vi/VjI099R0dqvCt/AgtE1q92UyOiE+xDCsHKH5DwRaj8nJqeJdscyV850jraFBPCA53l7x4Z+79XaB",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/course/students"
+					},
+					"response": []
+				},
+				{
+					"name": "Get a user's role of a course",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX192x+kbQb+xoQNYurHhLq+XnOgvshnu0Lle5CLj1Vi/VjI099R0dqvCt/AgtE1q92UyOiE+xDCsHKH5DwRaj8nJqeJdscyV850jraFBPCA53l7x4Z+79XaB",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/course/enrollment"
+					},
+					"response": []
+				},
+				{
+					"name": "Get all assignments of a course with access token",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\" : 56157\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:5000/course/assignments"
 					},
 					"response": []
 				},
 				{
 					"name": "Get one course with courseId",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"token\" : \"10392~CSIp8ZtA0Xmg4T6pSGGY6340ttor33EgRpSIhOvScwUqRpyQFxPWD4pbk16ZxZ3x\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
 							}
-						},
-						"url": "localhost:5000/canvas-api/courses/36016"
+						],
+						"url": "localhost:5000/course/56157"
 					},
 					"response": []
 				},
 				{
-					"name": "Get one assignment from a course with courseId and assignmentId",
+					"name": "Get courses with access token from FE",
 					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"token\" : \"10392~CSIp8ZtA0Xmg4T6pSGGY6340ttor33EgRpSIhOvScwUqRpyQFxPWD4pbk16ZxZ3x\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
 							}
-						},
-						"url": "localhost:5000/canvas-api/courses/36016/410236"
+						],
+						"url": "localhost:5000/course/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "Get only relevant courses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"type": "text"
+							}
+						],
+						"url": "localhost:5000/course/relevant-courses"
 					},
 					"response": []
 				}
