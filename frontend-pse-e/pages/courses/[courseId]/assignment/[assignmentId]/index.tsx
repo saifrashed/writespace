@@ -28,6 +28,9 @@ const Assignment = () => {
   const { submission } = useSubmission(token, assignmentId?.toString(), '')
   const { assignmentBadges } = useUser(token, assignmentId?.toString())
 
+  const currentTime = new Date();
+  const currentDate = currentTime.toISOString();
+
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
@@ -73,12 +76,20 @@ const Assignment = () => {
               <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                 <div className="flex flex-col">
 
-                  <button onClick={() => { setShowPopup(!showPopup) }} className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded-lg flex items-center">
+                  {assignment?.due_at != undefined && currentDate > assignment?.due_at ?
+
+                  <button onClick={() => { setShowPopup(!showPopup) }} className="bg-gray-300 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-white rounded-lg flex items-center" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                    </svg>
+                    <span className="ml-2">Submit</span>
+                  </button> : <button onClick={() => { setShowPopup(!showPopup) }} className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded-lg flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
                     </svg>
                     <span className="ml-2">Submit</span>
                   </button>
+                  }
 
                   <Link
                     href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}
