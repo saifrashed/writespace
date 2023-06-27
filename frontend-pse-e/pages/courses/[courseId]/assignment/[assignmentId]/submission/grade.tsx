@@ -49,7 +49,7 @@ const Grade: React.FC = () => {
     const { updateUserExperiencePoints } = useUser(token)
     const { assignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
 
-    const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token, assignmentId?.toString(), user?.toString())
+    const { gradeSubmission, getSubmission, fileUrl, fileNotes, submission } = useSubmission(token, assignmentId?.toString(), user?.toString())
     const { addUserBadges } = useUser(token)
     const { badges } = useBadges(token)
 
@@ -102,6 +102,12 @@ const Grade: React.FC = () => {
             setAssignedBadges(newAssignedBadges);
         }
     }, [user]);
+
+    useEffect(() => {
+        if (submission) {
+            setGrade(submission?.grade || 1)
+        }
+    }, [submission]);
 
     let noteId = notes.length;
 
