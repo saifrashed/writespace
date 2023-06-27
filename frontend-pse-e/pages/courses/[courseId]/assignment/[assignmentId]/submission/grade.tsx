@@ -11,6 +11,7 @@ import useUser from '@/lib/hooks/useUser';
 import useBadges from '@/lib/hooks/useBadges';
 import useAssignment from '@/lib/hooks/useAssignment';
 import { useNotification } from '@/lib/hooks/useNotification';
+import { Reply } from '@/lib/types';
 
 import {
     highlightPlugin,
@@ -85,6 +86,23 @@ const Grade: React.FC = () => {
         setAssignedBadges(newAssignedBadges);
     };
 
+    const addReply = (noteId: number, reply: string) => {
+        const note = notes.find((note) => note.id === noteId);
+        if (note && user) {
+            const reply_object: Reply = {
+                noteId: noteId,
+                message: reply,
+                userId: Number(user),
+                user_name: "",
+            };
+            const newNote = { ...note };
+            newNote.replies = newNote.replies.concat(reply_object);
+            setNotes(notes.map((note) => (note.id === noteId ? newNote : note)));
+            // Change to instantly update reply and not wait for submission == Stupid
+            onWarning("Change reply to instantly update reply and not wait for submission == Stupid")
+        }
+    };
+
     const handleDocumentLoad = () => {
         if (fileNotes) {
             setNotes(fileNotes);
@@ -143,6 +161,9 @@ const Grade: React.FC = () => {
                     content: message,
                     highlightAreas: props.highlightAreas,
                     quote: props.selectedText,
+                    replies: [],
+                    author: "",
+                    fresh: true,
                 };
                 setNotes(notes.concat([note]));
                 props.cancel();
@@ -374,43 +395,44 @@ const Grade: React.FC = () => {
                                                 </section> */}
                                                 {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
                                                 {notes.map((note, index) => {
+                                                    const hasReplies = note.replies.length && note.replies.length > 0;
                                                     return (
-                                                        <>
-                                                            <article className="p-6 text-base  bg-white rounded-lg dark:bg-gray-900" key={index} >
-                                                                <div className='hover:bg-gray-50 cursor-pointer' onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
-                                                                    <footer className="flex justify-between items-center mb-2">
-                                                                        <div className="flex items-center">
-                                                                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-                                                                                {note.author ? note.author : "Anonymous"}
-                                                                            </p>
-                                                                        </div>
-                                                                    </footer>
-                                                                    <p className="text-gray-500 dark:text-gray-400">"{note.quote}"</p>
-                                                                    <p className="text-black dark:text-gray-400">{note.content}</p>
+                                                        <li key={index} className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
+                                                            <div className="px-4 py-4 sm:px-6">
+                                                                <div className="items-center justify-between">
+                                                                    <p className="text-md text-gray-700 font-light">
+                                                                        "{note.quote}"
+                                                                    </p>
+                                                                    <p className="text-md text-gray-700 font-bold">
+                                                                        {note.content}
+                                                                    </p>
+                                                                    <p className="text-md text-gray-700 italic">
+                                                                        - {note.author ? note.author : "You"}
+                                                                    </p>
+                                                                    {hasReplies && !note.fresh && (
+                                                                        <ul>
+                                                                            {note.replies.map((reply, replyIndex) => (
+                                                                                <li key={replyIndex} className="bg-gray-500 m-4">
+                                                                                    <p>{replyIndex}</p>
+                                                                                    <p>{reply.message}</p>
+                                                                                    {reply.userId == Number(user) ? (
+                                                                                        <p>You</p>
+                                                                                    ) : (
+                                                                                        <p>{reply.user_name}</p>
+                                                                                    )}
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    )}
+                                                                    {!note.fresh && (
+                                                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(e) => addReply(note.id, "Teacher")}>
+                                                                            Add Reply
+                                                                        </button>
+                                                                    )}
                                                                 </div>
-                                                                <div className="flex items-center mt-4 space-x-4">
-                                                                    <button type="button"
-                                                                        className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
-                                                                        <svg aria-hidden="true" className="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                                                        Reply
-                                                                    </button>
-                                                                </div>
-                                                            </article>
-                                                            <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
-                                                                <footer className="flex justify-between items-center mb-2">
-                                                                    <div className="flex items-center">
-                                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
-                                                                            Jese Leos
-                                                                        </p>
-                                                                        <p className="text-sm text-gray-600 "><time
-                                                                            title="February 12th, 2022">Feb. 12, 2022</time></p>
-                                                                    </div>
-                                                                </footer>
-                                                                <p className="text-gray-500">Much appreciated! Glad you liked it ☺️</p>
-
-                                                            </article>
-                                                        </>
-                                                    )
+                                                            </div>
+                                                        </li>
+                                                    );
                                                 })}
                                             </ul>
                                         </div>
@@ -567,23 +589,23 @@ const Grade: React.FC = () => {
 
             {/* If Teacher submitted the grade */}
             {isSubmitted && (
-                <>
-                    <NavBar />
+                    <>
+                        <NavBar />
 
-                    <div className="w-1/3 mx-auto mt-10 text-center">
-                        <Lottie
-                            loop={false}
-                            autoplay={true}
-                            animationData={submittedAnimationData}
-                        />
-                        <p className="text-3xl font-bold mb-5">Grade has been submitted!</p>
-                        <button onClick={() => { router.back() }}
-                            className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
-                            Go back
-                        </button>
-                    </div>
-                </>
-            )}
+                        <div className="w-1/3 mx-auto mt-10 text-center">
+                            <Lottie
+                                loop={false}
+                                autoplay={true}
+                                animationData={submittedAnimationData}
+                            />
+                            <p className="text-3xl font-bold mb-5">Grade has been submitted!</p>
+                            <button onClick={() => { router.back() }}
+                                className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-lg font-medium rounded-full">
+                                Go back
+                            </button>
+                        </div>
+                    </>
+                )}
         </div>
     );
 };
