@@ -68,27 +68,41 @@ const Students = () => {
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {submissions && submissions.map((submission, index) => (
-                                    <tr
-                                        key={index}
-                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                    >
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
-                                                {submission.userName ? submission.userName : "Anonymous"}
-                                            </Link>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap font-bold">
-                                            {formatDate(submission.date)}
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            {submission.status}
-                                        </td>
-                                    </tr>
-                                ))}
-
-                            </tbody>
+                        <tbody>
+                        {submissions && (
+                            submissions.length > 0 ? (
+                                submissions.map((submission, index) => (
+                                <tr
+                                    key={index}
+                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                >
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <Link
+                                            href={{
+                                            pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`,
+                                            query: { user: submission.userId },
+                                            }}
+                                        >
+                                        {submission.userName ? submission.userName : "Anonymous"}
+                                        </Link>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap font-bold">
+                                        {formatDate(submission.date)}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {submission.status}
+                                    </td>
+                                </tr>
+                            ))
+                            ) : (
+                                <tr>
+                                <td className="px-6 py-4 text-center" colSpan={3}>
+                                    <span className="text-gray-400">No submissions available.</span>
+                                </td>
+                                </tr>
+                            )
+                            )}
+                        </tbody>
                         </table>
                         {!submissions && (
                             <div role="status" className="w-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
