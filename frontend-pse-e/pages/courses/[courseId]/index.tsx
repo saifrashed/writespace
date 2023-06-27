@@ -30,7 +30,7 @@ const CourseOverview = () => {
   const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
   const course = contextCourse || fetchedCourse;
   const { deleteAssignment } = useAssignment();
-  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), role, token);
+  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), token);
   const [selectedAssignment, setSelectedAssignment] = React.useState<Assignment>();
   const [showModal, setShowModal] = React.useState<boolean>(false);
 
