@@ -71,19 +71,18 @@ const Home = () => {
                 <div className="relative px-4 pt-24 pb-16 text-center sm:px-6 md:px-24 2xl:px-32 lg:py-24 lg:text-left">
                   <h1 className="text-4xl font-bold text-black sm:text-6xl xl:text-8xl">
                     Writing.<br />
-                    Fun, Intuitive.
+                    Fun, Engaging.
                   </h1>
-                  <p className="mt-8 text-xl text-black">We help you to make your remote work life easier. Build a distraction free working experience.</p>
-                  <div className=" sm:bg-white sm:border-2 sm:border-transparent sm:rounded-full ">
+                  {/* <p className="mt-8 text-xl text-black">We help you to make your remote work life easier. Build a distraction free working experience.</p> */}
+                  <p className="mt-8 text-xl text-black">Try our dynamic gamified platform, transform studying into an engaging and rewarding experience.</p>
+                  <br />
+                  <button className="bg-sky-300 hover:bg-sky-400 text-white transition-all font-bold py-2 px-4 border-b-8 border-sky-500 hover:border-sky-500 rounded-lg flex items-center mt-4">
                     <div className="flex flex-col items-center lg:flex-row">
-                      <a
-                        href={`${config.baseUrl}/auth/login`}
-                        className="inline-flex items-center justify-center w-full rounded-2xl px-4 py-4 mt-8 font-bold text-white transition-all duration-200 bg-yellow-500 border border-transparent sm:w-auto bg-yellow-600">
-                        Go to your courses
+                      <a href={`${config.baseUrl}/auth/login`} className="text-lg">
+                        Log in via institution
                       </a>
                     </div>
-                  </div>
-                  <p className="mt-5 text-base text-black">Login with your institution</p>
+                  </button>
                 </div>
               </div>
               <div className="relative w-full overflow-hidden lg:order-1 h-96 md:min-h-screen lg:h-auto lg:w-5/12">
@@ -93,7 +92,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
                 <div className="absolute bottom-0 left-0">
                   <div className="p-4 sm:p-6 lg:p-8">
-                    <p className="max-w-xs mt-1.5 text-xl text-white">Join others and learn to write better.</p>
+                    <p className="max-w-xs mt-1.5 text-xl text-white">Unlock your writing potential and improve your skills.</p>
                   </div>
                 </div>
               </div>
