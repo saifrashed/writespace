@@ -1,8 +1,7 @@
 import Head from "next/head";
-import Image from "next/image";
 import NavBar from "../../../../../components/NavBar";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import Link from "next/link";
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
@@ -11,6 +10,7 @@ import { formatDate } from "@/lib/date";
 import Quiz from "@/components/quiz";
 import useSubmission from "@/lib/hooks/useSubmission";
 import useUser from "@/lib/hooks/useUser";
+import { Context } from "@/Context";
 
 
 /**
@@ -24,7 +24,11 @@ const Assignment = () => {
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
+
+  const { assignment: contextAssignment } = useContext(Context);
+  const { assignment: fetchedAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
+  const assignment = contextAssignment || fetchedAssignment;
+
   const { submission } = useSubmission(token, assignmentId?.toString(), '')
   const { assignmentBadges } = useUser(token, assignmentId?.toString())
 
@@ -195,8 +199,8 @@ const Assignment = () => {
                     <div className="flex flex-col items-center justify-between">
                       <div className="relative mt-2" style={{ marginTop: "1.5rem", overflowX: "auto" }}>
                         <div className="flex my-3">
-                          {assignmentBadges.map((badge) => (
-                            <div key={badge.badgeId} className="flex-shrink-0 hover:animate-bounce">
+                          {assignmentBadges.map((badge, index) => (
+                            <div key={index} className="flex-shrink-0 hover:animate-bounce">
                               <img
                                 className="w-12 h-12"
                                 src={`/badges/${badge.badgeId.toString()}.png`}
