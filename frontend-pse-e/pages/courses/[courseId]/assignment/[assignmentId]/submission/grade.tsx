@@ -435,7 +435,7 @@ const Grade: React.FC = () => {
                                                 setIsSubmitted(true);
                                                 setShowModal(false);
                                                 if (assignmentId && user && courseId) {
-                                                    gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString())
+                                                    gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString(), courseId?.toString())
                                                     addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
                                                 }
                                             }}
