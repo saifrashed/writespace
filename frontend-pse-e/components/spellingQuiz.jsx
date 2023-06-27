@@ -32,13 +32,10 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   let [usedReplacements, setUsedReplacements] = useState([]);
   const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
   const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
-<<<<<<< HEAD
   const [isProfilePictureUpdated, setIsProfilePictureUpdated] = useState(false);
 
-=======
   const [detectedLanguage, setDetectedLanguage] = useState('');
   const [clickedOther, setClickedOther] = useState(false);
->>>>>>> b6345548920e2ddb662addab07b80b29356a3230
 
   const router = useRouter()
   const { courseId, assignmentId } = router.query;
@@ -70,13 +67,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
       addUserBadges([badgeNumber], courseId, assignmentId, '', '', token);
     }
   }
-
-  useEffect(() => {
-    if (isProfilePictureUpdated) {
-      // Reset the state
-      setIsProfilePictureUpdated(false);
-    }
-  }, [isProfilePictureUpdated]);
 
   const handleChooseProfilePicture = async (badgeId) => {
     await updateUserPicture(badgeId, token);

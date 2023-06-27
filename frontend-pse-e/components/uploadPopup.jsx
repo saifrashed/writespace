@@ -7,8 +7,6 @@ import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import { useNotification } from "@/lib/hooks/useNotification";
 import useUser from "@/lib/hooks/useUser";
 import { useRouter } from "next/router";
-import { formatDate } from "@/lib/date";
-
 
 const UploadPopup = ({ showPopup, togglePopup, deadline }) => {
     const router = useRouter();
