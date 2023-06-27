@@ -129,6 +129,18 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     </button>
   );
 
+  const LanguageButton = ({ language, langCode, longCode, langText, flagClass }) => (
+    <button className={language.includes(langCode) ? selectedButtonClass : buttonClass}
+      onClick={ () => {
+        selectLanguage(longCode);
+        setClickedOther(false);
+      }}
+    >
+      {langText} <span className={`fi fi-${flagClass}`}></span>
+    </button>
+  );
+
+
   // The number of suggested replacements for our current mistake.
   const numOfSuggestions = (dataMatches) =>
     dataMatches[currentMistakeIndex].replacements.length || 0;
@@ -222,30 +234,15 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
                 {/* Language selection. */}
                 <div className="flex justify-center space-x-5 mt-4">
-                  <button className={(language === 'en-US') ? selectedButtonClass : buttonClass}
-                    onClick={() => {
-                      selectLanguage('en-US');
-                      setClickedOther(false);
-                    }}
-                  >
-                    English (US) <span className="fi fi-us"></span>
-                  </button>
-                  <button className={(language === 'en-UK') ? selectedButtonClass : buttonClass}
-                    onClick={() => {
-                      selectLanguage('en-GB');
-                      setClickedOther(false);
-                    }}
-                  >
-                    English (UK) <span className="fi fi-gb"></span>
-                  </button>
-                  <button className={language.includes('nl') ? selectedButtonClass : buttonClass}
-                    onClick={() => {
-                      selectLanguage('nl-NL');
-                      setClickedOther(false);
-                    }}
-                  >
-                    Dutch (NL) <span className="fi fi-nl"></span>
-                  </button>
+
+                  <LanguageButton language={language} langCode="en-US" longCode={"en-US"}
+                                  langText="English (US)" flagClass="us" />
+
+                  <LanguageButton language={language} langCode="en-GB" longCode={"en-GB"}
+                                  langText="English (UK)" flagClass="gb" />
+
+                  <LanguageButton language={language} langCode="nl" longCode={"nl-NL"}
+                                  langText="Dutch (NL)" flagClass="nl" />
 
                   <button className={ buttonClass }
                     onClick={() => {
