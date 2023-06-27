@@ -39,13 +39,16 @@ const CreateAssignment = () => {
     const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const newAssignment: Assignment = {
-            ...assignment,
-            due_at: assignment.due_at && new Date(assignment.due_at)?.toISOString(),
-            allowed_attempts: assignment.allowed_attempts === "Unlimited" ? -1 : assignment.allowed_attempts,
-        }
 
-        await createAssignment(course?.id, newAssignment, token);
+        if (assignment.due_at && assignment.allowed_attempts) {
+            const newAssignment: any = {
+                ...assignment,
+                due_at: assignment.due_at && new Date(assignment.due_at)?.toISOString(),
+                allowed_attempts: assignment.allowed_attempts === "Unlimited" ? -1 : assignment.allowed_attempts,
+            }
+
+            await createAssignment(course?.id, newAssignment, token);
+        }
         router.back();
     };
 
@@ -65,6 +68,44 @@ const CreateAssignment = () => {
             [name]: inputValue
         }));
     };
+
+
+    const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+
+        let inputValue: any = value;
+
+        if (name === "allowed_attempts") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 1 ? "Unlimited" : parseInt(inputValue);
+        }
+        if (name === "points_possible") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 0 ? 0 : parseInt(inputValue);
+        }
+
+        setAssignment((prevAssignment) => ({
+            ...prevAssignment,
+            [name]: inputValue
+        }));
+    };
+
+    const handleTextAreaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value, type } = e.target;
+
+        let inputValue: any = value;
+
+        if (name === "allowed_attempts") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 1 ? "Unlimited" : parseInt(inputValue);
+        }
+        if (name === "points_possible") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 0 ? 0 : parseInt(inputValue);
+        }
+
+        setAssignment((prevAssignment) => ({
+            ...prevAssignment,
+            [name]: inputValue
+        }));
+    };
+
 
     return (
         <>
@@ -125,7 +166,7 @@ const CreateAssignment = () => {
                             placeholder="Description"
                             name="description"
                             value={assignment.description}
-                            onChange={handleInputChange}
+                            onChange={handleTextAreaChange}
                         ></textarea>
                         <label htmlFor="assignment_type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assignment Type</label>
                         <select disabled id="assignment_type" className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -139,7 +180,7 @@ const CreateAssignment = () => {
                             id="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             name="grading_type"
-                            onChange={handleInputChange}
+                            onChange={handleSelectChange}
                         >
                             <option value="pass_fail">Pass/Fail</option>
                             <option value="percent">Percent</option>
