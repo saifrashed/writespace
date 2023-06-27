@@ -38,6 +38,8 @@ const Assignment = () => {
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
+  console.log(assignment?.due_at)
+
   return (
     <>
       <Head>
@@ -144,7 +146,7 @@ const Assignment = () => {
               <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                 <div className="flex flex-col">
                   {/* submit button */}
-                  {assignment?.due_at != undefined && currentDate > assignment?.due_at ?
+                  {assignment?.due_at !== null && currentDate > assignment?.due_at ?
 
                   <button onClick={() => { setShowPopup(!showPopup) }} className="bg-gray-300 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-white rounded-lg flex items-center" disabled>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">

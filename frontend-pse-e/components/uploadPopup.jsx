@@ -85,8 +85,7 @@ const UploadPopup = ({ showPopup, togglePopup, deadline }) => {
         const currentTime = new Date();
         const currentDate = currentTime.toISOString();
 
-        if (deadline === undefined || currentDate < deadline){
-
+        if (deadline === null || currentDate < deadline){
             if (!isConfirmed) {
                 onError("Please confirm that the work submitted is your own.")
                 return;
@@ -97,8 +96,6 @@ const UploadPopup = ({ showPopup, togglePopup, deadline }) => {
                 return;
             }
 
-
-            // console.log("USERBADGES", user.badges)
             if (!isBadgePresent(13)) {
                 addUserBadges([13], courseId, assignmentId, "", "", token)
                 onSuccess("Congratulations you have received a badge! View your profile to see it.")
