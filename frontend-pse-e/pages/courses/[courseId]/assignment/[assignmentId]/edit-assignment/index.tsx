@@ -16,11 +16,11 @@ const EditAssignment = () => {
     const { updateAssignment } = useAssignment();
 
     const { course: contextCourse } = useContext(Context);
-    const { course: fetchedCourse, getCourse } = useCourse();
+    const { course: fetchedCourse, getCourse } = useCourse(token, courseId?.toString());
     const course = contextCourse || fetchedCourse;
 
     const { assignment: contextAssignment } = useContext(Context);
-    const { assignment: fetchedAssignment, getAssignment } = useAssignment();
+    const { assignment: fetchedAssignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString(),);
     const assignmentData = contextAssignment || fetchedAssignment;
 
     const [assignment, setAssignment] = useState<Assignment>({
@@ -35,12 +35,6 @@ const EditAssignment = () => {
         ...assignmentData,
     });
 
-    useEffect(() => {
-        if (courseId && assignmentId && token) {
-            getCourse(courseId.toString(), token);
-            getAssignment(courseId.toString(), assignmentId.toString(), token);
-        }
-    }, [router.query]);
 
     useEffect(() => {
         if (assignmentData) {

@@ -12,7 +12,7 @@ function useBadges(token = '') {
     if (token) {
       getBadges(token)
     }
-  }, [token])
+  })
 
   const getBadges = async (token: string) => {
     try {

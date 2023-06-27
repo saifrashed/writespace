@@ -12,7 +12,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
     if (assignmentId && token && courseId) {
       getAssignment(courseId, assignmentId, token);
     }
-  }, [courseId, assignmentId]);
+  });
 
   const getAssignment = async (courseId: string, assignmentId: string, token: string) => {
     try {

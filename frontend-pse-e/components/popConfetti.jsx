@@ -20,7 +20,7 @@ export default function PopConfetti() {
       });
   }, []);
 
-  useEffect(() => fire(), []);
+  useEffect(() => fire());
 
   const fire = useCallback(() => {
     makeShot(0.25, {

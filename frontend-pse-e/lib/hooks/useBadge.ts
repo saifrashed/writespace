@@ -13,7 +13,7 @@ function useBadge(token = '', badgeId = '') {
     if (token && badgeId) {
       getBadge(token, badgeId)
     }
-  }, [token])
+  })
 
   const getBadge = async (token: string, badgeId: string) => {
     try {

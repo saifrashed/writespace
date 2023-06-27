@@ -14,7 +14,7 @@ function useCourse(token = '', courseId = '') {
             getCourse(courseId, token);
             getEnrollment(courseId, token);
         }
-    }, []);
+    });
 
     const getCourse = async (courseId: String, token: string) => {
         try {

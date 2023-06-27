@@ -12,7 +12,7 @@ function useUser(token = '') {
     if (token) {
       getUser(token)
     }
-  }, []);
+  });
 
   const getUser = async (token: string) => {
     try {

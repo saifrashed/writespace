@@ -163,7 +163,7 @@ const View: React.FC = () => {
                                                                 <div
                                                                     className="items-center justify-between">
                                                                     <p className="text-md text-gray-700 font-light">
-                                                                        "{note.quote}"
+                                                                        &quot;{note.quote}&quot;
                                                                     </p>
                                                                     <p className="text-md text-gray-700  font-bold">
                                                                         {note.content}

@@ -19,7 +19,7 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
       getSubmissions(assignmentId, token);
       getSubmission(assignmentId, userId, token);
     }
-  }, [assignmentId]);
+  });
 
   const getSubmissions = async (assignmentId: string, token: string) => {
     try {

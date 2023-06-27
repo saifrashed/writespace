@@ -11,7 +11,7 @@ function useQuiz(token = '') {
     if (token) {
       getQuizzes();
     }
-  }, [token]);
+  });
 
   const getQuizzes = async () => {
     try {

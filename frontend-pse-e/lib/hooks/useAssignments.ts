@@ -13,7 +13,7 @@ function useAssignments(courseId = '', token = '') {
     if (courseId && token) {
       getAssignments(courseId?.toString(), token);
     }
-  }, [courseId]);
+  });
 
   const getAssignments = async (courseId: String, token: string) => {
     try {
