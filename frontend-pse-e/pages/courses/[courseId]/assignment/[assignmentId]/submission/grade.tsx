@@ -366,6 +366,7 @@ const Grade: React.FC = () => {
                         </div>
                     </div>
 
+
                     <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full" + (badgeModal ? " " : " hidden")}>
                         <div className="relative w-full max-w-3xl max-h-2x1 mx-auto">
                             <div className="relative bg-white rounded-lg shadow ">
