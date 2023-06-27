@@ -385,8 +385,8 @@ const Grade: React.FC = () => {
                                                                             </p>
                                                                         </div>
                                                                     </footer>
-                                                                    <p className="text-gray-500 dark:text-gray-400">"{note.quote}"</p>
-                                                                    <p className="text-black dark:text-gray-400">{note.content}</p>
+                                                                    <p className="text-gray-500 dark:text-gray-400">{note.quote}</p>
+                                                                    <p className="text-black text-bold dark:text-gray-400">{note.content}</p>
                                                                 </div>
                                                                 <div className="flex items-center mt-4 space-x-4">
                                                                     <button type="button"
