@@ -57,7 +57,7 @@ const Courses = () => {
 
       <NavBar />
 
-      <section className="bg-gray-100 min-h-screen py-28">
+      <section className="bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen py-28">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-2xl mx-auto text-center">
             <h2 className="text-3xl font-bold leading-tight text-black sm:text-4xl lg:text-5xl">Select a Course</h2>
@@ -66,6 +66,8 @@ const Courses = () => {
           <div className={`grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 p-4 ${courses.length === 0 && "animate-pulse"}`}>
             {courses.length === 0 ? (
               <>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
+                <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
                 <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
                 <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>
                 <div className="h-40 xs:h-64 bg-gray-300 rounded-2xl dark:bg-gray-600 p-2"></div>

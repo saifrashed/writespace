@@ -47,7 +47,7 @@ const Assignment = () => {
 
       {/* Display the headers: Assignment name, grade and deadline. */}
       {/* Assignment name. */}
-      <div className="bg-gray-50 min-h-screen py-10 mt-14">
+      <div className="bg-gradient-to-br from-gray-50 to-purple-50 min-h-screen py-10 mt-14">
         <div className="max-w-5xl mx-auto px-6">
           {assignment?.name ? (
             <h1 className="text-3xl font-bold px-5">{assignment.name}</h1>
