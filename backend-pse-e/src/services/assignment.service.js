@@ -11,7 +11,7 @@ const { auth } = require('../middleware/auth');
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 // Canvas api URL
-const { API_URL} = process.env;
+const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -73,24 +73,20 @@ router.put('/update', auth, (req, res) => {
 });
 
 // Delete assignment
-// router.delete('/delete/:courseId/:assignmentId', auth, (req, res) => {
-//     const { courseId, assignmentId } = req.params
+router.delete('/delete/:courseId/:assignmentId', auth, (req, res) => {
+    const { courseId, assignmentId } = req.params
 
-//     axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {}, {
-//         headers: {
-//             Authorization: `Bearer ${req.headers["bearer"]}`
-//         }
-//     }).then(response => {
-//         // Filter assignments by submission_types
-//         res.json(response.data.filter(assignment => {
-//             return assignment.submission_types.includes("online_upload");
-//         }));
-//     }).catch(error => {
-//         console.error('Error from Canvas API:', error);
-//         res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
-//     });
-// });
-
+    axios.delete(`${API_URL}/courses/${courseId}/assignments/${assignmentId}`, {
+        headers: {
+            Authorization: `Bearer ${req.headers["bearer"]}`
+        }
+    }).then(response => {
+        res.json(response.data)
+    }).catch(error => {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId.' });
+    });
+});
 
 // Get one assignment from a course with a user access token
 router.post('/get-one', auth, async (req, res) => {
@@ -119,7 +115,7 @@ router.post('/get-one', auth, async (req, res) => {
 
 router.post('/get-all', auth, async (req, res) => {
     try {
-        const { courseId, isTeacher } = req.body;
+        const { isTeacher, courseId } = req.body;
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
             headers: {
@@ -128,12 +124,15 @@ router.post('/get-all', auth, async (req, res) => {
             params: {
                 per_page: 100
             }
-        });
+        }); 
 
-        // Only select (WriteSpace) assignments, exclude the rest
+        // Only select (WriteSpace) assignments with assignment type "online_url", exclude the rest
         if (response.data && Array.isArray(response.data)) {
-            // Filter assignments that contain " - WriteSpace" in their name
-            const filteredAssignments = response.data.filter(assignment => assignment.name && assignment.name.includes("(WriteSpace)"));
+            // Filter assignments that contain " - WriteSpace" in their name and have "online_url" submission
+            const filteredAssignments = response.data.filter(assignment =>
+                assignment.name && assignment.name.includes("(WriteSpace)")
+                && assignment.submission_types.includes("online_url")
+            );
 
             // Remove " - WriteSpace" suffix from assignment names
             filteredAssignments.forEach(assignment => {
@@ -143,8 +142,19 @@ router.post('/get-all', auth, async (req, res) => {
             response.data = filteredAssignments;
         }
 
-        // Retrieve all submissions of the user for this course if it is NOT a teacher
-        if (isTeacher) {
+        // Get the enrollments of the user in this course
+        let userEnrollmentsRes = await axios.get(`${API_URL}/courses/${courseId}/enrollments`, {
+            headers: {
+              Authorization: `Bearer ${req.headers["bearer"]}`,
+            },
+            params: {
+              user_id: res.locals.userId,
+            },
+        });
+        // Map the response to only having the type of the enrollment
+        userEnrollmentsRes = userEnrollmentsRes.data.map(enrollment => enrollment.type)
+        // Retrieve all submissions of the user for this course if it is NOT a teacher or designer
+        if (!userEnrollmentsRes.includes("TeacherEnrollment" || "DesignerEnrollment")) {
             const userSubmissionsRes = await axios.get(`${API_URL}/courses/${courseId}/students/submissions`, {
                 headers: {
                     Authorization: `Bearer ${req.headers["bearer"]}`
@@ -160,7 +170,7 @@ router.post('/get-all', auth, async (req, res) => {
             const submittedAssignmentIds = userSubmissionsRes.data
                 .filter(submission => submission.workflow_state === 'submitted')
                 .map(submission => submission.assignment_id);
-    
+
             // Add the "has_submitted" attribute and set it to true or false
             response.data.forEach(assignment => {
                 // If the user has submitted something for the assignment, set it to true
@@ -171,7 +181,7 @@ router.post('/get-all', auth, async (req, res) => {
                 }
             });
         }
-        
+
         // Send back the edited response data with "has_submitted" attribute
         res.json(response.data);
     } catch (error) {

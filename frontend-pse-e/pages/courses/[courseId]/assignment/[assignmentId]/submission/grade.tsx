@@ -39,7 +39,7 @@ const Grade: React.FC = () => {
     const { onWarning } = useNotification();
     const [message, setMessage] = React.useState('');
     const [notes, setNotes] = React.useState<Note[]>([]);
-    const [grade, setGrade] = React.useState<number>(0);
+    const [grade, setGrade] = React.useState<number>(1);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const [showModal, setShowModal] = React.useState<boolean>(false);
@@ -251,7 +251,7 @@ const Grade: React.FC = () => {
                             <div className='inline-block'>
                                 <div className="flex items-center gap-1">
                                     <button
-                                        onClick={() => { grade != 0 ? setGrade(grade - 1) : onWarning("Minimum points reached") }}
+                                        onClick={() => { grade != 1 ? setGrade(grade - 1) : onWarning("Minimum points reached") }}
 
                                         type="button"
                                         className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
@@ -359,7 +359,7 @@ const Grade: React.FC = () => {
                                                                 <div
                                                                     className="items-center justify-between">
                                                                     <p className="text-md text-gray-700 font-light">
-                                                                        "{note.quote}"
+                                                                        {note.quote}
                                                                     </p>
                                                                     <p className="text-md text-gray-700  font-bold">
                                                                         {note.content}

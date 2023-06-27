@@ -21,7 +21,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
     const { saveSubmission } = useSubmission()
     const { token } = useAuthentication()
     const { onError } = useNotification()
-    const { addUserBadges } = useUser(token)
+    const { addUserBadges, user } = useUser(token)
     const { onSuccess } = useNotification()
 
     // Security measure: Remove shady characters from file name.
@@ -76,6 +76,10 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
         });
     };
 
+    function isBadgePresent(badgeId) {
+        return user?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
+      }
+
     const handleSubmit = () => {
         if (!isConfirmed) {
             onError("Please confirm that the work submitted is your own.")
@@ -87,8 +91,13 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
             return;
         }
 
-        addUserBadges([13], courseId, assignmentId, "", "", token)
-        onSuccess("Congratulations you have received a badge! View your profile to see it.")
+
+        // console.log("USERBADGES", user.badges)
+        if (!isBadgePresent(13)) {
+            addUserBadges([13], courseId, assignmentId, "", "", token)
+            onSuccess("Congratulations you have received a badge! View your profile to see it.")
+        }
+
         saveSubmission(token, assignmentId, courseId, uploadedFile.file)
         setFileUploadSuccess(true);
     }

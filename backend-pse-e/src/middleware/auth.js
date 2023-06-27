@@ -21,9 +21,7 @@ const decryptToken = (encryptedToken) => {
 // Authentication function
 const auth = async (req, res, next) => {
     // Get the token from the header (or body, but every token should be in the header!)
-    const token =
-        req.headers["bearer"] || req.body.token;
-
+    const token = req.headers["bearer"] || req.body.token;
     if (!token) {
         return res.status(401).send("A token is required for authentication");
     }
