@@ -30,7 +30,7 @@ const CourseOverview = () => {
   const { course: fetchedCourse, role, getCourse, getEnrollment } = useCourse(token, courseId?.toString()); // When navigating to a course via url
   const course = contextCourse || fetchedCourse;
   const { deleteAssignment } = useAssignment();
-  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), role, token);
+  const { assignments, isLoading, getAssignments } = useAssignments(courseId?.toString(), token);
   const [selectedAssignment, setSelectedAssignment] = React.useState<Assignment>();
   const [showModal, setShowModal] = React.useState<boolean>(false);
 
@@ -45,13 +45,13 @@ const CourseOverview = () => {
     if (!contextCourse && courseId && token) {
       getCourse(courseId.toString(), token);
       getEnrollment(courseId.toString(), token)
-      getAssignments(courseId.toString(), ((role === 'teacher' || role === 'designer')), token);
+      getAssignments(courseId.toString(), token);
     }
   }, [router.query]);
 
   const calculateSubmittedPercentage = () => {
     if (assignments?.length > 0) {
-      const submittedCount = assignments.filter((assignment) => assignment.has_submitted_submissions).length;
+      const submittedCount = assignments.filter((assignment) => assignment.has_submitted).length;
       const totalCount = assignments.length;
       const percentage = (submittedCount / totalCount) * 100 || 0;
       return `${percentage.toFixed(2)}%`
@@ -69,8 +69,8 @@ const CourseOverview = () => {
 
   const handleDeleteAssignment = async (assignmentId: string) => {
     if (courseId && token) {
-      deleteAssignment(courseId.toString(), assignmentId.toString(), token)
-      getAssignments(courseId.toString(), ((role === 'teacher' || role === 'designer')), token);
+      await deleteAssignment(courseId.toString(), assignmentId.toString(), token)
+      await getAssignments(courseId.toString(), token);
     }
   };
 
@@ -124,10 +124,9 @@ const CourseOverview = () => {
                 <th scope="col" className="px-6 py-4 whitespace-nowrap">
                   Due At
                 </th>
-                {(role === 'teacher' || role === 'designer') && (
-                  <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                  </th>
-                )}
+                <th scope="col" className="px-6 py-4 whitespace-nowrap">
+                  {role == '' || role === 'teacher' || role === 'designer' ? null : "Submission Status"}
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -143,7 +142,7 @@ const CourseOverview = () => {
                     <motion.td layoutId={assignment?.due_at?.toString()} className="px-6 py-4 whitespace-nowrap">
                       {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}
                     </motion.td>
-                    {(role === 'teacher' || role === 'designer') && (
+                    {(role === 'teacher' || role === 'designer') ? (
                       <td className="flex items-center justify-end px-3 py-2 space-x-3">
                         <Link
                           href={`/courses/${courseId}/assignment/${assignment.id}/edit-assignment`}
@@ -163,7 +162,31 @@ const CourseOverview = () => {
                         </button>
 
                       </td>
-                    )}
+                    ) : (
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div
+                          className={`flex items-center ${assignment.has_submitted
+                            ? ("text-emerald-400")
+                            : new Date() < new Date(assignment.due_at)
+                              ? ("text-orange-500")
+                              : ("text-red-500")
+                            } font-bold`}
+                        >
+                          <div
+                            className={`h-2.5 w-2.5 rounded-full ${assignment.has_submitted
+                              ? ("bg-emerald-400")
+                              : new Date() < new Date(assignment.due_at)
+                                ? ("bg-orange-500")
+                                : ("bg-red-500")
+                              } mr-2`}
+                          ></div>
+                          {assignment.has_submitted
+                            ? "Submitted"
+                            : "Not Submitted"}
+                        </div>
+                      </td>
+                    )
+                    }
                   </tr>
                 )
               ))}

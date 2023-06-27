@@ -1,3 +1,4 @@
+// To do: disable buttons when api call is being processed.
 import React, { useEffect, useState } from "react";
 import convertPdfToText from "@/lib/pdfToText";
 import { useNotification } from "@/lib/hooks/useNotification";
@@ -15,21 +16,29 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
     "text-gray-800 text-lg font-medium rounded-full";
+  const selectedButtonClass = "px-4 py-2 mr-2 inline-block bg-green-100 hover:bg-green-200 " +
+    "text-gray-800 text-lg font-medium rounded-full";
 
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
   const [outroScreen, setOutroScreen] = useState(false);
-  const [language, setLanguage] = useState("");
+  const [rejectScreen, setRejectScreen] = useState(false);
+  const [language, setLanguage] = useState("");  // Selected language.?
   const { onSuccess, onError } = useNotification();
   const [currentMistakeIndex, setCurrentMistakeIndex] = useState(-1);
   const [maxSuggestions, setMaxSuggestions] = useState(6);
-  const [dataMatches, setDataMatches] = useState(null);
+  const [dataMatches, setDataMatches] = useState({});
   const [isAPILoading, setIsAPILoading] = useState(false);
   let [usedReplacements, setUsedReplacements] = useState([]);
   const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
   const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
+<<<<<<< HEAD
   const [isProfilePictureUpdated, setIsProfilePictureUpdated] = useState(false);
 
+=======
+  const [detectedLanguage, setDetectedLanguage] = useState('');
+  const [clickedOther, setClickedOther] = useState(false);
+>>>>>>> b6345548920e2ddb662addab07b80b29356a3230
 
   const router = useRouter()
   const { courseId, assignmentId } = router.query;
@@ -37,7 +46,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const { user, addUserBadges, updateUserPicture } = useUser(token)
   const beeBadgeId = 2;
   const spellBadgeId = 14;
-
 
   // Check if the user has received the badge already for this assignment.
   const checkBadgePresent = (badgeId) => {
@@ -56,7 +64,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     return presence;
   }
 
-  const handleAddBadge = (badgeNumber) => {  // Give spelling bee badge.
+  const handleAddBadge = (badgeNumber) => {
     if (!checkBadgePresent(badgeNumber)) {
       onSuccess("Congratulations you have received a badge! View your profile to see it.");
       addUserBadges([badgeNumber], courseId, assignmentId, '', '', token);
@@ -79,6 +87,12 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     const fetchPdfText = async () => {
       const pdfText = await convertPdfToText(fileUrl);
       const filteredText = filterText(pdfText);
+
+      if (filteredText.length >= 30000) {
+        setIntroScreen(false);
+        setRejectScreen(true);
+      }
+
       setExtractedText(filteredText);
     };
 
@@ -86,23 +100,25 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   }, [fileUrl]);
 
   const selectLanguage = async (lang) => {
+    console.log("Selected language:", lang);
     setLanguage(lang);
-    console.log("Using language " + lang);
     setIsAPILoading(true);  // To disable start button.
 
     try {
-      const response = await languageTool(
-        lang,
-        extractedText
-      );
+      const response = await languageTool(lang, extractedText);
+      console.log("Detected language:", response.language.detectedLanguage);
+      setDetectedLanguage(response.language.detectedLanguage);
       setDataMatches(filterData(response, user?.name));
       setIsAPILoading(false); // Enable start button after API call is done.
 
       // Initialize/resize the array with replacements chosen by user.
       setUsedReplacements(Array(response.matches.length).fill(undefined));
     } catch (error) {
-      console.log(error);
-      onError("API call failed");
+      onError("LanguageTool API call failed: use detected language");
+
+      // Wrongly selected language can cause API call fail, so detect language.
+      selectLanguage('en');
+      setClickedOther(true);
     }
   };
 
@@ -111,6 +127,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     setOutroScreen(false);
     setCurrentMistakeIndex(-1);
     setMaxSuggestions(6);
+    setClickedOther(false);
   }
 
   const handleCloseModal = () => {
@@ -126,6 +143,19 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex
                 items-center">
       <i className="fa-solid fa-arrow-left w-5 h-5"></i>
+    </button>
+  );
+
+  const LanguageButton = ({ language, langCode, longCode, langText, flagClass }) => (
+    <button className={language.includes(langCode) ? selectedButtonClass : buttonClass}
+      onClick={ () => {
+        selectLanguage(longCode);
+        setClickedOther(false);
+      }}
+      disabled={isAPILoading}
+      style={isAPILoading ? { opacity: 0.5 } : {}}
+    >
+      {langText} <span className={`fi fi-${flagClass}`}></span>
     </button>
   );
 
@@ -170,6 +200,32 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
               <span className="sr-only">Close modal</span>
             </button>
 
+            {rejectScreen && (
+              <div>
+                <h1 className="text-center text-lg font-semibold pt-4 pb-4">
+                  No spelling check possible.
+                </h1>
+                <p>
+                  Unfortunately large files cannot be processed at this time
+                  as we are limited by the usage of a free API service with
+                  some limitations.
+                  <br/>
+                  We encourage you to refer to other spell checkers to
+                  complement your proofreading process and to take the time
+                  to review your work and correct any mistakes manually,
+                  paying attention to spelling, grammar, and overall
+                  coherence. Remember, proofreading is an essential part of
+                  the writing process and contributes to the refinement of
+                  your ideas.
+                </p>
+                <div className="flex justify-end">
+                  <button className={buttonClass} onClick={handleCloseModal}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
+
             {introScreen && (
               <>
                 <div>
@@ -195,24 +251,48 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 </div>
 
                 {/* Language selection. */}
-                {/* More could be added. 76 languages supported by API. */}
-                <div className="flex justify-center space-x-5 mt-4 pb-4">
-                  <button onClick={() => selectLanguage('en-US')} className={buttonClass}>
-                    English (US) <span className="fi fi-us"></span>
+                <div className="flex justify-center space-x-5 mt-4">
+
+                  <LanguageButton language={language} langCode="en-US" longCode={"en-US"}
+                                  langText="English (US)" flagClass="us" />
+
+                  <LanguageButton language={language} langCode="en-GB" longCode={"en-GB"}
+                                  langText="English (UK)" flagClass="gb" />
+
+                  <LanguageButton language={language} langCode="nl" longCode={"nl-NL"}
+                                  langText="Dutch (NL)" flagClass="nl" />
+
+                  <button className={ buttonClass }
+                    onClick={() => {
+                      selectLanguage('en');
+                      setClickedOther(true);
+                    }}
+                    disabled={isAPILoading}
+                    style={isAPILoading ? { opacity: 0.5 } : {}}
+                  >
+                    Other
                   </button>
-                  <button onClick={() => selectLanguage('en-GB')} className={buttonClass}>
-                    English (UK) <span className="fi fi-gb"></span>
-                  </button>
-                  <button onClick={() => selectLanguage('nl-NL')} className={buttonClass}>
-                    Dutch (NL) <span className="fi fi-nl"></span>
-                  </button>
+
                 </div>
+                {language && !clickedOther && (
+                  <div className="flex justify-center">
+                    <p>Selected language: {language}</p>
+                  </div>
+                )}
+                {clickedOther && (
+                  <div className="flex justify-center">
+                    <p>Select detected language</p>
+                  </div>
+                ) }
 
                 {isAPILoading && (
                   <div className="text-center pt-6 pb-3">
+                    <span // Animated loading circle.
+                      className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-purple-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status"
+                    />
                     <p>
                       Please wait while the API request is being processed. <br />
-                      If the loading persists, please try selecting your language again. <br />
                       If the API call fails, you may have selected the wrong language.
                     </p>
                   </div>
@@ -221,15 +301,34 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 {/* Show begin button only when language is selected. */}
                 {language && !isAPILoading && (
                   <div className="flex justify-between pt-6">
-                    <p>Selected language: {language}</p>
-                    <button className={buttonClass}
-                      onClick={() => {
-                        setIntroScreen(false);
-                        setCurrentMistakeIndex(0);
+                    {!language.includes(detectedLanguage.code) && (
+                      <button onClick={() => {
+                        selectLanguage(detectedLanguage.code);
+                        setClickedOther(false);
                       }}
-                    >
-                      Begin
-                    </button>
+                        className={buttonClass}
+                      >
+                        Use detected language: {detectedLanguage.name}
+                      </button>
+                    )}
+                    {language.includes(detectedLanguage.code) && (<div className="flex1"/ >)}
+
+                    {!clickedOther && (
+                      <button className={buttonClass}
+                        onClick={() => {
+                          setIntroScreen(false);
+                          setCurrentMistakeIndex(0);
+
+                          // Give spelling bee badge when no mistakes detected.
+                          if (dataMatches.length === 0) {
+                            setOutroScreen(true);
+                            handleAddBadge(beeBadgeId);
+                          }
+                        }}
+                      >
+                        Begin
+                      </button>
+                    )}
                   </div>
                 )}
               </>
@@ -403,13 +502,10 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     <button className={buttonClass}  // 'Next' button.
                       onClick={() => {
 
+                        // Give spellmaster badge on finishing quiz.
                         if (currentMistakeIndex === dataMatches.length - 1) {
                           setOutroScreen(true);
                           handleAddBadge(spellBadgeId);
-                        }
-                        else if (dataMatches.length === 0) {
-                          setOutroScreen(true);
-                          handleAddBadge(beeBadgeId);
                         }
 
                         setCurrentMistakeIndex((prevIndex) => prevIndex + 1);
@@ -422,7 +518,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 </div>
               )}
 
-            {outroScreen && (
+            {outroScreen && !(dataMatches.length === 0) && (
               <div>
                 <BackButton />
                 <div>

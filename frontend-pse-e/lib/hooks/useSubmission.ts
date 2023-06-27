@@ -88,13 +88,14 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
   }
 
   // Grades a submission for an assignment and user
-  const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: string, userId: string) => {
+  const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: string, userId: string, courseId: string) => {
     try {
       const body = {
         userId: userId,
         assignmentId: assignmentId,
         grade: grade,
-        notes: notes
+        notes: notes,
+        courseId: courseId
       }
 
       const response = await axios.put(`${config.baseUrl}/submission/grade/`, body, { headers: { bearer: token } });
