@@ -257,6 +257,7 @@ export interface Note {
     quote: string;
     author: string;
     replies: Reply[];
+    fresh: boolean;
 }
 
 export interface TokenResponse {

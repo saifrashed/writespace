@@ -157,6 +157,7 @@ const Grade: React.FC = () => {
                     quote: props.selectedText,
                     replies: [],
                     author: "",
+                    fresh: true,
                 };
                 setNotes(notes.concat([note]));
                 props.cancel();
@@ -387,7 +388,7 @@ const Grade: React.FC = () => {
                                                                     <p className="text-md text-gray-700 italic">
                                                                         - {note.author ? note.author : "You"}
                                                                     </p>
-                                                                    {hasReplies && (
+                                                                    {hasReplies && !note.fresh && (
                                                                         <ul>
                                                                             {note.replies.map((reply, replyIndex) => (
                                                                                 <li key={replyIndex} className="bg-gray-500 m-4">
@@ -402,9 +403,11 @@ const Grade: React.FC = () => {
                                                                             ))}
                                                                         </ul>
                                                                     )}
-                                                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(e) => addReply(note.id, "Teacher")}>
-                                                                        Add Reply
-                                                                    </button>
+                                                                    {!note.fresh && (
+                                                                        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(e) => addReply(note.id, "Teacher")}>
+                                                                            Add Reply
+                                                                        </button>
+                                                                    )}
                                                                 </div>
                                                             </div>
                                                         </li>
