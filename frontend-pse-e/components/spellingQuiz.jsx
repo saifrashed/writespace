@@ -1,3 +1,4 @@
+// To do: disable buttons when api call is being processed.
 import React, { useEffect, useState } from "react";
 import convertPdfToText from "@/lib/pdfToText";
 import { useNotification } from "@/lib/hooks/useNotification";
@@ -135,11 +136,12 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
         selectLanguage(longCode);
         setClickedOther(false);
       }}
+      disabled={isAPILoading}
+      style={isAPILoading ? { opacity: 0.5 } : {}}
     >
       {langText} <span className={`fi fi-${flagClass}`}></span>
     </button>
   );
-
 
   // The number of suggested replacements for our current mistake.
   const numOfSuggestions = (dataMatches) =>
@@ -249,6 +251,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       selectLanguage('en');
                       setClickedOther(true);
                     }}
+                    disabled={isAPILoading}
+                    style={isAPILoading ? { opacity: 0.5 } : {}}
                   >
                     Other
                   </button>
@@ -267,9 +271,12 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
                 {isAPILoading && (
                   <div className="text-center pt-6 pb-3">
+                    <span // Animated loading circle.
+                      className="inline-block h-4 w-4 animate-spin rounded-full border-4 border-solid border-purple-500 border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status"
+                    />
                     <p>
                       Please wait while the API request is being processed. <br />
-                      If the loading persists, please try selecting your language again. <br />
                       If the API call fails, you may have selected the wrong language.
                     </p>
                   </div>
@@ -292,7 +299,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
                     {!clickedOther && (
                       <button className={buttonClass}
-                        onClick={() => { // HIERO MOET JE ZIJN
+                        onClick={() => {
                           setIntroScreen(false);
                           setCurrentMistakeIndex(0);
 
