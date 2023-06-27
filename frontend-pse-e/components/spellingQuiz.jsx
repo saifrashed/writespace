@@ -28,12 +28,13 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   let [usedReplacements, setUsedReplacements] = useState([]);
   const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
   const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
+  const [isProfilePictureUpdated, setIsProfilePictureUpdated] = useState(false);
 
 
   const router = useRouter()
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication()
-  const { user, addUserBadges } = useUser(token)
+  const { user, addUserBadges, updateUserPicture } = useUser(token)
   const beeBadgeId = 2;
   const spellBadgeId = 14;
 
@@ -61,6 +62,17 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
       addUserBadges([badgeNumber], courseId, assignmentId, '', '', token);
     }
   }
+
+  useEffect(() => {
+    if (isProfilePictureUpdated) {
+      // Reset the state
+      setIsProfilePictureUpdated(false);
+    }
+  }, [isProfilePictureUpdated]);
+
+  const handleChooseProfilePicture = async (badgeId) => {
+    await updateUserPicture(badgeId, token);
+  };
 
   // Extract text from pdf.
   useEffect(() => {
@@ -250,7 +262,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={null}
+                        onChooseProfilePicture={() => handleChooseProfilePicture(beeBadgeId)}
+                        setIsProfilePictureUpdated={setIsProfilePictureUpdated}
                       />
                     </div>
                   </div>
@@ -438,7 +451,8 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
-                        onChooseProfilePicture={null}
+                        onChooseProfilePicture={() => handleChooseProfilePicture(spellBadgeId)}
+                        setIsProfilePictureUpdated={setIsProfilePictureUpdated}
                       />
                     </div>
                   </div>
