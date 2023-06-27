@@ -262,7 +262,7 @@ const Grade: React.FC = () => {
                                     <input
                                         type="number"
                                         value={grade}
-                                        max={assignment?.points_possible}
+                                        max={10}
                                         readOnly
                                         className="h-10 w-16 rounded border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
                                     />
@@ -271,13 +271,13 @@ const Grade: React.FC = () => {
 
                                     <input
                                         type="number"
-                                        value={assignment?.points_possible}
+                                        value={10}
                                         readOnly
                                         className="h-10 w-16 rounded border-gray-200  text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
                                     />
 
                                     <button
-                                        onClick={() => { assignment?.points_possible && (grade < assignment?.points_possible ? setGrade(grade + 1) : onWarning("Maximum points reached")) }}
+                                        onClick={() => { (grade < 10 ? setGrade(grade + 1) : onWarning("Maximum points reached")) }}
                                         type="button"
                                         className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
                                     >
@@ -458,7 +458,7 @@ const Grade: React.FC = () => {
                                             ></path>
                                         </svg>
                                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                                            Are you sure you want to submit this grade?
+                                            Submit the assessment with a grade of {grade}?
                                         </h3>
                                         <button
                                             data-modal-hide="popup-modal"

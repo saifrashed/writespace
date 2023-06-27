@@ -64,11 +64,11 @@ const Assignment = () => {
           {/* Grade. */}
           <div className="md:flex items-center justify-between mb-6 px-5">
             <p className="mt-8 text-gray-600">
-              <span className="font-bold">Grade: </span>{" "}
+              <span className="font-bold">Score: </span>{" "}
               {submission?.grade ? (
                 <span>
                   {" "}
-                  {Number(submission.grade).toFixed(1)} / {assignment?.points_possible}{" "}
+                  {Number((submission.grade / 10) * (assignment?.points_possible)).toFixed(1)} / {assignment?.points_possible}{` (${submission.grade})`}
                 </span>
               ) : (
                 " Waiting to be graded"
