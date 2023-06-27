@@ -200,7 +200,7 @@ const Assignment = () => {
                       <div className="relative mt-2" style={{ marginTop: "1.5rem", overflowX: "auto" }}>
                         <div className="flex my-3">
                           {assignmentBadges.map((badge, index) => (
-                            <div key={index} className="flex-shrink-0 hover:animate-bounce">
+                            <div key={index} className="flex-shrink-0 hover:animate-bounceNew">
                               <img
                                 className="w-12 h-12"
                                 src={`/badges/${badge.badgeId.toString()}.png`}

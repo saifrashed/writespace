@@ -52,14 +52,11 @@ const Home = () => {
       <NavBar showLogout={false} />
 
       {isLoading ? (
-
-        // This is ugly. Will fix.
         <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-          <div className="absolute right-1/2 bottom-1/2  transform translate-x-1/2 translate-y-1/2 ">
-              <div className="border-t-transparent border-solid animate-spin  rounded-full border-blue-400 border-8 h-64 w-64"></div>
+          <div className="absolute right-1/2 bottom-1/2 transform translate-x-1/2 translate-y-1/2">
+            <div className="border-t-transparent border-solid animate-spin rounded-full border-sky-500 border-8 h-14 w-14"></div>
           </div>
         </div>
-
       ) : (
         <div className="relative">
           <section className="bg-white overflow-hidden">
@@ -74,7 +71,7 @@ const Home = () => {
                     Fun, Engaging.
                   </h1>
                   {/* <p className="mt-8 text-xl text-black">We help you to make your remote work life easier. Build a distraction free working experience.</p> */}
-                  <p className="mt-8 text-xl text-black">Try our dynamic gamified platform, transform studying into an engaging and rewarding experience.</p>
+                  <p className="mt-8 text-xl text-black">Try our dynamic gamified platform and transform studying into an engaging and rewarding experience.</p>
                   <br />
                   <button className="bg-sky-300 hover:bg-sky-400 text-white transition-all font-bold py-2 px-4 border-b-8 border-sky-500 hover:border-sky-500 rounded-lg flex items-center mt-4">
                     <div className="flex flex-col items-center lg:flex-row">
