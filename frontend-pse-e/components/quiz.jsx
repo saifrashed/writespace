@@ -20,7 +20,6 @@ const Quiz = () => {
         getAllUserScores(token);
     }, [quizMenu]);
 
-
     const isQuizCompleted = (quizKey) => {
         // Hierin moeten de user quizzes.
         return userScores.some((quiz) => quiz.quizId === Number(quizKey))
@@ -96,7 +95,7 @@ const Quiz = () => {
                                 )}
 
                                 {selectedQuiz && Object.keys(selectedQuizObject).length > 0 && (
-                                    <Questions quizId={selectedQuiz} questions={selectedQuizObject.questions} userScores={userScores} />
+                                    <Questions topic={selectedQuizObject.topic} quizId={selectedQuiz} questions={selectedQuizObject.questions} userScores={userScores} />
                                 )}
                             </div>
                         )}

@@ -38,8 +38,6 @@ const Assignment = () => {
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
-  console.log(assignment?.due_at)
-
   return (
     <>
       <Head>
