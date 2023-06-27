@@ -20,9 +20,25 @@ const Quiz = () => {
         getAllUserScores(token);
     }, [quizMenu]);
 
+
+    function objectContainsMessage(obj, message) {
+        for (let key in obj) {
+          if (obj.hasOwnProperty(key) && obj[key] === message) {
+            return true;
+          }
+        }
+        return false;
+      }
+
     const isQuizCompleted = (quizKey) => {
+        // console.log("Contains message?",objectContainsMessage(userScores, "Object not found"))
+        if (objectContainsMessage(userScores, "Object not found")){
+            return false
+        }
         // Hierin moeten de user quizzes.
-        return userScores.some((quiz) => quiz.quizId === Number(quizKey))
+        else {
+            return userScores.some((quiz) => quiz.quizId === Number(quizKey))
+        }
     }
 
     // For opening popup
