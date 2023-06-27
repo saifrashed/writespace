@@ -58,7 +58,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     return presence;
   }
 
-  const handleAddBadge = (badgeNumber) => {  // Give spelling bee badge.
+  const handleAddBadge = (badgeNumber) => {
     if (!checkBadgePresent(badgeNumber)) {
       onSuccess("Congratulations you have received a badge! View your profile to see it.");
       addUserBadges([badgeNumber], courseId, assignmentId, '', '', token);
@@ -292,9 +292,15 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
                     {!clickedOther && (
                       <button className={buttonClass}
-                        onClick={() => {
+                        onClick={() => { // HIERO MOET JE ZIJN
                           setIntroScreen(false);
                           setCurrentMistakeIndex(0);
+
+                          // Give spelling bee badge when no mistakes detected.
+                          if (dataMatches.length === 0) {
+                            setOutroScreen(true);
+                            handleAddBadge(beeBadgeId);
+                          }
                         }}
                       >
                         Begin
@@ -472,13 +478,10 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     <button className={buttonClass}  // 'Next' button.
                       onClick={() => {
 
+                        // Give spellmaster badge on finishing quiz.
                         if (currentMistakeIndex === dataMatches.length - 1) {
                           setOutroScreen(true);
                           handleAddBadge(spellBadgeId);
-                        }
-                        else if (dataMatches.length === 0) {
-                          setOutroScreen(true);
-                          handleAddBadge(beeBadgeId);
                         }
 
                         setCurrentMistakeIndex((prevIndex) => prevIndex + 1);
@@ -491,7 +494,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 </div>
               )}
 
-            {outroScreen && (
+            {outroScreen && !(dataMatches.length === 0) && (
               <div>
                 <BackButton />
                 <div>

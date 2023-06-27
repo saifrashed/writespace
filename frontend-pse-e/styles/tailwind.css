@@ -1947,11 +1947,6 @@ select {
   padding-bottom: 1.25rem;
 }
 
-.py-8 {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
 .pb-16 {
   padding-bottom: 4rem;
 }
@@ -2074,10 +2069,6 @@ select {
 
 .uppercase {
   text-transform: uppercase;
-}
-
-.italic {
-  font-style: italic;
 }
 
 .leading-10 {
@@ -2549,11 +2540,6 @@ select {
   background-color: rgb(31 41 55 / var(--tw-bg-opacity));
 }
 
-:is(.dark .dark\:bg-gray-900) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(17 24 39 / var(--tw-bg-opacity));
-}
-
 :is(.dark .dark\:text-blue-400) {
   --tw-text-opacity: 1;
   color: rgb(96 165 250 / var(--tw-text-opacity));
@@ -2869,11 +2855,6 @@ select {
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
-  }
-
-  .lg\:py-16 {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
   }
 
   .lg\:py-24 {
