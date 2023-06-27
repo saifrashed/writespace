@@ -45,7 +45,7 @@ const CourseOverview = () => {
     if (!contextCourse && courseId && token) {
       getCourse(courseId.toString(), token);
       getEnrollment(courseId.toString(), token)
-      getAssignments(courseId.toString(), ((role === 'teacher' || role === 'designer')), token);
+      getAssignments(courseId.toString(), token);
     }
   }, [router.query]);
 
@@ -70,7 +70,7 @@ const CourseOverview = () => {
   const handleDeleteAssignment = async (assignmentId: string) => {
     if (courseId && token) {
       deleteAssignment(courseId.toString(), assignmentId.toString(), token)
-      getAssignments(courseId.toString(), ((role === 'teacher' || role === 'designer')), token);
+      getAssignments(courseId.toString(), token);
     }
   };
 
