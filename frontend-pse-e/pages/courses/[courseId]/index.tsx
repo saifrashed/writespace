@@ -69,8 +69,8 @@ const CourseOverview = () => {
 
   const handleDeleteAssignment = async (assignmentId: string) => {
     if (courseId && token) {
-      deleteAssignment(courseId.toString(), assignmentId.toString(), token)
-      getAssignments(courseId.toString(), token);
+      await deleteAssignment(courseId.toString(), assignmentId.toString(), token)
+      await getAssignments(courseId.toString(), token);
     }
   };
 
