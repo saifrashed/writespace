@@ -23,13 +23,13 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const [introScreen, setIntroScreen] = useState(true);
   const [outroScreen, setOutroScreen] = useState(false);
   const [rejectScreen, setRejectScreen] = useState(false);
-  const [language, setLanguage] = useState("");  // Selected language.?
+  const [language, setLanguage] = useState("");
   const { onSuccess, onError } = useNotification();
   const [currentMistakeIndex, setCurrentMistakeIndex] = useState(-1);
   const [maxSuggestions, setMaxSuggestions] = useState(6);
   const [dataMatches, setDataMatches] = useState({});
   const [isAPILoading, setIsAPILoading] = useState(false);
-  let [usedReplacements, setUsedReplacements] = useState([]);
+  const [usedReplacements, setUsedReplacements] = useState([]);
   const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
   const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
   const [isProfilePictureUpdated, setIsProfilePictureUpdated] = useState(false);
@@ -269,7 +269,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     <p>Selected language: {language}</p>
                   </div>
                 )}
-                {clickedOther && (
+                {clickedOther && !isAPILoading && (
                   <div className="flex justify-center">
                     <p>Select detected language</p>
                   </div>
