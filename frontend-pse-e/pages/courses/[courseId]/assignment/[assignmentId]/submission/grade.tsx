@@ -318,7 +318,6 @@ const Grade: React.FC = () => {
                         </div>
                     </div>
 
-                    {/* Notes Bar */}
                     <div className={"relative z-10 "} role="dialog" aria-modal="true">
                         <div
                             className={"pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10 transition ease-in-out delay-250 " + (!noteBar && "translate-x-full")}>
@@ -351,25 +350,60 @@ const Grade: React.FC = () => {
                                     <div className="relative  flex-1">
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
+                                                {/* <section className="bg-white dark:bg-gray-900 py-8 lg:py-16">
+                                                    <div className="max-w-2xl mx-auto px-4">
+                                                        <form className="mb-6">
+                                                            <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+                                                                <label className="sr-only">Your comment</label>
+                                                                <textarea id="comment"
+                                                                    className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
+                                                                    placeholder="Write a comment..." required></textarea>
+                                                            </div>
+                                                            <button type="submit"
+                                                                className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
+                                                                Post comment
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </section> */}
                                                 {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
                                                 {notes.map((note, index) => {
                                                     return (
-                                                        <li key={index} className="block hover:bg-gray-50 cursor-pointer" onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
-                                                            <div className="px-4 py-4 sm:px-6">
-                                                                <div
-                                                                    className="items-center justify-between">
-                                                                    <p className="text-md text-gray-700 font-light">
-                                                                        {note.quote}
-                                                                    </p>
-                                                                    <p className="text-md text-gray-700  font-bold">
-                                                                        {note.content}
-                                                                    </p>
-                                                                    <p className="text-md text-gray-700  italic">
-                                                                        - {note.author}
-                                                                    </p>
+                                                        <>
+                                                            <article className="p-6 text-base  bg-white rounded-lg dark:bg-gray-900" key={index} >
+                                                                <div className='hover:bg-gray-50 cursor-pointer' onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
+                                                                    <footer className="flex justify-between items-center mb-2">
+                                                                        <div className="flex items-center">
+                                                                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                                                                {note.author ? note.author : "Anonymous"}
+                                                                            </p>
+                                                                        </div>
+                                                                    </footer>
+                                                                    <p className="text-gray-500 dark:text-gray-400">"{note.quote}"</p>
+                                                                    <p className="text-black dark:text-gray-400">{note.content}</p>
                                                                 </div>
-                                                            </div>
-                                                        </li>
+                                                                <div className="flex items-center mt-4 space-x-4">
+                                                                    <button type="button"
+                                                                        className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
+                                                                        <svg aria-hidden="true" className="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                                                                        Reply
+                                                                    </button>
+                                                                </div>
+                                                            </article>
+                                                            <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
+                                                                <footer className="flex justify-between items-center mb-2">
+                                                                    <div className="flex items-center">
+                                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                                                            Jese Leos
+                                                                        </p>
+                                                                        <p className="text-sm text-gray-600 "><time
+                                                                            title="February 12th, 2022">Feb. 12, 2022</time></p>
+                                                                    </div>
+                                                                </footer>
+                                                                <p className="text-gray-500">Much appreciated! Glad you liked it ☺️</p>
+
+                                                            </article>
+                                                        </>
                                                     )
                                                 })}
                                             </ul>
@@ -381,7 +415,6 @@ const Grade: React.FC = () => {
                     </div>
                     {showModal && (
                         <div
-                            id="popup-modal"
                             tabIndex={-1}
                             className={`fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full flex justify-center items-center  backdrop-blur-[6px]`}
                         >
@@ -457,7 +490,6 @@ const Grade: React.FC = () => {
                     )}
                     {showBadgeModal && (
                         <div
-                            id="popup-badge-modal"
                             tabIndex={-1}
                             className={`fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full flex justify-center items-center  backdrop-blur-[6px]`}
                         >
@@ -524,38 +556,6 @@ const Grade: React.FC = () => {
                             </div>
                         </div>
                     )}
-
-                    {/* <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full" + (showBadgeModal ? " " : " hidden")}>
-                        <div className="relative w-full max-w-3xl max-h-2x1 mx-auto">
-                            <div className="relative bg-white rounded-lg shadow ">
-                                <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
-                                    <svg aria-hidden="true" className="w-4 h-5" fill="currentColor" onClick={() => { setBadgeModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                                    <span className="sr-only">Close modal</span>
-                                </button>
-                                <div className="p-6 text-center">
-                                    <div className="grid gap-4 my-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                                        {badges.map((badge, index) => {
-                                            return (
-                                                <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
-                                                    onClick={() => { console.log("assigning badge: ", badge.name); handleBadgeClick(index, badge); }}
-                                                    title={badge.description}
-                                                    key={badge.badgeId}
-                                                >
-                                                    <img className="w-10 h-10" src={`/badges/${badge.badgeId.toString()}.png`} alt={badge.description} />
-                                                    <p className="text-sm">{badge.name}</p>
-                                                </button>)
-                                        })}
-                                    </div>
-                                    <h3 className="mb-0 text-lg font-normal text-gray-500 ">Are you sure you want to assign these badges?</h3>
-                                    <p className="mb-5 text-sm font-normal text-gray-500 ">(badges wont be given until grade submission)</p>
-                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                        Yes, I'm sure
-                                    </button>
-                                    <button data-modal-hide="popup-modal" onClick={() => { setBadgeModal(false); setAssignedBadges([]); setBadgeClicked(new Array(badges.length).fill(false)); }} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
             )}
 
