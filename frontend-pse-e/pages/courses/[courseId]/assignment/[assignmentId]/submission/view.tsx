@@ -9,7 +9,6 @@ import useAuthentication from '@/lib/hooks/useAuthentication';
 import Lottie from "lottie-react"
 import SpellingQuiz from '@/components/spellingQuiz'
 import * as searchingAnimationData from "@/public/animations/searching.json";
-import { Reply } from '@/lib/types';
 
 import {
     highlightPlugin,
@@ -36,7 +35,7 @@ const View: React.FC = () => {
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const { token } = useAuthentication()
-    const { getSubmission, addReply, submission, fileNotes, fileUrl, grade } = useSubmission(token, assignmentId?.toString())
+    const { getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission(token, assignmentId?.toString())
 
     const [showPopup, setShowPopup] = useState(false);
 
@@ -45,24 +44,6 @@ const View: React.FC = () => {
     const jumpToNote = (note: Note) => {
         if (noteEles.has(note.id)) {
             noteEles.get(note.id)?.scrollIntoView();
-        }
-    };
-
-    const addCommentReply = async (noteId: number, reply: string) => {
-        if (notes) {
-            const updatedNotes = [...notes]; // Create a copy of the original array
-            const reply_object: Reply = {
-                noteId: noteId,
-                message: reply,
-                userId: 0,
-                user_name: "",
-            };
-            updatedNotes[noteId - 1].replies.push(reply_object);
-            setNotes(updatedNotes);
-        }
-        if (assignmentId) {
-            console.log(assignmentId);
-            addReply(token, Number(assignmentId), reply, noteId);
         }
     };
 
@@ -192,34 +173,20 @@ const View: React.FC = () => {
                                             <ul className="divide-y divide-gray-200">
                                                 {notes.length === 0 && <div className='text-center py-3'>There is no note</div>}
                                                 {notes.map((note, index) => {
-                                                    const hasReplies = note.replies && note.replies.length > 0;
                                                     return (
                                                         <li className="block hover:bg-gray-50 cursor-pointer" key={index} onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
                                                             <div className="px-4 py-4 sm:px-6">
-                                                                <div className="items-center justify-between">
+                                                                <div
+                                                                    className="items-center justify-between">
                                                                     <p className="text-md text-gray-700 font-light">
-                                                                        "{note.quote}"
+                                                                        {note.quote}
                                                                     </p>
-                                                                    <p className="text-md text-gray-700 font-bold">
+                                                                    <p className="text-md text-gray-700  font-bold">
                                                                         {note.content}
                                                                     </p>
-                                                                    <p className="text-md text-gray-700 italic">
+                                                                    <p className="text-md text-gray-700  italic">
                                                                         - {note.author}
                                                                     </p>
-                                                                    {hasReplies && (
-                                                                        <ul>
-                                                                            {note.replies.map((reply, replyIndex) => (
-                                                                                <li key={replyIndex} className="bg-gray-500 m-4">
-                                                                                    <p>{replyIndex}</p>
-                                                                                    <p>{reply.message}</p>
-                                                                                    {reply.user_name ? <p>{reply.user_name}</p> : <p>You</p>}
-                                                                                </li>
-                                                                            ))}
-                                                                        </ul>
-                                                                    )}
-                                                                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={(e) => addCommentReply(note.id, "Student")}>
-                                                                        Add Reply
-                                                                    </button>
                                                                 </div>
                                                             </div>
                                                         </li>

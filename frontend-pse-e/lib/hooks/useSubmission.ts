@@ -107,26 +107,7 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     }
   }
 
-  const addReply = async (token: string, assignmentId: number, message: string, noteId: number) => {
-    try {
-      const body = {
-        assignmentId: assignmentId,
-        message: message,
-        noteId: noteId
-      }
-
-      const response = await axios.put(`${config.baseUrl}/submission/add-reply/`, body, { headers: { bearer: token } });
-
-      console.log(response)
-
-      onSuccess("Reply submitted")
-    } catch (error) {
-      console.log(error);
-      onError("Something went wrong");
-    }
-  }
-
-  return { submission, submissions, isLoading, fileUrl, fileNotes, grade, getSubmissions, getSubmission, saveSubmission, gradeSubmission, addReply };
+  return { submission, submissions, isLoading, fileUrl, fileNotes, grade, getSubmissions, getSubmission, saveSubmission, gradeSubmission };
 }
 
 export default useSubmission;

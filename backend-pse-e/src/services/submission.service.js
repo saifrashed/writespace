@@ -213,45 +213,6 @@ router.put('/grade/', auth, async (req, res) => {
     }
 });
 
-// Note replies
-router.put('/add-reply/', auth, async (req, res) => {
-    try {
-        const userId = res.locals.userId;
-        const { assignmentId, noteId, message } = req.body;
-
-        const submissionToUpdate = await submissionModel.findOne(
-            {
-                'assignmentId': assignmentId,
-                'userId': userId
-            }
-        );
-
-        const updateId = submissionToUpdate._id;
-
-        const replyObject = {
-            note_id: noteId,
-            message: message,
-            user_id: userId,
-            user_name: res.locals.user.name
-        }
-
-        console.log(replyObject)
-        console.log(noteId)
-
-        if (!submissionToUpdate) {
-            return res.status(200).json({ error: 'Submission not found' });
-        }
-
-        submissionToUpdate.fileNotes[noteId - 1].replies.push(replyObject);
-
-        const updatedSubmission = await submissionModel.findByIdAndUpdate( updateId, submissionToUpdate, { new: true });
-
-        res.status(200).json({ message: 'Submission updated successfully' });
-    } catch (error) {
-        console.error('Error updating data in MongoDB:', error);
-        res.status(500).json({ error: 'Failed to update data in the database' });
-    }
-});
 
 // // Updates the submission Grade
 // router.put('/grade/', auth, async (req, res) => {
