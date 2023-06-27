@@ -353,53 +353,31 @@ const Grade: React.FC = () => {
                                             Comments about your assignment.
                                         </span>
                                     </div>
-                                    <div className="relative  flex-1">
+                                    <div className="relative flex-1">
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
-                                                {/* <section className="bg-white dark:bg-gray-900 py-8 lg:py-16">
-                                                    <div className="max-w-2xl mx-auto px-4">
-                                                        <form className="mb-6">
-                                                            <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-                                                                <label className="sr-only">Your comment</label>
-                                                                <textarea id="comment"
-                                                                    className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
-                                                                    placeholder="Write a comment..." required></textarea>
-                                                            </div>
-                                                            <button type="submit"
-                                                                className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 dark:focus:ring-primary-900 hover:bg-primary-800">
-                                                                Post comment
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                </section> */}
                                                 {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
                                                 {notes.map((note, index) => {
                                                     return (
                                                         <>
-                                                            <article className="p-6 text-base  bg-white rounded-lg dark:bg-gray-900" key={index} >
+                                                            <article className="p-6 text-base  bg-white rounded-lg " key={index} >
                                                                 <div className='hover:bg-gray-50 cursor-pointer' onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
                                                                     <footer className="flex justify-between items-center mb-2">
                                                                         <div className="flex items-center">
-                                                                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                                                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 ">
                                                                                 {note.author ? note.author : "Anonymous"}
                                                                             </p>
                                                                         </div>
                                                                     </footer>
-                                                                    <p className="text-gray-500 dark:text-gray-400">{note.quote}</p>
-                                                                    <p className="text-black text-bold dark:text-gray-400">{note.content}</p>
+                                                                    <p className="text-gray-500 ">{note.quote}</p>
+                                                                    <p className="text-black text-bold ">{note.content}</p>
                                                                 </div>
-                                                                <div className="flex items-center mt-4 space-x-4">
-                                                                    <button type="button"
-                                                                        className="flex items-center text-sm text-gray-500 hover:underline dark:text-gray-400">
-                                                                        <svg aria-hidden="true" className="mr-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                                                                        Reply
-                                                                    </button>
-                                                                </div>
+
                                                             </article>
-                                                            <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg dark:bg-gray-900">
+                                                            <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg ">
                                                                 <footer className="flex justify-between items-center mb-2">
                                                                     <div className="flex items-center">
-                                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white">
+                                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900">
                                                                             Jese Leos
                                                                         </p>
                                                                         <p className="text-sm text-gray-600 "><time
@@ -407,8 +385,23 @@ const Grade: React.FC = () => {
                                                                     </div>
                                                                 </footer>
                                                                 <p className="text-gray-500">Much appreciated! Glad you liked it ☺️</p>
-
                                                             </article>
+                                                            <section className="bg-white ml-6 lg:ml-12 ">
+                                                                <div className="max-w-2xl mx-auto px-4 py-3">
+                                                                    <form className="mb-6">
+                                                                        <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
+                                                                            <label className="sr-only">Your comment</label>
+                                                                            <textarea id="comment"
+                                                                                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none "
+                                                                                placeholder="Write a comment..." required></textarea>
+                                                                        </div>
+                                                                        <button type="submit"
+                                                                            className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800">
+                                                                            Post comment
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </section>
                                                         </>
                                                     )
                                                 })}
@@ -425,11 +418,11 @@ const Grade: React.FC = () => {
                             className={`fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full flex justify-center items-center  backdrop-blur-[6px]`}
                         >
                             <div className="relative w-full max-w-md max-h-full">
-                                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <div className="relative bg-white rounded-lg shadow">
                                     <button
                                         type="button"
                                         onClick={closeModal}
-                                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
                                         data-modal-hide="popup-modal"
                                     >
                                         <svg
@@ -450,7 +443,7 @@ const Grade: React.FC = () => {
                                     <div className="p-6 text-center">
                                         <svg
                                             aria-hidden="true"
-                                            className="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200"
+                                            className="mx-auto mb-4 text-gray-400 w-14 h-14 "
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -463,13 +456,13 @@ const Grade: React.FC = () => {
                                                 d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                             ></path>
                                         </svg>
-                                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                                        <h3 className="mb-5 text-lg font-normal text-gray-500 ">
                                             Submit the assessment with a grade of {grade}?
                                         </h3>
                                         <button
                                             data-modal-hide="popup-modal"
                                             type="button"
-                                            className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                                            className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
                                             onClick={() => {
                                                 setIsSubmitted(true);
                                                 setShowModal(false);
@@ -484,7 +477,7 @@ const Grade: React.FC = () => {
                                         <button
                                             data-modal-hide="popup-modal"
                                             type="button"
-                                            className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                            className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 "
                                             onClick={() => { setShowModal(false) }}
                                         >
                                             No, cancel
@@ -500,11 +493,11 @@ const Grade: React.FC = () => {
                             className={`fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full flex justify-center items-center  backdrop-blur-[6px]`}
                         >
                             <div className="relative w-full max-w-3xl max-h-full mx-auto">
-                                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                <div className="relative bg-white rounded-lg shadow ">
                                     <button
                                         type="button"
                                         onClick={closeBadgeModal}
-                                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center "
                                         data-modal-hide="popup-badge-modal"
                                     >
                                         <svg
@@ -542,7 +535,7 @@ const Grade: React.FC = () => {
                                         <button
                                             data-modal-hide="popup-badge-modal"
                                             type="button"
-                                            className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                                            className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
                                             onClick={() => {
                                                 setBadgeModal(false);
                                             }}
@@ -552,7 +545,7 @@ const Grade: React.FC = () => {
                                         <button
                                             data-modal-hide="popup-badge-modal"
                                             type="button"
-                                            className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                            className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 "
                                             onClick={() => { setBadgeModal(false) }}
                                         >
                                             No, cancel

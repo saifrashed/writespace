@@ -2425,10 +2425,6 @@ select {
   color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 
-.hover\:underline:hover {
-  text-decoration-line: underline;
-}
-
 .hover\:opacity-75:hover {
   opacity: 0.75;
 }
@@ -2655,11 +2651,6 @@ select {
 :is(.dark .dark\:focus\:ring-gray-600:focus) {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(75 85 99 / var(--tw-ring-opacity));
-}
-
-:is(.dark .dark\:focus\:ring-green-800:focus) {
-  --tw-ring-opacity: 1;
-  --tw-ring-color: rgb(22 101 52 / var(--tw-ring-opacity));
 }
 
 :is(.dark .dark\:focus\:ring-red-800:focus) {
