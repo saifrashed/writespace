@@ -3,9 +3,13 @@ import useQuiz from '@/lib/hooks/useQuiz';
 import useQuizScore from '@/lib/hooks/useQuizScore';
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import PopConfetti from './popConfetti';
+import useUser from '@/lib/hooks/useUser';
+import { useNotification } from "@/lib/hooks/useNotification";
 
-const Questions = ({quizId, questions, userScores}) => {
+const Questions = ({topic, quizId, questions, userScores}) => {
   const { token } = useAuthentication();
+  const { addUserBadges, user } = useUser(token)
+  const { onSuccess } = useNotification()
   const [answers, setAnswers] = useState([])
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(-1)
@@ -20,7 +24,18 @@ const Questions = ({quizId, questions, userScores}) => {
 
   const { question, choices, correctAnswer } = questions[activeQuestion];
   const {getOneScore, saveQuizScore} = useQuizScore(token);
+  const index = quizId > 4 ? 0 : quizId;
 
+  function isBadgePresent(badgeId) {
+    return user?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(index + 50) && badge.assignmentId === parseInt(index)));
+  }
+
+  const handleAddBadge = () => {
+    if (!isBadgePresent(index+15)){
+      addUserBadges([index+15], String(index+50), String(index), "", "", token)
+      onSuccess("Congratulations you have received a badge! View your profile to see it.")
+    }
+  }
   const handleAnswers = () => {
     const answer = {
       question: question,
@@ -35,11 +50,9 @@ const Questions = ({quizId, questions, userScores}) => {
     const userScore = userScores.find((quiz) => quiz.quizId === Number(quizId))
 
     if (userScore.highScore === undefined) {
-      console.log("no highscore yet")
       return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
     }
     else if (result.correctAnswers > userScore.highScore) {
-      console.log("new highscore")
       return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
     }
     return <p>{'Highscore: ' + String(userScore.highScore)}</p>
@@ -66,6 +79,7 @@ const Questions = ({quizId, questions, userScores}) => {
     // When the last question is filled in
     else {
       setShowResult(true);
+      handleAddBadge()
     }
 
     setSelectedAnswer(false);
@@ -104,8 +118,9 @@ const Questions = ({quizId, questions, userScores}) => {
       {/* If the Quiz is in progress */}
       {!showResult &&  (
         <div className='pt-6'>
-          <span>{activeQuestion + 1}</span>
-          <span>/{questions.length}</span>
+          <h1 className='font-bold text-center text-xl'>{topic}</h1>
+          {/* <span>{activeQuestion + 1}</span>
+          <span>/{questions.length}</span> */}
           <h2>{question}</h2>
           <div>
             {choices.map((answer, index) => (
@@ -118,6 +133,10 @@ const Questions = ({quizId, questions, userScores}) => {
                 {answer}
               </div>
             ))}
+          </div>
+          <div className="flex justify-center">
+              <span className='text-center'>{activeQuestion + 1}</span>
+              <span className='text-center'>/{questions.length}</span>
           </div>
           <div className="flex justify-end">
             <button className="rounded-lg text-xl h-8 px-3 my-4 focus:outline-none"
@@ -155,9 +174,6 @@ const Questions = ({quizId, questions, userScores}) => {
               <br />
             </div>
           ))}
-          { quizScores && (
-            console.log(quizScores)
-          )}
         </div>
       )}
     </>
