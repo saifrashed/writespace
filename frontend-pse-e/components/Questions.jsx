@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import useQuiz from '@/lib/hooks/useQuiz';
 import useQuizScore from '@/lib/hooks/useQuizScore';
 import useAuthentication from "@/lib/hooks/useAuthentication";
+import PopConfetti from './popConfetti';
 
-const Questions = ({quizId, questions}) => {
+const Questions = ({quizId, questions, userScores}) => {
   const { token } = useAuthentication();
   const [answers, setAnswers] = useState([])
   const [activeQuestion, setActiveQuestion] = useState(0)
@@ -18,17 +19,31 @@ const Questions = ({quizId, questions}) => {
   const [quizScores, setQuizScores] = useState([])
 
   const { question, choices, correctAnswer } = questions[activeQuestion];
-  const { getAllQuizzesScores, getAllUserScores, getAllQuizScores, getOneScore, saveQuizScore, updateQuizScore } = useQuizScore(token);
+  const {getOneScore, saveQuizScore} = useQuizScore(token);
 
   const handleAnswers = () => {
     const answer = {
       question: question,
       answered: selAnswer,
-      correctAnswer: choices[correctAnswer],
+      correctAnswer: correctAnswer,
     };
 
     setAnswers(prevAnswers => [...prevAnswers, answer]);
   };
+
+  const getHighScore = () => {
+    const userScore = userScores.find((quiz) => quiz.quizId === Number(quizId))
+
+    if (userScore.highScore === undefined) {
+      console.log("no highscore yet")
+      return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
+    }
+    else if (result.correctAnswers > userScore.highScore) {
+      console.log("new highscore")
+      return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
+    }
+    return <p>{'Highscore: ' + String(userScore.highScore)}</p>
+  }
 
   // when the next button is clicked
   const onClickNext = () => {
@@ -61,7 +76,7 @@ const Questions = ({quizId, questions}) => {
   const onAnswerSelected = (answer, index) => {
     setSelAnswer(answer)
     setSelectedAnswerIndex(index)
-    if (answer === choices[correctAnswer]) {
+    if (answer === correctAnswer) {
       setSelectedAnswer(true)
     } else {
       setSelectedAnswer(false)
@@ -96,7 +111,7 @@ const Questions = ({quizId, questions}) => {
             {choices.map((answer, index) => (
               <div
                 key={answer}
-                className={(selectedAnswerIndex === index ? 'text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer transition-all bg-pink-200' : 'text-base transition-all border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer')}
+                className={(selectedAnswerIndex === index ? 'text-base border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer transition-all bg-blue-200' : 'text-base transition-all border border-gray-300 rounded-lg py-2 px-3 my-4 cursor-pointer')}
                 style={{ cursor: 'pointer' }}
                 onClick={() => onAnswerSelected(answer, index)}
               >
@@ -119,9 +134,10 @@ const Questions = ({quizId, questions}) => {
       {showResult && (
         <div className="text-center">
           <h3 className="text-2xl font-bold">Result</h3>
-          <p>Total Question: {questions.length}</p>
+          <p>Total Questions: {questions.length}</p>
           <p>Correct Answers: {result.correctAnswers}</p>
           <p>Wrong Answers: {result.wrongAnswers}</p>
+          {getHighScore()}
           {/* <p>Latest Highscore: {latestHighScore} </p> */}
           <br />
 

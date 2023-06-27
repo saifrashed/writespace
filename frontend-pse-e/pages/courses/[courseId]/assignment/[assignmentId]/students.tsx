@@ -9,8 +9,13 @@ import { motion } from "framer-motion";
 import useSubmission from "@/lib/hooks/useSubmission";
 import Link from "next/link";
 
-
-const Assignments = () => {
+/**
+ * The students page component for teachers.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered courses page.
+ */
+const Students = () => {
     const router = useRouter();
     // Accessing query parameters from the router object
     const { assignmentId, courseId } = router.query;
@@ -91,4 +96,4 @@ const Assignments = () => {
     );
 };
 
-export default Assignments;
+export default Students;

@@ -12,14 +12,22 @@ import Quiz from "@/components/quiz";
 import useSubmission from "@/lib/hooks/useSubmission";
 import useUser from "@/lib/hooks/useUser";
 
-const Assignments = () => {
+
+/**
+ * The assignment page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered courses page.
+ */
+const Assignment = () => {
   const router = useRouter();
   // Accessing query parameters from the router object
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
-  const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString());
-  const { submission, isLoading } = useSubmission(token, assignmentId?.toString(), "");
-  const { assignmentBadges } = useUser(token, assignmentId?.toString());
+  const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
+  const { submission } = useSubmission(token, assignmentId?.toString(), '')
+  const { assignmentBadges } = useUser(token, assignmentId?.toString())
+
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
 
@@ -292,4 +300,4 @@ const Assignments = () => {
   );
 };
 
-export default Assignments;
+export default Assignment;

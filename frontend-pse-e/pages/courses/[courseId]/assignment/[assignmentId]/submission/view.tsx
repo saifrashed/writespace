@@ -1,5 +1,5 @@
 import NavBar from '@/components/NavBar';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Note } from '@/lib/types';
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import useSubmission from '@/lib/hooks/useSubmission';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from '@/lib/hooks/useAuthentication';
 import Lottie from "lottie-react"
+import SpellingQuiz from '@/components/spellingQuiz'
 import * as searchingAnimationData from "@/public/animations/searching.json";
 
 import {
@@ -21,6 +22,13 @@ import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-vie
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
+
+/**
+ * The view submission page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered view submission page.
+ */
 const View: React.FC = () => {
     const router = useRouter();
     const { assignmentId } = router.query;
@@ -28,6 +36,8 @@ const View: React.FC = () => {
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const { token } = useAuthentication()
     const { getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission(token, assignmentId?.toString())
+
+    const [showPopup, setShowPopup] = useState(false);
 
     const noteEles: Map<number, HTMLElement> = new Map();
 
@@ -107,6 +117,12 @@ const View: React.FC = () => {
                                 </button>
                             </div>
 
+                            <div>
+                                <button onClick={() => { setShowPopup(!showPopup) }}
+                                    className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
+                                    Revise spelling
+                                </button>
+                            </div>
 
                             <div>
                                 <button
@@ -163,10 +179,13 @@ const View: React.FC = () => {
                                                                 <div
                                                                     className="items-center justify-between">
                                                                     <p className="text-md text-gray-700 font-light">
-                                                                        "{note.quote}"
+                                                                        {note.quote}
                                                                     </p>
                                                                     <p className="text-md text-gray-700  font-bold">
                                                                         {note.content}
+                                                                    </p>
+                                                                    <p className="text-md text-gray-700  italic">
+                                                                        - {note.author}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -202,6 +221,7 @@ const View: React.FC = () => {
                 </>
             )}
 
+            <SpellingQuiz fileUrl={fileUrl} showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} />
         </div>
     );
 };

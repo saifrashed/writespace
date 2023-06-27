@@ -2,7 +2,6 @@ import type { AppProps } from "next/app";
 import { AnimatePresence } from 'framer-motion';
 import { Toaster } from "react-hot-toast";
 import { Provider } from '@/Context';
-import useAuthentication from "@/lib/hooks/useAuthentication";
 import { Worker } from '@react-pdf-viewer/core';
 
 import "@fortawesome/fontawesome-free/css/all.min.css";

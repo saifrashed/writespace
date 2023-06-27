@@ -30,9 +30,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     transition: 'transform 0.3s ease',
     transformOrigin: 'bottom',
     transform: isHovered
-      ? `scale(${resizeFactor + 0.1}) translateY(-40px)`
+      ? `scale(${resizeFactor + 0.1}) translate(-${245.76 * 0.1}px, -${245.76 * 0.1}px)`
       : `scale(${resizeFactor})`,
-
     cursor: isHovered ? 'pointer' : '',
   };
 
@@ -46,8 +45,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   const badgeId = extractIdFromUrl(pictureUrl)
 
   const handleChooseProfilePicture = async () => {
-    await onChooseProfilePicture(badgeId);
     setIsProfilePictureUpdated(true);
+    await onChooseProfilePicture(badgeId);
     setShowPopup(false);
   };
 
@@ -66,7 +65,10 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
           </div>
         </div>
         <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick={togglePopup}>Close</button>
-        {unlocked ? <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>: ''}
+
+        {unlocked && onChooseProfilePicture && (
+        <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>
+        )}
       </>
     );
   };

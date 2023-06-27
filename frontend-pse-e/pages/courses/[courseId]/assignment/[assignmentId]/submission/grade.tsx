@@ -9,6 +9,8 @@ import useSubmission from '@/lib/hooks/useSubmission';
 import useAuthentication from '@/lib/hooks/useAuthentication';
 import useUser from '@/lib/hooks/useUser';
 import useBadges from '@/lib/hooks/useBadges';
+import useAssignment from '@/lib/hooks/useAssignment';
+import { useNotification } from '@/lib/hooks/useNotification';
 
 import {
     highlightPlugin,
@@ -23,23 +25,48 @@ import { Button, Position, PrimaryButton, Tooltip, Viewer } from '@react-pdf-vie
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
+
+/**
+ * The grade page component.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered grade page.
+ */
 const Grade: React.FC = () => {
     const router = useRouter();
     const { courseId, assignmentId, user } = router.query;
     const { token } = useAuthentication()
+    const { onWarning } = useNotification();
     const [message, setMessage] = React.useState('');
     const [notes, setNotes] = React.useState<Note[]>([]);
-    const [grade, setGrade] = React.useState<number>(0);
+    const [grade, setGrade] = React.useState<number>(1);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const [isSubmitted, setIsSubmitted] = React.useState<boolean>(false);
     const [showModal, setShowModal] = React.useState<boolean>(false);
-    const [badgeModal, setBadgeModal] = React.useState<boolean>(false);
+    const [showBadgeModal, setBadgeModal] = React.useState<boolean>(false);
     const [badgeClicked, setBadgeClicked] = React.useState<boolean[]>([]);
     const [assignedBadges, setAssignedBadges] = React.useState<number[]>([]);
     const { updateUserExperiencePoints } = useUser(token)
+    const { assignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
+
     const { gradeSubmission, getSubmission, fileUrl, fileNotes } = useSubmission(token, assignmentId?.toString(), user?.toString())
     const { addUserBadges } = useUser(token)
     const { badges } = useBadges(token)
+
+    const openModal = () => {
+        setShowModal(true);
+    };
+
+    const closeModal = () => {
+        setShowModal(false);
+    };
+    const openBadgeModal = () => {
+        setBadgeModal(true);
+    };
+
+    const closeBadgeModal = () => {
+        setBadgeModal(false);
+    };
 
     const handleBadgeClick = (index: number, badge: Badge) => {
         let newBadgeClicked = [...badgeClicked];
@@ -224,7 +251,7 @@ const Grade: React.FC = () => {
                             <div className='inline-block'>
                                 <div className="flex items-center gap-1">
                                     <button
-                                        onClick={() => { setGrade(grade - 1) }}
+                                        onClick={() => { grade != 1 ? setGrade(grade - 1) : onWarning("Minimum points reached") }}
 
                                         type="button"
                                         className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
@@ -235,13 +262,22 @@ const Grade: React.FC = () => {
                                     <input
                                         type="number"
                                         value={grade}
-                                        max={10}
+                                        max={assignment?.points_possible}
                                         readOnly
                                         className="h-10 w-16 rounded border-gray-200 text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
                                     />
 
+                                    /
+
+                                    <input
+                                        type="number"
+                                        value={assignment?.points_possible}
+                                        readOnly
+                                        className="h-10 w-16 rounded border-gray-200  text-center [-moz-appearance:_textfield] sm:text-sm [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none"
+                                    />
+
                                     <button
-                                        onClick={() => { setGrade(grade + 1) }}
+                                        onClick={() => { assignment?.points_possible && (grade < assignment?.points_possible ? setGrade(grade + 1) : onWarning("Maximum points reached")) }}
                                         type="button"
                                         className="w-10 h-10 leading-10 text-gray-600 transition hover:opacity-75"
                                     >
@@ -251,16 +287,17 @@ const Grade: React.FC = () => {
                             </div>
                             <div>
                                 <button
-                                    className="px-4 py-2 mr-2 inline-block bg-gray-100  hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full" onClick={() => { setShowModal(true) }}>
-                                    Submit grade
+                                    onClick={openModal}
+                                    className="px-4 py-2 mr-2 inline-block bg-gray-100  hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full"
+                                    type="button"
+                                >
+                                    Submit Grade
                                 </button>
                             </div>
                             <div>
                                 <button
                                     className="px-4 py-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full relative"
-                                    onClick={() => {
-                                        setBadgeModal(true);
-                                    }}
+                                    onClick={openBadgeModal}
                                 >
                                     {assignedBadges.length === 0 ? "Assign badges" : "See assigned badges"}
                                     <span
@@ -322,10 +359,13 @@ const Grade: React.FC = () => {
                                                                 <div
                                                                     className="items-center justify-between">
                                                                     <p className="text-md text-gray-700 font-light">
-                                                                        "{note.quote}"
+                                                                        {note.quote}
                                                                     </p>
                                                                     <p className="text-md text-gray-700  font-bold">
                                                                         {note.content}
+                                                                    </p>
+                                                                    <p className="text-md text-gray-700  italic">
+                                                                        - {note.author}
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -339,34 +379,153 @@ const Grade: React.FC = () => {
                             </div>
                         </div>
                     </div>
-
-                    <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full " + (showModal ? " " : " hidden")}>
-                        <div className="relative w-full max-w-md max-h-full mx-auto">
-                            <div className="relative bg-white rounded-lg shadow ">
-                                <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
-                                    <svg aria-hidden="true" className="w-5 h-5" fill="currentColor" onClick={() => { setShowModal(false) }} viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd"></path></svg>
-                                    <span className="sr-only">Close modal</span>
-                                </button>
-                                <div className="p-6 text-center">
-                                    <svg aria-hidden="true" className="mx-auto mb-4 text-gray-400 w-14 h-14 " fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                    <h3 className="mb-5 text-lg font-normal text-gray-500 ">Are you sure you want to submit this grade?</h3>
-                                    <button data-modal-hide="popup-modal" onClick={() => {
-                                        setIsSubmitted(true);
-                                        setShowModal(false);
-                                        if (assignmentId && user && courseId) {
-                                            gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString())
-                                            addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
-                                        }
-                                    }} type="button" className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                        Yes, I'm sure
+                    {showModal && (
+                        <div
+                            id="popup-modal"
+                            tabIndex={-1}
+                            className={`fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full flex justify-center items-center  backdrop-blur-[6px]`}
+                        >
+                            <div className="relative w-full max-w-md max-h-full">
+                                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <button
+                                        type="button"
+                                        onClick={closeModal}
+                                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                                        data-modal-hide="popup-modal"
+                                    >
+                                        <svg
+                                            aria-hidden="true"
+                                            className="w-5 h-5"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clipRule="evenodd"
+                                            ></path>
+                                        </svg>
+                                        <span className="sr-only">Close modal</span>
                                     </button>
-                                    <button data-modal-hide="popup-modal" onClick={() => { setShowModal(false) }} type="button" className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 ">No, cancel</button>
+                                    <div className="p-6 text-center">
+                                        <svg
+                                            aria-hidden="true"
+                                            className="mx-auto mb-4 text-gray-400 w-14 h-14 dark:text-gray-200"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                                strokeWidth="2"
+                                                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                                            ></path>
+                                        </svg>
+                                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                                            Are you sure you want to submit this grade?
+                                        </h3>
+                                        <button
+                                            data-modal-hide="popup-modal"
+                                            type="button"
+                                            className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                                            onClick={() => {
+                                                setIsSubmitted(true);
+                                                setShowModal(false);
+                                                if (assignmentId && user && courseId) {
+                                                    gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString())
+                                                    addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
+                                                }
+                                            }}
+                                        >
+                                            Yes, I'm sure
+                                        </button>
+                                        <button
+                                            data-modal-hide="popup-modal"
+                                            type="button"
+                                            className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                            onClick={() => { setShowModal(false) }}
+                                        >
+                                            No, cancel
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    )}
+                    {showBadgeModal && (
+                        <div
+                            id="popup-badge-modal"
+                            tabIndex={-1}
+                            className={`fixed top-0 left-0 right-0 z-50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-full max-h-full flex justify-center items-center  backdrop-blur-[6px]`}
+                        >
+                            <div className="relative w-full max-w-3xl max-h-full mx-auto">
+                                <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                    <button
+                                        type="button"
+                                        onClick={closeBadgeModal}
+                                        className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
+                                        data-modal-hide="popup-badge-modal"
+                                    >
+                                        <svg
+                                            aria-hidden="true"
+                                            className="w-5 h-5"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                                clipRule="evenodd"
+                                            ></path>
+                                        </svg>
+                                        <span className="sr-only">Close modal</span>
+                                    </button>
+                                    <div className="p-6 text-center">
 
-                    <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full" + (badgeModal ? " " : " hidden")}>
+                                        <div className="grid gap-4 my-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                                            {badges.map((badge, index) => {
+                                                return (
+                                                    <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
+                                                        onClick={() => { console.log("assigning badge: ", badge.name); handleBadgeClick(index, badge); }}
+                                                        title={badge.description}
+                                                        key={badge.badgeId}
+                                                    >
+                                                        <img className="w-10 h-10" src={`/badges/${badge.badgeId.toString()}.png`} alt={badge.description} />
+                                                        <p className="text-sm">{badge.name}</p>
+                                                    </button>)
+                                            })}
+                                        </div>
+                                        <h3 className="mb-0 text-lg font-normal text-gray-500 ">Are you sure you want to assign these badges?</h3>
+                                        <p className="mb-5 text-sm font-normal text-gray-500 ">(badges wont be given until grade submission)</p>
+                                        <button
+                                            data-modal-hide="popup-badge-modal"
+                                            type="button"
+                                            className="text-white bg-green-600 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
+                                            onClick={() => {
+                                                setBadgeModal(false);
+                                            }}
+                                        >
+                                            Yes, I'm sure
+                                        </button>
+                                        <button
+                                            data-modal-hide="popup-badge-modal"
+                                            type="button"
+                                            className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
+                                            onClick={() => { setBadgeModal(false) }}
+                                        >
+                                            No, cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full" + (showBadgeModal ? " " : " hidden")}>
                         <div className="relative w-full max-w-3xl max-h-2x1 mx-auto">
                             <div className="relative bg-white rounded-lg shadow ">
                                 <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
@@ -396,7 +555,7 @@ const Grade: React.FC = () => {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             )}
 

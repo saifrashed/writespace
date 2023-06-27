@@ -21,7 +21,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
     const { saveSubmission } = useSubmission()
     const { token } = useAuthentication()
     const { onError } = useNotification()
-    const { addUserBadges } = useUser(token)
+    const { addUserBadges, user } = useUser(token)
     const { onSuccess } = useNotification()
 
     // Security measure: Remove shady characters from file name.
@@ -76,6 +76,10 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
         });
     };
 
+    function isBadgePresent(badgeId) {
+        return user?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
+      }
+
     const handleSubmit = () => {
         if (!isConfirmed) {
             onError("Please confirm that the work submitted is your own.")
@@ -87,9 +91,14 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
             return;
         }
 
-        addUserBadges([13], courseId, assignmentId, "", "", token)
-        onSuccess("Congratulations you have received a badge! View your profile to see it.")
-        saveSubmission(token, assignmentId, uploadedFile.file)
+
+        // console.log("USERBADGES", user.badges)
+        if (!isBadgePresent(13)) {
+            addUserBadges([13], courseId, assignmentId, "", "", token)
+            onSuccess("Congratulations you have received a badge! View your profile to see it.")
+        }
+
+        saveSubmission(token, assignmentId, courseId, uploadedFile.file)
         setFileUploadSuccess(true);
     }
 
@@ -106,7 +115,7 @@ const UploadPopup = ({ showPopup, togglePopup }) => {
 
     return (
         <>
-            <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full "} >
+            <div tabIndex={-1} className={"backdrop-blur-[6px] fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full "} >
                 <div className="relative w-full max-w-md max-h-full mx-auto">
                     <div className="relative bg-white rounded-lg shadow ">
                         <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">

@@ -76,6 +76,7 @@ router.post('/students', auth, async (req, res) => {
 // Get a user's role for a specific course
 // The path is /user/role because otherwise the request does a different one!
 router.post('/enrollment', auth, async (req, res) => {
+    const roles = ['teacher', 'designer', 'ta', 'student', 'observer'];
     try {
         const { courseId } = req.body;
         // Canvas API url
@@ -84,8 +85,15 @@ router.post('/enrollment', auth, async (req, res) => {
                 Authorization: `Bearer ${req.headers["bearer"]}`
             }
         });
+        const enrollments = response.data.enrollments;
         // Return enrollments information
-        res.json(response.data.enrollments[0]);
+        for (const role of roles) {
+            const enrollment = enrollments.find(enrollment => enrollment.type === role);
+            if (enrollment) {
+                res.json(enrollment);
+                break;
+            }
+        }
     } catch (error) {
         console.error('Error from Canvas API:', error);
         res.status(500).json({ error: 'An error occurred in /courses/:courseId/user/role.' });
