@@ -83,12 +83,13 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   }, [fileUrl]);
 
   const selectLanguage = async (lang) => {
+    console.log("Selected language:", lang);
     setLanguage(lang);
     setIsAPILoading(true);  // To disable start button.
 
     try {
       const response = await languageTool(lang, extractedText);
-
+      console.log("Detected language:", response.language.detectedLanguage);
       setDetectedLanguage(response.language.detectedLanguage);
       setDataMatches(filterData(response, user?.name));
       setIsAPILoading(false); // Enable start button after API call is done.
@@ -96,8 +97,11 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
       // Initialize/resize the array with replacements chosen by user.
       setUsedReplacements(Array(response.matches.length).fill(undefined));
     } catch (error) {
-      console.log(error);
-      onError("LanguageTool API call failed");
+      onError("LanguageTool API call failed: use detected language");
+
+      // Wrongly selected language can cause API call fail, so detect language.
+      selectLanguage('en');
+      setClickedOther(true);
     }
   };
 
@@ -277,7 +281,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 {/* Show begin button only when language is selected. */}
                 {language && !isAPILoading && (
                   <div className="flex justify-between pt-6">
-                    {language !== detectedLanguage.code && (
+                    {!language.includes(detectedLanguage.code) && (
                       <button onClick={() => {
                         selectLanguage(detectedLanguage.code);
                         setClickedOther(false);
@@ -287,7 +291,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         Use detected language: {detectedLanguage.name}
                       </button>
                     )}
-                    {language === detectedLanguage.code && (<div className="flex1"/ >)}
+                    {language.includes(detectedLanguage.code) && (<div className="flex1"/ >)}
 
                     {!clickedOther && (
                       <button className={buttonClass}
