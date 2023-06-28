@@ -44,11 +44,13 @@ These steps are an explanation of the steps provided in the Canvas API documenta
 
 ### Examples from our project (team PSE-E 2023, made in NodeJS)
 ![Alt text](image.png)
+
 This is the login request. You can test this at first by going to this URL in your browser: `localhost:5000/canvas-api/login`. Then you will get redirected to somewhere you can authorize yourself by logging into your Canvas account and approving.
 
 After you have authorized yourself on that URL, the browser gets a new URL containing the code and state. The code is needed for the next request to ask for the access token of the user.
 
 ![Alt text](image-1.png)
+
 You will probably see something like this in the beginning because the FE does not handle this URL at the start. You will need to make something in the FE that handles this URL so that the FE can extract the code from the URL and send a new request to the backend with that code. NOTE: the code can only be used for ONE request; with multiple used requests, it will cause an error (probably 404: NOT_FOUND)!
 
 This is an example for that request:
@@ -61,6 +63,7 @@ The refresh_token can be used infinetly after this. That can be used to ask a ne
 ![Alt text](image-4.png)
 
 This will return something like this:
+
 ![Alt text](image-5.png)
 
 # Extra information
