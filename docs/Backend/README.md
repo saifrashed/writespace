@@ -19,7 +19,7 @@
 - [npm](https://www.npmjs.com/get-npm): Node package manager
 - [Node.js](https://nodejs.org/en/): JavaScript runtime environment
 - [Express.js](https://expressjs.com/): Node.js web application framework
-- [MongoDB](https://docs.mongodb.com/manual/installation/)
+- [MongoDB](https://docs.mongodb.com/manual/installation/): NoSQL document database
 
 ## Installation
 
