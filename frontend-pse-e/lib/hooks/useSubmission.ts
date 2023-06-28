@@ -88,13 +88,14 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
   }
 
   // Grades a submission for an assignment and user
-  const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: string, userId: string) => {
+  const gradeSubmission = async (token: string, grade: number, notes: Note[], assignmentId: string, userId: string, courseId: string) => {
     try {
       const body = {
         userId: userId,
         assignmentId: assignmentId,
         grade: grade,
-        notes: notes
+        notes: notes,
+        courseId: courseId
       }
 
       const response = await axios.put(`${config.baseUrl}/submission/grade/`, body, { headers: { bearer: token } });
@@ -106,7 +107,27 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     }
   }
 
-  return { submission, submissions, isLoading, fileUrl, fileNotes, grade, getSubmissions, getSubmission, saveSubmission, gradeSubmission };
+  const addReply = async (token: string, assignmentId: number, message: string, noteId: number, studentId: string) => {
+    try {
+      const body = {
+        assignmentId: assignmentId,
+        noteId: noteId,
+        message: message,
+        studentId: studentId,
+      }
+
+      const response = await axios.put(`${config.baseUrl}/submission/add-reply/`, body, { headers: { bearer: token } });
+
+      console.log(response)
+
+      onSuccess("Reply submitted")
+    } catch (error) {
+      console.log(error);
+      onError("Something went wrong");
+    }
+  }
+
+  return { submission, submissions, isLoading, fileUrl, fileNotes, grade, getSubmissions, getSubmission, saveSubmission, gradeSubmission, addReply };
 }
 
 export default useSubmission;

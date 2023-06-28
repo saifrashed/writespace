@@ -4,10 +4,11 @@ import config from "../config";
 import { Course, User } from "../types";
 import { useNotification } from "./useNotification";
 
+// Custom React hook for managing course data
 function useCourse(token = '', courseId = '') {
     const [courseData, setCourseData] = useState<Course>();
-    const { onSuccess, onError } = useNotification();
-    const [role, setRole] = useState<boolean>();
+    const { onError } = useNotification();
+    const [role, setRole] = useState<string>('');
 
     useEffect(() => {
         // Fetch course and enrollment data when courseId and token change
@@ -43,7 +44,7 @@ function useCourse(token = '', courseId = '') {
     const getEnrollment = async (courseId: string, token: string) => {
         try {
             const response = await axios.post(`${config.baseUrl}/course/enrollment`, { courseId }, { headers: { bearer: token } });
-            setRole(response.data);
+            setRole(response.data.type);
             return response.data;
         } catch (error) {
             console.log(error)

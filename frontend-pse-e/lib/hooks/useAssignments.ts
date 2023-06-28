@@ -22,7 +22,7 @@ function useAssignments(courseId = '', token = '') {
   // Fetches assignments from the server
   const getAssignments = async (courseId: String, token: string) => {
     try {
-      const response = await axios.post(`${config.baseUrl}/assignment/get-all`, { token, courseId }, { headers: { bearer: token } });
+      const response = await axios.post(`${config.baseUrl}/assignment/get-all`, { courseId }, { headers: { bearer: token } });
       setAssignmentsData(response.data)
       setIsLoading(false)
     } catch (error) {

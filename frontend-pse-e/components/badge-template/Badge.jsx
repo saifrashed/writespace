@@ -30,9 +30,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     transition: 'transform 0.3s ease',
     transformOrigin: 'bottom',
     transform: isHovered
-      ? `scale(${resizeFactor + 0.1}) translateY(-40px)`
+      ? `scale(${resizeFactor + 0.1}) translate(-${245.76 * 0.1}px, -${245.76 * 0.1}px)`
       : `scale(${resizeFactor})`,
-
     cursor: isHovered ? 'pointer' : '',
   };
 
@@ -46,8 +45,8 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   const badgeId = extractIdFromUrl(pictureUrl)
 
   const handleChooseProfilePicture = async () => {
-    await onChooseProfilePicture(badgeId);
     setIsProfilePictureUpdated(true);
+    await onChooseProfilePicture(badgeId);
     setShowPopup(false);
   };
 
@@ -61,12 +60,15 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
             <br />
             <h2 className="text-3xl mb-4">{unlocked ? title : 'Locked Badge'}</h2>
             <p><em>"{description}"</em></p>
-            <p><b>Commentary:</b> {unlocked ? commentary : 'No commentary yet.'}</p>
+            {/* <p><b>Commentary:</b> {unlocked ? commentary : 'No commentary yet.'}</p> */}
             <p style={{ textAlign: 'right' }}><b>XP:</b> {unlocked ? xp : '--'}</p>
           </div>
         </div>
         <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick={togglePopup}>Close</button>
-        {unlocked ? <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>: ''}
+
+        {unlocked && (
+        <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>
+        )}
       </>
     );
   };
