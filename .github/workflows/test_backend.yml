@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - backend
-      - ci_lighthouse
   pull_request:
     branches:
       - backend
