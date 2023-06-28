@@ -168,6 +168,7 @@ router.put('/grade/', auth, async (req, res) => {
 
         for (let i = 0; i < notes.length; i++) {
             notes[i].author = res.locals.user.name;
+            notes[i].fresh = false;
         }
 
         const status = "graded"
@@ -205,6 +206,44 @@ router.put('/grade/', auth, async (req, res) => {
                 "submission[posted_grade]": grade
             }
         });
+
+        res.status(200).json({ message: 'Submission updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
+});
+
+// Note replies
+router.put('/add-reply/', auth, async (req, res) => {
+    try {
+        const { assignmentId, noteId, message, studentId } = req.body;
+
+        userId = studentId == "" ?  res.locals.userId : studentId;
+
+        const submissionToUpdate = await submissionModel.findOne(
+            {
+                'assignmentId': assignmentId,
+                'userId': userId
+            }
+        );
+
+        const updateId = submissionToUpdate._id;
+
+        const replyObject = {
+            note_id: noteId,
+            message: message,
+            user_id: res.locals.userId,
+            user_name: res.locals.user.name
+        }
+
+        if (!submissionToUpdate) {
+            return res.status(200).json({ error: 'Submission not found' });
+        }
+
+        submissionToUpdate.fileNotes[noteId - 1].replies.push(replyObject);
+
+        const updatedSubmission = await submissionModel.findByIdAndUpdate( updateId, submissionToUpdate, { new: true });
 
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {

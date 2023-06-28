@@ -46,10 +46,23 @@ const Questions = ({topic, quizId, questions, userScores}) => {
     setAnswers(prevAnswers => [...prevAnswers, answer]);
   };
 
+  function objectContainsMessage(obj, message) {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key) && obj[key] === message) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   const getHighScore = () => {
+    if (objectContainsMessage(userScores, "Object not found")){
+      return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
+    }
+
     const userScore = userScores.find((quiz) => quiz.quizId === Number(quizId))
 
-    if (userScore.highScore === undefined) {
+    if (userScore === undefined) {
       return <div><PopConfetti/><p>{'New highscore: ' + String(result.correctAnswers)}</p></div>
     }
     else if (result.correctAnswers > userScore.highScore) {

@@ -9,6 +9,7 @@ import useAuthentication from '@/lib/hooks/useAuthentication';
 import Lottie from "lottie-react"
 import SpellingQuiz from '@/components/spellingQuiz'
 import * as searchingAnimationData from "@/public/animations/searching.json";
+import { Reply } from '@/lib/types';
 
 import {
     highlightPlugin,
@@ -35,7 +36,7 @@ const View: React.FC = () => {
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [noteBar, setNotebar] = React.useState<boolean>(false);
     const { token } = useAuthentication()
-    const { getSubmission, submission, fileNotes, fileUrl, grade } = useSubmission(token, assignmentId?.toString())
+    const { getSubmission, addReply, submission, fileNotes, fileUrl, grade } = useSubmission(token, assignmentId?.toString())
 
     const [showPopup, setShowPopup] = useState(false);
 
@@ -52,6 +53,23 @@ const View: React.FC = () => {
             setNotes(fileNotes)
         }
     }
+
+    const addCommentReply = async (noteId: number, reply: string) => {
+        if (notes) {
+            const updatedNotes = [...notes]; // Create a copy of the original array
+            const reply_object: Reply = {
+                noteId: noteId,
+                message: reply,
+                userId: 0,
+                user_name: "",
+            };
+            updatedNotes[noteId - 1].replies.push(reply_object);
+            setNotes(updatedNotes);
+        }
+        if (assignmentId) {
+            addReply(token, Number(assignmentId), reply, noteId, "");
+        }
+    };
 
     const renderHighlights = (props: RenderHighlightsProps) => (
         <div>
@@ -173,6 +191,7 @@ const View: React.FC = () => {
                                             <ul className="divide-y divide-gray-200">
                                                 {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
                                                 {notes.map((note, index) => {
+                                                    const hasReplies = note.replies.length > 0;
                                                     return (
                                                         <>
                                                             <article className="p-6 text-base  bg-white rounded-lg " key={index} >
@@ -189,34 +208,51 @@ const View: React.FC = () => {
                                                                 </div>
 
                                                             </article>
-                                                            <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg ">
-                                                                <footer className="flex justify-between items-center mb-2">
-                                                                    <div className="flex items-center">
-                                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900">
-                                                                            Jese Leos
-                                                                        </p>
-                                                                        <p className="text-sm text-gray-600 "><time
-                                                                            title="February 12th, 2022">Feb. 12, 2022</time></p>
+                                                            {hasReplies && (
+                                                                <>
+                                                                    {note.replies.map((reply, replyIndex) => (
+                                                                        <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg " key={`${note.id}-reply-${replyIndex}`}>
+                                                                            <footer className="flex justify-between items-center mb-2">
+                                                                                <div className="flex items-center">
+                                                                                    <p className="inline-flex items-center mr-3 text-sm text-gray-900">
+                                                                                        {reply.user_name ? <p>{reply.user_name}</p> : <p>You</p>}
+                                                                                    </p>
+                                                                                    <p className="text-sm text-gray-600 "><time
+                                                                                        title="February 12th, 2022">Feb. 12, 2022</time></p>
+                                                                                </div>
+                                                                            </footer>
+                                                                            <p className="text-gray-500">{reply.message}</p>
+                                                                        </article>
+                                                                    ))}
+                                                                </>
+                                                            )}
+                                                            {!note.fresh && (
+                                                                <section className="bg-white ml-6 lg:ml-12 ">
+                                                                    <div className="max-w-2xl mx-auto px-4 py-3">
+                                                                        <form className="mb-6">
+                                                                            <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
+                                                                                <label className="sr-only">Your comment</label>
+                                                                                <textarea id={`${note.id}-comment`}
+                                                                                    className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none "
+                                                                                    placeholder="Write a comment..." required></textarea>
+                                                                            </div>
+                                                                            <button type="submit"
+                                                                                className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
+                                                                                onClick={(e) => {
+                                                                                    e.preventDefault();
+                                                                                    const comment = document.getElementById(`${note.id}-comment`).value;
+                                                                                    if (comment) {
+                                                                                        addCommentReply(note.id, comment);
+                                                                                        document.getElementById(`${note.id}-comment`).value = "";
+                                                                                    }
+                                                                                }}
+                                                                                >
+                                                                                Post comment
+                                                                            </button>
+                                                                        </form>
                                                                     </div>
-                                                                </footer>
-                                                                <p className="text-gray-500">Much appreciated! Glad you liked it ☺️</p>
-                                                            </article>
-                                                            <section className="bg-white ml-6 lg:ml-12 ">
-                                                                <div className="max-w-2xl mx-auto px-4 py-3">
-                                                                    <form className="mb-6">
-                                                                        <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
-                                                                            <label className="sr-only">Your comment</label>
-                                                                            <textarea id="comment"
-                                                                                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none "
-                                                                                placeholder="Write a comment..." required></textarea>
-                                                                        </div>
-                                                                        <button type="submit"
-                                                                            className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800">
-                                                                            Post comment
-                                                                        </button>
-                                                                    </form>
-                                                                </div>
-                                                            </section>
+                                                                </section>
+                                                            )}
                                                         </>
                                                     )
                                                 })}
