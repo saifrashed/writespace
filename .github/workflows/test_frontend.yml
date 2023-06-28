@@ -21,6 +21,6 @@ jobs:
       - name: Install packages frontend
         run: cd ./frontend-pse-e && npm install
       - name: Run Eslint
-        run: cd ./frontend-pse-e && npm run lint:ci
+        run: cd ./frontend-pse-e && npm run lint
       - name: Bundle and Output
         run: cd ./frontend-pse-e && npm run build
