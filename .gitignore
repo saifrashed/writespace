@@ -13,6 +13,8 @@
 # dependencies
 /node_modules
 
+/frontend-pse-e/cypress/videos
+
 # debug
 npm-debug.log*
 yarn-debug.log*

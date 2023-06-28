@@ -22,7 +22,6 @@ function useAuthentication() {
       if (!user.data.userId) {
         await axios.post(`${config.baseUrl}/user/save`, { badges: [] }, { headers: { bearer: response.data.access_token } });
       }
-
       setCookie("pse-token", response.data.access_token)
       setToken(response.data.access_token)
       onSuccess("Authentication successful")
