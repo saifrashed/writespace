@@ -5,8 +5,14 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import Lottie from "lottie-react"
 import * as submittedAnimationData from "@/public/animations/greenTick.json";
 import { useNotification } from "@/lib/hooks/useNotification";
+import useUser from "@/lib/hooks/useUser";
+import { useRouter } from "next/router";
 
-const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
+const UploadPopup = ({ showPopup, togglePopup, deadline }) => {
+    const router = useRouter();
+
+    const { courseId, assignmentId } = router.query;
+
     const [fileUploadSuccess, setFileUploadSuccess] = useState(false);
     const [uploadedFile, setUploadedFile] = useState(null);
     const [isConfirmed, setIsConfirmed] = useState(false)
@@ -14,6 +20,8 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
     const { saveSubmission } = useSubmission()
     const { token } = useAuthentication()
     const { onError } = useNotification()
+    const { addUserBadges, user } = useUser(token)
+    const { onSuccess } = useNotification()
 
     // Security measure: Remove shady characters from file name.
     const sanitizeString = (string) => {
@@ -67,19 +75,36 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
         });
     };
 
+    function isBadgePresent(badgeId) {
+        return user?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
+      }
+
     const handleSubmit = () => {
-        if (!isConfirmed) {
-            onError("Please confirm that the work submitted is your own.")
-            return;
+        const currentTime = new Date();
+        const currentDate = currentTime.toISOString();
+
+        if (deadline === null || currentDate < deadline){
+            if (!isConfirmed) {
+                onError("Please confirm that the work submitted is your own.")
+                return;
+            }
+
+            if (!uploadedFile) {
+                onError("Please upload a file.")
+                return;
+            }
+
+            if (!isBadgePresent(13)) {
+                addUserBadges([13], courseId, assignmentId, "", "", token)
+                onSuccess("Congratulations you have received a badge! View your profile to see it.")
+            }
+
+            saveSubmission(token, assignmentId, courseId, uploadedFile.file)
+            setFileUploadSuccess(true);
         }
 
-        if (!uploadedFile) {
-            onError("Please upload a file.")
-            return;
-        }
-
-        saveSubmission(token, assignmentId, uploadedFile.file)
-        setFileUploadSuccess(true);
+        else {
+            onError("The deadline has passed. Submission is not possible.")}
     }
 
     const handleCloseModal = () => {
@@ -95,7 +120,7 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
 
     return (
         <>
-            <div tabIndex={-1} className={"fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full "} >
+            <div tabIndex={-1} className={"backdrop-blur-[6px] fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 z-50  p-4 overflow-x-hidden overflow-y-auto md:inset-0  max-h-full "} >
                 <div className="relative w-full max-w-md max-h-full mx-auto">
                     <div className="relative bg-white rounded-lg shadow ">
                         <button type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center " data-modal-hide="popup-modal">
@@ -114,7 +139,7 @@ const UploadPopup = ({ showPopup, togglePopup, assignmentId }) => {
                                         <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50">
                                             <div className="flex flex-col items-center justify-center pt-5 pb-6">
                                                 <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
-                                                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+                                                <p className="text-xs text-gray-500 dark:text-gray-400">PDF (MAX. 800x400px)</p>
                                             </div>
                                             <input id="dropzone-file" type="file" onChange={(event) => { handleInputChange(event); }} className="hidden" />
                                         </label>

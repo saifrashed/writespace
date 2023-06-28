@@ -3,10 +3,12 @@
 // Simply editing the png is currently more time-efficient than changing code.
 import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
-import CloseButton from '@/components/closeButton';
+import useUser from '@/lib/hooks/useUser';
+import useAuthentication from '@/lib/hooks/useAuthentication';
+
 
 const ScaledBadge = ({ resizeFactor, pictureUrl, title,
-                       description, commentary, xp, unlocked}) => {
+                       description, commentary, xp, unlocked, count, onChooseProfilePicture, setIsProfilePictureUpdated}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -19,13 +21,17 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     setShowPopup(!showPopup);
   };
 
+  const extractIdFromUrl = (url)=>{
+    const match = url.match(/\/badges\/(\d+)\.png/);
+    return match ? match[1] : null;
+  }
+
   const badgeScale = {
     transition: 'transform 0.3s ease',
     transformOrigin: 'bottom',
     transform: isHovered
-      ? `scale(${resizeFactor + 0.1}) translateY(-40px)`
+      ? `scale(${resizeFactor + 0.1}) translate(-${245.76 * 0.1}px, -${245.76 * 0.1}px)`
       : `scale(${resizeFactor})`,
-
     cursor: isHovered ? 'pointer' : '',
   };
 
@@ -34,6 +40,14 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
     position: 'relative',
     top: '-7.5pt',  // To center badge.
     left: '-7.5pt',
+  };
+
+  const badgeId = extractIdFromUrl(pictureUrl)
+
+  const handleChooseProfilePicture = async () => {
+    setIsProfilePictureUpdated(true);
+    await onChooseProfilePicture(badgeId);
+    setShowPopup(false);
   };
 
 
@@ -46,11 +60,15 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
             <br />
             <h2 className="text-3xl mb-4">{unlocked ? title : 'Locked Badge'}</h2>
             <p><em>"{description}"</em></p>
-            <p><b>Commentary:</b> {unlocked ? commentary : 'No commentary yet.'}</p>
+            {/* <p><b>Commentary:</b> {unlocked ? commentary : 'No commentary yet.'}</p> */}
             <p style={{ textAlign: 'right' }}><b>XP:</b> {unlocked ? xp : '--'}</p>
           </div>
         </div>
-        <CloseButton onClick={togglePopup}>Close</CloseButton>
+        <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick={togglePopup}>Close</button>
+
+        {unlocked && (
+        <button className="hover:bg-gray-100 text-gray-700 font-bold py-2 px-4 rounded mt-4" onClick = {handleChooseProfilePicture}>Choose as profile picture</button>
+        )}
       </>
     );
   };
@@ -99,7 +117,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
             <div className="w-20 h-20">
               <div style={{ display: 'flex' }}>
                 <div style={smallBadge}>
-                  <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
+                  <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} count={count} />
                 </div>
               </div>
             </div>
@@ -128,7 +146,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
                 height: '300px', position: 'relative',
                 top: '-10px', left: '-10px', // Adjust positioning to taste
             }}>
-              <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
+              <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} count={count} />
             </div>
           </div>
           {/* Window for title and description */}
@@ -150,7 +168,7 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
           onMouseLeave={handleMouseLeave}
           onClick={togglePopup}
         >
-          <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} />
+          <BadgeTemplate pictureUrl={pictureUrl} unlocked={unlocked} count={count} />
         </div>
       </div>
       {/* Make pop-up responsive to window size. */}

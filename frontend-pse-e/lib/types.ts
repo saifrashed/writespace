@@ -91,6 +91,7 @@ export interface Assignment {
     name: string;
     submission_types: string[];
     has_submitted_submissions: boolean;
+    has_submitted: boolean;
     due_date_required: boolean;
     max_name_length: number;
     in_closed_grading_period: boolean;
@@ -136,15 +137,16 @@ export interface Submission {
     filetype: string;
     filename: string;
     fileData: Buffer;
+    userName: string;
     fileNotes: object[];
 }
 
 export interface Badge {
-    badgeId: Number,
-    iconId: Number,
-    experiencePoints: Number,
-    name: String,
-    description: String,
+    badgeId: number,
+    iconId: number,
+    experiencePoints: number,
+    name: string,
+    description: string,
 }
 
 
@@ -230,9 +232,10 @@ export interface User {
     experiencePoints: number;
     badges: BadgeModel[];
     level: number;
+    threshold: number;
 }
 
-interface BadgeModel {
+export interface BadgeModel {
     badgeId: number;
     courseId: number;
     assignmentId: number;
@@ -240,14 +243,22 @@ interface BadgeModel {
     comment: string;
 }
 
+export interface Reply {
+    noteId: number;
+    message: string;
+    userId: number;
+    user_name: string;
+}
+
 export interface Note {
     id: number;
     content: string;
     highlightAreas: HighlightArea[];
     quote: string;
+    author: string;
+    replies: Reply[];
+    fresh: boolean;
 }
-
-
 
 export interface TokenResponse {
     access_token: string;

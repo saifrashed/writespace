@@ -1,36 +1,33 @@
-const ExpBrainBar = ({bgcolor,progress,height}) => {
+const ExpBrainBar = ({ bgcolor, progress, height }) => {
+  const Parentdiv = {
+    height: height,
+    width: '80%',
+    backgroundColor: 'lightgray',
+    borderRadius: 40,
+    margin: 50
+  }
 
-    const Parentdiv = {
-        height: height,
-        width: '80%',
-        backgroundColor: 'lightgray',
-        borderRadius: 40,
-        margin: 50
-      }
+  const Childdiv = {
+    height: '100%',
+    width: `${progress}%`,
+    backgroundColor: bgcolor,
+    borderRadius: 40,
+    textAlign: 'right'
+  }
 
-      const Childdiv = {
-        height: '100%',
-        width: `${progress}%`,
-        backgroundColor: bgcolor,
-        borderRadius:40,
-        textAlign: 'right'
-      }
+  const progresstext = {
+    padding: 10,
+    color: 'black',
+    fontWeight: 90
+  }
 
-      const progresstext = {
-        padding: 10,
-        color: 'black',
-        fontWeight: 90
-      }
-
-      return (
-
-        <div style={Parentdiv}>
-          <div style={Childdiv}>
-            <span style={progresstext}>{`${progress}%`}</span>
-          </div>
-        </div>
-        )
-
+  return (
+    <div style={Parentdiv}>
+      <div style={Childdiv}>
+        <span style={progresstext}>{`${progress}%`}</span>
+      </div>
+    </div>
+  )
 }
 
 export default ExpBrainBar;

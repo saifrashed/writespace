@@ -11,7 +11,7 @@ const { auth } = require('../middleware/auth');
 // Require axios for communicating with the canvas api
 const axios = require('axios');
 // Canvas api URL
-const { API_URL } = process.env;
+const { API_URL, CANVAS_REDIRECT_URI } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
@@ -91,7 +91,23 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
         const assignmentId = req.body.assignmentId;
-        const alreadySubmitted = await submissionModel.find({ 'assignmentId': assignmentId, 'userId': userId });
+        const courseId = req.body.courseId;
+
+        // Add the submission to the assignment on canvas
+        const responseCanvas = await axios.post(
+            `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`,
+            {},
+        {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                "submission[submission_type]": "online_url",
+                "submission[url]": CANVAS_REDIRECT_URI
+            }
+        });
+
+        const alreadySubmitted = await submissionModel.find({ 'courseId': courseId, 'assignmentId': assignmentId, 'userId': userId });
 
         // If file is not yet submitted
         if (alreadySubmitted.length == 0) {
@@ -99,7 +115,9 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
             // Create a new instance of the submission model
             const newSubmission = await new submissionModel({
                 userId: userId,
+                userName: res.locals.user.name,
                 assignmentId: assignmentId,
+                courseId: courseId,
                 date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
                 grade: null,
                 status: "ungraded",
@@ -120,6 +138,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
             const updatedSubmission = await submissionModel.findOneAndUpdate(
                 {
                     'assignmentId': req.body.assignmentId,
+                    'userName': res.locals.user.name,
                     'userId': res.locals.userId
                 },
                 {
@@ -145,20 +164,24 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
 // Voegt notes to the submission
 router.put('/grade/', auth, async (req, res) => {
     try {
-        const { userId, assignmentId, notes, grade } = req.body;
+        const { userId, assignmentId, notes, grade, courseId } = req.body;
+
+        for (let i = 0; i < notes.length; i++) {
+            notes[i].author = res.locals.user.name;
+            notes[i].fresh = false;
+        }
 
         const status = "graded"
 
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
+                'courseId': courseId,
                 'assignmentId': assignmentId,
                 'userId': userId
             },
             {
-                $push: {
-                    fileNotes: { $each: notes }
-                },
                 $set: {
+                    fileNotes: notes,
                     grade: grade,
                     status: status
                 }
@@ -169,6 +192,58 @@ router.put('/grade/', auth, async (req, res) => {
         if (!updatedSubmission) {
             return res.status(200).json({ error: 'Submission not found' });
         }
+
+        // Add the grade to the submission on canvas
+        const responseCanvas = await axios.put(
+            `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`,
+            {},
+        {
+            headers: {
+                // Authorization using the access token
+                Authorization: `Bearer ${req.headers["bearer"]}`
+            }, params: {
+                // Grade is already the points in the FE
+                "submission[posted_grade]": grade
+            }
+        });
+
+        res.status(200).json({ message: 'Submission updated successfully' });
+    } catch (error) {
+        console.error('Error updating data in MongoDB:', error);
+        res.status(500).json({ error: 'Failed to update data in the database' });
+    }
+});
+
+// Note replies
+router.put('/add-reply/', auth, async (req, res) => {
+    try {
+        const { assignmentId, noteId, message, studentId } = req.body;
+
+        userId = studentId == "" ?  res.locals.userId : studentId;
+
+        const submissionToUpdate = await submissionModel.findOne(
+            {
+                'assignmentId': assignmentId,
+                'userId': userId
+            }
+        );
+
+        const updateId = submissionToUpdate._id;
+
+        const replyObject = {
+            note_id: noteId,
+            message: message,
+            user_id: res.locals.userId,
+            user_name: res.locals.user.name
+        }
+
+        if (!submissionToUpdate) {
+            return res.status(200).json({ error: 'Submission not found' });
+        }
+
+        submissionToUpdate.fileNotes[noteId - 1].replies.push(replyObject);
+
+        const updatedSubmission = await submissionModel.findByIdAndUpdate( updateId, submissionToUpdate, { new: true });
 
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {
