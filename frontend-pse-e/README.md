@@ -21,7 +21,7 @@ WriteSpace's frontend follows a modern, component-based architecture, utilizing 
 
 ## Custom React Hooks
 
-The custom React hooks are designed to manage and facilitate the fetching of data from a server. This hook utilizes other hooks such as useEffect, useState, and useNotification to handle the logic and state management. The hooks interact with the endpoints located in the backend folder: ‘services’. The hooks employed in the application serve the purpose of managing various types of data, including authentication, users, assignments, badges, courses, notifications, quizzes, and submissions.
+The custom React hooks are designed to manage and facilitate the fetching of data from the server. The hooks interact with the endpoints located in the backend folder: ‘services’ and serve the purpose of managing various types of data, including authentication, users, assignments, badges, courses, notifications, quizzes, and submissions. These hooks utilize other hooks such as useEffect, useState, and useNotification to handle the logic and state management.
 
 ## Third-Party Dependency: LanguageTool API
 
