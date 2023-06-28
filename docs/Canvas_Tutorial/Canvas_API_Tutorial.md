@@ -1,4 +1,20 @@
-# Contents
+# Canvas API tutorial document
+
+## Table of Contents
+- [Contents](#contents)
+- [Getting Started](#getting-started)
+  - [Canvas Environments](#canvas-environments)
+    - [Test Environment](#test-environment)
+    - [Production Environment](#production-environment)
+  - [User Access Tokens](#user-access-tokens)
+    - [Manually Getting a User Access Token](#manually-getting-a-user-access-token)
+    - [Getting a User Access Token with OAuth2 (for the API version)](#getting-a-user-access-token-with-oauth2-for-the-api-version)
+      - [Step 1: Ask the Administrator to Set Up the Developer Key](#step-1-ask-the-administrator-to-set-up-the-developer-key)
+      - [Step 2: Setting Up the Developer Key in Your Project](#step-2-setting-up-the-developer-key-in-your-project)
+      - [Step 3: Getting the User's Access Token by Using OAuth2 from Canvas](#step-3-getting-the-users-access-token-by-using-oauth2-from-canvas)
+    - [Examples from Our Project (Team PSE-E 2023, Made in NodeJS)](#examples-from-our-project-team-pse-e-2023-made-in-nodejs)
+- [Extra Information](#extra-information)
+- [Student Roles on Canvas Test Environment](#student-roles-on-canvas-test-environment)
 
 ## Getting started
 Before getting started, you should determine the purpose of your application because there are two different versions of the Canvas API that can be used: LTI and API. LTI is connected to one assignment, so the information from the Canvas API is sent from that one assignment, so it is bound to that assignment. For example, CodeGrade uses the LTI version. The LTI version is also harder to set up than the API version. However, the API version gives more information and is not bound to a single assignment.
@@ -43,24 +59,84 @@ Note: These requests for OAuth2 are without the "/api/v1" part in the API URL! S
 These steps are an explanation of the steps provided in the Canvas API documentation. More information can be found here: [https://canvas.instructure.com/doc/api/file.oauth.html#oauth2-flow-0](https://canvas.instructure.com/doc/api/file.oauth.html#oauth2-flow-0).
 
 ### Examples from our project (team PSE-E 2023, made in NodeJS)
-![Alt text](image.png)
+```javascript
+// Route for initiating the login redirect
+// Test this by going to this URL in your browser for example: localhost:5000/canvas-api/login
+router.get('/login', (req, res) => {
+    const authUrl = `${LOGIN_API_URL}/login/oauth2/auth?client_id=${CLIENT_ID}&response_type=code&state=1&redirect_uri=${CANVAS_REDIRECT_URI}`;
+    res.redirect(authUrl);
+});
+```
+
 This is the login request. You can test this at first by going to this URL in your browser: `localhost:5000/canvas-api/login`. Then you will get redirected to somewhere you can authorize yourself by logging into your Canvas account and approving.
 
 After you have authorized yourself on that URL, the browser gets a new URL containing the code and state. The code is needed for the next request to ask for the access token of the user.
 
 ![Alt text](image-1.png)
+
 You will probably see something like this in the beginning because the FE does not handle this URL at the start. You will need to make something in the FE that handles this URL so that the FE can extract the code from the URL and send a new request to the backend with that code. NOTE: the code can only be used for ONE request; with multiple used requests, it will cause an error (probably 404: NOT_FOUND)!
 
 This is an example for that request:
-![Alt text](image-2.png)
+```javascript
+// After the /login request, the FE extracted the code from the URL in the browser
+// that can be used to make this request to actually get the user's access-key/token
+// NOTE: the code from the /login request can only be used for ONE request, otherwise it will give an error!!
+router.post('/get-user-token', async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
+            params: {
+                grant_type: `authorization_code`,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                redirect_uri: CANVAS_REDIRECT_URI,
+                code: req.body.code
+            }
+        });
+        // Encrypt tokens
+        response.data.access_token = encryptToken(response.data.access_token);
+        response.data.refresh_token = encryptToken(response.data.refresh_token);
+        // Send back the edited response
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /get-user-token.' });
+    }
+});
+```
 
 This will return something like this:
 ![Alt text](image-3.png)
 
 The refresh_token can be used infinetly after this. That can be used to ask a new token for the user. The access_token will only be valid for an hour, so you should use the refresh token to get a new token after that time period! The refresh token can also be used to ask a new access_token (that also expires in one hour). This is an example request for that:
-![Alt text](image-4.png)
+```javascript
+// Get new user token with refresh token (the refresh token from can be used infinitely!)
+router.post('/get-user-token/refresh', async (req, res) => {
+    try {
+        // Canvas API url
+        const response = await axios.post(`${LOGIN_API_URL}/login/oauth2/token`, {}, {
+            params: {
+                grant_type: `refresh_token`,
+                client_id: CLIENT_ID,
+                client_secret: CLIENT_SECRET,
+                redirect_uri: CANVAS_REDIRECT_URI,
+                // Decrypt refresh token (no auth because refresh token does NOT retrieve a user)
+                refresh_token: decryptToken(req.headers["bearer"])
+            }
+        });
+        // Encrypt tokens
+        response.data.access_token = encryptToken(response.data.access_token);
+        // Send back the edited response
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error from Canvas API:', error);
+        res.status(500).json({ error: 'An error occurred in /get-user-token/refresh.' });
+    }
+});
+```
 
 This will return something like this:
+
 ![Alt text](image-5.png)
 
 # Extra information
