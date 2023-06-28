@@ -25,16 +25,19 @@ const Profile = () => {
 
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isXSmallScreen, setIsXSmallScreen] = useState(false);
 
   useEffect(() => {
     const handleWindowResize = () => {
       setIsLargeScreen(window.innerWidth > 1600);
       setIsSmallScreen(window.innerWidth < 1000);
+      setIsXSmallScreen(window.innerWidth < 650);
     };
 
     if (typeof window !== 'undefined') {
       setIsLargeScreen(window.innerWidth > 1600);
       setIsSmallScreen(window.innerWidth < 1000);
+      setIsSmallScreen(window.innerWidth < 650);
       window.addEventListener('resize', handleWindowResize);
     }
 
@@ -85,10 +88,8 @@ const Profile = () => {
 
   useEffect(() => {
     if (isProfilePictureUpdated) {
-      // Fetch updated user data
-      getUser(token);
-      // Reset the state
-      setIsProfilePictureUpdated(false);
+      getUser(token);  // Fetch updated user data
+      setIsProfilePictureUpdated(false);  // Reset the state
     }
   }, [isProfilePictureUpdated, getUser, token]);
 
@@ -167,7 +168,7 @@ const Profile = () => {
         {/* Showcase carousel for achieved badges. */}
         {user &&
           <Slider {...(isSmallScreen ? carouselSettingsSmallScreen : carouselSettings)}>
-            {[1].map(() => (
+            {(
               badges.map((badge) => {
                 const badgeCount = countBadgeOccurrences(badge.badgeId)
                 const isBadgeOwned = user.badges.find(obj => obj.badgeId === badge.badgeId);
@@ -198,45 +199,44 @@ const Profile = () => {
                   </div>
                 );
               })
-            ))}
+            )}
           </Slider>
         }
 
-        <div className="mx-16">
-          <h1 className="text-4xl pb-4 font-bold mb-6 gradient-text">Badges overview</h1>
+        {!isXSmallScreen && (
+          <div className="mx-16">
+            <h1 className="text-4xl pb-4 font-bold mb-6 gradient-text">Badges overview</h1>
+            <div className={isSmallScreen ? '' : 'ml-16'}>
+            {/* {isSmallScreen ? 'ml-4' : 'ml-16'} */}
 
-          <div className={isSmallScreen ? '' : 'ml-16'}>
-          {/* {isSmallScreen ? 'ml-4' : 'ml-16'} */}
+              <div className="grid grid-cols sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+                {user &&
+                  badges.map((badge) => {
+                    const badgeCount = countBadgeOccurrences(badge.badgeId)
+                    const isBadgeOwned = user.badges.find(obj => obj.badgeId === badge.badgeId);
 
-            <div className="grid grid-cols sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-
-              {user &&
-                badges.map((badge) => {
-                  const badgeCount = countBadgeOccurrences(badge.badgeId)
-                  const isBadgeOwned = user.badges.find(obj => obj.badgeId === badge.badgeId);
-
-                  return (
-                    <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-44" key={badge.badgeId}>
-                      <ScaledBadge
-                        resizeFactor={0.5}
-                        pictureUrl={`/badges/${badge.badgeId.toString()}.png`}
-                        title={badge.name}
-                        description={badge.description}
-                        xp={String(badge.experiencePoints)}
-                        unlocked={isBadgeOwned}
-                        count={badgeCount}
-                        onChooseProfilePicture={() => handleChooseProfilePicture(badge.badgeId)}
-                        setIsProfilePictureUpdated={setIsProfilePictureUpdated}
-                        noPopup={false}
-                      />
-                    </div>
-                  );
-                })
-              }
+                    return (
+                      <div className="w-full sm:w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/6 flex items-center justify-center mb-44" key={badge.badgeId}>
+                        <ScaledBadge
+                          resizeFactor={0.5}
+                          pictureUrl={`/badges/${badge.badgeId.toString()}.png`}
+                          title={badge.name}
+                          description={badge.description}
+                          xp={String(badge.experiencePoints)}
+                          unlocked={isBadgeOwned}
+                          count={badgeCount}
+                          onChooseProfilePicture={() => handleChooseProfilePicture(badge.badgeId)}
+                          setIsProfilePictureUpdated={setIsProfilePictureUpdated}
+                          noPopup={false}
+                        />
+                      </div>
+                    );
+                  })
+                }
+              </div>
             </div>
           </div>
-
-      </div>
+        )}
       </div>
     </>
   );
