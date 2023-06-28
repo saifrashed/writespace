@@ -5,7 +5,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
 
 
-const ScaledBadge = ({ resizeFactor, pictureUrl, title, description, commentary, xp, unlocked,
+const ScaledBadge = ({ resizeFactor, pictureUrl, title, description, xp, unlocked,
                        count, onChooseProfilePicture, setIsProfilePictureUpdated, noPopup}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
@@ -60,7 +60,6 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title, description, commentary,
             <br />
             <h2 className="text-3xl mb-4">{unlocked ? title : 'Locked Badge'}</h2>
             <p><em>"{description}"</em></p>
-            {/* <p><b>Commentary:</b> {unlocked ? commentary : 'No commentary yet.'}</p> */}
             <p style={{ textAlign: 'right' }}><b>XP:</b> {unlocked ? xp : '--'}</p>
           </div>
         </div>

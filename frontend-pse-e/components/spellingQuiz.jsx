@@ -348,7 +348,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         title={"Spelling Bee"}
                         description={"Awarded for handing in and revising an" +
                           " assignment with no apparent spelling errors."}
-                        commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
                         onChooseProfilePicture={() => handleChooseProfilePicture(beeBadgeId)}
@@ -535,7 +534,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         description={"Awarded to students who show exemplary initiative and " +
                           "interest in their own improvement by completing the " +
                           "spelling revision quiz."}
-                        commentary={'no comment'}
                         xp={String("200")}
                         unlocked={true}
                         onChooseProfilePicture={() => handleChooseProfilePicture(spellBadgeId)}

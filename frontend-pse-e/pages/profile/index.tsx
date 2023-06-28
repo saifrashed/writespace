@@ -187,7 +187,6 @@ const Profile = () => {
                         pictureUrl={`/badges/${badge.badgeId.toString()}.png`}
                         title={badge.name}
                         description={badge.description}
-                        commentary={'no comment'}
                         xp={String(badge.experiencePoints)}
                         unlocked={isBadgeOwned}
                         count={badgeCount}
@@ -223,7 +222,6 @@ const Profile = () => {
                         pictureUrl={`/badges/${badge.badgeId.toString()}.png`}
                         title={badge.name}
                         description={badge.description}
-                        commentary={'no comment'}
                         xp={String(badge.experiencePoints)}
                         unlocked={isBadgeOwned}
                         count={badgeCount}
