@@ -10,7 +10,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-
 /**
  * The profile page component.
  *
@@ -26,19 +25,16 @@ const Profile = () => {
 
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [isXSmallScreen, setIsXSmallScreen] = useState(false)
 
   useEffect(() => {
     const handleWindowResize = () => {
       setIsLargeScreen(window.innerWidth > 1600);
       setIsSmallScreen(window.innerWidth < 1000);
-      setIsXSmallScreen(window.innerWidth < 400)
     };
 
     if (typeof window !== 'undefined') {
       setIsLargeScreen(window.innerWidth > 1600);
       setIsSmallScreen(window.innerWidth < 1000);
-      setIsXSmallScreen(window.innerWidth < 400)
       window.addEventListener('resize', handleWindowResize);
     }
 
@@ -66,12 +62,6 @@ const Profile = () => {
     ...carouselSettings,
     slidesToShow: 3,
   };
-
-  const carouselSettingsXSmallScreen = {
-    ...carouselSettings,
-    slidesToShow: 2,
-  };
-
 
 
   function countBadgeOccurrences(targetBadgeId: number) {
@@ -165,16 +155,18 @@ const Profile = () => {
                   className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center p-0.5 rounded-full"
                   style={{ height: "30px", width: `${user.experiencePoints / user.threshold * 100}%` }}
                 >
-                  <div className="text-center text-xl">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div>
+                  {/* <div className="text-center text-xl">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div> */}
                 </div>
               </div>
             )}
           </div>
+          {user && (<div className="text-center text-xl">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div>)}
+
         </div>
 
         {/* Showcase carousel for achieved badges. */}
         {user &&
-          <Slider {...(isSmallScreen ? (isSmallScreen && isXSmallScreen ? carouselSettingsSmallScreen : carouselSettingsXSmallScreen) : carouselSettings)}>
+          <Slider {...(isSmallScreen ? carouselSettingsSmallScreen : carouselSettings)}>
             {[1].map(() => (
               badges.map((badge) => {
                 const badgeCount = countBadgeOccurrences(badge.badgeId)
@@ -245,7 +237,6 @@ const Profile = () => {
               }
             </div>
           </div>
-
 
       </div>
       </div>
