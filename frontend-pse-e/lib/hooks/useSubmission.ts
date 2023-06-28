@@ -107,13 +107,14 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
     }
   }
 
-  const addReply = async (token: string, assignmentId: number, message: string, noteId: number, studentId: string) => {
+  const addReply = async (token: string, assignmentId: number, message: string, noteId: number, studentId: string, date: string) => {
     try {
       const body = {
         assignmentId: assignmentId,
         noteId: noteId,
         message: message,
         studentId: studentId,
+        date: date
       }
 
       const response = await axios.put(`${config.baseUrl}/submission/add-reply/`, body, { headers: { bearer: token } });

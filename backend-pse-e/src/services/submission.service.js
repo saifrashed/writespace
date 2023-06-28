@@ -217,7 +217,7 @@ router.put('/grade/', auth, async (req, res) => {
 // Note replies
 router.put('/add-reply/', auth, async (req, res) => {
     try {
-        const { assignmentId, noteId, message, studentId } = req.body;
+        const { assignmentId, noteId, message, studentId, date } = req.body;
 
         userId = studentId == "" ?  res.locals.userId : studentId;
 
@@ -234,7 +234,8 @@ router.put('/add-reply/', auth, async (req, res) => {
             note_id: noteId,
             message: message,
             user_id: res.locals.userId,
-            user_name: res.locals.user.name
+            user_name: res.locals.user.name,
+            date: date
         }
 
         if (!submissionToUpdate) {
