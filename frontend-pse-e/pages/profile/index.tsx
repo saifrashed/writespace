@@ -158,7 +158,7 @@ const Profile = () => {
           )}
 
           {/* XP bar */}
-          <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+          {/* <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
             {user && (
               <div className="flex items-center justify-left">
                 <div
@@ -167,6 +167,22 @@ const Profile = () => {
                 >
                   <div className="text-center text-xl">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div>
                 </div>
+              </div>
+            )}
+            </div>*/}
+
+          <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+            {user && (
+              <div className="relative">
+                <div
+                  className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center rounded-full"
+                  style={{ height: "30px", width: `${user.experiencePoints / user.threshold * 100}%` }}>
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-xl">
+                      {`${user.experiencePoints} / ${user.threshold} XP`}
+                    </div>
+                  </div>
               </div>
             )}
           </div>
@@ -185,8 +201,8 @@ const Profile = () => {
                   <div className="flex justify-center">
                     <div
                       style={{
-                        height: '300px', position: 'relative',
-                        top: '-10px', left: '35px',
+                        height: '300px', position: 'relative'
+                        // top: '-10px', left: '35px',
                       }}
                       key={badge.badgeId}
                       >
