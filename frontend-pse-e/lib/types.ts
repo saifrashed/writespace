@@ -243,15 +243,22 @@ export interface BadgeModel {
     comment: string;
 }
 
+export interface Reply {
+    noteId: number;
+    message: string;
+    userId: number;
+    user_name: string;
+}
+
 export interface Note {
     id: number;
     content: string;
     highlightAreas: HighlightArea[];
     quote: string;
     author: string;
+    replies: Reply[];
+    fresh: boolean;
 }
-
-
 
 export interface TokenResponse {
     access_token: string;
