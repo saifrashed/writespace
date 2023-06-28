@@ -176,7 +176,7 @@ const Profile = () => {
               <div className="relative">
                 <div
                   className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center rounded-full"
-                  style={{ height: "30px", width: `${user.experiencePoints / user.threshold * 100}%` }}>
+                  style={{ height: "30px", width: `${Math.max((user.experiencePoints / user.threshold) * 100, 1)}%` }}>
                   </div>
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center text-xl">
