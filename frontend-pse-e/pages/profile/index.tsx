@@ -139,7 +139,7 @@ const Profile = () => {
       <div className="mt-14 text-center pt-10 bg-gradient-to-br from-blue-50 to-purple-50">
 
         {/* Profile picture */}
-        <div className="flex flex-col items-center justify-center mt-10">
+        <div className="flex flex-col items-center justify-center mt-10 mb-10">
           <Avatar
             sx={{ width: 200, height: 200, border: '2px solid #706f7d', padding: '30px', boxShadow:'0px 0px 30px 2px purple'
           }}
