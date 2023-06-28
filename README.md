@@ -23,6 +23,15 @@ Instructions on how to install the project and its dependencies. Include any pre
 
 Provide examples and instructions on how to use the project. Explain the main features and functionality.
 
+
+### Documentation
+
+
+- [Backend](./docs/Frontend.md)
+- [Frontend](./docs/Backend.md)
+- [CICD](./docs/CICD.md)
+- [CANVAS API](./docs/canvas.md)
+
 ## Backend Architecture
 
 Explain the architecture and components of the project's backend. Provide an overview of the server infrastructure, APIs, and any other relevant information.
