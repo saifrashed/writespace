@@ -270,60 +270,6 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
     }
 });
 
-
-// General update request
-// PUT request (updates something in the db)
-// router.put('/update/', auth, async (req, res) => {
-//     try {
-//         const userId = res.locals.userId;
-//         const updatedUser = {
-//             userId: res.locals.userId,
-//             pictureId: req.body.pictureId,
-//             experiencePoints: req.body.experiencePoints,
-//             badges: req.body.badges
-//         };
-
-//         // Find the existing test by testId and update it
-//         const result = await userModel.updateOne(
-//             {
-//                 'userId': userId
-//             },
-//             { $set: updatedUser }
-//         );
-
-//         // Check if the test was found and updated successfully
-//         if (result.nModified === 0) {
-//             return res.status(200).json({ message: 'Object not found' });
-//         }
-
-//         res.status(200).json({ message: 'User updated successfully' });
-//     } catch (error) {
-//         console.error('Error updating data in MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to update data in the database' });
-//     }
-// });
-
-// // Delete user
-// router.delete('/delete/:userId', auth, async (req, res) => {
-//     try {
-//         const userId = req.params.userId;
-
-//         // Find the document by submissionId and remove it
-//         const result = await userModel.deleteOne({ 'userId': userId });
-
-//         // Check if the document was found and deleted successfully
-//         if (result.deletedCount === 0) {
-//             return res.status(200).json({ message: 'Object not found' });
-//         }
-
-//         // Delete successful
-//         res.status(200).json({ message: 'User deleted successfully' });
-//     } catch (error) {
-//         console.error('Error deleting data from MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to delete data from the database' });
-//     }
-// });
-
 // Get user combined with canvas user object
 router.get("/get-user", auth, async (req, res) => {
     try {
@@ -360,23 +306,6 @@ router.get("/get-user", auth, async (req, res) => {
         res.status(500).json({ error: 'Internal server error in /get-user' });
     }
 });
-
-// // Get user from canvas only
-// router.get('/get-user-canvas', auth, async (req, res) => {
-//     try {
-//         // Canvas API url
-//         const response = await axios.get(`${API_URL}/users/self`, {
-//             headers: {
-//                 // Authorization using the access token
-//                 Authorization: `Bearer ${req.headers["bearer"]}`
-//             }
-//         });
-//         res.json(response.data);
-//     } catch (error) {
-//         console.error('Error from Canvas API:', error);
-//         res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
-//     }
-// });
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable
