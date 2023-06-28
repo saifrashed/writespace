@@ -139,30 +139,29 @@ const Profile = () => {
         </div>
 
         <div className="mx-16">
-          {/* User info: name, xp, level */}
-          {user && (
-            <div className="mt-2 mb-4 flex row justify-between w-full">
-              <div className={`lg:me-1 text-center font-bold text-2xl font-medium leading-tight ${isLegendary && "gradient-text"}`}> XP {user.experiencePoints}</div>
-              <div className={`text-center font-bold text-4xl font-medium leading-tight ${isLegendary && "gradient-text"}`}>{user?.name}</div>
-              <div className={`lg:ms-1 text-center font-bold text-2xl font-medium leading-tight ${isLegendary && "gradient-text"}`}> Level {user.level}</div>
-            </div>
-          )}
+        {user && (
+        <div className="grid grid-cols-3 gap-2 items-baseline mb-6">
+          <div className={`text-start font-bold text-2xl font-medium ${isLegendary && "gradient-text"}`}>XP: {user.experiencePoints}</div>
+          <div className={`text-center font-bold text-4xl font-medium ${isLegendary && "gradient-text"}`}>{user.name}</div>
+          <div className={`text-end font-bold text-2xl font-medium ${isLegendary && "gradient-text"}`}>Level: {user.level}</div>
+        </div>
+        )}
 
-          {/* XP bar */}
           <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
             {user && (
-              <div className="flex items-center justify-left">
+              <div className="relative">
                 <div
-                  className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center p-0.5 rounded-full"
-                  style={{ height: "30px", width: `${user.experiencePoints / user.threshold * 100}%` }}
-                >
-                  {/* <div className="text-center text-xl">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div> */}
-                </div>
+                  className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center rounded-full"
+                  style={{ height: "30px", width: `${Math.max((user.experiencePoints / user.threshold) * 100, 1)}%` }}>
+                  </div>
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center text-xl">
+                      {`${user.experiencePoints} / ${user.threshold} XP`}
+                    </div>
+                  </div>
               </div>
             )}
           </div>
-          {user && (<div className="text-center text-xl">{user && (`${user.experiencePoints} / ${user.threshold} XP`)}</div>)}
-
         </div>
 
         {/* Showcase carousel for achieved badges. */}
@@ -178,8 +177,8 @@ const Profile = () => {
                   <div className="flex justify-center">
                     <div
                       style={{
-                        height: '300px', position: 'relative',
-                        top: '-10px', left: '35px',
+                        height: '300px', position: 'relative'
+                        // top: '-10px', left: '35px',
                       }}
                       key={badge.badgeId}
                       >
