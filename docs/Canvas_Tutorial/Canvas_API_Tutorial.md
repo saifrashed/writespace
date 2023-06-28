@@ -1,4 +1,20 @@
-# Contents
+# Canvas API tutorial document
+
+## Table of Contents
+- [Contents](#contents)
+- [Getting Started](#getting-started)
+  - [Canvas Environments](#canvas-environments)
+    - [Test Environment](#test-environment)
+    - [Production Environment](#production-environment)
+  - [User Access Tokens](#user-access-tokens)
+    - [Manually Getting a User Access Token](#manually-getting-a-user-access-token)
+    - [Getting a User Access Token with OAuth2 (for the API version)](#getting-a-user-access-token-with-oauth2-for-the-api-version)
+      - [Step 1: Ask the Administrator to Set Up the Developer Key](#step-1-ask-the-administrator-to-set-up-the-developer-key)
+      - [Step 2: Setting Up the Developer Key in Your Project](#step-2-setting-up-the-developer-key-in-your-project)
+      - [Step 3: Getting the User's Access Token by Using OAuth2 from Canvas](#step-3-getting-the-users-access-token-by-using-oauth2-from-canvas)
+    - [Examples from Our Project (Team PSE-E 2023, Made in NodeJS)](#examples-from-our-project-team-pse-e-2023-made-in-nodejs)
+- [Extra Information](#extra-information)
+- [Student Roles on Canvas Test Environment](#student-roles-on-canvas-test-environment)
 
 ## Getting started
 Before getting started, you should determine the purpose of your application because there are two different versions of the Canvas API that can be used: LTI and API. LTI is connected to one assignment, so the information from the Canvas API is sent from that one assignment, so it is bound to that assignment. For example, CodeGrade uses the LTI version. The LTI version is also harder to set up than the API version. However, the API version gives more information and is not bound to a single assignment.
