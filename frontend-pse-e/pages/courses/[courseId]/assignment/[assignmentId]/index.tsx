@@ -11,6 +11,7 @@ import Quiz from "@/components/quiz";
 import useSubmission from "@/lib/hooks/useSubmission";
 import useUser from "@/lib/hooks/useUser";
 import { Context } from "@/Context";
+import useCourse from "@/lib/hooks/useCourse";
 
 
 /**
@@ -25,6 +26,8 @@ const Assignment = () => {
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication();
 
+  const { role } = useCourse(token, courseId?.toString());
+
   const { assignment: contextAssignment } = useContext(Context);
   const { assignment: fetchedAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString())
   const assignment = contextAssignment || fetchedAssignment;
@@ -37,6 +40,19 @@ const Assignment = () => {
 
   // For the upload popup.
   const [showPopup, setShowPopup] = useState(false);
+
+
+  // Hide submit button when role is teacher or when deadline has passed.
+  const buttonClass =
+  (assignment?.due_at !== null && currentDate > assignment?.due_at) || role==="teacher"
+    ? "bg-gray-300 border-white"
+    : "bg-fuchsia-300 hover:bg-fuchsia-400 border-fuchsia-500 hover:border-fuchsia-500";
+
+  const isTeacher = role === "teacher";
+  const isDisabled = isTeacher || (assignment?.due_at !== null && currentDate > assignment?.due_at);
+
+  // Hide submission view button when user role is teacher.
+  const buttonViewClass = isTeacher ? "bg-gray-300 border-white" : "bg-pink-300 hover:bg-pink-400 border-pink-500 hover:border-pink-500";
 
   return (
     <>
@@ -145,24 +161,38 @@ const Assignment = () => {
               <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                 <div className="flex flex-col">
                   {/* submit button */}
-                  {assignment?.due_at !== null && currentDate > assignment?.due_at ?
-
-                  <button onClick={() => { setShowPopup(!showPopup) }} className="bg-gray-300 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-white rounded-lg flex items-center" disabled>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    <span className="ml-2">Submit</span>
-                  </button> : <button onClick={() => { setShowPopup(!showPopup) }} className="bg-fuchsia-300 hover:bg-fuchsia-400 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-fuchsia-500 hover:border-fuchsia-500 rounded-lg flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                    </svg>
-                    <span className="ml-2">Submit</span>
-                  </button>
-                  }
+                  <button
+                      onClick={() => {
+                        setShowPopup(!showPopup);
+                      }}
+                      className={`w-full text-white transition-all font-bold py-2 px-4 border-b-4 rounded-lg flex items-center ${
+                        buttonClass
+                      }`}
+                      disabled={isDisabled}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth="1.5"
+                        stroke="currentColor"
+                        className="w-6 h-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"
+                        />
+                      </svg>
+                      <span className="ml-2">Submit</span>
+                    </button>
 
                   {/* View button. */}
                   <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}>
-                    <button className="mt-5 bg-pink-300 hover:bg-pink-400 text-white w-full transition-all font-bold py-2 px-4 border-b-4 border-pink-500 hover:border-pink-500 rounded-lg flex max-width items-center">
+                    <button className={`mt-5 text-white w-full transition-all font-bold py-2 px-4 border-b-4 rounded-lg flex max-width items-center ${
+                      buttonViewClass
+                      }`} disabled={isTeacher}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
