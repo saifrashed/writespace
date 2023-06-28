@@ -3,12 +3,10 @@
 // Simply editing the png is currently more time-efficient than changing code.
 import React, { useState, useEffect, useRef } from 'react';
 import BadgeTemplate from '@/components/badge-template/badgeTemplate';
-import useUser from '@/lib/hooks/useUser';
-import useAuthentication from '@/lib/hooks/useAuthentication';
 
 
-const ScaledBadge = ({ resizeFactor, pictureUrl, title,
-                       description, commentary, xp, unlocked, count, onChooseProfilePicture, setIsProfilePictureUpdated}) => {
+const ScaledBadge = ({ resizeFactor, pictureUrl, title, description, commentary, xp, unlocked,
+                       count, onChooseProfilePicture, setIsProfilePictureUpdated, noPopup}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [isLargeScreen, setIsLargeScreen] = useState(false);
@@ -18,7 +16,9 @@ const ScaledBadge = ({ resizeFactor, pictureUrl, title,
   const handleMouseLeave = () => {setIsHovered(false);};
 
   const togglePopup = () => {
-    setShowPopup(!showPopup);
+    if (!noPopup) {
+      setShowPopup(!showPopup);
+    }
   };
 
   const extractIdFromUrl = (url)=>{

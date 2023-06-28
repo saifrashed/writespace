@@ -353,6 +353,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         unlocked={true}
                         onChooseProfilePicture={() => handleChooseProfilePicture(beeBadgeId)}
                         setIsProfilePictureUpdated={setIsProfilePictureUpdated}
+                        noPopup={false}
                       />
                     </div>
                   </div>
@@ -539,6 +540,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         unlocked={true}
                         onChooseProfilePicture={() => handleChooseProfilePicture(spellBadgeId)}
                         setIsProfilePictureUpdated={setIsProfilePictureUpdated}
+                        noPopup={false}
                       />
                     </div>
                   </div>
