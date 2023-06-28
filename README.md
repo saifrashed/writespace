@@ -2,7 +2,18 @@
 
 ## Description
 
-A brief description of the project.
+WriteSpace is an online platform integrated with Canvas, aimed at enhancing students' writing skills through gamification. Designed for educational purposes, WriteSpace leverages badges and interactive quizzes to incentivize student engagement and foster skill development.
+
+## Key Features
+
+* Badge System: Students are rewarded with badges for active participation and achievement in writing exercises and assignments.
+* Interactive Quizzes: Engaging quizzes focused on writing skills enable students to earn badges and improve their writing abilities.
+* Teacher Interaction: Teachers can grade assignments, provide valuable feedback, and assign badges to recognize and celebrate student progress.
+* Canvas Integration: WriteSpace seamlessly integrates with Canvas, providing a familiar and convenient environment for students and educators.
+
+### Target Audience
+
+WriteSpace is primarily designed for students and teachers in academic settings who aim to cultivate and enhance writing skills. It offers an engaging and motivating platform for students to develop their writing abilities within the context of their academic studies.
 
 ## Table of Contents
 
@@ -15,9 +26,22 @@ A brief description of the project.
 - [Contributing](#contributing)
 - [License](#license)
 
-## Installation
 
-Instructions on how to install the project and its dependencies. Include any prerequisites or system requirements if applicable.
+### Prerequisites
+
+* npm
+* Node.js
+* Express.js
+
+
+### Installation
+
+_Below are the steps of how you can start installing and setting up the app._
+1. Clone the repo (only required once)
+   ```sh
+   git clone https://github.com/[URL]
+   ```
+2. Refer to the instructions provided in the readme files in the `backend-pse-e` and `frontend-pse-e` directories.
 
 ## Usage
 
