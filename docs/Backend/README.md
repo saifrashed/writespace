@@ -23,7 +23,6 @@
 
 ## Installation
 
-Outline the steps to install and set up the project locally. Include any commands or scripts needed to install dependencies, set up a database, or perform initial setup tasks.
 _Below are the steps of how you can start installing and setting up the app._
 1. Clone the repo (only required once)
    ```sh
