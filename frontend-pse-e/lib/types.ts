@@ -248,6 +248,7 @@ export interface Reply {
     message: string;
     userId: number;
     user_name: string;
+    date: string;
 }
 
 export interface Note {
