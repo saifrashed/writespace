@@ -71,7 +71,8 @@ const Assignment = () => {
               {submission?.grade ? (
                 <span>
                   {" "}
-                  {Number((submission.grade / 10) * (assignment?.points_possible)).toFixed(1)} / {assignment?.points_possible}{` (${submission.grade})`}
+                  {Number((submission.grade / 10) * (assignment?.points_possible)).toFixed(1)} / {assignment?.points_possible}
+                  <span className="ml-4"> <span className="font-bold">Grade: </span>{`${submission.grade}`}</span>
                 </span>
               ) : (
                 " Waiting to be graded"
