@@ -30,7 +30,7 @@ Provide examples and instructions on how to use the project. Explain the main fe
 - [Backend](./docs/Frontend.md)
 - [Frontend](./docs/Backend.md)
 - [CICD](./docs/CICD.md)
-- [CANVAS API](./docs/canvas.md)
+- [CANVAS API](./docs/Canvas_Tutorial/Canvas_API_Tutorial.md)
 
 ## Backend Architecture
 
