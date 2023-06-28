@@ -26,16 +26,19 @@ const Profile = () => {
 
   const [isLargeScreen, setIsLargeScreen] = useState(false);
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [isXSmallScreen, setIsXSmallScreen] = useState(false)
 
   useEffect(() => {
     const handleWindowResize = () => {
       setIsLargeScreen(window.innerWidth > 1600);
-      setIsSmallScreen(window.innerWidth < 800);
+      setIsSmallScreen(window.innerWidth < 1000);
+      setIsXSmallScreen(window.innerWidth < 400)
     };
 
     if (typeof window !== 'undefined') {
       setIsLargeScreen(window.innerWidth > 1600);
-      setIsSmallScreen(window.innerWidth < 800);
+      setIsSmallScreen(window.innerWidth < 1000);
+      setIsXSmallScreen(window.innerWidth < 400)
       window.addEventListener('resize', handleWindowResize);
     }
 
@@ -58,6 +61,18 @@ const Profile = () => {
     accessibility: true,  // Allow control with arrow keys.
     centerPadding: "60px",
   };
+
+  const carouselSettingsSmallScreen = {
+    ...carouselSettings,
+    slidesToShow: 3,
+  };
+
+  const carouselSettingsXSmallScreen = {
+    ...carouselSettings,
+    slidesToShow: 2,
+  };
+
+
 
   function countBadgeOccurrences(targetBadgeId: number) {
     let count = 0;
@@ -159,7 +174,7 @@ const Profile = () => {
 
         {/* Showcase carousel for achieved badges. */}
         {user &&
-          <Slider {...carouselSettings}>
+          <Slider {...(isSmallScreen ? (isSmallScreen && isXSmallScreen ? carouselSettingsSmallScreen : carouselSettingsXSmallScreen) : carouselSettings)}>
             {[1].map(() => (
               badges.map((badge) => {
                 const badgeCount = countBadgeOccurrences(badge.badgeId)
