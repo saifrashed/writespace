@@ -87,6 +87,7 @@ const Grade: React.FC = () => {
     };
 
     const addCommentReply = async (noteId: number, reply: string) => {
+        const date = new Date().toLocaleString();
         if (notes) {
             const updatedNotes = [...notes]; // Create a copy of the original array
             const reply_object: Reply = {
@@ -94,12 +95,13 @@ const Grade: React.FC = () => {
                 message: reply,
                 userId: 0,
                 user_name: "",
+                date: date,
             };
             updatedNotes[noteId - 1].replies.push(reply_object);
             setNotes(updatedNotes);
         }
         if (assignmentId && user) {
-            addReply(token, Number(assignmentId), reply, noteId, user?.toString());
+            addReply(token, Number(assignmentId), reply, noteId, user?.toString(), date);
         }
     };
 
@@ -405,8 +407,7 @@ const Grade: React.FC = () => {
                                                                                     <p className="inline-flex items-center mr-3 text-sm text-gray-900">
                                                                                         {reply.user_name ? <p>{reply.user_name}</p> : <p>You</p>}
                                                                                     </p>
-                                                                                    <p className="text-sm text-gray-600 "><time
-                                                                                        title="February 12th, 2022">Feb. 12, 2022</time></p>
+                                                                                    <p className="text-sm text-gray-600 "><time>{reply.date}</time></p>
                                                                                 </div>
                                                                             </footer>
                                                                             <p className="text-gray-500">{reply.message}</p>
