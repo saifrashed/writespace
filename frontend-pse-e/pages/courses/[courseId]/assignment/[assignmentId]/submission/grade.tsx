@@ -87,7 +87,7 @@ const Grade: React.FC = () => {
     };
 
     const addCommentReply = async (noteId: number, reply: string) => {
-        const date = new Date().toLocaleString();
+        const date = new Date().toLocaleString("en-UK");
         if (notes) {
             const updatedNotes = [...notes]; // Create a copy of the original array
             const reply_object: Reply = {
