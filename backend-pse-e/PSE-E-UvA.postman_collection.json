@@ -137,21 +137,18 @@
 				},
 				{
 					"name": "Get one assignment from a course with courseId and assignmentId",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
-						"method": "GET",
+						"method": "POST",
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX1+ql6/7Zqq3T+L7Gfm6YQbmo8VxIi8TYXDcqzchwsEcSzXhhqB8dMTIAPLStfWrVD/mtLg3NVBlXb51VL+Ud7XqLBaDnhS2bFRDJICNVtEsc733Z4q1HNW9",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"courseId\" : 56157,\r\n    \"assignmentId\" : 6058\r\n}",
+							"raw": "{\r\n    \"courseId\" : 78230,\r\n    \"assignmentId\" : 6193\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -185,6 +182,54 @@
 						"url": "localhost:5000/assignment/written-assignments"
 					},
 					"response": []
+				},
+				{
+					"name": "Get all assignments",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+W7fG01VZz7yD4DewGKuZ5hIct32XBLYdNpL80FU/8C40CJYkoIBO5CBLfecyLeg8BbHyYO4cZFB3bJEVXFr/a/j1e9o7vDz2hoiD5vKvjh9NFagxz27a7",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 78219\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/assignment/get-all"
+					},
+					"response": []
+				},
+				{
+					"name": "Create assignment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1+lDnQIF0Zex5RLlKN61ymQMeBWAB6Jm31G9X5NBYHazppdRF/oKD5ZQvF9jGlyqGOvqHQiepTPQAxnQKn2DlD6njUtQlk9lcv2zDUZeDjLQsbiCt8y2s5g",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"courseId\": 78230,\r\n    \"assignment\": {\r\n        \"name\": \"Submission test\",\r\n        \"description\": \"test\",\r\n        \"points_possible\": 10,\r\n        \"grading_type\": \"points\",\r\n        \"omit_from_final_grade\": true,\r\n        \"anonymous_grading\": false,\r\n        \"allowed_attempts\": -1,\r\n        \"due_at\": \"2023-05-18T14:12:00.000Z\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/assignment/create"
+					},
+					"response": []
 				}
 			]
 		},
@@ -198,7 +243,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX18TKVf4mIAAq4W+VD4UIaRVqHA1d2gDz7FIuZj7B4u2Pjn64N4VmG98Rw87EFacl5adHoWdW8yhL1w6d+gUsk1CWWZ/NImv+mr9ahe2BuYcZ6617bxB1nOa",
 								"type": "text"
 							}
 						],
@@ -243,7 +288,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
 								"type": "text"
 							}
 						],
@@ -278,7 +323,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX186V1fjP/Qd1cmqDhPBLzfQj4DYeZZ429461BOGs0Hyu8kGz73xCWBm0QqMCGKAfHzCgmcRneHWgHqCOzKj+b+G23DekVchdeQRnjM+3bsxOnaQynKMILEw",
 								"type": "text"
 							}
 						],
@@ -286,19 +331,19 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "userId",
-									"value": "4",
+									"key": "courseId",
+									"value": "78230",
 									"type": "text"
 								},
 								{
 									"key": "assignmentId",
-									"value": "15",
+									"value": "6204",
 									"type": "text"
 								},
 								{
 									"key": "file",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/cpoet/Downloads/Maintainability_table.jpg"
 								}
 							]
 						},
@@ -313,20 +358,20 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX18TKVf4mIAAq4W+VD4UIaRVqHA1d2gDz7FIuZj7B4u2Pjn64N4VmG98Rw87EFacl5adHoWdW8yhL1w6d+gUsk1CWWZ/NImv+mr9ahe2BuYcZ6617bxB1nOa",
 								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userId\": 4,\r\n    \"assignmentId\": 15,\r\n    \"newGrade\": 90\r\n}",
+							"raw": "{\r\n    \"userId\": 36081,\r\n    \"assignmentId\": 6198,\r\n    \"grade\": 10,\r\n    \"courseId\": 78230,\r\n    \"notes\": [\r\n        {\r\n    \"id\":1,\r\n    \"content\": \"dasa\",\r\n    \"highlightAreas\": [{\r\n        \"height\":1.0521885521885521,\r\n        \"left\":55.57822765607979,\r\n        \"pageIndex\": 4,\r\n        \"top\":54.54545454545455,\r\n        \"width\":3.818919196367783\r\n    }],\r\n    \"quote\": \"ompass\"\r\n        }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
-						"url": "localhost:5000/submission/update/grade/"
+						"url": "localhost:5000/submission/grade/"
 					},
 					"response": []
 				},
@@ -385,6 +430,30 @@
 						"url": "http://localhost:5000/submission/delete-one/"
 					},
 					"response": []
+				},
+				{
+					"name": "Get a submission",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "bearer",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"userId\": 36122,\r\n    \"assignmentId\": 15\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:5000/submission/get-submission/"
+					},
+					"response": []
 				}
 			]
 		},
@@ -398,7 +467,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
 								"type": "text"
 							}
 						],
@@ -413,7 +482,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+CMyRVRu4fIjEqvEx9o3SE/p7M1KeaLK3JArRb+IRmNTmRPiG8y8WslSsNHDVn93HtP7y3XxdWJTJ7Yo2TX6GFKiq6JVT9/ZkF0M9NQRqIsOfEH6dOCUzp",
+								"value": "U2FsdGVkX186PZfDFrPgCXaGDCtL61UB+lI4XWgUDKbjjAxpJMV2WsNDXPw8qkv3SlUCYgJ/CoEZZ02TBfcmGAIVLNlvgin0u5FHKYrvLFSiJchUKPJDv/zwffOtVa09",
 								"type": "text"
 							}
 						],
@@ -660,7 +729,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX1/OVO0tfV/rXifLW9uW1M/JsKx/bzeLwKb+IMyr+kfo4qLx09/Wzq9QgDS8p5mq6TnFTlfYm8X5Kp9r2gf9bYUqbdw0s1l2Uy1PqSrvF0IfubWm+5i50Zgq",
 								"type": "text"
 							}
 						],
@@ -1029,7 +1098,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"code\" : \"f0e365b8fddaf38896078c2a44b8cf172297dd4551cf4a121ab1a5c25aa9348281bcd97f85ecc69e4aa14dc318a775e6b88968ae34149fc3e38aa56be778e400\"\r\n}",
+							"raw": "{\r\n    \"code\" : \"de10800dbda87dd9cd3df016124fedad6c32ab8a8b4b4edbf2b54b9c7a84f94fbf6bee6b00113932c11dab17aad170f74b2bf1338297e19466bccf65dbf08a36\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1047,10 +1116,14 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX1+EAAehLZGDSLX8ukSF5MvMBfi1sLNmKNwVEWRPX5K7vGYzL+TZgKL+ZL8qr4ym+q6Z/SEmnT/3LSO0dhmKQn81JoVAHWGekpoO21MnMJ8TwZkRTA2KvXqi",
+								"value": "U2FsdGVkX19QQ9g67S7cBrj9HK58M0Qw/5gllJll+brf9yPOdcaKS6P1ag5v5lp/btH9piI80gnDGSPMMd0SFuSqAL+M5vWeHOuWOx4BwSyjAsn7mNNYKNdPgcKc8yfb",
 								"type": "text"
 							}
 						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": "localhost:5000/auth/get-user-token/refresh"
 					},
 					"response": []
@@ -1133,11 +1206,11 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX1+ql6/7Zqq3T+L7Gfm6YQbmo8VxIi8TYXDcqzchwsEcSzXhhqB8dMTIAPLStfWrVD/mtLg3NVBlXb51VL+Ud7XqLBaDnhS2bFRDJICNVtEsc733Z4q1HNW9",
 								"type": "text"
 							}
 						],
-						"url": "localhost:5000/course/56157"
+						"url": "localhost:5000/course/78217"
 					},
 					"response": []
 				},
@@ -1148,7 +1221,7 @@
 						"header": [
 							{
 								"key": "bearer",
-								"value": "U2FsdGVkX19f2/zHjbjD7D8DZr2qYhRiibvSY7FQkkm4BfqxjQGHw0BlAVUG1aPJqm6cOHxwHTFJYd8qUX8wpkzXTrHCGMAdN3bx6Qn+n2Hz2w828dH7YxrQ9CPkLCbW",
+								"value": "U2FsdGVkX1+W7fG01VZz7yD4DewGKuZ5hIct32XBLYdNpL80FU/8C40CJYkoIBO5CBLfecyLeg8BbHyYO4cZFB3bJEVXFr/a/j1e9o7vDz2hoiD5vKvjh9NFagxz27a7",
 								"type": "text"
 							}
 						],

@@ -5,6 +5,7 @@ export const setCookie = (key, value) => {
         document.cookie = `${key}=${value}; expires=${expires.toUTCString()}; path=/`;
     }
 };
+
 export const removeCookie = (key) => {
     if (process.browser) {
         document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;

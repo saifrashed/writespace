@@ -19,3 +19,4 @@ Thumbs.db
 
 # package-lock
 package-lock.json
+cypress.env.json

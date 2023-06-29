@@ -4,7 +4,7 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
@@ -15,7 +15,7 @@ const { API_URL } = process.env;
 
 // Configure multer storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+multer({ storage: storage });
 // ************************* This can be coppied for every new service *************************
 
 // ************************* Copy and change this with the model you added *************************
@@ -31,16 +31,23 @@ const userModel = require("../models/user.model.js");
 function getLevel(experiencePoints) {
     let level = 1;
     let levelThreshold = 0;
+    let prevThreshold = 0;
     while (experiencePoints >= levelThreshold) {
         level++;
-        levelThreshold += (level - 1) * 100;
+        prevThreshold = levelThreshold;
+        levelThreshold += (level - 1) * 15;
     }
-    return {level: level - 1,
-            threshold: levelThreshold};
+    return {
+        level: level - 1,
+        threshold: levelThreshold,
+        prevThreshold
+    };
 }
 
-// Get request (gets something from the db)
-// Get all users
+/* This request returns all users
+Input: none
+Output: all users
+*/
 router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all users
@@ -53,7 +60,31 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-// Save new user
+/* This request returns the badges a user received for an assignment
+Input: userId, assignmentId
+Output: the badges for the given userId and assignmentId
+*/
+router.post("/badges/assignment/", auth, async (req, res) => {
+    try {
+        const assignmentId = req.body.assignmentId;
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
+
+        const user = await userModel.findOne({ 'userId': userId });
+        const badges = user.badges;
+
+        const assignmentBadges = badges.filter(badge => badge.assignmentId == assignmentId);
+
+        res.status(200).json(assignmentBadges);
+    } catch (error) {
+        console.error('Error from MongoDB:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+/* This request saves a user to the database
+Input: userId (from token), badges (empty array)
+Output: the saved user
+*/
 router.post('/save', auth, async (req, res) => {
     try {
         // Use the userId from the authentication check (canvas userId)
@@ -88,7 +119,10 @@ router.post('/save', auth, async (req, res) => {
     }
 });
 
-// Updates user picture
+/* This request updates the pictureId of a user
+Input: pictureId, userId (from token)
+Output: confirmation/error message
+*/
 router.put('/update/picture/', auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
@@ -117,9 +151,14 @@ router.put('/update/picture/', auth, async (req, res) => {
     }
 });
 
-// Updates user XP
+/* This request updates the XP of a user
+Input: pictureId, userId (from token or body, depending on who is updating)
+Output: confirmation/error message
+*/
 router.put('/update/experience-points/', auth, async (req, res) => {
     try {
+        // If XP is added by a teacher, there is a userId in the request body.
+        // If XP is added automatically, the userId is gotten from the locals
         const userId = req.body.userId ? req.body.userId : res.locals.userId;
         const XPToAdd = req.body.experiencePoints
 
@@ -133,7 +172,7 @@ router.put('/update/experience-points/', auth, async (req, res) => {
         let userXP = userToUpdate.experiencePoints;
         userXP = userXP + XPToAdd;
 
-        const updatedUser = await userModel.findByIdAndUpdate(updateId,
+        await userModel.findByIdAndUpdate(updateId,
             {
                 $set: {
                     'experiencePoints': userXP,
@@ -149,16 +188,27 @@ router.put('/update/experience-points/', auth, async (req, res) => {
     }
 });
 
-// Add badge to user. Handles adding of new badges and adding to existing badges
+/* Add badge to user. Handles adding of new badges and adding to existing badges
+Input: badges, userId (from token or body), courseId, assignmentId, comment,
+graderId (empty if badge is awarded automatically)
+Output: confirmation/error message
+*/
 router.put('/update/add-badges/', auth, async (req, res) => {
     try {
-        const userId = res.locals.userId;
-        const { badges, courseId, assignmentId, graderId, comment } = req.body;
+        // If badge is added by a teacher, there is a userId in the request body.
+        // The userId is then gotten from the body and the graderId is the
+        // local userId of the teacher. If the badge is awarded automatically,
+        // there is no userId in the request body. The userId is gotten from the
+        // local userId and the graderId is null.
+        const graderId = req.body.userId ? res.locals.userId : null
+        const userId = req.body.userId ? req.body.userId : res.locals.userId;
+        const { badges, courseId, assignmentId, comment } = req.body;
 
         let preparedBadges = [];
 
         for (let i = 0; i < badges.length; i++) {
             const badgeId = badges[i];
+
             const badge = {
                 badgeId: badgeId,
                 courseId: courseId,
@@ -176,7 +226,8 @@ router.put('/update/add-badges/', auth, async (req, res) => {
             {
                 $push: {
                     'badges': preparedBadges
-                }
+                },
+                $inc: { 'experiencePoints': 1000 }
             },
             { new: true }
         );
@@ -192,7 +243,10 @@ router.put('/update/add-badges/', auth, async (req, res) => {
     }
 });
 
-// Delete a badge
+/* Delete badge from user
+Input: userId (from token or body), assignmentId, badgeId
+Output: confirmation/error message
+*/
 router.put('/update/delete-badge/', auth, async (req, res) => {
     try {
         const userId = req.body.userId ? req.body.userId : res.locals.userId;
@@ -212,14 +266,14 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
         for (let i = 0; i < badges.length; i++) {
             const b = badges[i];
             if (
-              b.badgeId === badgeId &&
-              b.assignmentId === assignmentId
+                b.badgeId === badgeId &&
+                b.assignmentId === assignmentId
             ) {
-              badges.splice(i, 1); // Remove the object at the found index
-              badgePresent = true;
-              break;
+                badges.splice(i, 1); // Remove the object at the found index
+                badgePresent = true;
+                break;
             }
-          }
+        }
 
         if (!badgePresent) {
             return res.status(200).json({ message: 'Badge not found' });
@@ -233,60 +287,6 @@ router.put('/update/delete-badge/', auth, async (req, res) => {
         res.status(500).json({ error: 'Failed to update data in the database' });
     }
 });
-
-
-// General update request
-// PUT request (updates something in the db)
-// router.put('/update/', auth, async (req, res) => {
-//     try {
-//         const userId = res.locals.userId;
-//         const updatedUser = {
-//             userId: res.locals.userId,
-//             pictureId: req.body.pictureId,
-//             experiencePoints: req.body.experiencePoints,
-//             badges: req.body.badges
-//         };
-
-//         // Find the existing test by testId and update it
-//         const result = await userModel.updateOne(
-//             {
-//                 'userId': userId
-//             },
-//             { $set: updatedUser }
-//         );
-
-//         // Check if the test was found and updated successfully
-//         if (result.nModified === 0) {
-//             return res.status(200).json({ message: 'Object not found' });
-//         }
-
-//         res.status(200).json({ message: 'User updated successfully' });
-//     } catch (error) {
-//         console.error('Error updating data in MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to update data in the database' });
-//     }
-// });
-
-// // Delete user
-// router.delete('/delete/:userId', auth, async (req, res) => {
-//     try {
-//         const userId = req.params.userId;
-
-//         // Find the document by submissionId and remove it
-//         const result = await userModel.deleteOne({ 'userId': userId });
-
-//         // Check if the document was found and deleted successfully
-//         if (result.deletedCount === 0) {
-//             return res.status(200).json({ message: 'Object not found' });
-//         }
-
-//         // Delete successful
-//         res.status(200).json({ message: 'User deleted successfully' });
-//     } catch (error) {
-//         console.error('Error deleting data from MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to delete data from the database' });
-//     }
-// });
 
 // Get user combined with canvas user object
 router.get("/get-user", auth, async (req, res) => {
@@ -314,8 +314,9 @@ router.get("/get-user", auth, async (req, res) => {
             ...responseCanvas.data,
             ...responseMongo[0]._doc,
             level: level.level,
-            threshold: level.threshold
-          };
+            threshold: level.threshold,
+            prevThreshold: level.prevThreshold
+        };
 
         // Handle success case here
         res.status(200).json(combinedUser);
@@ -324,23 +325,6 @@ router.get("/get-user", auth, async (req, res) => {
         res.status(500).json({ error: 'Internal server error in /get-user' });
     }
 });
-
-// // Get user from canvas only
-// router.get('/get-user-canvas', auth, async (req, res) => {
-//     try {
-//         // Canvas API url
-//         const response = await axios.get(`${API_URL}/users/self`, {
-//             headers: {
-//                 // Authorization using the access token
-//                 Authorization: `Bearer ${req.headers["bearer"]}`
-//             }
-//         });
-//         res.json(response.data);
-//     } catch (error) {
-//         console.error('Error from Canvas API:', error);
-//         res.status(500).json({ error: 'An error occurred in /get-user-canvas.' });
-//     }
-// });
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable

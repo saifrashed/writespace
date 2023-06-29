@@ -5,20 +5,26 @@ import React, { useContext, useEffect, useState } from "react";
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from "@/lib/hooks/useAuthentication";
 import { formatDate } from "@/lib/date";
-import { motion } from "framer-motion";
 import useSubmission from "@/lib/hooks/useSubmission";
 import Link from "next/link";
+import { Context } from "@/Context";
 
-
-const Assignments = () => {
+/**
+ * The students page component for teachers.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered courses page.
+ */
+const Students = () => {
     const router = useRouter();
     // Accessing query parameters from the router object
     const { assignmentId, courseId } = router.query;
     const { token } = useAuthentication();
-    const { assignment, getAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
+
+    const { assignment: contextAssignment } = useContext(Context);
+    const { assignment: fetchedAssignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()) // When navigating to an assignment via url
+    const assignment = contextAssignment || fetchedAssignment;
     const { submission, submissions } = useSubmission(token, assignmentId?.toString())
-
-
 
     return (
         <>
@@ -33,12 +39,17 @@ const Assignments = () => {
 
             <div className="bg-gray-50 py-10 mt-16 min-h-screen">
                 <div className="text-center mb-6">
-                    <motion.h1 layoutId={assignment?.name} className="text-3xl font-bold">{assignment?.name}</motion.h1>
-
-                    <motion.div layoutId={assignment?.due_at?.toString()}>
-                        <p className="mt-8 text-gray-600">
+                    <h1 className="text-3xl font-bold">{assignment?.name}</h1>
+                    <div>
+                        <p className="mt-8 mb-8 text-gray-600">
                             <span className="font-bold">Deadline: </span> {assignment?.due_at ? formatDate(assignment?.due_at) : "No due date"}</p>
-                    </motion.div>
+                    </div>
+                    <Link href={`/courses/${courseId}/assignment/${assignmentId}`}
+                        className="hover:bg-blue-600 text-white bg-blue-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-2xl text-sm px-5 py-2.5 text-center"
+                    >
+                        <i className="fa-solid fa-eye me-2"></i>
+                        Student view
+                    </Link>
                 </div>
 
                 <div className="max-w-5xl mx-auto">
@@ -50,32 +61,89 @@ const Assignments = () => {
                                         Name
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
-                                        Submission Status
+                                        Submission Date
                                     </th>
                                     <th scope="col" className="px-6 py-4 whitespace-nowrap">
                                         Grade Status
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {submissions && submissions.map((submission, index) => (
-                                    <tr
-                                        key={index}
-                                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                                    >
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                            <Link href={{ pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`, query: { user: submission.userId } }}>
-                                                {submission.userId}
-                                            </Link>
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap text-green-500 font-bold">
-                                        </td>
-                                        <td className="px-6 py-4 whitespace-nowrap">
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
+                        <tbody>
+                        {submissions && (
+                            submissions.length > 0 ? (
+                                submissions.map((submission, index) => (
+                                <tr
+                                    key={index}
+                                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                                >
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        <Link
+                                            href={{
+                                            pathname: `/courses/${courseId}/assignment/${assignmentId}/submission/grade`,
+                                            query: { user: submission.userId },
+                                            }}
+                                        >
+                                        {submission.userName ? submission.userName : "Anonymous"}
+                                        </Link>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap font-bold">
+                                        {formatDate(submission.date)}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {submission.status}
+                                    </td>
+                                </tr>
+                            ))
+                            ) : (
+                                <tr>
+                                <td className="px-6 py-4 text-center" colSpan={3}>
+                                    <span className="text-gray-400">No submissions available.</span>
+                                </td>
+                                </tr>
+                            )
+                            )}
+                        </tbody>
                         </table>
+                        {!submissions && (
+                            <div role="status" className="w-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
+                                <div className="flex items-center justify-between">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <div className="flex items-center justify-between pt-4">
+                                    <div>
+                                        <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+                                        <div className="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+                                    </div>
+                                    <div className="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+                                </div>
+                                <span className="sr-only">Loading...</span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div >
@@ -83,4 +151,4 @@ const Assignments = () => {
     );
 };
 
-export default Assignments;
+export default Students;

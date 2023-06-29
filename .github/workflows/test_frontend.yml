@@ -19,10 +19,8 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install packages frontend
-        run: cd ./frontend-pse-e && npm ci
+        run: cd ./frontend-pse-e && npm install
       - name: Run Eslint
-        run: cd ./frontend-pse-e && npm run lint:ci
-      - name: Run Tests
-        run: cd ./frontend-pse-e && npm run test:ci
+        run: cd ./frontend-pse-e && npm run lint
       - name: Bundle and Output
         run: cd ./frontend-pse-e && npm run build

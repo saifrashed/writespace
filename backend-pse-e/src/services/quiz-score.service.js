@@ -4,13 +4,13 @@
 // Import the router with express to do requests
 const express = require('express');
 const router = express.Router();
-const { ObjectId } = require('mongodb');
+require('mongodb');
 const multer = require('multer');
 const { auth } = require('../middleware/auth');
 
 // Configure multer storage
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+multer({ storage: storage });
 // ************************* This can be coppied for every new service *************************
 
 // ************************* Copy and change this with the model you added *************************
@@ -21,8 +21,10 @@ const quizScoreModel = require('../models/quiz-score.model.js');
 // ************************* Requests for this service (examples below) *************************
 // Define a route without the starting route defined in app.js
 
-// Get request (gets something from the db)
-// Get all quiz scores
+/* This request returns all scores for a quiz
+Input: none
+Output: all quiz scores
+*/
 router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
@@ -35,7 +37,10 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-// Find all scores for a specific user
+/* This request returns all quiz scores for the given user
+Input: none (uses the userId from the token)
+Output: all quiz scores for the given user
+*/
 router.get("/user/", auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
@@ -54,7 +59,10 @@ router.get("/user/", auth, async (req, res) => {
     }
 });
 
-// Find all scores for a specific quiz
+/* This request returns all scores for a quiz
+Input: quizId
+Output: all quiz scores for a quiz
+*/
 router.get("/quiz/:quizId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -72,6 +80,10 @@ router.get("/quiz/:quizId", auth, async (req, res) => {
     }
 });
 
+/* This request returns the score for a quiz for a user
+Input: quizId, (userId from token)
+Output: the score for a quiz for a user
+*/
 router.post("/get-score/", auth, async (req, res) => {
     try {
         const quizId = req.body.quizId;
@@ -91,7 +103,10 @@ router.post("/get-score/", auth, async (req, res) => {
     }
 });
 
-// Save or update new quiz score
+/* This request saves or updates a quiz score.
+Input: quizId, latestScore, (userId from token)
+Output: confirmation/error message
+*/
 router.post('/save/', auth, async (req, res) => {
     try {
         const quizId = req.body.quizId;
@@ -125,7 +140,10 @@ router.post('/save/', auth, async (req, res) => {
     }
 });
 
-// Delete quiz score by quizId
+/* This request deletes the quiz score for the given quiz
+Input: quizId
+Output: confirmation/error message
+*/
 router.delete('/delete/quiz/:quizId', auth, async (req, res) => {
     try {
         const quizId = req.params.quizId;
@@ -146,7 +164,10 @@ router.delete('/delete/quiz/:quizId', auth, async (req, res) => {
     }
 });
 
-// Delete quiz score by userId
+/* This request deletes the quiz score for the given user
+Input: userId
+Output: confirmation/error message
+*/
 router.delete('/delete/user/:userId', auth, async (req, res) => {
     try {
         const userId = req.params.userId;
@@ -167,7 +188,10 @@ router.delete('/delete/user/:userId', auth, async (req, res) => {
     }
 });
 
-// Delete quiz score for specific user and quiz
+/* This request deletes the quiz score for the given user and quiz
+Input: userId, quizId
+Output: confirmation/error message
+*/
 router.delete('/delete-one/', auth, async (req, res) => {
     try {
         const userId = res.locals.userId;

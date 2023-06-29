@@ -1,0 +1,9 @@
+{
+    "assignment_name": "Test assignment",
+    "assignment_description": "This is a test assignment",
+    "grade_type": "Percent",
+    "points": 100,
+    "attemps": 3,
+    "due_date": "01/01/2024"
+
+}
