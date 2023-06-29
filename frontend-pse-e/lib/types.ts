@@ -233,6 +233,7 @@ export interface User {
     badges: BadgeModel[];
     level: number;
     threshold: number;
+    prevThreshold: number;
 }
 
 export interface BadgeModel {

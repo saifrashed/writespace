@@ -132,33 +132,34 @@ const Profile = () => {
         {/* Profile picture */}
         <div className="flex flex-col items-center justify-center mt-10 mb-10">
           <Avatar
-            sx={{ width: 200, height: 200, border: '2px solid #706f7d', padding: '30px', boxShadow:'0px 0px 30px 2px purple'
-          }}
+            sx={{
+              width: 200, height: 200, border: '2px solid #706f7d', padding: '30px', boxShadow: '0px 0px 30px 2px purple'
+            }}
             src={user?.pictureId === 0 || user?.pictureId === undefined ? '' : `/badges/${user?.pictureId}.png`}
           />
         </div>
 
         <div className="mx-16">
-        {user && (
-        <div className="grid grid-cols-3 gap-2 items-baseline mb-6">
-          <div className={`text-start font-bold text-2xl font-medium ${isLegendary && "gradient-text"}`}>XP: {user.experiencePoints}</div>
-          <div className={`text-center font-bold text-4xl font-medium ${isLegendary && "gradient-text"}`}>{user.name}</div>
-          <div className={`text-end font-bold text-2xl font-medium ${isLegendary && "gradient-text"}`}>Level: {user.level}</div>
-        </div>
-        )}
+          {user && (
+            <div className="grid grid-cols-3 gap-2 items-baseline mb-6">
+              <div className={`text-start font-bold text-2xl font-medium ${isLegendary && "gradient-text"}`}>XP: {user.experiencePoints}</div>
+              <div className={`text-center font-bold text-4xl font-medium ${isLegendary && "gradient-text"}`}>{user.name}</div>
+              <div className={`text-end font-bold text-2xl font-medium ${isLegendary && "gradient-text"}`}>Level: {user.level}</div>
+            </div>
+          )}
 
           <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
             {user && (
               <div className="relative">
                 <div
                   className="leading-4 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-sm font-medium text-center rounded-full"
-                  style={{ height: "30px", width: `${Math.max((user.experiencePoints / user.threshold) * 100, 1)}%` }}>
+                  style={{ height: "30px", width: `${Math.max(((user.experiencePoints - user.prevThreshold) / (user.threshold - user.prevThreshold)) * 100, 1)}%` }}>
+                </div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-xl">
+                    {`${user.experiencePoints} / ${user.threshold} XP`}
                   </div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="text-center text-xl">
-                      {`${user.experiencePoints} / ${user.threshold} XP`}
-                    </div>
-                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -182,7 +183,7 @@ const Profile = () => {
                       }}
                       key={badge.badgeId}
                       title={badge.description}
-                      >
+                    >
                       <ScaledBadge
                         resizeFactor={0.8}
                         pictureUrl={`/badges/${badge.badgeId.toString()}.png`}
@@ -207,7 +208,7 @@ const Profile = () => {
           <div className="mx-16">
             <h1 className="text-4xl pb-4 font-bold mb-6 gradient-text">Badges overview</h1>
             <div className={isSmallScreen ? '' : 'ml-16'}>
-            {/* {isSmallScreen ? 'ml-4' : 'ml-16'} */}
+              {/* {isSmallScreen ? 'ml-4' : 'ml-16'} */}
 
               <div className="grid grid-cols sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
                 {user &&

@@ -13,8 +13,8 @@ const falseSplit = (matchText, match) => {
   if (matchText.includes("- ")) {
     let unsplit = matchText.replace("- ", "");
     if (match.replacements.length > 0 &&
-        match.replacements[0].value === unsplit) {
-        return true;
+      match.replacements[0].value === unsplit) {
+      return true;
     }
   }
   return false;
@@ -52,27 +52,30 @@ export const filterData = (inputData, username) => {
 }
 
 export const filterText = (text) => {
+  if (text) {
+    // Replace "a ," with "a," with "a" an alphanumeric or a greek letter.
+    let pattern = /(\w|[\u0391-\u0969])\s+,/g;
+    let filteredText = text.replace(pattern, "$1,");
 
-  // Replace "a ," with "a," with "a" an alphanumeric or a greek letter.
-  let pattern = /(\w|[\u0391-\u0969])\s+,/g;
-  let filteredText = text.replace(pattern, "$1,");
+    // Remove space after an opening bracket.
+    pattern = /(\(|\[|\{)\s+(\w|[\u0370-\u03FF])/g;
+    filteredText = filteredText.replace(pattern, "$1$2");
 
-  // Remove space after an opening bracket.
-  pattern = /(\(|\[|\{)\s+(\w|[\u0370-\u03FF])/g;
-  filteredText = filteredText.replace(pattern, "$1$2");
+    // Remove space before a closing bracket.
+    pattern = /(\w|[\u0370-\u03FF])\s+(\)|\]|\})/g;
+    filteredText = filteredText.replace(pattern, "$1$2");
 
-  // Remove space before a closing bracket.
-  pattern = /(\w|[\u0370-\u03FF])\s+(\)|\]|\})/g;
-  filteredText = filteredText.replace(pattern, "$1$2");
+    // Fix umlauted vowels.
+    const umlauts = {
+      a: 'ä', e: 'ë', i: 'ï', o: 'ö', u: 'ü', \u0131: 'ï',
+      A: 'Ä', E: 'Ë', I: 'Ï', O: 'Ö', U: 'Ü'
+    };
+    pattern = /¨\s+([aei\u0131ou])/gi;
+    filteredText = filteredText.replace(pattern,
+      (match, vowel) => umlauts[vowel.toLowerCase()] || match);
 
-  // Fix umlauted vowels.
-  const umlauts = {
-    a: 'ä', e: 'ë', i: 'ï', o: 'ö', u: 'ü', \u0131: 'ï',
-    A: 'Ä', E: 'Ë', I: 'Ï', O: 'Ö', U: 'Ü'
-  };
-  pattern = /¨\s+([aei\u0131ou])/gi;
-  filteredText = filteredText.replace(pattern,
-    (match, vowel) => umlauts[vowel.toLowerCase()] || match);
-
-  return filteredText;
+    return filteredText;
+  } else {
+    return ""
+  }
 }
