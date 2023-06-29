@@ -51,7 +51,7 @@ const Profile = () => {
   const carouselSettings = {
     infinite: true,
     speed: 500,
-    autoplaySpeed: 3000,
+    autoplaySpeed: 2000,
     slidesToShow: 5,
     slidesToScroll: 1,
     autoplay: true,
@@ -184,11 +184,11 @@ const Profile = () => {
                   <div className="flex justify-center">
                     <div
                       style={{
-                        height: '300px', position: 'relative'
-                        // top: '-10px', left: '35px',
+                        height: '300px', position: 'relative',
+                        top: '-10px', ...(isLargeScreen && { left: '30px' }),
                       }}
                       key={badge.badgeId}
-                      title={badge.description}
+                      title={badge.name + "\n" + badge.description + "\nXP:" + badge.experiencePoints}
                       >
                       <ScaledBadge
                         resizeFactor={0.8}
