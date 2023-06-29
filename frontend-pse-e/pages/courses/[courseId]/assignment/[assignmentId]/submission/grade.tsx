@@ -37,7 +37,7 @@ const Grade: React.FC = () => {
     const router = useRouter();
     const { courseId, assignmentId, user } = router.query;
     const { token } = useAuthentication()
-    const { onWarning } = useNotification();
+    const { onWarning, onSuccess } = useNotification();
     const [message, setMessage] = React.useState('');
     const [notes, setNotes] = React.useState<Note[]>([]);
     const [grade, setGrade] = React.useState<number>(1);
@@ -51,7 +51,7 @@ const Grade: React.FC = () => {
     const { assignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
 
     const { gradeSubmission, getSubmission, addReply, fileUrl, fileNotes, submission } = useSubmission(token, assignmentId?.toString(), user?.toString())
-    const { addUserBadges } = useUser(token)
+    const { user:grader, addUserBadges} = useUser(token)
     const { badges } = useBadges(token)
 
 
@@ -59,9 +59,14 @@ const Grade: React.FC = () => {
         return arr.filter((obj) => !badgeIdsToRemove.includes(obj.badgeId));
     }
 
-    const automaticBadges = [2, 13, 14, 15, 16, 17, 18, 19]
+    const automaticBadges = [2, 13, 14, 15, 16, 17, 18, 19, 20]
 
     const filteredBadges = removeObjectsByBadgeIds(badges, automaticBadges)
+
+
+    function isBadgePresent(badgeId: number) {
+        return grader?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
+    }
 
 
     const openModal = () => {
@@ -519,6 +524,10 @@ const Grade: React.FC = () => {
                                                 if (assignmentId && user && courseId) {
                                                     gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString(), courseId?.toString())
                                                     addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
+                                                    if(!isBadgePresent(20)){
+                                                        addUserBadges([20], courseId?.toString(), assignmentId?.toString(), '', '', token)
+                                                        onSuccess("Congratulations you have received a badge! View your profile to see it.")
+                                                    }
                                                 }
                                             }}
                                         >
