@@ -522,7 +522,7 @@ const Grade: React.FC = () => {
                                                 }
                                             }}
                                         >
-                                            Yes, I'm sure
+                                            Yes, I&apos;m sure
                                         </button>
                                         <button
                                             data-modal-hide="popup-modal"
@@ -590,7 +590,7 @@ const Grade: React.FC = () => {
                                                 setBadgeModal(false);
                                             }}
                                         >
-                                            Yes, I'm sure
+                                            Yes, I&apos;m sure
                                         </button>
                                         <button
                                             data-modal-hide="popup-badge-modal"
