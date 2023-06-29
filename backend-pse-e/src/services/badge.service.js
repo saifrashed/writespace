@@ -38,17 +38,20 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-/* This get request returns one badge
-Input: badgeId
-Output: badge with the given badgeId
+/* This post request returns one or more badge(s)
+Input: badgeId(s)
+Output: badge(s) with the given badgeId(s)
 */
-router.get("/get-badge/:badgeId", auth, async (req, res) => {
+router.post("/get-badge", auth, async (req, res) => {
     try {
-        // Find the object using an attribute of the object
-        const result = await badgeModel.find({ 'badgeId': req.params.badgeId });
-        // If the object is not fount give an error
+        const badgeIds = req.body.badgeIds;
+
+        // Find the objects using the badgeIds
+        const result = await badgeModel.find({ badgeId: { $in: badgeIds } });
+
+        // If no objects are found, return an error message
         if (result.length === 0) {
-            return res.status(200).json({ message: 'Object not found' });
+            return res.status(200).json({ message: 'No objects found' });
         }
 
         // Handle success case here
@@ -58,6 +61,7 @@ router.get("/get-badge/:badgeId", auth, async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 });
+
 
 /* This post request saves a new badge
 Input: badgeId, experiencePoints, name, category, description
@@ -131,7 +135,10 @@ router.put('/update/experience-points/', auth, async (req, res) => {
     }
 });
 
-// Update badge name and description
+/* This put request updates the details of a badge
+Input: badgeId, name, category, description
+Output: confirmation/error message
+*/
 router.put('/update/details/', auth, async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
@@ -164,8 +171,10 @@ router.put('/update/details/', auth, async (req, res) => {
     }
 });
 
-
-// Delete badge
+/* This request deletes a badge from the database
+Input: badgeId
+Output: confirmation/error message
+*/
 router.delete('/delete/:badgeId', auth, async (req, res) => {
     try {
         const badgeId = req.params.badgeId;

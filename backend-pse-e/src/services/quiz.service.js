@@ -21,8 +21,10 @@ const quizModel = require('../models/quiz.model.js');
 // ************************* Requests for this service (examples below) *************************
 // Define a route without the starting route defined in app.js
 
-// Get request (gets something from the db)
-// Get all quiz scores
+/* This request returns all quizzes
+Input: none
+Output: all quizzes
+*/
 router.get("/get-all", auth, async (req, res) => {
     try {
         // Find all tests
@@ -35,7 +37,10 @@ router.get("/get-all", auth, async (req, res) => {
     }
 });
 
-// Find all scores for a specific user
+/* This request returns the quiz with the given quizId
+Input: quizId
+Output: quiz with the given quizId
+*/
 router.get("/get-quiz/:quizId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -53,7 +58,10 @@ router.get("/get-quiz/:quizId", auth, async (req, res) => {
     }
 });
 
-// Save new quiz
+/* This request saves a new quiz
+Input: quizId, topic, experiencePoints, questions
+Output: confirmation/error message
+*/
 router.post('/save/', auth, async (req, res) => {
    try {
         const quizId = req.body.quizId;
@@ -80,7 +88,10 @@ router.post('/save/', auth, async (req, res) => {
    }
 });
 
-// Generic quiz update
+/* This request updates a quiz
+Input: quizId, topic, experiencePoints, questions
+Output: confirmation/error message
+*/
 router.put('/update/', auth, async (req, res) => {
     try {
         const quizId = req.body.quizId;
@@ -111,7 +122,10 @@ router.put('/update/', auth, async (req, res) => {
     }
 });
 
-// Delete quiz score by quizId
+/* This request deletes the quiz with the given quizId
+Input: quizId
+Output: confirmation/error message
+*/
 router.delete('/delete/:quizId', auth, async (req, res) => {
     try {
         const quizId = req.params.quizId;
