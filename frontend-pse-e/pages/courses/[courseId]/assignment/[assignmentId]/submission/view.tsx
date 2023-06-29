@@ -7,7 +7,7 @@ import useSubmission from '@/lib/hooks/useSubmission';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from '@/lib/hooks/useAuthentication';
 import Lottie from "lottie-react"
-import SpellingQuiz from '@/components/spellingQuiz'
+// import SpellingQuiz from '@/components/spellingQuiz'
 import * as searchingAnimationData from "@/public/animations/searching.json";
 import { Reply } from '@/lib/types';
 
@@ -289,7 +289,7 @@ const View: React.FC = () => {
                 </>
             )}
 
-            <SpellingQuiz fileUrl={fileUrl} showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} />
+            {/* <SpellingQuiz fileUrl={fileUrl} showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} /> */}
         </div>
     );
 };
