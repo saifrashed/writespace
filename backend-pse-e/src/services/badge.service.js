@@ -131,7 +131,10 @@ router.put('/update/experience-points/', auth, async (req, res) => {
     }
 });
 
-// Update badge name and description
+/* This put request updates the details of a badge
+Input: badgeId, name, category, description
+Output: confirmation/error message
+*/
 router.put('/update/details/', auth, async (req, res) => {
     try {
         const badgeId = req.body.badgeId;
@@ -164,8 +167,10 @@ router.put('/update/details/', auth, async (req, res) => {
     }
 });
 
-
-// Delete badge
+/* This request deletes a badge from the database
+Input: badgeId
+Output: confirmation/error message
+*/
 router.delete('/delete/:badgeId', auth, async (req, res) => {
     try {
         const badgeId = req.params.badgeId;
