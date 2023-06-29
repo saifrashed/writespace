@@ -1,15 +1,11 @@
-export const setCookie = (key, value, expire) => {
+export const setCookie = (key, value) => {
     if (process.browser) {
         const expires = new Date();
-        if (expire) {
-            expires.setHours(expires.getHours() + 1);
-            document.cookie = `${key}=${value}; expires=${expires.toUTCString()}; path=/`;
-        } else {
-            expires.setFullYear(expires.getFullYear() + 1);
-            document.cookie = `${key}=${value}; expires=${expires.toUTCString()}; path=/`;
-        }
+        expires.setDate(expires.getDate() + 1);
+        document.cookie = `${key}=${value}; expires=${expires.toUTCString()}; path=/`;
     }
 };
+
 export const removeCookie = (key) => {
     if (process.browser) {
         document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
