@@ -13,6 +13,7 @@
 # dependencies
 /node_modules
 
+
 /frontend-pse-e/cypress/videos
 
 # debug

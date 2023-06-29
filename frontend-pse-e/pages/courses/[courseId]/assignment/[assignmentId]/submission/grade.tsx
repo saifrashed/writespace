@@ -64,7 +64,9 @@ const Grade: React.FC = () => {
     const filteredBadges = removeObjectsByBadgeIds(badges, automaticBadges)
 
 
-
+    function isBadgePresent(badgeId: number) {
+        return grader?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
+    }
 
 
     const openModal = () => {
@@ -525,8 +527,10 @@ const Grade: React.FC = () => {
                                                 if (assignmentId && user && courseId) {
                                                     gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString(), courseId?.toString())
                                                     addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
-                                                    addUserBadges([20], courseId?.toString(), assignmentId?.toString(), '', '', token)
-                                                    onSuccess("Congratulations you have received a badge! View your profile to see it.")
+                                                    if (!isBadgePresent(20)) {
+                                                        addUserBadges([20], courseId?.toString(), assignmentId?.toString(), '', '', token)
+                                                        onSuccess("Congratulations you have received a badge! View your profile to see it.")
+                                                    }
                                                 }
                                             }}
                                         >

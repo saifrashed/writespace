@@ -25,7 +25,6 @@ function useAuthentication() {
       setCookie("pse-refresh-token", response.data.refresh_token)
       setToken(response.data.access_token)
       onSuccess("Authentication successful")
-      await router.push("/courses");
     } catch (error) {
       console.log(error)
     }

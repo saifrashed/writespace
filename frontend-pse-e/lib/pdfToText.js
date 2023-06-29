@@ -5,8 +5,8 @@ import { pdfjs } from "react-pdf";
 import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-const convertPdfToText = async (fileUrl) => {
 
+const convertPdfToText = async (fileUrl) => {
   try {
     const loadingTask = getDocument(fileUrl);
     const pdf = await loadingTask.promise;

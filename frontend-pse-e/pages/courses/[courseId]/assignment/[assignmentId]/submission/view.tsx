@@ -7,7 +7,7 @@ import useSubmission from '@/lib/hooks/useSubmission';
 import useAssignment from "@/lib/hooks/useAssignment";
 import useAuthentication from '@/lib/hooks/useAuthentication';
 import Lottie from "lottie-react"
-// import SpellingQuiz from '@/components/spellingQuiz'
+import SpellingQuiz from '@/components/spellingQuiz'
 import * as searchingAnimationData from "@/public/animations/searching.json";
 import { Reply } from '@/lib/types';
 
@@ -192,74 +192,68 @@ const View: React.FC = () => {
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
                                                 {notes.length === 0 && <div className='text-center py-3'>There are no comments to view</div>}
-                                                {notes.map((note, index) => {
-                                                    const hasReplies = note.replies.length > 0;
-                                                    return (
-                                                        <>
-                                                            <article className="p-6 text-base  bg-white rounded-lg " key={index} >
-                                                                <div className='hover:bg-gray-50 cursor-pointer' onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
-                                                                    <footer className="flex justify-between items-center mb-2">
-                                                                        <div className="flex items-center">
-                                                                            <p className="inline-flex items-center mr-3 text-sm text-gray-900 ">
-                                                                                {note.author ? note.author : "Anonymous"}
-                                                                            </p>
-                                                                        </div>
-                                                                    </footer>
-                                                                    <p className="text-gray-500 ">{note.quote}</p>
-                                                                    <p className="text-black text-bold ">{note.content}</p>
-                                                                </div>
-
-                                                            </article>
-                                                            {hasReplies && (
-                                                                <>
-                                                                    {note.replies.map((reply, replyIndex) => (
-                                                                        <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg " key={`${note.id}-reply-${replyIndex}`}>
-                                                                            <footer className="flex justify-between items-center mb-2">
-                                                                                <div className="flex items-center">
-                                                                                    <p className="inline-flex items-center mr-3 text-sm text-gray-900">
-                                                                                        {reply.user_name ? <p>{reply.user_name}</p> : <p>You</p>}
-                                                                                    </p>
-                                                                                    <p className="text-sm text-gray-600 "><time>{reply.date}</time></p>
-                                                                                </div>
-                                                                            </footer>
-                                                                            <p className="text-gray-500">{reply.message}</p>
-                                                                        </article>
-                                                                    ))}
-                                                                </>
-                                                            )}
-                                                            {!note.fresh && (
-                                                                <section className="bg-white ml-6 lg:ml-12 ">
-                                                                    <div className="max-w-2xl mx-auto px-4 py-3">
-                                                                        <form className="mb-6">
-                                                                            <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
-                                                                                <label className="sr-only">Your comment</label>
-                                                                                <textarea id={`${note.id}-comment`}
-                                                                                    className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none "
-                                                                                    placeholder="Write a comment..." required></textarea>
-                                                                            </div>
-                                                                            <button type="submit"
-                                                                                className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
-                                                                                onClick={(e) => {
-                                                                                    e.preventDefault();
-                                                                                    const commentElement = document.getElementById(`${note.id}-comment`) as HTMLInputElement;
-                                                                                    if (commentElement !== null) {
-                                                                                        const comment = commentElement.value;
-                                                                                        if (comment) {
-                                                                                            addCommentReply(note.id, comment);
-                                                                                            commentElement.value = "";
-                                                                                        }
-                                                                                    }
-                                                                                }}
-                                                                            >
-                                                                                Post comment
-                                                                            </button>
-                                                                        </form>
+                                                {notes.map((note, index) => (
+                                                    <>
+                                                        <article className="p-6 text-base  bg-white rounded-lg " key={index} >
+                                                            <div className='hover:bg-gray-50 cursor-pointer' onClick={() => jumpToHighlightArea(note.highlightAreas[0])}>
+                                                                <footer className="flex justify-between items-center mb-2">
+                                                                    <div className="flex items-center">
+                                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900 ">
+                                                                            {note.author ? note.author : "Anonymous"}
+                                                                        </p>
                                                                     </div>
-                                                                </section>
-                                                            )}
-                                                        </>
-                                                    )
-                                                })}
+                                                                </footer>
+                                                                <p className="text-gray-500 ">{note.quote}</p>
+                                                                <p className="text-black text-bold ">{note.content}</p>
+                                                            </div>
+
+                                                        </article>
+
+                                                        {note.replies.length > 0 && note.replies.map((reply, replyIndex) => (
+                                                            <article className="p-6 mb-6 ml-6 lg:ml-12 text-base bg-white rounded-lg " key={`${note.id}-reply-${replyIndex}`}>
+                                                                <footer className="flex justify-between items-center mb-2">
+                                                                    <div className="flex items-center">
+                                                                        <p className="inline-flex items-center mr-3 text-sm text-gray-900">
+                                                                            {reply.user_name ? <span>{reply.user_name}</span> : <span>You</span>}
+                                                                        </p>
+                                                                        <p className="text-sm text-gray-600 "><time>{reply.date}</time></p>
+                                                                    </div>
+                                                                </footer>
+                                                                <p className="text-gray-500">{reply.message}</p>
+                                                            </article>
+                                                        ))}
+                                                        {!note.fresh && (
+                                                            <section className="bg-white ml-6 lg:ml-12 ">
+                                                                <div className="max-w-2xl mx-auto px-4 py-3">
+                                                                    <form className="mb-6">
+                                                                        <div className="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 ">
+                                                                            <label className="sr-only">Your comment</label>
+                                                                            <textarea id={`${note.id}-comment`}
+                                                                                className="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none "
+                                                                                placeholder="Write a comment..." required></textarea>
+                                                                        </div>
+                                                                        <button type="submit"
+                                                                            className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
+                                                                            onClick={(e) => {
+                                                                                e.preventDefault();
+                                                                                const commentElement = document.getElementById(`${note.id}-comment`) as HTMLInputElement;
+                                                                                if (commentElement !== null) {
+                                                                                    const comment = commentElement.value;
+                                                                                    if (comment) {
+                                                                                        addCommentReply(note.id, comment);
+                                                                                        commentElement.value = "";
+                                                                                    }
+                                                                                }
+                                                                            }}
+                                                                        >
+                                                                            Post comment
+                                                                        </button>
+                                                                    </form>
+                                                                </div>
+                                                            </section>
+                                                        )}
+                                                    </>
+                                                ))}
                                             </ul>
                                         </div>
                                     </div>
@@ -289,7 +283,7 @@ const View: React.FC = () => {
                 </>
             )}
 
-            {/* <SpellingQuiz fileUrl={fileUrl} showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} /> */}
+            <SpellingQuiz fileUrl={fileUrl} showPopup={showPopup} togglePopup={() => { setShowPopup(!showPopup) }} />
         </div>
     );
 };
