@@ -42,16 +42,18 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication()
   const { user, addUserBadges, updateUserPicture } = useUser(token)
-  const { badges, getBadge } = useBadge(token, [2, 14]);
+
+  const beeBadgeId = 2
+  const spellBadgeId = 14
+
+  const { badges, getBadge } = useBadge(token, [beeBadgeId, spellBadgeId]);
 
   useEffect(() => {
     if (token) {
-      getBadge(token, [2, 14]);
+      getBadge(token, [beeBadgeId, spellBadgeId]);
     }
   }, [token]);
 
-  const beeBadgeId = badges[0].badgeId
-  const spellBadgeId = badges[1].badgeId
 
   // Check if the user has received the badge already for this assignment.
   const checkBadgePresent = (badgeId) => {
@@ -351,6 +353,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       height: '300px', position: 'relative',
                       top: '-10px', left: '-130px',
                     }}>
+                      {badges && (
                       <ScaledBadge
                         resizeFactor={0.8}
                         pictureUrl={`/badges/${badges[0].badgeId}.png`}
@@ -361,7 +364,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         onChooseProfilePicture={() => handleChooseProfilePicture(beeBadgeId)}
                         setIsProfilePictureUpdated={setIsProfilePictureUpdated}
                         noPopup={false}
-                      />
+                      />)}
                     </div>
                   </div>
                   {(!isBeeBadgePresent) && (
@@ -535,6 +538,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       height: '300px', position: 'relative',
                       top: '-10px', left: '-130px',
                     }}>
+                      {badges && (
                       <ScaledBadge
                         resizeFactor={0.8}
                         pictureUrl={`/badges/${badges[1].badgeId}.png`}
@@ -545,7 +549,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         onChooseProfilePicture={() => handleChooseProfilePicture(spellBadgeId)}
                         setIsProfilePictureUpdated={setIsProfilePictureUpdated}
                         noPopup={false}
-                      />
+                      />)}
                     </div>
                   </div>
                   {(!isSpellBadgePresent) && (
