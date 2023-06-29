@@ -26,34 +26,10 @@ const submissionModel = require("../models/submission.model.js");
 // ************************* Requests for this service (examples below) *************************
 // Define a route without the starting route defined in app.js
 
-// Get request (gets something from the db)
-// router.get("/get-all", auth, async (req, res) => {
-//     try {
-//         // Find all tests
-//         const submissions = await submissionModel.find();
-//         // Return them in json form
-//         res.status(200).json(submissions);
-//     } catch (error) {
-//         console.error('Error from MongoDB:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-// Find submissions by userId
-// router.get("/user/:userId", auth, async (req, res) => {
-//     try {
-//         // Find the object using an attribute of the object
-//         const result = await submissionModel.find({ 'userId': req.params.userId });
-
-//         // Handle success case here
-//         res.status(200).json(result);
-//     } catch (error) {
-//         console.error('Error from MongoDB:', error);
-//         res.status(500).json({ error: 'Internal server error' });
-//     }
-// });
-
-// Get all submissions for an assignment
+/* This request returns all submissions for an assignment
+Input: assignmentId
+Output: all submissions for the given assignmentId
+*/
 router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -67,7 +43,10 @@ router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
     }
 });
 
-// Get submission by a user for an assignment
+/* This request returns the submission by a user for an assignment
+Input: userId, assignmentId
+Output: the submission for the given userId and assignmentId
+*/
 router.post("/get-submission/", auth, async (req, res) => {
     try {
         const { userId, assignmentId } = req.body;
@@ -86,7 +65,10 @@ router.post("/get-submission/", auth, async (req, res) => {
     }
 });
 
-// Post request (creates something in the db)
+/* This request saves a submission for an assignment
+Input: userId, assignmentId, courseId, PDF file
+Output: The created submission
+*/
 router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
@@ -94,7 +76,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
         const courseId = req.body.courseId;
 
         // Add the submission to the assignment on canvas
-        const responseCanvas = await axios.post(
+        await axios.post(
             `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`,
             {},
         {
@@ -161,11 +143,15 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
     }
 });
 
-// Voegt notes to the submission
+/* This request is used to grade a submission
+Input: userId, assignmentId, courseId, notes, grade
+Output: Confirmation/error message
+*/
 router.put('/grade/', auth, async (req, res) => {
     try {
         const { userId, assignmentId, notes, grade, courseId } = req.body;
 
+        // Add author field to the notes
         for (let i = 0; i < notes.length; i++) {
             notes[i].author = res.locals.user.name;
             notes[i].fresh = false;
@@ -173,6 +159,7 @@ router.put('/grade/', auth, async (req, res) => {
 
         const status = "graded"
 
+        // Change the grade and add notes to the submission in the database
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
                 'courseId': courseId,
@@ -194,7 +181,7 @@ router.put('/grade/', auth, async (req, res) => {
         }
 
         // Add the grade to the submission on canvas
-        const responseCanvas = await axios.put(
+        await axios.put(
             `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`,
             {},
         {
@@ -214,7 +201,10 @@ router.put('/grade/', auth, async (req, res) => {
     }
 });
 
-// Note replies
+/* This request adds replies to a note/comment on a submission
+Input: assignmentId, noteId, message, studentId, date
+Output: confirmation/error message
+*/
 router.put('/add-reply/', auth, async (req, res) => {
     try {
         const { assignmentId, noteId, message, studentId, date } = req.body;
@@ -244,7 +234,7 @@ router.put('/add-reply/', auth, async (req, res) => {
 
         submissionToUpdate.fileNotes[noteId - 1].replies.push(replyObject);
 
-        const updatedSubmission = await submissionModel.findByIdAndUpdate( updateId, submissionToUpdate, { new: true });
+        await submissionModel.findByIdAndUpdate( updateId, submissionToUpdate, { new: true });
 
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {
@@ -252,191 +242,6 @@ router.put('/add-reply/', auth, async (req, res) => {
         res.status(500).json({ error: 'Failed to update data in the database' });
     }
 });
-
-
-// // Updates the submission Grade
-// router.put('/grade/', auth, async (req, res) => {
-//     try {
-//         const { userId, assignmentId, grade } = req.body;
-//         const status = "graded";
-
-//         const updatedSubmission = await submissionModel.findOneAndUpdate(
-//             {
-//                 'assignmentId': assignmentId,
-//                 'userId': userId
-//             },
-//             {
-//                 $set: {
-//                     'grade': grade,
-//                     'status': status,
-//                 }
-//             },
-//             { new: true }
-//         );
-
-//         if (!updatedSubmission) {
-//             return res.status(200).json({ message: 'Submission not found' });
-//         }
-
-//         res.status(200).json({ message: 'Submission updated successfully' });
-//     } catch (error) {
-//         console.error('Error updating data in MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to update data in the database' });
-//     }
-// });
-
-// // Updates the submitted file, along with the new date of submission.
-// router.put('/file/', upload.single('file'), auth, async (req, res) => {
-//     try {
-//         const userId = res.locals.userId;
-//         const assignmentId = req.body.assignmentId
-//         const newFileType = req.file.mimetype
-//         const newFileName = req.file.originalname;
-//         const newFileData = req.file.buffer;
-//         const newDate = new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" });
-
-//         const updatedSubmission = await submissionModel.findOneAndUpdate(
-//             {
-//                 'assignmentId': assignmentId,
-//                 'userId': userId
-//             },
-//             {
-//                 $set: {
-//                     'filetype': newFileType,
-//                     'filename': newFileName,
-//                     'fileData': newFileData,
-//                     'date': newDate,
-//                 }
-//             },
-//             { new: true }
-//         );
-
-//         if (!updatedSubmission) {
-//             return res.status(200).json({ message: 'Submission not found' });
-//         }
-
-//         res.status(200).json({ message: 'Submission updated successfully' });
-//     } catch (error) {
-//         console.error('Error updating data in MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to update data in the database' });
-//     }
-// });
-
-// PUT request (updates something in the db)
-// router.put('/update/', upload.single('file'), auth, async (req, res) => {
-//     try {
-//         const userId = res.locals.userId;
-//         const assignmentId = req.body.assignmentId
-//         const updatedSubmission = {
-//             userId: res.locals.userId,
-//             assignmentId: req.body.assignmentId,
-//             date: new Date().toLocaleString("en-US", { timeZone: "Europe/Amsterdam" }),
-//             filetype: req.file.mimetype,
-//             filename: req.file.originalname,
-//             fileData: req.file.buffer
-//         };
-
-//         // Find the existing test by testId and update it
-//         const result = await submissionModel.updateOne(
-//             {
-//                 'assignmentId': assignmentId,
-//                 'userId': userId
-//             },
-//             { $set: updatedSubmission }
-//         );
-
-//         // Check if the test was found and updated successfully
-//         if (result.nModified === 0) {
-//             return res.status(200).json({ message: 'Object not found' });
-//         }
-
-//         res.status(200).json({ message: 'Submission updated successfully' });
-//     } catch (error) {
-//         console.error('Error updating data in MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to update data in the database' });
-//     }
-// });
-
-
-// router.delete('/delete-all/:assignmentId', auth, async (req, res) => {
-//     try {
-//         const assignmentId = req.params.assignmentId;
-
-//         // Find the document by submissionId and remove it
-//         const result = await submissionModel.deleteMany({ 'assignmentId': assignmentId });
-
-//         // Check if the document was found and deleted successfully
-//         if (result.deletedCount === 0) {
-//             return res.status(200).json({ message: 'Object not found' });
-//         }
-
-//         // Delete successful
-//         res.status(200).json({ message: 'Submission deleted successfully' });
-//     } catch (error) {
-//         console.error('Error deleting data from MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to delete data from the database' });
-//     }
-// });
-
-// DELETE request (deletes something from the db)
-// router.delete('/delete-one/', auth, async (req, res) => {
-//     try {
-//         const userId = res.locals.userId;
-//         const assignmentId = req.body.assignmentId;
-
-//         // Find the document by submissionId and remove it
-//         const result = await submissionModel.deleteOne({
-//             'userId': userId,
-//             'assignmentId': assignmentId
-//         });
-
-//         // Check if the document was found and deleted successfully
-//         if (result.deletedCount === 0) {
-//             return res.status(200).json({ message: 'Object not found' });
-//         }
-
-//         // Delete successful
-//         res.status(200).json({ message: 'Submission deleted successfully' });
-//     } catch (error) {
-//         console.error('Error deleting data from MongoDB:', error);
-//         res.status(500).json({ error: 'Failed to delete data from the database' });
-//     }
-// });
-
-// Get an user its submission data for a specific assignment.
-// router.post('/get-user-submission', auth, async (req, res) => {
-//     try {
-//         const { courseId, assignmentId, userId } = req.body;
-
-//         // Canvas API url
-//         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`, {
-//             headers: {
-//                 Authorization: `Bearer ${req.headers["bearer"]}`
-//             }
-//         });
-//         res.json(response.data);
-//     } catch (error) {
-//         console.error('Error from Canvas API:', error);
-//         res.status(500).json({ error: 'An error occurred in /courses/:courseId/:assignmentId/:userId.' });
-//     }
-// });
-
-// Get all submission data for a specific assignment (teacher).
-// router.post('/get-assignment-submissions', auth, async (req, res) => {
-//     try {
-//         const { courseId, assignmentId } = req.body;
-//         // Canvas API url
-//         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`, {
-//             headers: {
-//                 Authorization: `Bearer ${req.headers["bearer"]}`
-//             }
-//         });
-//         res.json(response.data);
-//     } catch (error) {
-//         console.error('Error from Canvas API:', error);
-//         res.status(500).json({ error: 'An error occurred in /courses/:courseId/assignments/:assignmentId/submissions.' });
-//     }
-// });
 
 // ************************* This needs to stay the same for every service, you are exporting the requests with the router variable *************************
 // Export requests with the router variable

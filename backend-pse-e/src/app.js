@@ -35,7 +35,6 @@ async function init() {
 
         // ************************* Add new services here *************************
         // Import services here
-        const testService = require('./services/test.service.js');
         const submissionService = require('./services/submission.service.js');
         const userService = require('./services/user.service.js');
         const quizService = require('./services/quiz.service.js');
@@ -53,7 +52,6 @@ async function init() {
         app.use('/badge', badgeService);
         app.use('/auth', authService);
         app.use('/course', courseService);
-        app.use('/test', testService);
 
         // ************************* General requests *************************
         app.get('/', (req, res) => {
