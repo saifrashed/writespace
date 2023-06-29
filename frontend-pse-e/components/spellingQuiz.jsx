@@ -149,7 +149,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   const LanguageButton = ({ language, langCode, longCode, langText, flagClass }) => (
     <button className={language.includes(langCode) ? selectedButtonClass : buttonClass}
-      onClick={ () => {
+      onClick={() => {
         selectLanguage(longCode);
         setClickedOther(false);
       }}
@@ -210,7 +210,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                   Unfortunately large files cannot be processed at this time
                   as we are limited by the usage of a free API service with
                   some limitations.
-                  <br/>
+                  <br />
                   We encourage you to refer to other spell checkers to
                   complement your proofreading process and to take the time
                   to review your work and correct any mistakes manually,
@@ -255,15 +255,15 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                 <div className="flex justify-center space-x-5 mt-4">
 
                   <LanguageButton language={language} langCode="en-US" longCode={"en-US"}
-                                  langText="English (US)" flagClass="us" />
+                    langText="English (US)" flagClass="us" />
 
                   <LanguageButton language={language} langCode="en-GB" longCode={"en-GB"}
-                                  langText="English (UK)" flagClass="gb" />
+                    langText="English (UK)" flagClass="gb" />
 
                   <LanguageButton language={language} langCode="nl" longCode={"nl-NL"}
-                                  langText="Dutch (NL)" flagClass="nl" />
+                    langText="Dutch (NL)" flagClass="nl" />
 
-                  <button className={ buttonClass }
+                  <button className={buttonClass}
                     onClick={() => {
                       selectLanguage('en');
                       setClickedOther(true);
@@ -284,7 +284,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                   <div className="flex justify-center">
                     <p>Select detected language</p>
                   </div>
-                ) }
+                )}
 
                 {isAPILoading && (
                   <div className="text-center pt-6 pb-3">
@@ -312,7 +312,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                         Use detected language: {detectedLanguage.name}
                       </button>
                     )}
-                    {language.includes(detectedLanguage.code) && (<div className="flex1"/ >)}
+                    {language.includes(detectedLanguage.code) && (<div className="flex1" />)}
 
                     {!clickedOther && (
                       <button className={buttonClass}
@@ -354,17 +354,17 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       top: '-10px', left: '-130px',
                     }}>
                       {badges && (
-                      <ScaledBadge
-                        resizeFactor={0.8}
-                        pictureUrl={`/badges/${badges[0].badgeId}.png`}
-                        title={badges[0].name}
-                        description={badges[0].description}
-                        xp={badges[0].experiencePoints}
-                        unlocked={true}
-                        onChooseProfilePicture={() => handleChooseProfilePicture(beeBadgeId)}
-                        setIsProfilePictureUpdated={setIsProfilePictureUpdated}
-                        noPopup={false}
-                      />)}
+                        <ScaledBadge
+                          resizeFactor={0.8}
+                          pictureUrl={`/badges/${badges[0].badgeId}.png`}
+                          title={badges[0].name}
+                          description={badges[0].description}
+                          xp={badges[0].experiencePoints}
+                          unlocked={true}
+                          onChooseProfilePicture={() => handleChooseProfilePicture(beeBadgeId)}
+                          setIsProfilePictureUpdated={setIsProfilePictureUpdated}
+                          noPopup={false}
+                        />)}
                     </div>
                   </div>
                   {(!isBeeBadgePresent) && (
@@ -539,17 +539,17 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                       top: '-10px', left: '-130px',
                     }}>
                       {badges && (
-                      <ScaledBadge
-                        resizeFactor={0.8}
-                        pictureUrl={`/badges/${badges[1].badgeId}.png`}
-                        title={badges[1].name}
-                        description={badges[1].description}
-                        xp={badges[1].experiencePoints}
-                        unlocked={true}
-                        onChooseProfilePicture={() => handleChooseProfilePicture(spellBadgeId)}
-                        setIsProfilePictureUpdated={setIsProfilePictureUpdated}
-                        noPopup={false}
-                      />)}
+                        <ScaledBadge
+                          resizeFactor={0.8}
+                          pictureUrl={`/badges/${badges[1].badgeId}.png`}
+                          title={badges[1].name}
+                          description={badges[1].description}
+                          xp={badges[1].experiencePoints}
+                          unlocked={true}
+                          onChooseProfilePicture={() => handleChooseProfilePicture(spellBadgeId)}
+                          setIsProfilePictureUpdated={setIsProfilePictureUpdated}
+                          noPopup={false}
+                        />)}
                     </div>
                   </div>
                   {(!isSpellBadgePresent) && (
