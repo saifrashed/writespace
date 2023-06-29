@@ -7,8 +7,21 @@ import { Worker } from '@react-pdf-viewer/core';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "../styles/tailwind.css";
 import "../styles/index.css";
+import { useEffect } from "react";
+import useAuthentication from "@/lib/hooks/useAuthentication";
+import { useRouter } from "next/router";
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const router = useRouter();
+  const { refresh } = useAuthentication();
+
+  useEffect(() => {
+    async function refreshAsync() {
+      await refresh()
+    }
+    refreshAsync()
+  }, [router.pathname])
+
   return (
     <>
       <Toaster position="bottom-right" />

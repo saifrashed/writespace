@@ -18,7 +18,7 @@ const storage = multer.memoryStorage();
 multer({ storage: storage });
 const submissionModel = require("../models/submission.model.js");
 
-// Create assignment 
+// Create assignment
 router.post('/create', auth, (req, res) => {
     const { assignment, courseId } = req.body;
 
@@ -124,7 +124,7 @@ router.post('/get-all', auth, async (req, res) => {
             params: {
                 per_page: 100
             }
-        }); 
+        });
 
         // Only select (WriteSpace) assignments with assignment type "online_url", exclude the rest
         if (response.data && Array.isArray(response.data)) {
@@ -160,7 +160,7 @@ router.post('/get-all', auth, async (req, res) => {
                     Authorization: `Bearer ${req.headers["bearer"]}`
                 },
                 params: {
-                    // Only select the submissions for the current user 
+                    // Only select the submissions for the current user
                     // automatically selects submissions for the course with courseId only
                     "student_ids[]": [res.locals.userId],
                     per_page: 200
@@ -168,7 +168,8 @@ router.post('/get-all', auth, async (req, res) => {
             });
             // Map the submission objects to only the assignment ids that are submitted
             const submittedAssignmentIds = userSubmissionsRes.data
-                .filter(submission => submission.workflow_state === 'submitted')
+                .filter(submission => submission.workflow_state === 'submitted'
+                || submission.workflow_state === 'graded')
                 .map(submission => submission.assignment_id);
 
             // Add the "has_submitted" attribute and set it to true or false

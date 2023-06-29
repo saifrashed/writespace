@@ -181,6 +181,7 @@ const Profile = () => {
                         // top: '-10px', left: '35px',
                       }}
                       key={badge.badgeId}
+                      title={badge.description}
                       >
                       <ScaledBadge
                         resizeFactor={0.8}
