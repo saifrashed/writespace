@@ -54,6 +54,16 @@ const Grade: React.FC = () => {
     const { addUserBadges } = useUser(token)
     const { badges } = useBadges(token)
 
+
+    function removeObjectsByBadgeIds(arr: any[], badgeIdsToRemove: number[]): any[] {
+        return arr.filter((obj) => !badgeIdsToRemove.includes(obj.badgeId));
+    }
+
+    const automaticBadges = [2, 13, 14, 15, 16, 17, 18, 19]
+
+    const filteredBadges = removeObjectsByBadgeIds(badges, automaticBadges)
+
+
     const openModal = () => {
         setShowModal(true);
     };
@@ -273,7 +283,7 @@ const Grade: React.FC = () => {
                             <div>
                                 <button onClick={() => { setNotebar(true) }}
                                     className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
-                                    Watch notes ({notes.length})
+                                    Watch comments ({notes.length})
                                 </button>
                             </div>
 
@@ -379,7 +389,7 @@ const Grade: React.FC = () => {
                                     <div className="relative flex-1">
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
-                                                {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
+                                                {notes.length === 0 && <div className='text-center py-3'>There are no comments to view</div>}
                                                 {notes.map((note, index) => {
                                                     const hasReplies = note.replies.length > 0;
                                                     return (
@@ -435,7 +445,7 @@ const Grade: React.FC = () => {
                                                                                         document.getElementById(`${note.id}-comment`).value = "";
                                                                                     }
                                                                                 }}
-                                                                                >
+                                                                            >
                                                                                 Post comment
                                                                             </button>
                                                                         </form>
@@ -558,7 +568,7 @@ const Grade: React.FC = () => {
                                     <div className="p-6 text-center">
 
                                         <div className="grid gap-4 my-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                                            {badges.map((badge, index) => {
+                                            {filteredBadges.map((badge, index) => {
                                                 return (
                                                     <button className={`flex flex-col items-center justify-center w-full h-full border-2 p-1 rounded-2xl hover:scale-110 ${badgeClicked[index] ? 'border-green-500' : 'border-gray-300'}`}
                                                         onClick={() => { console.log("assigning badge: ", badge.name); handleBadgeClick(index, badge); }}

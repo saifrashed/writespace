@@ -36,8 +36,10 @@
     "react-hot-toast": "^2.4.1",
     "react-modal": "^3.16.1",
     "react-pdf": "^7.1.1",
+    "react-slick": "^0.29.0",
     "run-parallel": "^1.2.0",
     "sharp": "^0.32.1",
+    "slick-carousel": "^1.8.1",
     "tailwindcss": "^3.2.4",
     "ts-interface-checker": "^1.0.2"
   },
@@ -47,6 +49,7 @@
     "@types/react": "^18.0.29",
     "@types/react-dom": "^18.0.11",
     "@types/react-modal": "^3.16.0",
+    "@types/react-slick": "^0.23.10",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.32.0",
     "cypress": "^12.15.0",

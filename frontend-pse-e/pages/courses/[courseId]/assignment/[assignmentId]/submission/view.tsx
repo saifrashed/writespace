@@ -133,7 +133,7 @@ const View: React.FC = () => {
                             <div>
                                 <button onClick={() => { setNotebar(true) }}
                                     className="px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 text-gray-800 text-sm font-medium rounded-full">
-                                    Watch notes ({notes.length})
+                                    Watch comments ({notes.length})
                                 </button>
                             </div>
 
@@ -191,7 +191,7 @@ const View: React.FC = () => {
                                     <div className="relative flex-1">
                                         <div className="absolute inset-0 ">
                                             <ul className="divide-y divide-gray-200">
-                                                {notes.length === 0 && <div className='text-center py-3'>There are no notes to view</div>}
+                                                {notes.length === 0 && <div className='text-center py-3'>There are no comments to view</div>}
                                                 {notes.map((note, index) => {
                                                     const hasReplies = note.replies.length > 0;
                                                     return (
@@ -247,7 +247,7 @@ const View: React.FC = () => {
                                                                                         document.getElementById(`${note.id}-comment`).value = "";
                                                                                     }
                                                                                 }}
-                                                                                >
+                                                                            >
                                                                                 Post comment
                                                                             </button>
                                                                         </form>

@@ -7,7 +7,7 @@ describe('Login service', () => {
   // });
   it ('should have login and go to courses page', () => {
     cy.visit('http://localhost:3000');
-    cy.get('a[href="http://localhost:5000/auth/login"]').should('contain.text', 'Go to your courses');
+    cy.get('a[href="http://localhost:5000/auth/login"]').should('contain.text', 'Log in via institution');
     cy.get('a[href="http://localhost:5000/auth/login"]').click();
     cy.origin('https://login.canvas.uva.nl', () => {
       cy.get('[data-testid="button-uva-login"]').click();

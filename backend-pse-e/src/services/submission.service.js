@@ -26,7 +26,10 @@ const submissionModel = require("../models/submission.model.js");
 // ************************* Requests for this service (examples below) *************************
 // Define a route without the starting route defined in app.js
 
-// Get all submissions for an assignment
+/* This request returns all submissions for an assignment
+Input: assignmentId
+Output: all submissions for the given assignmentId
+*/
 router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
     try {
         // Find the object using an attribute of the object
@@ -40,7 +43,10 @@ router.get("/get-submissions/:assignmentId", auth, async (req, res) => {
     }
 });
 
-// Get submission by a user for an assignment
+/* This request returns the submission by a user for an assignment
+Input: userId, assignmentId
+Output: the submission for the given userId and assignmentId
+*/
 router.post("/get-submission/", auth, async (req, res) => {
     try {
         const { userId, assignmentId } = req.body;
@@ -59,7 +65,10 @@ router.post("/get-submission/", auth, async (req, res) => {
     }
 });
 
-// Post request (creates something in the db)
+/* This request saves a submission for an assignment
+Input: userId, assignmentId, courseId, PDF file
+Output: The created submission
+*/
 router.post('/save', upload.single('file'), auth, async (req, res) => {
     try {
         const userId = res.locals.userId;
@@ -67,7 +76,7 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
         const courseId = req.body.courseId;
 
         // Add the submission to the assignment on canvas
-        const responseCanvas = await axios.post(
+        await axios.post(
             `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions`,
             {},
         {
@@ -134,11 +143,15 @@ router.post('/save', upload.single('file'), auth, async (req, res) => {
     }
 });
 
-// Voegt notes to the submission
+/* This request is used to grade a submission
+Input: userId, assignmentId, courseId, notes, grade
+Output: Confirmation/error message
+*/
 router.put('/grade/', auth, async (req, res) => {
     try {
         const { userId, assignmentId, notes, grade, courseId } = req.body;
 
+        // Add author field to the notes
         for (let i = 0; i < notes.length; i++) {
             notes[i].author = res.locals.user.name;
             notes[i].fresh = false;
@@ -146,6 +159,7 @@ router.put('/grade/', auth, async (req, res) => {
 
         const status = "graded"
 
+        // Change the grade and add notes to the submission in the database
         const updatedSubmission = await submissionModel.findOneAndUpdate(
             {
                 'courseId': courseId,
@@ -167,7 +181,7 @@ router.put('/grade/', auth, async (req, res) => {
         }
 
         // Add the grade to the submission on canvas
-        const responseCanvas = await axios.put(
+        await axios.put(
             `${API_URL}/courses/${courseId}/assignments/${assignmentId}/submissions/${userId}`,
             {},
         {
@@ -187,7 +201,10 @@ router.put('/grade/', auth, async (req, res) => {
     }
 });
 
-// Note replies
+/* This request adds replies to a note/comment on a submission
+Input: assignmentId, noteId, message, studentId, date
+Output: confirmation/error message
+*/
 router.put('/add-reply/', auth, async (req, res) => {
     try {
         const { assignmentId, noteId, message, studentId, date } = req.body;
@@ -217,7 +234,7 @@ router.put('/add-reply/', auth, async (req, res) => {
 
         submissionToUpdate.fileNotes[noteId - 1].replies.push(replyObject);
 
-        const updatedSubmission = await submissionModel.findByIdAndUpdate( updateId, submissionToUpdate, { new: true });
+        await submissionModel.findByIdAndUpdate( updateId, submissionToUpdate, { new: true });
 
         res.status(200).json({ message: 'Submission updated successfully' });
     } catch (error) {
