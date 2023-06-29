@@ -51,7 +51,7 @@ const Grade: React.FC = () => {
     const { assignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
 
     const { gradeSubmission, getSubmission, addReply, fileUrl, fileNotes, submission } = useSubmission(token, assignmentId?.toString(), user?.toString())
-    const { user:grader, addUserBadges} = useUser(token)
+    const { user: grader, addUserBadges } = useUser(token)
     const { badges } = useBadges(token)
 
 
@@ -64,9 +64,7 @@ const Grade: React.FC = () => {
     const filteredBadges = removeObjectsByBadgeIds(badges, automaticBadges)
 
 
-    function isBadgePresent(badgeId: number) {
-        return grader?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
-    }
+
 
 
     const openModal = () => {
@@ -524,10 +522,8 @@ const Grade: React.FC = () => {
                                                 if (assignmentId && user && courseId) {
                                                     gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString(), courseId?.toString())
                                                     addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
-                                                    if(!isBadgePresent(20)){
-                                                        addUserBadges([20], courseId?.toString(), assignmentId?.toString(), '', '', token)
-                                                        onSuccess("Congratulations you have received a badge! View your profile to see it.")
-                                                    }
+                                                    addUserBadges([20], courseId?.toString(), assignmentId?.toString(), '', '', token)
+                                                    onSuccess("Congratulations you have received a badge! View your profile to see it.")
                                                 }
                                             }}
                                         >
