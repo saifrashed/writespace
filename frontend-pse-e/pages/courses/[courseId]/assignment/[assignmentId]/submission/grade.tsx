@@ -51,7 +51,7 @@ const Grade: React.FC = () => {
     const { assignment } = useAssignment(token, courseId?.toString(), assignmentId?.toString()); // When navigating to a course via url
 
     const { gradeSubmission, getSubmission, addReply, fileUrl, fileNotes, submission } = useSubmission(token, assignmentId?.toString(), user?.toString())
-    const { user:grader, addUserBadges} = useUser(token)
+    const { user: grader, addUserBadges } = useUser(token)
     const { badges } = useBadges(token)
 
 
@@ -444,10 +444,13 @@ const Grade: React.FC = () => {
                                                                                 className="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-500 rounded-lg focus:ring-4 focus:ring-primary-200 hover:bg-primary-800"
                                                                                 onClick={(e) => {
                                                                                     e.preventDefault();
-                                                                                    const comment = document.getElementById(`${note.id}-comment`).value;
-                                                                                    if (comment) {
-                                                                                        addCommentReply(note.id, comment);
-                                                                                        document.getElementById(`${note.id}-comment`).value = "";
+                                                                                    const commentElement = document.getElementById(`${note.id}-comment`) as HTMLInputElement;
+                                                                                    if (commentElement !== null) {
+                                                                                        const comment = commentElement.value;
+                                                                                        if (comment) {
+                                                                                            addCommentReply(note.id, comment);
+                                                                                            commentElement.value = "";
+                                                                                        }
                                                                                     }
                                                                                 }}
                                                                             >
@@ -524,7 +527,7 @@ const Grade: React.FC = () => {
                                                 if (assignmentId && user && courseId) {
                                                     gradeSubmission(token, grade, notes, assignmentId?.toString(), user?.toString(), courseId?.toString())
                                                     addUserBadges(assignedBadges, courseId?.toString(), assignmentId?.toString(), user?.toString(), '', token)
-                                                    if(!isBadgePresent(20)){
+                                                    if (!isBadgePresent(20)) {
                                                         addUserBadges([20], courseId?.toString(), assignmentId?.toString(), '', '', token)
                                                         onSuccess("Congratulations you have received a badge! View your profile to see it.")
                                                     }

@@ -2,13 +2,11 @@ import { getDocument } from 'pdfjs-dist/legacy/build/pdf';
 import { pdfjs } from "react-pdf";
 
 // Specify the correct path to the worker script
-// import pdf worker as a url, see `next.config.js` and `pdf-worker.js`
-import workerSrc from "../pdf-worker";
+import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
+pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker;
 
-pdfjs.GlobalWorkerOptions.workerSrc = workerSrc;
 
 const convertPdfToText = async (fileUrl) => {
-
   try {
     const loadingTask = getDocument(fileUrl);
     const pdf = await loadingTask.promise;
