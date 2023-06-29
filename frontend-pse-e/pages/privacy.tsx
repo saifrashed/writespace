@@ -24,123 +24,123 @@ const PrivacyPolicy = () => {
             <div className="px-4 sm:px-6 lg:px-8 mt-14">
                 <div className="relative mx-auto max-w-[37.5rem] pt-20 text-center pb-24">
                     <h1 className="text-4xl font-extrabold sm:text-5xl">Privacy policy</h1>
-                    <p className="mt-4 text-base leading-7 text-[#4b5563]">Laatst bijgewerkt op 29 juni 2023</p>
+                    <p className="mt-4 text-base leading-7 text-[#4b5563]">Last updated on June 29, 2023</p>
                 </div>
             </div>
             <div className="relative px-4 sm:px-6 lg:px-8">
                 <div className="mx-auto max-w-[40rem]">
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Welkom bij WriteSpace! Dit privacybeleid beschrijft hoe wij jouw persoonlijke informatie verzamelen, gebruiken, delen en beschermen in verband met het gebruik van onze applicatie, WriteSpace. We hechten veel waarde aan jouw privacy en zorgen ervoor dat jouw persoonlijke informatie vertrouwelijk en in overeenstemming met de geldende privacywetgeving wordt behandeld.
+                        Welcome to WriteSpace! This privacy policy describes how we collect, use, share, and protect your personal information in connection with the use of our application, WriteSpace. We value your privacy and ensure that your personal information is treated confidentially and in accordance with applicable privacy laws.
                     </p>
+                    <h2 className="mb-4 mt-8 font-bold text-xl">Collected Information</h2>
 
-                    <h2 className="mb-4 mt-8 font-bold text-xl">Verzamelde informatie</h2>
-
-                    <h3 className="mb-4 font-bold text-md">Gebruikersinformatie</h3>
+                    <h3 className="mb-4 font-bold text-md">User Information</h3>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Bij het gebruik van WriteSpace verzamelen wij bepaalde persoonlijke informatie van gebruikers, zoals:
-                    </p>
-
-                    <ul className="space-y-0.5 text-[#4b5563] text-sm list-disc list-inside">
-                        <li>Naam</li>
-                        <li>E-mailadres</li>
-                        <li>Gebruikers-ID (toegewezen door Canvas)</li>
-                        <li>Gebruikersinstellingen en voorkeuren</li>
-                    </ul>
-
-                    <h3 className="mb-4 mt-8 font-bold text-lg">Opdrachtinformatie</h3>
-
-                    <p className="mb-4 text-sm text-[#4b5563]">
-                        Wanneer studenten opdrachten via de Canvas API indienen, verzamelen wij de volgende informatie in verband met de schrijfopdrachten:
+                        When using WriteSpace, we collect certain personal information from users, such as:
                     </p>
 
                     <ul className="space-y-0.5 text-[#4b5563] text-sm list-disc list-inside">
-                        <li>Inhoud van de ingediende opdrachten</li>
-                        <li>Datum en tijd van indiening</li>
-                        <li>Eventuele bijlagen bij de opdrachten</li>
+                        <li>Name</li>
+                        <li>Email address</li>
+                        <li>User ID (assigned by Canvas)</li>
+                        <li>User settings and preferences</li>
                     </ul>
 
-                    <h2 className="mb-4 mt-8 font-bold text-xl">Gebruik van verzamelde informatie</h2>
+                    <h3 className="mb-4 mt-8 font-bold text-lg">Assignment Information</h3>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Wij gebruiken de verzamelde informatie voor de volgende doeleinden:
+                        When students submit assignments through the Canvas API, we collect the following information related to the writing assignments:
+                    </p>
+
+                    <ul className="space-y-0.5 text-[#4b5563] text-sm list-disc list-inside">
+                        <li>Content of the submitted assignments</li>
+                        <li>Date and time of submission</li>
+                        <li>Any attachments to the assignments</li>
+                    </ul>
+
+                    <h2 className="mb-4 mt-8 font-bold text-xl">Use of Collected Information</h2>
+
+                    <p className="mb-4 text-sm text-[#4b5563]">
+                        We use the collected information for the following purposes:
                     </p>
 
                     <ul className="space-y-0.5 text-[#4b5563] text-sm list-disc list-inside">
 
-                        <li>Het leveren en verbeteren van de functionaliteit van WriteSpace</li>
-                        <li>Het verwerken en beheren van ingediende opdrachten</li>
-                        <li>Het communiceren met gebruikers met betrekking tot hun opdrachten en de applicatie</li>
-                        <li>Het bieden van klantenondersteuning en het oplossen van problemen</li>
-                        <li>Het analyseren van het gebruik van de applicatie om de gebruikerservaring te verbeteren</li>
-                        <li>Het verkrijgen van inzichten om de gebruikerservaring te verbeteren</li>
-                        <li>Het waarborgen van de veiligheid en beveiliging van WriteSpace</li>
+                        <li>Providing and improving the functionality of WriteSpace</li>
+                        <li>Processing and managing submitted assignments</li>
+                        <li>Communicating with users regarding their assignments and the application</li>
+                        <li>Providing customer support and troubleshooting</li>
+                        <li>Analyzing the usage of the application to improve user experience</li>
+                        <li>Gaining insights to enhance user experience</li>
+                        <li>Ensuring the security and safety of WriteSpace</li>
                     </ul>
 
-                    <h2 className="mb-4 mt-8 font-bold text-xl">Gegevensbeheer</h2>
+                    <h2 className="mb-4 mt-8 font-bold text-xl">Data Management</h2>
 
-                    <h3 className="mb-4 mt-8 font-bold text-lg">Gegevensopslag en beveiliging</h3>
+                    <h3 className="mb-4 mt-8 font-bold text-lg">Data Storage and Security</h3>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Wij nemen redelijke maatregelen om jouw persoonlijke informatie te beschermen tegen ongeoorloofde toegang, openbaarmaking, wijziging of vernietiging. Jouw gegevens worden opgeslagen op beveiligde servers en we hanteren passende technische en organisatorische maatregelen om de gegevens te beschermen.
+                        We take reasonable measures to protect your personal information from unauthorized access, disclosure, alteration, or destruction. Your data is stored on secure servers, and we employ appropriate technical and organizational measures to protect the data.
                     </p>
 
-                    <h3 className="mb-4 mt-8 font-bold text-lg">Gegevensbewaring</h3>
+                    <h3 className="mb-4 mt-8 font-bold text-lg">Data Retention</h3>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Wij bewaren jouw persoonlijke informatie gedurende de periode die nodig is om de doeleinden te bereiken waarvoor de informatie is verzameld, tenzij een langere bewaartermijn wettelijk vereist of toegestaan is.
+                        We retain your personal information for the period necessary to fulfill the purposes for which the information was collected, unless a longer retention period is required or permitted by law.
                     </p>
 
-                    <h3 className="mb-4 mt-8 font-bold text-lg">Delen van informatie met derden</h3>
+                    <h3 className="mb-4 mt-8 font-bold text-lg">Sharing of Information with Third Parties</h3>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Wij delen jouw persoonlijke informatie niet met derden, behalve in de volgende gevallen:
+                        We do not share your personal information with third parties except in the following cases:
                     </p>
 
                     <ul className="space-y-0.5 text-[#4b5563] text-sm list-disc list-inside">
-                        <li>Met jouw voorafgaande toestemming</li>
-                        <li>Wanneer het delen van informatie noodzakelijk is om te voldoen aan wettelijke verplichtingen, zoals het reageren op gerechtelijke bevelen of wettelijke procedures</li>
-                        <li>Met vertrouwde dienstverleners die namens ons bepaalde diensten uitvoeren, zoals hostingproviders of klantondersteuning</li>
+                        <li>With your prior consent</li>
+                        <li>When sharing information is necessary to comply with legal obligations, such as responding to court orders or legal processes</li>
+                        <li>With trusted service providers who perform certain services on our behalf, such as hosting providers or customer support</li>
                     </ul>
 
-                    <h2 className="mb-4 mt-8 font-bold text-xl">Jouw rechten</h2>
+                    <h2 className="mb-4 mt-8 font-bold text-xl">Your Rights</h2>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Je hebt bepaalde rechten met betrekking tot jouw persoonlijke informatie. Je kunt:
+                        You have certain rights regarding your personal information. You can:
                     </p>
 
                     <ul className="space-y-0.5 text-[#4b5563] text-sm list-disc list-inside">
-                        <li>Toegang vragen tot de persoonlijke informatie die wij over jou hebben</li>
-                        <li>Onjuiste informatie corrigeren of bijwerken</li>
-                        <li>Verzoeken om verwijdering van jouw persoonlijke informatie</li>
-                        <li>Bezwaar maken tegen bepaalde verwerkingen van jouw persoonlijke informatie</li>
-                        <li>Jouw toestemming voor het verwerken van jouw persoonlijke informatie intrekken (wat van invloed kan zijn op het gebruik van WriteSpace)</li>
+                        <li>Request access to the personal information we have about you</li>
+                        <li>Correct or update inaccurate information</li>
+                        <li>Request deletion of your personal information</li>
+                        <li>Object to certain processing of your personal information</li>
+                        <li>Withdraw your consent for the processing of your personal information (which may affect the use of WriteSpace)</li>
                     </ul>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Neem contact met ons op via de onderstaande contactgegevens om gebruik te maken van deze rechten of als je vragen of opmerkingen hebt met betrekking tot jouw privacy.
+                        Please contact us using the contact information provided below to exercise these rights or if you have any questions or concerns regarding your privacy.
                     </p>
 
                     <h2 className="mb-4 mt-8 font-bold text-xl">Cookies</h2>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        WriteSpace maakt gebruik van cookies en vergelijkbare technologieën om de functionaliteit van de applicatie te verbeteren en een gepersonaliseerde ervaring te bieden. Door WriteSpace te gebruiken, stem je in met het gebruik van cookies in overeenstemming met ons Cookiebeleid.
+                        WriteSpace uses cookies and similar technologies to enhance the functionality of the application and provide a personalized experience. By using WriteSpace, you consent to the use of cookies in accordance with our Cookie Policy.
                     </p>
 
-                    <h2 className="mb-4 mt-8 font-bold text-xl">Wijzigingen in het privacybeleid</h2>
+                    <h2 className="mb-4 mt-8 font-bold text-xl">Changes to the Privacy Policy</h2>
 
                     <p className="mb-4 text-sm text-[#4b5563]">
-                        Dit privacybeleid kan van tijd tot tijd worden gewijzigd om bijgewerkte privacypraktijken weer te geven of om te voldoen aan relevante wet- en regelgeving. Wij raden je aan om regelmatig ons privacybeleid te controleren voor eventuele wijzigingen.
+                        This privacy policy may be amended from time to time to reflect updated privacy practices or to comply with relevant laws and regulations. We recommend checking our privacy policy regularly for any changes.
                     </p>
 
-                    <h2 className="mb-4 mt-8 font-bold text-xl">Contactgegevens</h2>
-                    <p className="mb-4 text-sm text-[#4b5563]">Als je vragen, opmerkingen of verzoeken hebt met betrekking tot dit privacybeleid, neem dan contact met ons op via
+                    <h2 className="mb-4 mt-8 font-bold text-xl">Contact Information</h2>
+                    <p className="mb-4 text-sm text-[#4b5563]">If you have any questions, comments, or requests regarding this privacy policy, please contact us at
                         <a className="font-bold" href="mailto:bobkreugel@hotmail.com"> bobkreugel@hotmail.com</a>.
                     </p>
-                    <p className="mb-56 text-sm text-[#4b5563]">Bedankt voor het gebruik van WriteSpace en het vertrouwen dat je in ons stelt met betrekking tot jouw persoonlijke informatie.
+                    <p className="mb-56 text-sm text-[#4b5563]">Thank you for using WriteSpace and trusting us with your personal information.
                     </p>
                 </div>
             </div>
+
         </>
     );
 };
