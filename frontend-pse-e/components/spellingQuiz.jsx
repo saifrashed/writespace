@@ -42,6 +42,10 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   const { badges, getBadge } = useBadge(token, [beeBadgeId, spellBadgeId]);
 
+  const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
+    "text-gray-800 text-lg font-medium rounded-full";
+  const selectedButtonClass = "px-4 py-2 mr-2 inline-block bg-green-100 hover:bg-green-200 " +
+    "text-gray-800 text-lg font-medium rounded-full";
 
 
   useEffect(() => {
@@ -105,12 +109,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     setIsAPILoading(true);  // To disable start button.
 
 
-    if (!showPopup) { return null; }
-
-    const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
-      "text-gray-800 text-lg font-medium rounded-full";
-    const selectedButtonClass = "px-4 py-2 mr-2 inline-block bg-green-100 hover:bg-green-200 " +
-      "text-gray-800 text-lg font-medium rounded-full";
 
     try {
       const response = await languageTool(lang, extractedText);
@@ -181,7 +179,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     setUsedReplacements([...usedReplacements]);
   }
 
-  return (
+  return showPopup && (
     <>
       <div className="relative">
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center
