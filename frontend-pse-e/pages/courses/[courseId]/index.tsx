@@ -247,7 +247,7 @@ const CourseOverview = () => {
                             handleDeleteAssignment(selectedAssignment?.id.toString())
                           }}
                         >
-                          Yes, I'm sure
+                          Yes, I&apos;m sure
                         </button>
                         <button
                           data-modal-hide="popup-modal"
@@ -306,10 +306,10 @@ const CourseOverview = () => {
           )}
           {/* Show in table when no assignments available. */}
           {(assignments.length == 0 && !isLoading) &&
-          <>
-            <td className="text-gray-400 flex items-center justify-center px-3 py-2 space-x-3"></td>
-            <td className="text-gray-400 flex items-center justify-center px-3 py-2 space-x-3">No assignments available.</td>
-          </>
+            <>
+              <td className="text-gray-400 flex items-center justify-center px-3 py-2 space-x-3"></td>
+              <td className="text-gray-400 flex items-center justify-center px-3 py-2 space-x-3">No assignments available.</td>
+            </>
           }
         </div>
       </div >
