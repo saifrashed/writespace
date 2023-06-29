@@ -28,7 +28,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
   }
 
   // Creates a new assignment on the server
-  const createAssignment = async (courseId: string, assignment: Assignment, token: string) => {
+  const createAssignment = async (courseId: string, assignment: any, token: string) => {
     try {
       const response = await axios.post(`${config.baseUrl}/assignment/create`, { courseId, assignment }, { headers: { bearer: token } })
       setAssignment(response.data)
@@ -59,7 +59,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
             bearer: token,
           },
         }
-      ); 
+      );
       onSuccess(`Succesfully deleted "${response.data.name}"`)
     } catch (error) {
       console.log(error)

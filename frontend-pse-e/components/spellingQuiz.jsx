@@ -13,12 +13,6 @@ import useBadge from "@/lib/hooks/useBadge";
 
 const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
-  if (!showPopup) { return null; }
-
-  const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
-    "text-gray-800 text-lg font-medium rounded-full";
-  const selectedButtonClass = "px-4 py-2 mr-2 inline-block bg-green-100 hover:bg-green-200 " +
-    "text-gray-800 text-lg font-medium rounded-full";
 
   const [extractedText, setExtractedText] = useState("");
   const [introScreen, setIntroScreen] = useState(true);
@@ -34,7 +28,6 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const [isBeeBadgePresent, setIsBeeBadgePresent] = useState(false);
   const [isSpellBadgePresent, setIsSpellBadgePresent] = useState(false);
   const [isProfilePictureUpdated, setIsProfilePictureUpdated] = useState(false);
-
   const [detectedLanguage, setDetectedLanguage] = useState('');
   const [clickedOther, setClickedOther] = useState(false);
 
@@ -48,11 +41,32 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
   const { badges, getBadge } = useBadge(token, [beeBadgeId, spellBadgeId]);
 
+
+
   useEffect(() => {
     if (token) {
       getBadge(token, [beeBadgeId, spellBadgeId]);
     }
   }, [token]);
+
+
+  // Extract text from pdf.
+  useEffect(() => {
+    const fetchPdfText = async () => {
+      const pdfText = await convertPdfToText(fileUrl);
+      const filteredText = filterText(pdfText);
+
+      if (filteredText.length >= 30000) {
+        setIntroScreen(false);
+        setRejectScreen(true);
+      }
+
+      setExtractedText(filteredText);
+    };
+
+    fetchPdfText();
+  }, [fileUrl]);
+
 
 
   // Check if the user has received the badge already for this assignment.
@@ -83,27 +97,19 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
     await updateUserPicture(badgeId, token);
   };
 
-  // Extract text from pdf.
-  useEffect(() => {
-    const fetchPdfText = async () => {
-      const pdfText = await convertPdfToText(fileUrl);
-      const filteredText = filterText(pdfText);
-
-      if (filteredText.length >= 30000) {
-        setIntroScreen(false);
-        setRejectScreen(true);
-      }
-
-      setExtractedText(filteredText);
-    };
-
-    fetchPdfText();
-  }, [fileUrl]);
 
   const selectLanguage = async (lang) => {
     console.log("Selected language:", lang);
     setLanguage(lang);
     setIsAPILoading(true);  // To disable start button.
+
+
+    if (!showPopup) { return null; }
+
+    const buttonClass = "px-4 py-2 mr-2 inline-block bg-gray-100 hover:bg-gray-200 " +
+      "text-gray-800 text-lg font-medium rounded-full";
+    const selectedButtonClass = "px-4 py-2 mr-2 inline-block bg-green-100 hover:bg-green-200 " +
+      "text-gray-800 text-lg font-medium rounded-full";
 
     try {
       const response = await languageTool(lang, extractedText);
@@ -245,9 +251,9 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     and discuss any disagreements with your peers. Collaboration and critical
                     thinking are key to refining your writing abilities.
                     <br /><br />
-                    Let's enhance your spelling skills together!
+                    Let&apos;s enhance your spelling skills together!
                     <br /><br />
-                    <b>To start, select the language in which you've written your assignment:</b>
+                    <b>To start, select the language in which you&apos;ve written your assignment:</b>
                   </p>
                 </div>
 
@@ -573,7 +579,7 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     confident choices in your writing.
                     <br /><br />
                     Remember, learning is a continuous journey, and refining your skills takes
-                    practice and perseverance. Take the lessons you've learned here and apply them
+                    practice and perseverance. Take the lessons you&apos;ve learned here and apply them
                     to your future writing endeavors. Keep up the great work!
                   </p>
                 </div>

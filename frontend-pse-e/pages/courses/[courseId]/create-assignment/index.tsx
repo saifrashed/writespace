@@ -46,19 +46,58 @@ const CreateAssignment = () => {
     const handleCreateAssignment = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const newAssignment: Assignment = {
-            ...assignment,
-            due_at: assignment.due_at && new Date(assignment.due_at)?.toISOString(),
-            allowed_attempts: assignment.allowed_attempts === "Unlimited" ? -1 : assignment.allowed_attempts,
-        }
 
-        await createAssignment(course?.id, newAssignment, token);
-        router.back();
+        if (assignment.due_at && assignment.allowed_attempts) {
+            await createAssignment(course?.id, {
+                ...assignment,
+                due_at: assignment.due_at && new Date(assignment.due_at)?.toISOString(),
+                allowed_attempts: assignment.allowed_attempts === "Unlimited" ? -1 : assignment.allowed_attempts,
+            }, token);
+            router.back();
+        }
     };
+
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
+
         let inputValue: any = type === "checkbox" ? checked : value;
+
+        if (name === "allowed_attempts") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 1 ? "Unlimited" : parseInt(inputValue);
+        }
+        if (name === "points_possible") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 0 ? 0 : parseInt(inputValue);
+        }
+
+        setAssignment((prevAssignment) => ({
+            ...prevAssignment,
+            [name]: inputValue
+        }));
+    };
+
+    const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const { name, value, type } = e.target;
+
+        let inputValue: any = value;
+
+        if (name === "allowed_attempts") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 1 ? "Unlimited" : parseInt(inputValue);
+        }
+        if (name === "points_possible") {
+            inputValue = inputValue === "" || parseInt(inputValue) < 0 ? 0 : parseInt(inputValue);
+        }
+
+        setAssignment((prevAssignment) => ({
+            ...prevAssignment,
+            [name]: inputValue
+        }));
+    };
+
+    const handleTextAreaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        const { name, value, type } = e.target;
+
+        let inputValue: any = value;
 
         if (name === "allowed_attempts") {
             inputValue = inputValue === "" || parseInt(inputValue) < 1 ? "Unlimited" : parseInt(inputValue);
@@ -132,7 +171,7 @@ const CreateAssignment = () => {
                             placeholder="Description"
                             name="description"
                             value={assignment.description}
-                            onChange={handleInputChange}
+                            onChange={handleTextAreaChange}
                         ></textarea>
                         <label htmlFor="assignment_type" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Assignment Type</label>
                         <select disabled id="assignment_type" className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
@@ -146,7 +185,7 @@ const CreateAssignment = () => {
                             id="grading_type"
                             className="mb-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             name="grading_type"
-                            onChange={handleInputChange}
+                            onChange={handleSelectChange}
                         >
                             <option value="pass_fail">Pass/Fail</option>
                             <option value="percent">Percent</option>
