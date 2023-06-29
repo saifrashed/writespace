@@ -267,7 +267,6 @@ const View: React.FC = () => {
             {!fileUrl && (
                 <>
                     <NavBar />
-
                     <div className="w-1/3 mx-auto mt-10 text-center">
                         <Lottie
                             loop={true}

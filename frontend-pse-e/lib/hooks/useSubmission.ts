@@ -20,7 +20,7 @@ function useSubmission(token = '', assignmentId = '', userId = '') {
       getSubmissions(assignmentId, token);
       getSubmission(assignmentId, userId, token);
     }
-  });
+  }, []);
 
   // Retrieves all submissions for a specific assignment
   const getSubmissions = async (assignmentId: string, token: string) => {
