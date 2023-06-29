@@ -44,9 +44,9 @@ const Assignment = () => {
 
   // Hide submit button when role is teacher or when deadline has passed.
   const buttonClass =
-  (assignment?.due_at !== null && currentDate > assignment?.due_at) || role==="teacher"
-    ? "bg-gray-300 border-white"
-    : "bg-fuchsia-300 hover:bg-fuchsia-400 border-fuchsia-500 hover:border-fuchsia-500";
+    (assignment?.due_at !== null && currentDate > assignment?.due_at) || role === "teacher"
+      ? "bg-gray-300 border-white"
+      : "bg-fuchsia-300 hover:bg-fuchsia-400 border-fuchsia-500 hover:border-fuchsia-500";
 
   const isTeacher = role === "teacher";
   const isDisabled = isTeacher || (assignment?.due_at !== null && currentDate > assignment?.due_at);
@@ -161,13 +161,14 @@ const Assignment = () => {
               <div className="w-full p-4 bg-white rounded-lg border border-gray-200">
                 <div className="flex flex-col">
                   {/* submit button */}
-                  <button
+
+                  {!submission?.grade && (
+                    <button
                       onClick={() => {
                         setShowPopup(!showPopup);
                       }}
-                      className={`w-full text-white transition-all font-bold py-2 px-4 border-b-4 rounded-lg flex items-center ${
-                        buttonClass
-                      }`}
+                      className={`w-full text-white transition-all font-bold py-2 mb-5 px-4 border-b-4 rounded-lg flex items-center ${buttonClass
+                        }`}
                       disabled={isDisabled}
                     >
                       <svg
@@ -187,10 +188,11 @@ const Assignment = () => {
                       <span className="ml-2">Submit</span>
                     </button>
 
+                  )}
+
                   {/* View button. */}
                   <Link href={`/courses/${courseId}/assignment/${assignmentId}/submission/view`}>
-                    <button className={`mt-5 text-white w-full transition-all font-bold py-2 px-4 border-b-4 rounded-lg flex max-width items-center ${
-                      buttonViewClass
+                    <button className={` text-white w-full transition-all font-bold py-2 px-4 border-b-4 rounded-lg flex max-width items-center ${buttonViewClass
                       }`} disabled={isTeacher}
                     >
                       <svg
@@ -321,7 +323,8 @@ const Assignment = () => {
           <UploadPopup
             showPopup={showPopup}
             togglePopup={() => {
-              setShowPopup(!showPopup)}} deadline={assignment?.due_at}
+              setShowPopup(!showPopup)
+            }} deadline={assignment?.due_at}
           />
         </div>
       </div>
