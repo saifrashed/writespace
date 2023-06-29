@@ -63,6 +63,12 @@ const Grade: React.FC = () => {
 
     const filteredBadges = removeObjectsByBadgeIds(badges, automaticBadges)
 
+
+    // function isBadgePresent(badgeId: number) {
+    //     return grader?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
+    // }
+
+
     const openModal = () => {
         setShowModal(true);
     };

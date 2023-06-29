@@ -77,13 +77,13 @@ const UploadPopup = ({ showPopup, togglePopup, deadline }) => {
 
     function isBadgePresent(badgeId) {
         return user?.badges.some(badge => (badge.badgeId === badgeId && badge.courseId === parseInt(courseId) && badge.assignmentId === parseInt(assignmentId)));
-      }
+    }
 
     const handleSubmit = () => {
         const currentTime = new Date();
         const currentDate = currentTime.toISOString();
 
-        if (deadline === null || currentDate < deadline){
+        if (deadline === null || currentDate < deadline) {
             if (!isConfirmed) {
                 onError("Please confirm that the work submitted is your own.")
                 return;
@@ -104,7 +104,8 @@ const UploadPopup = ({ showPopup, togglePopup, deadline }) => {
         }
 
         else {
-            onError("The deadline has passed. Submission is not possible.")}
+            onError("The deadline has passed. Submission is not possible.")
+        }
     }
 
     const handleCloseModal = () => {

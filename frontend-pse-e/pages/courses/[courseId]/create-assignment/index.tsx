@@ -48,19 +48,19 @@ const CreateAssignment = () => {
 
 
         if (assignment.due_at && assignment.allowed_attempts) {
-            const newAssignment: any = {
+            await createAssignment(course?.id, {
                 ...assignment,
                 due_at: assignment.due_at && new Date(assignment.due_at)?.toISOString(),
                 allowed_attempts: assignment.allowed_attempts === "Unlimited" ? -1 : assignment.allowed_attempts,
-            }
-
-            await createAssignment(course?.id, newAssignment, token);
+            }, token);
+            router.back();
         }
-        router.back();
     };
+
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
+
         let inputValue: any = type === "checkbox" ? checked : value;
 
         if (name === "allowed_attempts") {
@@ -75,7 +75,6 @@ const CreateAssignment = () => {
             [name]: inputValue
         }));
     };
-
 
     const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const { name, value, type } = e.target;
@@ -112,7 +111,6 @@ const CreateAssignment = () => {
             [name]: inputValue
         }));
     };
-
 
     return (
         <>
