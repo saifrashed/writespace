@@ -21,7 +21,7 @@ function useAuthentication() {
       if (!user.data.userId) {
         await axios.post(`${config.baseUrl}/user/save`, { badges: [] }, { headers: { bearer: response.data.access_token } });
       }
-      setCookie("pse-token", response.data.access_token, true)
+      setCookie("pse-token", response.data.access_token)
       setCookie("pse-refresh-token", response.data.refresh_token)
       setToken(response.data.access_token)
       onSuccess("Authentication successful")
@@ -42,23 +42,8 @@ function useAuthentication() {
     }
   };
 
-  const refresh = async () => {
-    try {
-      const accessToken = getCookie("pse-token")
-      const refreshToken = getCookie("pse-refresh-token")
 
-      if (!accessToken && refreshToken) {
-        const response = await axios.post(`${config.baseUrl}/auth/get-user-token/refresh`, {}, { headers: { bearer: refreshToken } })
-        setCookie("pse-token", response.data.access_token, true)
-        setToken(response.data.access_token)
-      }
-    } catch (error) {
-      await router.push("/");
-      console.log(error);
-    }
-  }
-
-  return { token, login, logout, refresh };
+  return { token, login, logout };
 }
 
 export default useAuthentication;

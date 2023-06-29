@@ -13,14 +13,6 @@ import { useRouter } from "next/router";
 
 const App = ({ Component, pageProps }: AppProps) => {
   const router = useRouter();
-  const { refresh } = useAuthentication();
-
-  useEffect(() => {
-    async function refreshAsync() {
-      await refresh()
-    }
-    refreshAsync()
-  }, [router.pathname])
 
   return (
     <>
