@@ -200,7 +200,11 @@ const CourseOverview = () => {
                     <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
                       <button
                         type="button"
-                        onClick={toggleModal}
+                        onClick={() => {
+                          if (selectedAssignment) {
+                            toggleModal(selectedAssignment)
+                          }
+                        }}
                         className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-800 dark:hover:text-white"
                         data-modal-hide="popup-modal"
                       >
@@ -243,8 +247,10 @@ const CourseOverview = () => {
                           type="button"
                           className="text-white bg-red-500 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2"
                           onClick={() => {
-                            toggleModal()
-                            handleDeleteAssignment(selectedAssignment?.id.toString())
+                            if (selectedAssignment) {
+                              toggleModal(selectedAssignment)
+                              handleDeleteAssignment(selectedAssignment?.id.toString())
+                            }
                           }}
                         >
                           Yes, I&apos;m sure
@@ -253,7 +259,11 @@ const CourseOverview = () => {
                           data-modal-hide="popup-modal"
                           type="button"
                           className="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
-                          onClick={toggleModal}
+                          onClick={() => {
+                            if (selectedAssignment) {
+                              toggleModal(selectedAssignment)
+                            }
+                          }}
                         >
                           No, cancel
                         </button>
