@@ -91,6 +91,7 @@ export interface Assignment {
     name: string;
     submission_types: string[];
     has_submitted_submissions: boolean;
+    has_submitted: boolean;
     due_date_required: boolean;
     max_name_length: number;
     in_closed_grading_period: boolean;
@@ -232,9 +233,10 @@ export interface User {
     badges: BadgeModel[];
     level: number;
     threshold: number;
+    prevThreshold: number;
 }
 
-interface BadgeModel {
+export interface BadgeModel {
     badgeId: number;
     courseId: number;
     assignmentId: number;
@@ -242,14 +244,23 @@ interface BadgeModel {
     comment: string;
 }
 
+export interface Reply {
+    noteId: number;
+    message: string;
+    userId: number;
+    user_name: string;
+    date: string;
+}
+
 export interface Note {
     id: number;
     content: string;
     highlightAreas: HighlightArea[];
     quote: string;
+    author: string;
+    replies: Reply[];
+    fresh: boolean;
 }
-
-
 
 export interface TokenResponse {
     access_token: string;

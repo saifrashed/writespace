@@ -1,30 +1,27 @@
-<!-- ABOUT THE PROJECT -->
-# Request strategies
-In this project we are using the 'services' directory for all the requests.
-Normally, you would have routes, controllers and services, but for this project 
-we are keeping it as simple as possible because we only have 4 weeks and a lot of
-students do not have any or minimal experience with BE developing.
-# Project Server
+# Backend README file
 
-The test.model.js and test.service.js file are tutorial files so that the code can be copied
-and modified for specific user stories so that everyone can easily code in the backend.
+## Table of Contents
 
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+- [Usage](#usage)
+  - [Config](#config)
+  - [Middleware](#middleware)
+  - [Models](#models)
+  - [Services](#services)
+- [Postman](#postman)
 
-## About The Project
-
-
-<!-- GETTING STARTED -->
 ## Getting Started
-
-To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
 
-* npm
-* Node.js
-* Express.js
+- [npm](https://www.npmjs.com/get-npm): Node package manager
+- [Node.js](https://nodejs.org/en/): JavaScript runtime environment
+- [Express.js](https://expressjs.com/): Node.js web application framework
+- [MongoDB](https://docs.mongodb.com/manual/installation/): NoSQL document database
 
-### Installation
+## Installation
 
 _Below are the steps of how you can start installing and setting up the app._
 1. Clone the repo (only required once)
@@ -36,26 +33,39 @@ _Below are the steps of how you can start installing and setting up the app._
    npm install
    ```
 
-3. Run the start script (do this everytime you want to run the BE)
+3. Add the .env file in the root directory of the backend folder (contains secret information)
+
+4. Run the start script (do this everytime you want to run the BE)
    ```sh
    npm run dev
    ```
 
-## Using MongoDB Compass for the database
-Use the MongoDB Compass app to get a GUI for the database.
-Use the MONGO_URI connection string in the .env file and use it to connect using the MongoDB Compass app.
+## Usage
 
-## Postman
+Run the start script (do this everytime you want to run the BE)
+   ```sh
+   npm run dev
+   ```
+
+### Config
+
+The config directory contains configuration files for the backend application. This is where you can set up environment variables, database connections, and other application-specific configurations. Make sure to update the configuration files according to your specific needs.
+
+### Middleware
+
+The middleware directory contains custom middleware functions that can be used to handle various tasks in the request-response cycle. Middleware functions can be used for tasks such as authentication, error handling, logging, and more.
+
+### Models
+
+The models directory contains the MongoDB models used in the application. These models define the structure and behavior of the data stored in the MongoDB database. You can create models for each of your MongoDB collections and define various methods and statics to interact with the data. Make sure to import and use the appropriate models in your services.
+
+### Services
+
+The services directory contains the service files that handle the business logic and interaction with the models. Services are responsible for processing the requests, performing database operations, and returning the appropriate responses. You can create separate service files for different entities or functionalities in the application. These services are used by the express router to handle the incoming requests and produce the desired results.
+
+We chose to only include services to keep the backend as simple as possible so that less experienced backend developers could also easily understand and contribute to the backend application.
+
+### Postman
 Postman is recommended to use for testing requests.
 An example collection of Postman requests can be found in the root folder of the backend-pse-e directory. 
 Import this file in Postman to get example requests.
-
-## .env file
-create the '.env' file in the root folder of the 'backend-pse-e' and add the information on Discord
-from the backend channel to it.
-
-### Deployment
-
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
