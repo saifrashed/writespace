@@ -5,23 +5,23 @@ import { Badge } from "../types";
 import { useNotification } from "./useNotification";
 
 // Custom React hook for managing badge data and actions
-function useBadge(token = '', badgeId = '') {
-  const [badge, setBadge] = useState<Badge>();
+function useBadge(token = '', badgeIds: []) {
+  const [badges, setBadges] = useState<Badge[]>([]);
   const { onSuccess, onError } = useNotification();
 
   // Effect to fetch badge when token changes
   useEffect(() => {
-    if (token && badgeId) {
-      getBadge(token, badgeId)
+    if (token && badgeIds.length > 0) {
+      getBadge(token, badgeIds)
     }
   }, [token])
 
 
   // Retrieves a badge from the server
-  const getBadge = async (token: string, badgeId: string) => {
+  const getBadge = async (token: string, badgeIds: []) => {
     try {
-      const response = await axios.get(`${config.baseUrl}/badge/get-badge/${badgeId}`, { headers: { bearer: token } });
-      setBadge(response.data)
+      const response = await axios.post(`${config.baseUrl}/badge/get-badge/`, {badgeIds}, { headers: { bearer: token } });
+      setBadges(response.data)
     } catch (error) {
       console.log(error)
       onError("Something went wrong")
@@ -58,7 +58,7 @@ function useBadge(token = '', badgeId = '') {
     }
   }
 
-  return { badge, getBadge };
+  return { badges, getBadge };
 }
 
 export default useBadge;

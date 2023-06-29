@@ -9,6 +9,7 @@ import useAuthentication from "@/lib/hooks/useAuthentication";
 import { useRouter } from 'next/router';
 import ScaledBadge from '@/components/badge-template/Badge';
 import { filterData, filterText } from '@/lib/filterUtils';
+import useBadge from "@/lib/hooks/useBadge";
 
 const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
 
@@ -41,8 +42,16 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
   const { courseId, assignmentId } = router.query;
   const { token } = useAuthentication()
   const { user, addUserBadges, updateUserPicture } = useUser(token)
-  const beeBadgeId = 2;
-  const spellBadgeId = 14;
+  const { badges, getBadge } = useBadge(token, [2, 14]);
+
+  useEffect(() => {
+    if (token) {
+      getBadge(token, [2, 14]);
+    }
+  }, [token]);
+
+  const beeBadgeId = badges[0].badgeId
+  const spellBadgeId = badges[1].badgeId
 
   // Check if the user has received the badge already for this assignment.
   const checkBadgePresent = (badgeId) => {
@@ -344,11 +353,10 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     }}>
                       <ScaledBadge
                         resizeFactor={0.8}
-                        pictureUrl={`/badges/${beeBadgeId}.png`}
-                        title={"Spelling Bee"}
-                        description={"Awarded for handing in and revising an" +
-                          " assignment with no apparent spelling errors."}
-                        xp={String("200")}
+                        pictureUrl={`/badges/${badges[0].badgeId}.png`}
+                        title={badges[0].name}
+                        description={badges[0].description}
+                        xp={badges[0].experiencePoints}
                         unlocked={true}
                         onChooseProfilePicture={() => handleChooseProfilePicture(beeBadgeId)}
                         setIsProfilePictureUpdated={setIsProfilePictureUpdated}
@@ -529,12 +537,10 @@ const SpellingQuiz = ({ fileUrl, showPopup, togglePopup }) => {
                     }}>
                       <ScaledBadge
                         resizeFactor={0.8}
-                        pictureUrl={`/badges/${spellBadgeId}.png`}
-                        title={"Spellmaster"}
-                        description={"Awarded to students who show exemplary initiative and " +
-                          "interest in their own improvement by completing the " +
-                          "spelling revision quiz."}
-                        xp={String("200")}
+                        pictureUrl={`/badges/${badges[1].badgeId}.png`}
+                        title={badges[1].name}
+                        description={badges[1].description}
+                        xp={badges[1].experiencePoints}
                         unlocked={true}
                         onChooseProfilePicture={() => handleChooseProfilePicture(spellBadgeId)}
                         setIsProfilePictureUpdated={setIsProfilePictureUpdated}
