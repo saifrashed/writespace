@@ -31,13 +31,16 @@ const userModel = require("../models/user.model.js");
 function getLevel(experiencePoints) {
     let level = 1;
     let levelThreshold = 0;
+    let prevThreshold = 0;
     while (experiencePoints >= levelThreshold) {
         level++;
+        prevThreshold = levelThreshold;
         levelThreshold += (level - 1) * 15;
     }
     return {
         level: level - 1,
-        threshold: levelThreshold
+        threshold: levelThreshold,
+        prevThreshold
     };
 }
 
@@ -311,7 +314,8 @@ router.get("/get-user", auth, async (req, res) => {
             ...responseCanvas.data,
             ...responseMongo[0]._doc,
             level: level.level,
-            threshold: level.threshold
+            threshold: level.threshold,
+            prevThreshold: level.prevThreshold
         };
 
         // Handle success case here
