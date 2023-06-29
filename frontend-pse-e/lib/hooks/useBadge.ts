@@ -14,13 +14,13 @@ function useBadge(token = '', badgeIds: []) {
     if (token && badgeIds.length > 0) {
       getBadge(token, badgeIds)
     }
-  })
+  }, [])
 
 
   // Retrieves a badge from the server
   const getBadge = async (token: string, badgeIds: []) => {
     try {
-      const response = await axios.post(`${config.baseUrl}/badge/get-badge/`, {badgeIds}, { headers: { bearer: token } });
+      const response = await axios.post(`${config.baseUrl}/badge/get-badge/`, { badgeIds }, { headers: { bearer: token } });
       setBadges(response.data)
     } catch (error) {
       console.log(error)

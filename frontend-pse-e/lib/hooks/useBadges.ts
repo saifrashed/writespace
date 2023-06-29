@@ -14,7 +14,7 @@ function useBadges(token = '') {
     if (token) {
       getBadges(token)
     }
-  })
+  }, [])
 
   // Retrieves badges from the server
   const getBadges = async (token: string) => {

@@ -14,7 +14,7 @@ function useAssignment(token = '', courseId = '', assignmentId = '') {
     if (assignmentId && token && courseId) {
       getAssignment(courseId, assignmentId, token);
     }
-  });
+  }, []);
 
   // Retrieves an assignment from the server
   const getAssignment = async (courseId: string, assignmentId: string, token: string) => {

@@ -14,7 +14,7 @@ function useUser(token = '', assignmentId = '') {
     if (token) {
       getUser(token)
     }
-  });
+  }, []);
 
   useEffect(() => {
     if (assignmentId && token) {

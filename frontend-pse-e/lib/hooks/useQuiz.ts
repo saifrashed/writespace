@@ -13,7 +13,7 @@ function useQuiz(token = '') {
     if (token) {
       getQuizzes();
     }
-  });
+  }, []);
 
   // Retrieves quizzes from the server
   const getQuizzes = async () => {

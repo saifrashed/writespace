@@ -16,7 +16,7 @@ function useAssignments(courseId = '', token = '') {
     if (courseId && token) {
       getAssignments(courseId?.toString(), token);
     }
-  });
+  }, []);
 
 
   // Fetches assignments from the server

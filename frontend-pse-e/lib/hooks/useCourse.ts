@@ -16,7 +16,7 @@ function useCourse(token = '', courseId = '') {
             getCourse(courseId, token);
             getEnrollment(courseId, token);
         }
-    });
+    }, []);
 
     // Retrieves course data from the server
     const getCourse = async (courseId: String, token: string) => {
