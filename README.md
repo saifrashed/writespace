@@ -141,6 +141,10 @@ Additionally, the frontend triggers the Lighthouse workflow. This workflow bench
 
 Both the frontend and backend are automatically deployed when pushed to the main branch. The backend uses Vercel hosting, which automatically detects a push or pull request to the main branch and deploys the new code immediately.
 
+## Green coding
+
+At Writespace, we recognize the importance of writing efficient and sustainable code. Our project takes into account energy efficiency and performance. We have done research to compare the performance of different programming languages and chose JavaScript and TypeScript for our project. We optimized our JavaScript code by minimizing redundant operations and leveraging server-side rendering through the next.js framework. MongoDB was selected as the database, and we explored strategies such as indexed and aggregated queries to improve power usage. We hosted our backend on AWS, which offers a server in Amsterdam, reducing latency and energy consumption. Additionally, we focused on writing efficient code, reducing duplication, and optimizing UI design and website navigation.
+
 ## Contributing
 
 To contribute to Writespace, follow these guidelines:
