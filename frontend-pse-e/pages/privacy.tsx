@@ -137,7 +137,7 @@ const PrivacyPolicy = () => {
                     <p className="mb-4 text-sm text-[#4b5563]">Als je vragen, opmerkingen of verzoeken hebt met betrekking tot dit privacybeleid, neem dan contact met ons op via
                         <a className="font-bold" href="mailto:bobkreugel@hotmail.com"> bobkreugel@hotmail.com</a>.
                     </p>
-                    <p className="mb-10 lg:mb-24 text-sm text-[#4b5563]">Bedankt voor het gebruik van WriteSpace en het vertrouwen dat je in ons stelt met betrekking tot jouw persoonlijke informatie.
+                    <p className="mb-56 text-sm text-[#4b5563]">Bedankt voor het gebruik van WriteSpace en het vertrouwen dat je in ons stelt met betrekking tot jouw persoonlijke informatie.
                     </p>
                 </div>
             </div>

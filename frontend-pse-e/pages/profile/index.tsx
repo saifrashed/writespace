@@ -177,13 +177,13 @@ const Profile = () => {
         {user &&
           <Slider {...(isSmallScreen ? carouselSettingsSmallScreen : carouselSettings)}>
             {(
-              badges.map((badge) => {
+              badges.map((badge, index) => {
                 const badgeCount = countBadgeOccurrences(badge.badgeId)
                 const isBadgeOwned = user.badges.find(obj => obj.badgeId === badge.badgeId);
 
                 if (!isBadgeOwned) { return null; }
                 return (
-                  <div className="flex justify-center">
+                  <div className="flex justify-center" key={index}>
                     <div
                       style={{
                         height: '300px', position: 'relative',
