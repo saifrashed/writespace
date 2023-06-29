@@ -127,8 +127,7 @@ const Profile = () => {
       </Head>
       <NavBar />
 
-      <div className="mt-14 text-center pt-10 bg-gradient-to-br from-blue-50 to-purple-50">
-
+      <div className={`mt-14 text-center pt-10 ${user ? 'bg-gradient-to-br from-blue-50 to-purple-50' : ''}`}>
         {/* Profile picture */}
         <div className="flex flex-col items-center justify-center mt-10 mb-10">
           <Avatar
@@ -163,6 +162,14 @@ const Profile = () => {
             )}
           </div>
         </div>
+
+        {!user && (
+          <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <div className="absolute right-1/2 bottom-1/2 transform translate-x-1/2 translate-y-1/2">
+              <div className="border-t-transparent border-solid animate-spin rounded-full border-purple-500 border-8 h-14 w-14"></div>
+            </div>
+          </div>
+        )}
 
         {/* Showcase carousel for achieved badges. */}
         {user &&
@@ -203,7 +210,7 @@ const Profile = () => {
           </Slider>
         }
 
-        {!isXSmallScreen && (
+        {user && !isXSmallScreen && (
           <div className="mx-16">
             <h1 className="text-4xl pb-4 font-bold mb-6 gradient-text">Badges overview</h1>
             <div className={isSmallScreen ? '' : 'ml-16'}>
