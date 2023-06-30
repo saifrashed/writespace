@@ -80,9 +80,9 @@ npm run dev
 
 ### Documentation
 
-- [Backend](./docs/Frontend.md)
-- [Frontend](./docs/Backend.md)
-- [CICD](./docs/CICD.md)
+- [Backend](./backend-pse-e/README.md)
+- [Frontend](./frontend-pse-e/README.md)
+- [CICD](#Continuous Integration/Continuous Deployment (CI/CD))
 - [CANVAS API](./docs/Canvas_Tutorial/Canvas_API_Tutorial.md)
 
 ## App Architecture
