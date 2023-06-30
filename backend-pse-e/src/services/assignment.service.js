@@ -1,5 +1,3 @@
-// Test service, services handle everything with requests in the BE
-
 // ************************* This can be coppied for every new service *************************
 // Import the router with express to do requests
 const express = require('express');
@@ -115,7 +113,7 @@ router.post('/get-one', auth, async (req, res) => {
 
 router.post('/get-all', auth, async (req, res) => {
     try {
-        const { isTeacher, courseId } = req.body;
+        const {courseId } = req.body;
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
             headers: {

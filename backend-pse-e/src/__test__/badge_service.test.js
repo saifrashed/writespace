@@ -42,9 +42,9 @@ describe("Badge Service", () => {
     const badge = new Badge({ badgeId: 12345, experiencePoints: 10, name: 'badge1', category: 'cat1', description: 'desc1' });
     await badge.save();
 
-    const res = await request(app)
-    .get(`/get-badge/${badge.badgeId}`)
-    .set("bearer", encryptedToken);
+    const res = await request(app).post("/get-badge")
+    .set("bearer", encryptedToken)
+    .send({ "badgeIds": badge.badgeId });
     expect(res.statusCode).toEqual(200);
     expect(res.body[0]).toHaveProperty('badgeId');
     expect(res.body[0].badgeId).toBe(badge.badgeId);

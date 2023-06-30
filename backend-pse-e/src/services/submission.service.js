@@ -1,5 +1,3 @@
-// Test service, services handle everything with requests in the BE
-
 // ************************* This can be coppied for every new service *************************
 // Import the router with express to do requests
 const express = require('express');
@@ -209,7 +207,7 @@ router.put('/add-reply/', auth, async (req, res) => {
     try {
         const { assignmentId, noteId, message, studentId, date } = req.body;
 
-        userId = studentId == "" ?  res.locals.userId : studentId;
+        const userId = studentId == "" ?  res.locals.userId : studentId;
 
         const submissionToUpdate = await submissionModel.findOne(
             {

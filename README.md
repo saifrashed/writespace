@@ -80,9 +80,9 @@ npm run dev
 
 ### Documentation
 
-- [Backend](./docs/Frontend.md)
-- [Frontend](./docs/Backend.md)
-- [CICD](./docs/CICD.md)
+- [Backend](./backend-pse-e/README.md)
+- [Frontend](./frontend-pse-e/README.md)
+- [Continuous Integration/Continuous Deployment (CI/CD)](#continuous-integrationcontinuous-deployment-cicd)
 - [CANVAS API](./docs/Canvas_Tutorial/Canvas_API_Tutorial.md)
 
 ## App Architecture
@@ -120,6 +120,17 @@ If this process succeeds, the workflow proceeds to execute all tests using the J
 
 ```bash
   backend-pse/src/__test__
+```
+
+to run these test use 
+```bash
+  npm run test
+```
+
+or for a specific test 
+
+```bash
+  npm run test path_to_test_file
 ```
 
 These tests leverage the capabilities of mongodb-memory-server to create a local MongoDB instance. This approach enhances the speed of tests, as no external connections are required. Moreover, it guarantees that the test suite does not interact with the live database, thereby avoiding any residual test data.
