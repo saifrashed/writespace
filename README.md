@@ -6,8 +6,6 @@ Writespace is a writing tool designed to enhance the learning experience for stu
 
 The gamification aspect of Writespace adds an element of fun and motivation to the learning process. Students can earn points, badges, or rewards based on their progress, quality of writing, and adherence to assignment guidelines. This gamified approach encourages healthy competition among students and boosts their engagement and commitment to the task.
 
-WriteSpace is an online platform integrated with Canvas, aimed at enhancing students' writing skills through gamification. Designed for educational purposes, WriteSpace leverages badges and interactive quizzes to incentivize student engagement and foster skill development.
-
 ## Key Features
 
 * Badge System: Students are rewarded with badges for active participation and achievement in writing exercises and assignments.
@@ -122,12 +120,12 @@ If this process succeeds, the workflow proceeds to execute all tests using the J
   backend-pse/src/__test__
 ```
 
-to run these test use 
+to run these test use
 ```bash
   npm run test
 ```
 
-or for a specific test 
+or for a specific test
 
 ```bash
   npm run test path_to_test_file
