@@ -82,7 +82,7 @@ npm run dev
 
 - [Backend](./backend-pse-e/README.md)
 - [Frontend](./frontend-pse-e/README.md)
-- [CICD](#Continuous Integration/Continuous Deployment (CI/CD))
+- [Continuous Integration/Continuous Deployment (CI/CD)](#continuous-integrationcontinuous-deployment-cicd)
 - [CANVAS API](./docs/Canvas_Tutorial/Canvas_API_Tutorial.md)
 
 ## App Architecture
