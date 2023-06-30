@@ -70,16 +70,11 @@ const Home = () => {
                     Writing.<br />
                     Fun, Engaging.
                   </h1>
-                  {/* <p className="mt-8 text-xl text-black">We help you to make your remote work life easier. Build a distraction free working experience.</p> */}
                   <p className="mt-8 text-xl text-black">Try our dynamic gamified platform and transform studying into an engaging and rewarding experience.</p>
                   <br />
-                  <button className="bg-sky-300 hover:bg-sky-400 text-white transition-all font-bold py-2 px-4 border-b-8 border-sky-500 hover:border-sky-500 rounded-lg flex items-center mt-4">
-                    <div className="flex flex-col items-center lg:flex-row">
-                      <a href={`${config.baseUrl}/auth/login`} className="text-lg">
-                        Log in via institution
-                      </a>
-                    </div>
-                  </button>
+                  <a href={`${config.baseUrl}/auth/login`} className="bg-sky-300 hover:bg-sky-400 text-center text-white transition-all font-bold py-2 px-4 border-b-8 border-sky-500 hover:border-sky-500 rounded-lg  items-center mt-4">
+                    Log in via institution
+                  </a>
                 </div>
               </div>
               <div className="relative w-full overflow-hidden lg:order-1 h-96 md:min-h-screen lg:h-auto lg:w-5/12">
