@@ -16,6 +16,7 @@ router.get('/login', (req, res) => {
     const authUrl = `${LOGIN_API_URL}/login/oauth2/auth?client_id=${CLIENT_ID}&response_type=code&state=1&redirect_uri=${CANVAS_REDIRECT_URI}`;
     res.redirect(authUrl);
 });
+
 // After the /login request, the FE extracted the code from the URL in the browser
 // that can be used to make this request to actually get the user's access-key/token
 // NOTE: the code from the /login request can only be used for ONE request, otherwise it will give an error!!
@@ -41,6 +42,7 @@ router.post('/get-user-token', async (req, res) => {
         res.status(500).json({ error: 'An error occurred in /get-user-token.' });
     }
 });
+
 // Get new user token with refresh token (the refresh token from can be used infinitely!)
 router.post('/get-user-token/refresh', async (req, res) => {
     try {

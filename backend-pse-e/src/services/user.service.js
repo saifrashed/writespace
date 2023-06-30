@@ -1,5 +1,3 @@
-// Test service, services handle everything with requests in the BE
-
 // ************************* This can be coppied for every new service *************************
 // Import the router with express to do requests
 const express = require('express');

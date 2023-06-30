@@ -118,11 +118,6 @@ const Questions = ({topic, quizId, questions, userScores}) => {
   useEffect(() => {
     if (showResult) {
       saveQuizScore(String(quizId), token, result.correctAnswers);
-      // // const quizScoresObj = quizzes.reduce((acc, quiz) => {
-      //   acc[quiz.quizId] = quiz;
-      //   return acc;
-      // }, {});
-      // console.log(quizScoresObj, "SE OBJ");
     }
   }, [showResult]);
 
@@ -132,8 +127,6 @@ const Questions = ({topic, quizId, questions, userScores}) => {
       {!showResult &&  (
         <div className='pt-6'>
           <h1 className='font-bold text-center text-xl'>{topic}</h1>
-          {/* <span>{activeQuestion + 1}</span>
-          <span>/{questions.length}</span> */}
           <h2>{question}</h2>
           <div>
             {choices.map((answer, index) => (
@@ -170,7 +163,6 @@ const Questions = ({topic, quizId, questions, userScores}) => {
           <p>Correct Answers: {result.correctAnswers}</p>
           <p>Wrong Answers: {result.wrongAnswers}</p>
           {getHighScore()}
-          {/* <p>Latest Highscore: {latestHighScore} </p> */}
           <br />
 
           {answers.map((object, index) => (
