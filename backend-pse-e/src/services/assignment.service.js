@@ -115,7 +115,7 @@ router.post('/get-one', auth, async (req, res) => {
 
 router.post('/get-all', auth, async (req, res) => {
     try {
-        const { isTeacher, courseId } = req.body;
+        const {courseId } = req.body;
         // Canvas API url
         const response = await axios.get(`${API_URL}/courses/${courseId}/assignments`, {
             headers: {
