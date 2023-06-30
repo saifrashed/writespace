@@ -1,5 +1,5 @@
-import { getDocument } from 'pdfjs-dist/legacy/build/pdf';
-import { pdfjs } from "react-pdf";
+// import { getDocument } from 'pdfjs-dist/legacy/build/pdf';
+// import { pdfjs } from "react-pdf";
 
 // Specify the correct path to the worker script
 // import pdfjsWorker from "pdfjs-dist/build/pdf.worker.entry";
