@@ -1,4 +1,4 @@
-// import { getDocument } from 'pdfjs-dist/legacy/build/pdf';
+import { getDocument } from 'pdfjs-dist/legacy/build/pdf';
 // import { pdfjs } from "react-pdf";
 
 // Specify the correct path to the worker script
@@ -8,17 +8,17 @@
 
 const convertPdfToText = async (fileUrl) => {
   try {
-    // const loadingTask = getDocument(fileUrl);
-    // const pdf = await loadingTask.promise;
-    // const totalNumPages = pdf.numPages;
+    const loadingTask = getDocument(fileUrl);
+    const pdf = await loadingTask.promise;
+    const totalNumPages = pdf.numPages;
     let text = "";
 
-    // for (let i = 1; i <= totalNumPages; i++) {
-    //   const page = await pdf.getPage(i);
-    //   const content = await page.getTextContent();
-    //   const pageText = content.items.map((item) => item.str).join(" ");
-    //   text += pageText + " ";
-    // }
+    for (let i = 1; i <= totalNumPages; i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      const pageText = content.items.map((item) => item.str).join(" ");
+      text += pageText + " ";
+    }
 
     return text;
   } catch (error) {
