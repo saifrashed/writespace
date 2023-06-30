@@ -209,7 +209,7 @@ router.put('/add-reply/', auth, async (req, res) => {
     try {
         const { assignmentId, noteId, message, studentId, date } = req.body;
 
-        userId = studentId == "" ?  res.locals.userId : studentId;
+        const userId = studentId == "" ?  res.locals.userId : studentId;
 
         const submissionToUpdate = await submissionModel.findOne(
             {
