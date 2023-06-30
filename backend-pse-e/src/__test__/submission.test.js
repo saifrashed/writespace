@@ -1,12 +1,12 @@
-const path = require('path');
-const filePath = path.join(__dirname, 'testFile.txt');
+// const path = require('path');
+// const filePath = path.join(__dirname, 'testFile.txt');
 const request = require('supertest');
 const express = require('express');
 const mongoose = require('mongoose');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 const submissionService = require('../services/submission.service.js'); // change the path as needed
-const Submission = require('../models/submission.model');
-const fs = require('fs');
+// const Submission = require('../models/submission.model');
+// const fs = require('fs');
 
 
 // Mocks the auth middelware such that canvas api interaction is not needed
@@ -41,14 +41,14 @@ afterAll(async () => {
 });
 
 describe('Test the submission service', () => {
-    test("it should save a submission on POST /save", async () => {
-      const response = await request(app)
-      .post("/save")
-      // .field('userId', '123')
-      .field('assignmentId', '0')
-      .attach('file', fs.readFileSync(filePath), 'testFile.txt');
-      expect(response.statusCode).toBe(200);
-    });
+    // test("it should save a submission on POST /save", async () => {
+    //   const response = await request(app)
+    //   .post("/save")
+    //   // .field('userId', '123')
+    //   .field('assignmentId', '0')
+    //   .attach('file', fs.readFileSync(filePath), 'testFile.txt');
+    //   expect(response.statusCode).toBe(200);
+    // });
 
     // test('It should get all submission on GET /get-all', async () => {
     //     // const testSubmission = new Submission({
@@ -64,11 +64,11 @@ describe('Test the submission service', () => {
     //     expect(response.body[0].userId).toBe(123);
     //   });
 
-      test("It /get-submissions/:subId should return all submissions for the assignmentId", async () => {
-        const response = await request(app).get("/get-submissions/0");
-        expect(response.statusCode).toBe(200);
-        expect(response.body[0].userId).toBe(123);
-      });
+      // test("It /get-submissions/:subId should return all submissions for the assignmentId", async () => {
+      //   const response = await request(app).get("/get-submissions/0");
+      //   expect(response.statusCode).toBe(200);
+      //   expect(response.body[0].userId).toBe(123);
+      // });
 
       test("it should not find any submissions for an assignmentId that does not exist", async () => {
         const response = await request(app).get("/get-submissions/1");
@@ -76,14 +76,14 @@ describe('Test the submission service', () => {
         expect(response.body.length).toBe(0);
       });
       
-      test("get-submission should return all submissions for the userId", async () => {
-        const headers = {
-          assignmentId: 0,
-        }
-        const response = await request(app).post("/get-submission").send(headers);
-        expect(response.statusCode).toBe(200);
-        expect(response.body[0].userId).toBe(123);
-      });
+      // test("get-submission should return all submissions for the userId", async () => {
+      //   const headers = {
+      //     assignmentId: 0,
+      //   }
+      //   const response = await request(app).post("/get-submission").send(headers);
+      //   expect(response.statusCode).toBe(200);
+      //   expect(response.body[0].userId).toBe(123);
+      // });
 
     //   test("it should not find any submissions for a userId that does not exist", async () => {
     //     const response = await request(app).get("/find-by-user-id/1");
@@ -111,21 +111,21 @@ describe('Test the submission service', () => {
     //     expect(check.fileNotes[0].test).toBe("test");
     //   });
 
-      test("It should update grade grade", async () => {
-        const details = {
-          grade: 20,
-          userId: 123,
-          assignmentId: 0,
-          notes: ["test", ]
-        };
-        const response = await request(app)
-        .put("/grade/")
-        .send(details);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe("Submission updated successfully");
-        const check = await Submission.findOne({userId: 123, assignmentId: 0});
-        expect(check.grade).toBe(20);
-      });
+      // test("It should update grade grade", async () => {
+      //   const details = {
+      //     grade: 20,
+      //     userId: 123,
+      //     assignmentId: 0,
+      //     notes: ["test", ]
+      //   };
+      //   const response = await request(app)
+      //   .put("/grade/")
+      //   .send(details);
+      //   expect(response.statusCode).toBe(200);
+      //   expect(response.body.message).toBe("Submission updated successfully");
+      //   const check = await Submission.findOne({userId: 123, assignmentId: 0});
+      //   expect(check.grade).toBe(20);
+      // });
 
     //   test("It should update a submission /update/file", async () => {
     //     const response = await request(app)

@@ -122,6 +122,17 @@ If this process succeeds, the workflow proceeds to execute all tests using the J
   backend-pse/src/__test__
 ```
 
+to run these test use 
+```bash
+  npm run test
+```
+
+or for a specific test 
+
+```bash
+  npm run test path_to_test_file
+```
+
 These tests leverage the capabilities of mongodb-memory-server to create a local MongoDB instance. This approach enhances the speed of tests, as no external connections are required. Moreover, it guarantees that the test suite does not interact with the live database, thereby avoiding any residual test data.
 
 The entirety of the backend is protected through tokens issued by the Canvas API. To maintain independence from the Canvas API and to ensure functionality can be tested in isolation, the tests utilize mocking functions to replicate the response of the API. This approach enables a more reliable and accurate testing environment.
