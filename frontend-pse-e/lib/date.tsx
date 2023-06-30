@@ -1,3 +1,8 @@
+/**
+ * Formats a date string into a localized date and time format.
+ * @param {string} dateString - The date string to format.
+ * @returns {string} - The formatted date string.
+ */
 export const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const options: Intl.DateTimeFormatOptions = {

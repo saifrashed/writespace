@@ -4,7 +4,6 @@ import 'tailwindcss/tailwind.css';
 import NavBar from "@/components/NavBar"
 
 const PrivacyPolicy = () => {
-
     return (
         <>
             <Head>
@@ -140,7 +139,6 @@ const PrivacyPolicy = () => {
                     </p>
                 </div>
             </div>
-
         </>
     );
 };
